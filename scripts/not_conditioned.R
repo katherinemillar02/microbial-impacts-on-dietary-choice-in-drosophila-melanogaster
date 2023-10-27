@@ -43,5 +43,8 @@ not_conditioned_plot <- not_conditioned_summary %>%
   theme_classic() 
 
 ## Combining the two plots 
- male_conditioned_diets_plot + not_conditioned_plot
+conditionedandnot_plot <- male_conditioned_diets_plot + not_conditioned_plot
+ 
+ 
+ ggsave("plots/conditionedandnot_plot.png", dpi=300)
  

@@ -40,3 +40,6 @@ male_conditioned_diets_plot <- male_conditioned_diets_summary %>%
   labs(x = "",
        y = "")+
   theme_classic() 
+
+
+ggsave("plots/male_conditioned_diets_plot.png", dpi=300)

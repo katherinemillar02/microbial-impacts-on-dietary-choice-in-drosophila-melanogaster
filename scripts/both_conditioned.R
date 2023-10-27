@@ -41,3 +41,6 @@ both_conditioned_plot <- both_conditioned_summary %>%
   labs(x = "",
        y = "")+
   theme_classic() 
+
+
+ggsave("plots/both_conditioned_plot.png", dpi=300)
