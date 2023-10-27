@@ -1,1 +1,1 @@
-# microbial-impacts-on-dietary-choice-in-drosophila-melanogaster
+# Microbial impacts on dietary choice in *Drosophila melanogaster*
