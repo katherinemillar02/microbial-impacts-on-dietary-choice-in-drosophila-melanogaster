@@ -5,11 +5,11 @@ library(patchwork)
 
 
 ## Import Data
-not_conditioned <- read_excel("data/not_conditioned.xlsx")
+unconditioned_diets <- read_excel("data/not_conditioned.xlsx")
 
 ## Making the data long 
-not_conditioned_long <- not_conditioned %>% 
-  pivot_longer(cols = ("4;1nc":"1;4nc"), names_to = "diet", values_to = "fly_numbers")
+not_conditioned_long <- unconditioned_diets %>% 
+  pivot_longer(cols = ("4:1 Unconditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 ## Summarising the data; mean, sd, se
 not_conditioned_summary <- not_conditioned_long  %>%  
@@ -37,9 +37,9 @@ not_conditioned_plot <- not_conditioned_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 9.0)+
+  ylim(0.0, 3.0)+
   labs(x = "Diet condition",
-       y = "Mean + S.E. Number of flies per diet patch",
+       y = "Mean +/- S.E. Number of flies per diet patch",
        title = "Unconditioned Diet Patches")+
   theme_classic() 
 
