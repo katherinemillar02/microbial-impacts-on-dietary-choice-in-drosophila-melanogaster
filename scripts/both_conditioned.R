@@ -38,9 +38,10 @@ both_conditioned_plot <- both_conditioned_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 9.0)+
-  labs(x = "",
-       y = "")+
+  labs(x = "Diet condition",
+       y = "Male Conditioned Diet Patches",
+       title = "Unconditioned and Conditioned Treatment")+
   theme_classic() 
 
-
+##  Saving the plot to a plots file
 ggsave("plots/both_conditioned_plot.png", dpi=300)

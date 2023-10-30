@@ -24,10 +24,10 @@ male_conditioned_diets_plot <- male_conditioned_diets_summary %>%
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FF6863",
+           colour = "#E57157",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "#E57157",
                 width = 0.2)+
   geom_jitter(data = male_conditioned_diets_long,
               aes(x = diet,
@@ -37,9 +37,12 @@ male_conditioned_diets_plot <- male_conditioned_diets_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 9.0)+
-  labs(x = "",
-       y = "")+
+  labs(x = "Diet condition",
+       y = "Mean + S.E. Number of flies per patch",
+       title = "Male Conditioned Diet Patches")+
   theme_classic() 
 
 
+
+## Saving the plot to a plots file
 ggsave("plots/male_conditioned_diets_plot.png", dpi=300)
