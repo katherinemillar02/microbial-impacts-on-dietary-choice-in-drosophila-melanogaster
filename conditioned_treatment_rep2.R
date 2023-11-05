@@ -3,6 +3,7 @@ library(tidyverse)
 library(readxl)
 library(patchwork)
 
+#### CALCULATING THE MEAN AVERAGE 
 
 ## Import Data
 conditioned_diets_2 <- read_excel("data/male_conditioned_rep2_mean.xlsx")
@@ -11,7 +12,7 @@ conditioned_diets_2 <- read_excel("data/male_conditioned_rep2_mean.xlsx")
 conditioned_diets_2_long <- conditioned_diets_2 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Conditioned"), names_to = "diet", values_to = "fly_numbers")
 
-#### CALCULATING THE MEAN AVERAGE 
+
 
 ## Summarising the data; mean, sd, se
 conditioned_diets_2_summary <- conditioned_diets_2_long   %>%  
@@ -43,5 +44,5 @@ conditioned_diets_2_plot <- conditioned_diets_2_summary %>%
   ylim(0.0, 4.0)+
   labs(x = "Diet condition",
        y = "Mean +/- S.E. Number of flies per diet patch",
-       title = "Conditioned Diet Patches")+
+       title = "Conditioned Diet Patches Rep 2")+
   theme_classic() 
