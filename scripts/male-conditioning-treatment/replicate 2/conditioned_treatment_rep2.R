@@ -29,10 +29,10 @@ conditioned_diets_2_plot <- conditioned_diets_2_summary %>%
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#E5B457",
+           colour = "#FF6863",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#E5B457",
+                colour = "#FF6863",
                 width = 0.2)+
   geom_jitter(data = conditioned_diets_2_long,
               aes(x = diet,
