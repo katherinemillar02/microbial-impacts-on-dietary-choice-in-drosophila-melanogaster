@@ -41,8 +41,11 @@ conditioned_diets_2_plot <- conditioned_diets_2_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 4.5)+
   labs(x = "Diet condition",
        y = "Mean +/- S.E. Number of flies per diet patch",
        title = "Conditioned Diet Patches Rep 2")+
   theme_classic() 
+
+## saving plots to a plot folder
+ggsave("plots/conditioned_diets_2_plot.png", dpi=300)
