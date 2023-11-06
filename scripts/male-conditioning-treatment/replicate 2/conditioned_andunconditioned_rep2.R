@@ -1,5 +1,5 @@
 #### INSTALL PACKAGES 
-library(tidyverse)
+library(tidyverse)  
 library(readxl)
 library(patchwork)
 
@@ -42,7 +42,10 @@ conditioned_and_unconditioned_diets_2_plot <- conditioned_and_unconditioned_diet
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet condition",
+  labs(x = "Diet Condition",
        y = "Mean +/- S.E. Number of flies per diet patch",
        title = "Conditioned and Unconditioned Diet Patches Rep 2")+
   theme_classic() 
+
+ggsave("plots/conditioned_and_unconditioned_diets_2_plot.png", dpi=300)
+
