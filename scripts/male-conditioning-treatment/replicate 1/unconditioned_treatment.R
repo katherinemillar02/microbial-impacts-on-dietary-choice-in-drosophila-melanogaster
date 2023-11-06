@@ -25,10 +25,10 @@ unconditioned_diets_rep1_plot <- unconditioned_diets_rep1_summary  %>%
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#E5B457",
+           colour = "#FF6863",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#E5B457",
+                colour = "#FF6863",
                 width = 0.2)+
   geom_jitter(data = unconditioned_diets_rep1_long ,
               aes(x = diet,
@@ -37,7 +37,7 @@ unconditioned_diets_rep1_plot <- unconditioned_diets_rep1_summary  %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 2.5)+
+  ylim(0.0, 1.25)+
   labs(x = "Diet condition",
        y = "Mean +/- S.E. Number of flies per diet patch",
        title = "Unconditioned Diet Patches Rep 1")+
