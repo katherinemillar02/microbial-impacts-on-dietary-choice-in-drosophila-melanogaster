@@ -37,14 +37,14 @@ unconditioned_diets_rep1_plot <- unconditioned_diets_rep1_summary  %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 1.25)+
+  ylim(0.0, 2.5)+
   labs(x = "Diet condition",
        y = "Mean +/- S.E. Number of flies per diet patch",
        title = "Unconditioned Diet Patches Rep 1")+
   theme_classic() 
 
 ## Combining the two plots 
-conditioned_notconditioned_treatments <- male_conditioned_diets_plot + unconditioned_diets_rep1_plot
+conditioned_notconditioned_treatments <- conditioned_diets_rep1_plot + unconditioned_diets_rep1_plot
  
  # Saving the plots to a plots file
 # not conditioned plot
