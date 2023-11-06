@@ -49,3 +49,39 @@ conditioned_diets_2_plot <- conditioned_diets_2_summary %>%
 
 ## saving plots to a plot folder
 ggsave("plots/conditioned_diets_2_plot.png", dpi=300)
+
+
+## Statistical analysis
+# First testing a linear model 
+conditioned_rep2_lm <- lm(fly_numbers ~  diet, data = conditioned_diets_2_long)
+
+# Assumption Checking of the model 
+performance::check_model(conditioned_rep2_lm, check = c("qq")) # I think qqplot looks okay, even better than the lm for rep 1
+performance::check_model(conditioned_rep2_lm, check = c("homogeneity")) # line is more flat than rep 1 lm
+performance::check_model(conditioned_rep2_lm, check = c("linearity")) # line is more flat than rep 1 lm
+performance::check_model(conditioned_rep2_lm, check = c("outliers"))
+
+
+
+
+# Trying a generalised linear model
+conditioned_rep2_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = conditioned_diets_2_long)
+
+
+performance::check_model(conditioned_rep2_glm, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(conditioned_rep2_glm, check = c("homogeneity")) # not flat
+performance::check_model(conditioned_rep1_lm, check = c("outliers"))
+
+# glm qq better for this repeat, but others not, go with lm for rep 2
+
+# summary function, shows t test
+summary(conditioned_rep2_lm)
+
+# using anova 
+anova(conditioned_rep2_lm)
+
+# emmeans for tukey
+emmeans::emmeans(conditioned_rep2_lm, pairwise ~ diet)
+
+
+
