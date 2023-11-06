@@ -37,14 +37,17 @@ unconditioned_rep2_plot <- unconditioned_rep2_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 5.0)+
+  ylim(0.0, 4.5)+
   labs(x = "Diet condition",
        y = "Male Conditioned Diet Patches",
        title = "Unconditioned and Conditioned Treatment Rep 2")+
   theme_classic() 
 
 
+## Testing patchwork of Conditioned and Unconditioned plots together
+conditioned_and_unconditioned_rep2 <- conditioned_diets_2_plot + unconditioned_rep2_plot 
 
 
 ##  Saving the plot to a plots file
 ggsave("plots/unconditioned_rep2_plot.png", dpi=300)
+ggsave("plots/conditioned_and_unconditioned_rep2.png", dpi=300)
