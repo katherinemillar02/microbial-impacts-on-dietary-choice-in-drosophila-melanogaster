@@ -5,14 +5,14 @@ library(patchwork)
 
 
 ## Import Data
-unconditioned_diets <- read_excel("data/not_conditioned.xlsx")
+unconditioned_diets_rep1 <- read_excel("data/not_conditioned.xlsx")
 
 ## Making the data long 
-not_conditioned_long <- unconditioned_diets %>% 
+unconditioned_diets_rep1_long <- unconditioned_diets_rep1 %>% 
   pivot_longer(cols = ("4:1 Unconditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 ## Summarising the data; mean, sd, se
-not_conditioned_summary <- not_conditioned_long  %>%  
+unconditioned_diets_rep1_summary <- unconditioned_diets_rep1_long  %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -21,7 +21,7 @@ not_conditioned_summary <- not_conditioned_long  %>%
 
 ## Visualising the data
 # creating a boxplot with the data that has been summarised
-not_conditioned_plot <- not_conditioned_summary %>% 
+unconditioned_diets_rep1_plot <- unconditioned_diets_rep1_summary  %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -30,21 +30,21 @@ not_conditioned_plot <- not_conditioned_summary %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#E5B457",
                 width = 0.2)+
-  geom_jitter(data = not_conditioned_long,
+  geom_jitter(data = unconditioned_diets_rep1_long ,
               aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 3.0)+
+  ylim(0.0, 1.25)+
   labs(x = "Diet condition",
        y = "Mean +/- S.E. Number of flies per diet patch",
-       title = "Unconditioned Diet Patches")+
+       title = "Unconditioned Diet Patches Rep 1")+
   theme_classic() 
 
 ## Combining the two plots 
-conditionedandnot_plot <- male_conditioned_diets_plot + not_conditioned_plot
+conditioned_notconditioned_treatments <- male_conditioned_diets_plot + unconditioned_diets_rep1_plot
  
  # Saving the plots to a plots file
 # not conditioned plot
