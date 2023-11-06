@@ -48,8 +48,8 @@ conditioned_notconditioned_treatments <- conditioned_diets_rep1_plot + unconditi
  
  # Saving the plots to a plots file
 # not conditioned plot
-ggsave("plots/not_conditioned_plot.png", dpi=300)
+ggsave("plots/unconditioned_diets_rep1_plot.png", dpi=300)
 # a patchwork of male conditioned and not conditioned plot
-ggsave("plots/conditionedandnot_plot.png", dpi=300)
+ggsave("plots/conditioned_notconditioned_treatments", dpi=300)
  
  
