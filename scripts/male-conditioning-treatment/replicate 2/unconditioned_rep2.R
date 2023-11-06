@@ -47,6 +47,9 @@ unconditioned_rep2_plot <- unconditioned_rep2_summary %>%
 ## Testing patchwork of Conditioned and Unconditioned plots together
 conditioned_and_unconditioned_rep2 <- conditioned_diets_2_plot + unconditioned_rep2_plot 
 
+## Testing out patchwork for plot gathering 
+
+
 
 ##  Saving the plot to a plots file
 ggsave("plots/unconditioned_rep2_plot.png", dpi=300)
