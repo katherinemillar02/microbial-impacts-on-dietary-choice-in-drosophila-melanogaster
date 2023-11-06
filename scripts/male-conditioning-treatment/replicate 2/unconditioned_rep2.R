@@ -47,10 +47,42 @@ unconditioned_rep2_plot <- unconditioned_rep2_summary %>%
 ## Testing patchwork of Conditioned and Unconditioned plots together
 conditioned_and_unconditioned_rep2 <- conditioned_diets_2_plot + unconditioned_rep2_plot 
 
-## Testing out patchwork for plot gathering 
+
 
 
 
 ##  Saving the plot to a plots file
 ggsave("plots/unconditioned_rep2_plot.png", dpi=300)
 ggsave("plots/conditioned_and_unconditioned_rep2.png", dpi=300)
+
+
+#### Data Analysis 
+
+# First testing a linear model 
+unconditioned_rep2_lm <- lm(fly_numbers ~  diet, data = unconditioned_rep2_long)
+
+# Assumption Checking of the model 
+performance::check_model(unconditioned_rep2_lm, check = c("qq")) # a bit poor - dots around
+performance::check_model(unconditioned_rep2_lm, check = c("homogeneity")) # not great
+performance::check_model(unconditioned_rep2_lm, check = c("linearity")) # not great
+performance::check_model(unconditioned_rep2_lm, check = c("outliers"))
+
+
+# Trying a generalised linear model
+unconditioned_rep2_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = unconditioned_rep2_long)
+
+
+performance::check_model(unconditioned_rep2_glm, check = c("qq")) # dots seem to match to line better than lm rep 1 and 2
+performance::check_model(unconditioned_rep2_glm, check = c("homogeneity")) # not great either but dots do appear? - line isn't flat
+performance::check_model(unconditioned_rep2_glm, check = c("outliers"))
+
+# glm qq a lot better 
+
+# summary function, shows t test
+summary(unconditioned_rep2_glm)
+
+# using anova 
+anova(unconditioned_rep2_glm)
+
+# emmeans for tukey
+emmeans::emmeans(unconditioned_rep2_glm, pairwise ~ diet)

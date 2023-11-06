@@ -51,5 +51,38 @@ conditioned_notconditioned_treatments <- conditioned_diets_rep1_plot + unconditi
 ggsave("plots/unconditioned_diets_rep1_plot.png", dpi=300)
 # a patchwork of male conditioned and not conditioned plot
 ggsave("plots/conditioned_notconditioned_treatments", dpi=300)
+
+
+#### Data Analysis 
+
+# First testing a linear model 
+unconditioned_rep1_lm <- lm(fly_numbers ~  diet, data = unconditioned_diets_rep1_long)
+
+# Assumption Checking of the model 
+performance::check_model(unconditioned_rep1_lm, check = c("qq")) # a bit poor 
+performance::check_model(unconditioned_rep1_lm, check = c("homogeneity")) # not great
+performance::check_model(unconditioned_rep1_lm, check = c("linearity")) # not great
+performance::check_model(unconditioned_rep1_lm, check = c("outliers"))
+
+
+# Trying a generalised linear model
+unconditioned_rep1_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = unconditioned_diets_rep1_long)
+
+
+performance::check_model(unconditioned_rep1_glm, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(unconditioned_rep1_glm, check = c("homogeneity")) # not great either but dots do appear?
+performance::check_model(unconditioned_rep1_glm, check = c("outliers"))
+
+# similar to lm but glm may be better 
+
+# summary function, shows t test
+summary(unconditioned_rep1_glm)
+
+# using anova 
+anova(unconditioned_rep1_glm)
+
+# emmeans for tukey
+emmeans::emmeans(unconditioned_rep1_glm, pairwise ~ diet)
+
  
  
