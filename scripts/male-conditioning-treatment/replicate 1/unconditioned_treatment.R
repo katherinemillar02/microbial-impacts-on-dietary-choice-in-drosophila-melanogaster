@@ -66,6 +66,10 @@ performance::check_model(unconditioned_rep1_lm, check = c("outliers"))
 
 
 # Trying a generalised linear model
+unconditioned_rep1_glm_01 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = unconditioned_diets_rep1_long)
+summary(unconditioned_rep1_glm_01) # underdispersed 
+
+# quasi for underdispersion but need to check this
 unconditioned_rep1_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = unconditioned_diets_rep1_long)
 
 
@@ -84,5 +88,6 @@ anova(unconditioned_rep1_glm)
 # emmeans for tukey
 emmeans::emmeans(unconditioned_rep1_glm, pairwise ~ diet)
 
- 
+# maybe using lm instead
+emmeans::emmeans(unconditioned_rep1_lm, pairwise ~ diet)
  
