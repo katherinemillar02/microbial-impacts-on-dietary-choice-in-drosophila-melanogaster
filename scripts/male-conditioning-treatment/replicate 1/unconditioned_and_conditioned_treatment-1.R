@@ -71,6 +71,10 @@ performance::check_model(conditioned_and_unconditioned_rep1_lm, check = c("outli
 
 
 # Trying a generalised linear model
+conditioned_and_unconditioned_rep1_glm_01 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = unconditioned_and_conditioned_rep1_long)
+summary(conditioned_and_unconditioned_rep1_glm_01 ) # underdispersed 
+
+# doing quassipoisson for now but i dont know if thats okay
 conditioned_and_unconditioned_rep1_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = unconditioned_and_conditioned_rep1_long)
 
 
