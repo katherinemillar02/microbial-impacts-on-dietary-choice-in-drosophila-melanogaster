@@ -3,6 +3,7 @@ library(tidyverse)
 library(readxl)
 library(patchwork)
 library(dplyr)
+library(betareg)
 
 
 ## Import Data
@@ -165,13 +166,17 @@ unconditioned_and_conditioned_rep1_condition_plot <- unconditioned_and_condition
   theme_classic() 
 
 
+#### visualising the separate variables 
+unconditioned_and_conditioned_rep1_nutrient_plot + unconditioned_and_conditioned_rep1_condition_plot
+
+
 #### Data Analysis of separated variables
 
 
 # First testing a linear model 
 conditioned_and_unconditioned_rep1_separate_lm <- lm(fly_numbers ~  nutrient_composition * condition, data = unconditioned_and_conditioned_rep1_long)
 
-drop1(conditioned_and_unconditioned_rep1_separate_lm, test = "F")
+
 
 
 # Assumption Checking of the model 
@@ -180,13 +185,16 @@ performance::check_model(conditioned_and_unconditioned_rep1_separate_lm , check 
 performance::check_model(conditioned_and_unconditioned_rep1_separate_lm , check = c("linearity")) # not great
 performance::check_model(conditioned_and_unconditioned_rep1_separate_lm , check = c("outliers"))
 
-
+drop1(conditioned_and_unconditioned_rep1_separate_lm, test = "F") ## checking lm incase
 
 # Trying a generalised linear model
+conditioned_and_unconditioned_rep1_separate_glm01 <- glm(fly_numbers ~  nutrient_composition * condition, family = poisson(link = "log"), data = unconditioned_and_conditioned_rep1_long)
+summary(conditioned_and_unconditioned_rep1_separate_glm01)  #underdispersed? 
+
+# using quasi but need rec on what to do when there is underdispersion with count data? 
 conditioned_and_unconditioned_rep1_separate_glm <- glm(fly_numbers ~  nutrient_composition * condition, family = quasipoisson(link = "log"), data = unconditioned_and_conditioned_rep1_long)
 
-drop1(conditioned_and_unconditioned_rep1_separate_glm, test = "F")
-# no interaction effect? 
+
 
 performance::check_model(conditioned_and_unconditioned_rep1_separate_glm, check = c("qq")) # dots seem to match to line better than lm
 performance::check_model(conditioned_and_unconditioned_rep1_separate_glm, check = c("homogeneity")) # not great either but dots do appear?
@@ -194,10 +202,8 @@ performance::check_model(conditioned_and_unconditioned_rep1_separate_glm, check 
 
 # pretty much the same - go with glm
 
-# summary function, shows t test
-summary(conditioned_and_unconditioned_rep1_separate_glm)
 
-# using anova 
-anova(conditioned_and_unconditioned_rep1_separate_glm)
 
+drop1(conditioned_and_unconditioned_rep1_separate_glm, test = "F")
+# no interaction effect? 
 
