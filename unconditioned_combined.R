@@ -38,3 +38,40 @@ unconditioned_combined_plot <- unconditioned_combined_summary  %>%
        y = "Mean +/- S.E. Number of flies per diet patch",
        title = "Unconditioned Diet Patches Combined")+
   theme_classic() 
+
+
+#### Data Analysis 
+
+# First testing a linear model 
+unconditioned_combined_lm <- lm(fly_numbers ~  diet, data = unconditioned_combined_long)
+
+# Assumption Checking of the model 
+performance::check_model(unconditioned_combined_lm, check = c("qq")) # mostly fall along line 
+performance::check_model(unconditioned_combined_lm, check = c("homogeneity")) # not great
+performance::check_model(unconditioned_combined_lm, check = c("linearity")) # not great - nearly flat
+performance::check_model(unconditioned_combined_lm, check = c("outliers"))
+
+
+# Trying a generalised linear model
+unconditioned_combined_glm01 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = unconditioned_combined_long)
+summary(unconditioned_combined_glm01) # overdispersion with poisson
+
+# glm with quasipoisson
+unconditioned_combined_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = unconditioned_combined_long)
+
+# assumption checking
+performance::check_model(unconditioned_combined_glm, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(unconditioned_combined_glm, check = c("homogeneity")) # not flat but better than l,
+performance::check_model(unconditioned_combined_glm, check = c("outliers")) # same as lm? 
+
+
+# glm has better assumption checks 
+
+# summary function, shows t test
+summary(unconditioned_combined_glm)
+
+# using anova 
+anova(unconditioned_combined_glm)
+
+# emmeans for tukey
+emmeans::emmeans(unconditioned_combined_glm, pairwise ~ diet)
