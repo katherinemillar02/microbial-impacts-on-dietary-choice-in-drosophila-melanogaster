@@ -66,6 +66,10 @@ performance::check_model(conditioned_and_unconditioned_rep2_lm, check = c("outli
 
 
 # Trying a generalised linear model
+conditioned_and_unconditioned_rep2_glm_01 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = conditioned_and_unconditioned_diets_2_long)
+summary(conditioned_and_unconditioned_rep2_glm_01) # underdispersed 
+
+# using quasi for now for underdispersion
 conditioned_and_unconditioned_rep2_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = conditioned_and_unconditioned_diets_2_long)
 
 
@@ -178,7 +182,7 @@ performance::check_model(conditioned_and_unconditioned_rep2_separate_lm , check 
 performance::check_model(conditioned_and_unconditioned_rep2_separate_lm , check = c("linearity")) # very straight
 performance::check_model(conditioned_and_unconditioned_rep2_separate_lm , check = c("outliers"))
 
-drop1(conditioned_and_unconditioned_rep2_separate_lm, test = "F") ## checking lm incase
+
 
 # Trying a generalised linear model
 conditioned_and_unconditioned_rep2_separate_glm01 <- glm(fly_numbers ~  nutrient_composition * condition, family = poisson(link = "log"), data = conditioned_and_unconditioned_diets_2_long)
@@ -194,6 +198,6 @@ performance::check_model(conditioned_and_unconditioned_rep1_separate_glm, check 
 performance::check_model(conditioned_and_unconditioned_rep1_separate_glm, check = c("outliers"))
 
 # i think lm is better
-
+drop1(conditioned_and_unconditioned_rep2_separate_lm, test = "F") 
 
 
