@@ -63,9 +63,13 @@ performance::check_model(conditioned_combined_lm, check = c("outliers"))
 
 
 # Trying a generalised linear model
+conditioned_combined_glm01 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = conditioned_diets_combined_long)
+summary(conditioned_combined_glm01) # overdispersion with poisson
+
+# glm with quasipoisson
 conditioned_combined_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = conditioned_diets_combined_long)
 
-
+# assumption checking
 performance::check_model(conditioned_combined_glm, check = c("qq")) # dots seem to match to line better than lm
 performance::check_model(conditioned_combined_glm, check = c("homogeneity")) # not great either but dots do appear?
 performance::check_model(conditioned_combined_glm, check = c("outliers")) # same as lm
