@@ -58,6 +58,9 @@ performance::check_model(conditioned_rep1_lm, check = c("outliers"))
 
 
 # Trying a generalised linear model
+conditioned_rep1_glm_01 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = male_conditioned_diets_long)
+summary(conditioned_rep1_glm_01) # overdispersion 
+# glm with quasipoisson to account for overdispersion 
 conditioned_rep1_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = male_conditioned_diets_long)
 
 
