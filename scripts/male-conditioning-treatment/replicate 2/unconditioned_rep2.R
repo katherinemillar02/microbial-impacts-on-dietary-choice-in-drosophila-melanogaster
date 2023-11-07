@@ -3,7 +3,7 @@ library(tidyverse)
 library(readxl)
 library(patchwork)
 
-
+## Data summaries ----
 ## Import Data
 unconditioned_rep2 <- read_excel("data/male_unconditioned_rep2.xlsx")
 
@@ -19,7 +19,7 @@ unconditioned_rep2_summary <- unconditioned_rep2_long   %>%
             n = n(),
             se = sd/sqrt(n))
 
-## Visualising the data
+## Visualising the data ----
 # creating a boxplot with the data that has been summarised
 unconditioned_rep2_plot <- unconditioned_rep2_summary %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -56,7 +56,7 @@ ggsave("plots/unconditioned_rep2_plot.png", dpi=300)
 ggsave("plots/conditioned_and_unconditioned_rep2.png", dpi=300)
 
 
-#### Data Analysis 
+#### Data Analysis ----
 
 # First testing a linear model 
 unconditioned_rep2_lm <- lm(fly_numbers ~  diet, data = unconditioned_rep2_long)

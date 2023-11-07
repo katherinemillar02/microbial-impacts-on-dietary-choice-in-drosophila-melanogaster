@@ -5,6 +5,7 @@ library(patchwork)
 
 #### CALCULATING THE MEAN AVERAGE 
 
+#### Data upload and summaries ----
 ## Import Data
 conditioned_diets_2 <- read_excel("data/male_conditioned_rep2_mean.xlsx")
 
@@ -23,7 +24,7 @@ conditioned_diets_2_summary <- conditioned_diets_2_long   %>%
             se = sd/sqrt(n))
 
 
-## Visualising the mean average with a bar plot
+## Visualising the data ----
 # creating a boxplot with the data that has been summarised
 conditioned_diets_2_plot <- conditioned_diets_2_summary %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -51,7 +52,7 @@ conditioned_diets_2_plot <- conditioned_diets_2_summary %>%
 ggsave("plots/conditioned_diets_2_plot.png", dpi=300)
 
 
-## Statistical analysis
+## Statistical analysis ----
 # First testing a linear model 
 conditioned_rep2_lm <- lm(fly_numbers ~  diet, data = conditioned_diets_2_long)
 

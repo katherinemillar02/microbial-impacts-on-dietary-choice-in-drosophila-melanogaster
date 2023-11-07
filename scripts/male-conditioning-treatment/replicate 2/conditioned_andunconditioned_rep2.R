@@ -5,6 +5,7 @@ library(patchwork)
 
 #### CALCULATING THE MEAN AVERAGE 
 
+# Data summaries ----
 ## Import Data
 conditioned_and_unconditioned_diets_2 <- read_excel("data/male_conditionedandunconditioned_rep2_mean.xlsx")
 
@@ -23,8 +24,8 @@ conditioned_and_unconditioned_diets_2_summary <- conditioned_and_unconditioned_d
             se = sd/sqrt(n))
 
 
-## Visualising the mean average with a bar plot
-# creating a boxplot with the data that has been summarised
+## Visualising the data ----
+# creating a barplot with the data that has been summarised
 conditioned_and_unconditioned_diets_2_plot <- conditioned_and_unconditioned_diets_2_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
@@ -52,7 +53,7 @@ ggsave("plots/conditioned_and_unconditioned_diets_2_plot.png", dpi=300)
 
 
 
-#### Data Analysis 
+#### Data Analysis ----
 
 
 # First testing a linear model 
@@ -89,13 +90,13 @@ anova(conditioned_and_unconditioned_rep2_glm)
 emmeans::emmeans(conditioned_and_unconditioned_rep2_glm, pairwise ~ diet)
 
 
-## Splitting the data
+## Splitting the data ----
 
-## Splitting the data into variables
+## Splitting the data into variables 
 conditioned_and_unconditioned_diets_2_long$condition <- ifelse(conditioned_and_unconditioned_diets_2_long$diet %in% c("4:1 Conditioned", "1:4 Conditioned"), "Conditioned", "Unconditioned")
 conditioned_and_unconditioned_diets_2_long$nutrient_composition <- ifelse(conditioned_and_unconditioned_diets_2_long$diet %in% c("4:1 Conditioned", "4:1 Unconditioned"), "4:1", "1:4")
 
-## summary of split variables data 
+## Summary of split variables data ----
 
 # nutrient composition
 unconditioned_and_conditioned_rep2_nutrient_summary <- conditioned_and_unconditioned_diets_2_long  %>%  
@@ -115,8 +116,8 @@ unconditioned_and_conditioned_rep2_condition_summary <- conditioned_and_uncondit
             se = sd/sqrt(n))
 
 
-## Visualising the data
-# creating a boxplot with the data that has been summarised
+## Visualising the data split variables ----
+# creating a barplot with the data that has been summarised
 unconditioned_and_conditioned_rep2_nutrient_plot <- unconditioned_and_conditioned_rep2_nutrient_summary  %>% 
   ggplot(aes(x = nutrient_composition, y = mean))+
   geom_bar(stat = "identity",
@@ -139,7 +140,7 @@ unconditioned_and_conditioned_rep2_nutrient_plot <- unconditioned_and_conditione
        title = "Unconditioned and Conditioned Treatment Rep 1")+
   theme_classic() 
 
-# creating a boxplot with the data that has been summarised - condition
+# creating a barplot with the data that has been summarised - condition
 unconditioned_and_conditioned_rep2_condition_plot <- unconditioned_and_conditioned_rep2_condition_summary %>% 
   ggplot(aes(x = condition, y = mean))+
   geom_bar(stat = "identity",
@@ -167,7 +168,7 @@ unconditioned_and_conditioned_rep2_condition_plot <- unconditioned_and_condition
 unconditioned_and_conditioned_rep2_nutrient_plot + unconditioned_and_conditioned_rep2_condition_plot
 
 
-#### Data Analysis of separated variables
+#### Data Analysis of separated variables ----
 
 
 # First testing a linear model 

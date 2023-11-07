@@ -2,6 +2,7 @@
 library(tidyverse)
 library(readxl)
 
+#### Data upload and summaries ----
 ## Import Data
 conditioned_diets_rep1 <- read_excel("data/male_conditioning.xlsx")
 
@@ -17,6 +18,8 @@ male_conditioned_diets_summary <- male_conditioned_diets_long  %>%
             n = n(),
             se = sd/sqrt(n))
 
+
+## Visualising data ----
 ## Visualising the data
 # Creating a boxplot with the data that has been summarised
 conditioned_diets_rep1_plot <- male_conditioned_diets_summary %>% 
@@ -45,7 +48,7 @@ conditioned_diets_rep1_plot <- male_conditioned_diets_summary %>%
 ggsave("plots/conditioned_diets_rep1_plot.png", dpi=300)
 
 
-#### Data Analysis 
+#### Data Analysis ----
 
 # First testing a linear model 
 conditioned_rep1_lm <- lm(fly_numbers ~  diet, data = male_conditioned_diets_long)
