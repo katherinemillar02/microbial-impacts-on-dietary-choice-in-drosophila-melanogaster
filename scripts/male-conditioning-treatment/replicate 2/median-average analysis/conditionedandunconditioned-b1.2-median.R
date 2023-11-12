@@ -32,3 +32,38 @@ conditionedandunconditioned_b1.2_median_plot <- ## Making the data long
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)
+
+
+
+## 
+## Statistical analysis ----
+# First testing a linear model 
+conditionedandunconditioned_b1.2_median_lm <- lm(fly_numbers ~  diet, data = conditionedandunconditioned_b1.2_median_long)
+
+# Assumption Checking of the model 
+performance::check_model(conditionedandunconditioned_b1.2_median_lm, check = c("qq")) # Looks a bit weird.
+performance::check_model(conditionedandunconditioned_b1.2_median_lm, check = c("homogeneity")) # line is not flat.
+performance::check_model(conditionedandunconditioned_b1.2_median_lm, check = c("linearity")) # line is very flat.
+performance::check_model(conditionedandunconditioned_b1.2_median_lm, check = c("outliers"))
+
+
+
+
+# Trying a generalised linear model
+conditionedandunconditioned_b1.2_median_glm  <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = conditionedandunconditioned_b1.2_median_long)
+# would not let me do poisson - but choosing glm
+
+performance::check_model(conditionedandunconditioned_b1.2_median_glm, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(conditionedandunconditioned_b1.2_median_glm, check = c("homogeneity")) # not flat but better
+performance::check_model(conditionedandunconditioned_b1.2_median_glm, check = c("outliers"))
+
+# glm qq better for this repeat
+
+# summary function, shows t test
+summary(conditionedandunconditioned_b1.2_median_glm )
+
+# using anova 
+anova(conditioned_rep2_lm)
+
+# emmeans for tukey analysis 
+emmeans::emmeans(conditionedandunconditioned_b1.2_median_glm,  pairwise ~ diet)
