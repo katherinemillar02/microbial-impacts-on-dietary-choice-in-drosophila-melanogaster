@@ -57,7 +57,7 @@ performance::check_model(conditionedandunconditioned_b1.2_median_glm, check = c(
 performance::check_model(conditionedandunconditioned_b1.2_median_glm, check = c("homogeneity")) # not flat but better
 performance::check_model(conditionedandunconditioned_b1.2_median_glm, check = c("outliers"))
 
-# glm qq better for this repeat
+# glm better
 
 # summary function, shows t test
 summary(conditionedandunconditioned_b1.2_median_glm )
@@ -66,4 +66,4 @@ summary(conditionedandunconditioned_b1.2_median_glm )
 anova(conditioned_rep2_lm)
 
 # emmeans for tukey analysis 
-emmeans::emmeans(conditionedandunconditioned_b1.2_median_glm,  pairwise ~ diet)
+emmeans::emmeans(conditionedandunconditioned_b1.2_median_lm,  pairwise ~ diet)
