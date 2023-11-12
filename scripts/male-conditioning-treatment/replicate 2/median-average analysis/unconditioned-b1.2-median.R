@@ -21,11 +21,48 @@ unconditioned_b1.2_median_plot <- unconditioned_b1.2_median_long %>%
        y = "Median number of flies per diet patch", 
        title = "")+
   theme(legend.position="none")+ 
-  ylim(-0.01,2)+
-  geom_jitter(data =  unconditioned_b1.2_median_long ,
+  ylim(-0.01,6)+
+  geom_jitter(data =  unconditioned_b1.2_median_long,
               aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)
+
+
+
+conditioned_b1.2_median_plot + unconditioned_b1.2_median_plot 
+
+## 
+## Statistical analysis ----
+# First testing a linear model 
+unconditioned__b1.2_median_lm <- lm(fly_numbers ~  diet, data = unconditioned_b1.2_median_long)
+
+# Assumption Checking of the model 
+performance::check_model(unconditioned__b1.2_median_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed.
+performance::check_model(unconditioned__b1.2_median_lm, check = c("homogeneity")) # line is not flat.
+performance::check_model(unconditioned__b1.2_median_lm, check = c("linearity")) # line is very flat.
+performance::check_model(unconditioned__b1.2_median_lm, check = c("outliers"))
+
+
+
+
+# Trying a generalised linear model
+unconditioned__b1.2_median_glm <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = unconditioned_b1.2_median_long)
+# would not let me do poisson - but choosing glm
+
+performance::check_model(unconditioned__b1.2_median_glm, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(unconditioned__b1.2_median_glm, check = c("homogeneity")) # not flat but better
+performance::check_model(unconditioned__b1.2_median_glm, check = c("outliers"))
+
+# glm qq better for this repeat
+
+# summary function, shows t test
+summary(unconditioned__b1.2_median_lm)
+
+# using anova 
+anova(conditioned_rep2_lm)
+
+# emmeans for tukey analysis 
+emmeans::emmeans(unconditioned__b1.2_median_lm, pairwise ~ diet)
