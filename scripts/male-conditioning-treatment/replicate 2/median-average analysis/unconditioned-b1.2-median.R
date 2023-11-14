@@ -16,10 +16,10 @@ unconditioned_b1.2_median_plot <- unconditioned_b1.2_median_long %>%
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_manual(values=c("#1A85FF", "#D41159"))+
+  scale_fill_brewer(palette = "Set1")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "")+
+       title = "Unconditioned Treatment")+
   theme(legend.position="none")+ 
   ylim(-0.01,6)+
   geom_jitter(data =  unconditioned_b1.2_median_long,
@@ -33,7 +33,7 @@ unconditioned_b1.2_median_plot <- unconditioned_b1.2_median_long %>%
 
 
 conditioned_b1.2_median_plot + unconditioned_b1.2_median_plot 
-
+ colorBlindness::cvdPlot()
 ## 
 ## Statistical analysis ----
 # First testing a linear model 
