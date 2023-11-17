@@ -19,7 +19,7 @@ unconditioned_b1.2_median_plot <- unconditioned_b1.2_median_long %>%
   scale_fill_brewer(palette = "Set1")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "Unconditioned Treatment")+
+       title = "Male Unconditioned Treatment")+
   theme(legend.position="none")+ 
   ylim(-0.01,6)+
   geom_jitter(data =  unconditioned_b1.2_median_long,

@@ -19,7 +19,7 @@ conditioned_b1.2_median_plot <- conditioned_b1.2_median_long  %>%
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "Conditioned Treatment")+
+       title = " Male Conditioned Treatment")+
   theme(legend.position="none")+ 
   ylim(0.01,6)+
   geom_jitter(data =  conditioned_b1.2_median_long,
