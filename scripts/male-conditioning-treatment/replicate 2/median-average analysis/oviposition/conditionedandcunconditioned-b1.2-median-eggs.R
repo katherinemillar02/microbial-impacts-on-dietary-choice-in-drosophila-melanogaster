@@ -14,6 +14,7 @@ conditionedunconditioned_b1.2_median_egg_long  <- conditionedunconditioned_b1.2_
   pivot_longer(cols = ("1:4 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 ## Median boxplot --
+
 conditionedunconditioned_b1.2_median_egg_plot <- conditionedunconditioned_b1.2_median_egg_long  %>% 
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
