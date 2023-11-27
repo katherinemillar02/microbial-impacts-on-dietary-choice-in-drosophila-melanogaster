@@ -37,4 +37,39 @@ conditioned_b1.2_median_egg_plot <- conditioned_b1.2_median_egg_long  %>%
 conditioned_b1.2_median_egg_plot  + unconditioned_b1.2_median_egg_plot
 
 
+#### Data Analysis ----
+# First testing a linear model 
+conditioned_b1.2_egg_lm <- lm(egg_numbers ~  diet, data = conditioned_b1.2_median_egg_long)
+
+# Assumption Checking of the model 
+performance::check_model(conditioned_b1.2_egg_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed. Line is straight
+performance::check_model(conditioned_b1.2_egg_lm, check = c("homogeneity")) # line is not flat.
+performance::check_model(conditioned_b1.2_egg_lm, check = c("linearity")) # line is very much not flat.
+performance::check_model(conditioned_b1.2_egg_lm, check = c("outliers"))
+
+
+
+# Trying a generalised linear model
+conditioned_b1.2_egg_glm  <- glm(egg_numbers ~  diet, family = poisson(link = "log"), data = conditioned_b1.2_median_egg_long)
+summary(conditioned_b1.2_egg_glm) ## underdispersed
+
+performance::check_model(conditioned_b1.2_egg_glm, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(conditioned_b1.2_egg_glm, check = c("homogeneity")) # not flat but better
+performance::check_model(conditioned_b1.2_egg_glm , check = c("outliers"))
+
+# lm probs better but neither models are great
+
+# summary function, shows t test
+summary(conditioned_b1.2_egg_glm)
+
+# using anova 
+anova(conditioned_b1.2_egg_glm)
+
+# emmeans for tukey analysis 
+emmeans::emmeans(conditioned_b1.2_egg_glm, pairwise ~ diet)
+
+
+
+
+
 
