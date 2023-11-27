@@ -15,7 +15,15 @@ This project studies the effects of sex-specific fly contaminated diets and how 
 
 The experiments as part of this project: 
 
+Diets Conditioned with __males__
 First project experiment:         
 (i) conditioned treatment (4:1 C + 1:4 C)     
 (ii) conditioned and unconditioned treatment (4:1 C, 1:4 C, 4:1 UC, 1:4 UC)      
 (iii) unconditioned treatment (4:1 UC + 1:4 UC)
+
+
+Second project experiment:           
+(i) 4:1 conditioned and unconditioned treatment (4:1 C + 4:1 UC)          
+(ii) 1:4 conditioned and unconditioned treatment (1:4 C + 1:4 UC)     
+(iii) 1:4 and 4:1 conditioned and unconditioned treatment (4:1 C, 1:4 C, 4:1 UC,1:4 UC)     
+
