@@ -2,9 +2,10 @@
 
 This is a GitHub Repository for my Masters of Science by Research Project. 
 
-My research project is aimed at researching the effects of diets which have previously had flies on them, and how this influences dietary choice through leaving behind gut microbes, pheromones, and the digested effects of the diet. 
+My research project is aimed at researching the effects of diets which have previously had flies on them, and how this influences dietary choice through leaving behind gut microbes, pheromones, and the effects of diets which have been digested. 
 
-<img title="droso pic" alt="drosopAlt text" src="/images/flycondition.png" width=450 height=200>
+<img title="droso pic" alt="drosopAlt text" src="/images/flycondition.png" width=450 height=200>   
+
 *__Figure 1__: Schematic of the ideas associated with the experimental designs: This project studies the effects of sex-specific fly contaminated diets and how they may leave behind*
 
 This project studies the effects of sex-specific fly contaminated diets and how they may leave behind      
