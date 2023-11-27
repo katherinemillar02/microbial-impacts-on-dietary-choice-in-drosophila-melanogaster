@@ -35,6 +35,8 @@ egg_analysis_combined_lm_2 <- lm(egg_numbers ~  diet : treatment, data = egg_ana
 
 egg_analysis_sig <- lm(egg_numbers ~ treatment, data = egg_analysis_2)
 
+emmeans::emmeans(egg_analysis_sig, pairwise ~ treatment)
+
 drop1(egg_analysis_sig , test = "F")
 
 # Assumption Checking of the model 
