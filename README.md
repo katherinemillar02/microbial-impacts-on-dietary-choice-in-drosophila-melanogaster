@@ -1,7 +1,15 @@
-# Microbial impacts on dietary choice in *Drosophila melanogaster*
+# The effects of fly contaminated diets on dietary choice in mated female *Drosophila melanogaster*
 
-This is a GitHub Repo for my Masters of Science by Research Product. 
+This is a GitHub Repository for my Masters of Science by Research Project. 
 
-Aimed at researching the effects of diets which have had flies previously on them, and how this influences dietary choice through leaving behind gut microbes, pheromones, and the digest effects of the diet. 
+My research project is aimed at researching the effects of diets which have previously had flies on them, and how this influences dietary choice through leaving behind gut microbes, pheromones, and the digested effects of the diet. 
 
 <img title="droso pic" alt="drosopAlt text" src="/images/flycondition.png" width=450 height=200>
+__*Figure 1*__ *Schematic of the ideas associated with the experimental designs*
+
+This project studies the effects of sex-specific fly contaminated diets and how they may leave behind
+- Microbes (Acetobacter, Lactobacillus)
+- Pheromones (cVA, CHs)
+- Change digestive texture of diet
+
+
