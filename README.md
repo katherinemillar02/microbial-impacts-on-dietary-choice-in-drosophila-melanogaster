@@ -6,7 +6,7 @@ My research project is aimed at researching the effects of diets which have prev
 
 <img title="droso pic" alt="drosopAlt text" src="/images/flycondition.png" width=450 height=200>   
 
-*__Figure 1__: Schematic of the ideas associated with the experimental designs: This project studies the effects of sex-specific fly contaminated diets and how they may leave behind*
+*__Figure 1: Schematic of the ideas associated with the experimental designs__: This project studies the effects of sex-specific fly contaminated diets and how they may leave behind*
 
 This project studies the effects of sex-specific fly contaminated diets and how they may leave behind      
 - Microbes (Acetobacter, Lactobacillus)
