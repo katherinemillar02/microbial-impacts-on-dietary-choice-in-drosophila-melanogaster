@@ -33,7 +33,9 @@ egg_analysis_plot <- egg_analysis_2  %>%
 # First testing a linear model 
 egg_analysis_combined_lm_2 <- lm(egg_numbers ~  diet : treatment, data = egg_analysis_2)
 
-drop1(egg_analysis_combined_lm_2, test = "F")
+egg_analysis_sig <- lm(egg_numbers ~ treatment, data = egg_analysis_2)
+
+drop1(egg_analysis_sig , test = "F")
 
 # Assumption Checking of the model 
 performance::check_model(egg_analysis_combined_lm_2, check = c("qq")) # I think qqplot looks okay, few dots dispersed. Line is straightperformance::check_model(egg_analysis_combined_lm, check = c("homogeneity")) # line is not flat.
