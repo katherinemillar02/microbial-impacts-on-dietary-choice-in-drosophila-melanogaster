@@ -29,3 +29,40 @@ conduncond_b2_eggs_plot <- conduncond_b2_eggs_long %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)
+
+
+#### Data Analysis ----
+# First testing a linear model 
+cond_uncond_b2_egg_lm <- lm(egg_numbers ~  diet, data = conduncond_b2_eggs_long)
+
+# Assumption Checking of the model 
+performance::check_model(cond_uncond_b2_egg_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed. Line is straight
+performance::check_model(cond_uncond_b2_egg_lm, check = c("homogeneity")) # line is not flat.
+performance::check_model(cond_uncond_b2_egg_lm, check = c("linearity")) # line is very much not flat.
+performance::check_model(cond_uncond_b2_egg_lm, check = c("outliers"))
+
+## mostly looks okay
+
+# Trying a generalised linear model
+cond_uncond_b2_egg_glm <- glm(egg_numbers ~  diet, family = poisson(link = "log"), conduncond_b2_eggs_long)
+summary(cond_uncond_b2_egg_glm) ## underdispersed ?? 
+
+## Doing glm for now
+cond_uncond_b2_egg_glm_2 <- glm(egg_numbers ~  diet, family = quasipoisson(link = "log"), conduncond_b2_eggs_long)
+
+
+performance::check_model(cond_uncond_b2_egg_glm_2, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(cond_uncond_b2_egg_glm_2 , check = c("homogeneity")) # not flat but better
+performance::check_model(cond_uncond_b2_egg_glm_2 , check = c("outliers"))
+
+# glm probs looks better 
+
+# summary function, shows t test
+summary(cond_uncond_b2_egg_glm_2)
+
+# using anova 
+anova(cond_uncond_b2_egg_glm_2)
+
+# emmeans for tukey analysis 
+emmeans::emmeans(cond_uncond_b2_egg_glm_2, pairwise ~ diet)
+
