@@ -18,9 +18,8 @@ unconditioned_b2_eggs_plot <- unconditioned_b2_eggs_long %>%
   theme_classic()+
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
-       
        y = "Median number of eggs per diet patch", 
-       title = " Male Conditioned Treatment")+
+       title = " Male Unconditioned Treatment")+
   theme(legend.position="none")+ 
   ylim(-0.01,200)+
   geom_jitter(data =  unconditioned_b2_eggs_long,
