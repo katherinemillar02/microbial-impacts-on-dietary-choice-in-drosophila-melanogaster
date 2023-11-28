@@ -15,7 +15,7 @@ egg_analysis_plot <- egg_analysis  %>%
   scale_fill_brewer(palette = "Set1")+
   labs(x = "Diet Condition",
        y = "Median number of eggs per diet patch", 
-       title = "COMBINED DATA")+
+       title = "Across Conditioned and Unconditioned Egg count")+
   theme(legend.position="none")+
   ylim(0,200)+
   geom_jitter(data =  egg_analysis, 
@@ -33,7 +33,10 @@ egg_analysis_plot <- egg_analysis  %>%
 # First testing a linear model 
 egg_analysis_combined_lm <- lm(egg_numbers ~  diet : treatment, data = egg_analysis)
 
-drop1(egg_analysis_combined_lm, test = "F")
+
+egg_analysis_sig_1 <- lm(egg_numbers ~ treatment, data = egg_analysis)
+
+drop1(egg_analysis_sig_1, test = "F")
 
 # Assumption Checking of the model 
 performance::check_model(egg_analysis_combined_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed. Line is straightperformance::check_model(egg_analysis_combined_lm, check = c("homogeneity")) # line is not flat.
