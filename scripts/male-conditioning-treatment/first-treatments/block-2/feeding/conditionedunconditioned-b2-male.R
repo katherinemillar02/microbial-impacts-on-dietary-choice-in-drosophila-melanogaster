@@ -29,3 +29,44 @@ conditionedunconditioned_b2_plot <- conditionedunconditioned_b2_long %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)
+
+
+## 
+## Statistical analysis ----
+# First testing a linear model 
+conduncond_b2_lm <- lm(fly_numbers ~  diet, data = conditionedunconditioned_b2_long)
+
+# Assumption Checking of the model 
+performance::check_model(conduncond_b2_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed.
+performance::check_model(conduncond_b2_lm, check = c("homogeneity")) # line is not flat.
+performance::check_model(conduncond_b2_lm, check = c("linearity")) # line is very flat.
+performance::check_model(conduncond_b2_lm, check = c("outliers"))
+
+## models actually look okay
+
+
+# Trying a generalised linear model
+conduncond_b2_glm  <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = conditionedunconditioned_b2_long)
+summary(conduncond_b2_glm) #underdispersed
+
+
+
+## doing  quasipoisson for now
+conduncond_b2_glm_2  <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = conditionedunconditioned_b2_long)
+
+
+
+performance::check_model(conduncond_b2_glm_2, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(conduncond_b2_glm_2, check = c("homogeneity")) # not flat but better
+performance::check_model(conduncond_b2_glm_2, check = c("outliers"))
+
+# glm looks better
+
+# summary function, shows t test
+summary(conduncond_b2_glm_2)
+
+# using anova 
+anova(conduncond_b2_glm_2)
+
+# emmeans for tukey analysis 
+emmeans::emmeans(conduncond_b2_glm_2, pairwise ~ diet)
