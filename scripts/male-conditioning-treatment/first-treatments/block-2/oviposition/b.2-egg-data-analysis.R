@@ -8,14 +8,14 @@ egg_analysis_uncon_2 <- unconditioned_b2_eggs_long %>% mutate(treatment = "uncon
 egg_analysis_2 <- rbind(egg_analysis_con_2, egg_analysis_uncon_2)
 
 ## Data visualising for combined egg data 
-egg_analysis_plot <- egg_analysis_2  %>% 
+egg_analysis_plot_2 <- egg_analysis_2  %>% 
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
   scale_fill_brewer(palette = "Set1")+
   labs(x = "Diet Condition",
        y = "Median number of eggs per diet patch", 
-       title = "COMBINED DATA")+
+       title = "Across Conditioned and Unconditioned Plates - B2")+
   theme(legend.position="none")+
   ylim(0,200)+
   geom_jitter(data =  egg_analysis_2, 
