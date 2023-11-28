@@ -63,7 +63,7 @@ performance::check_model(unconditioned_b2_glm_2, check = c("qq")) # dots seem to
 performance::check_model(unconditioned_b2_glm_2, check = c("homogeneity")) # not flat but better
 performance::check_model(unconditioned_b2_glm_2, check = c("outliers"))
 
-# glm looks better
+# glm looks better? 
 
 # summary function, shows t test
 summary(unconditioned_b2_glm_2)
