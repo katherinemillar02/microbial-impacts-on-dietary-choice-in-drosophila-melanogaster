@@ -60,7 +60,7 @@ summary(feeding_analysis_2_glm) # underdispersed so using quaispoisson?
 feeding_analysis_2_glm  <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = feeding_analysis_2)
 
 
-
+#### Assumption Checking ####
 performance::check_model(feeding_analysis_2_glm, check = c("qq")) # dots seem to match to line better than lm
 performance::check_model(feeding_analysis_2_glm, check = c("homogeneity")) # not flat but better
 performance::check_model(feeding_analysis_2_glm, check = c("outliers"))
