@@ -20,7 +20,7 @@ conditioned_b1.1_egg_plot <- conditioned_b1.1_egg_long %>%
        y = "Median number of eggs per diet patch", 
        title = "Male Conditioned Treatment Eggs 1.1")+
   theme(legend.position="none")+
-  ylim(0,200)+
+  ylim(0,150)+
   geom_jitter(data =  conditioned_b1.1_egg_long, 
               aes(x = diet,
                   y = egg_numbers),
