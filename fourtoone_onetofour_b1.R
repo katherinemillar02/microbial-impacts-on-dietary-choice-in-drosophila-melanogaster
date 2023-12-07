@@ -14,14 +14,14 @@ onetofour_fourtoone_b1_long <- onetofour_fourtoone_b1  %>%
 ## Median boxplot --
 onetofour_fourtoone_b1_plot <- onetofour_fourtoone_b1_long  %>% 
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
-  geom_boxplot()+
+  geom_boxplot(aes(x = diet, y = fly_numbers, fill = diet))+
   theme_classic()+
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
        title = " Male 1:4 Treatment")+
   theme(legend.position="none")+ 
-  ylim(-0.01,5)+
+  ylim(-0,4)+
   geom_jitter(data =  onetofour_fourtoone_b1_long,
               aes(x = diet,
                   y = fly_numbers),
@@ -34,34 +34,34 @@ onetofour_fourtoone_b1_plot <- onetofour_fourtoone_b1_long  %>%
 ## 
 ## Statistical analysis ----
 # First testing a linear model 
-conditioned__b1.2_median_lm <- lm(fly_numbers ~  diet, data = conditioned_b1.2_median_long)
+onetofour_fourtoone_b1_lm <- lm(fly_numbers ~  diet, data = onetofour_fourtoone_b1_long)
 
 # Assumption Checking of the model 
-performance::check_model(conditioned__b1.2_median_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed.
-performance::check_model(conditioned__b1.2_median_lm, check = c("homogeneity")) # line is not flat.
-performance::check_model(conditioned__b1.2_median_lm, check = c("linearity")) # line is very flat.
-performance::check_model(conditioned__b1.2_median_lm, check = c("outliers"))
+performance::check_model(onetofour_fourtoone_b1_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed.
+performance::check_model(onetofour_fourtoone_b1_lm, check = c("homogeneity")) # line is not flat.
+performance::check_model(onetofour_fourtoone_b1_lm, check = c("linearity")) # line is very flat.
+performance::check_model(onetofour_fourtoone_b1_lm, check = c("outliers"))
 
 
 
 
 # Trying a generalised linear model
-conditioned__b1.2_median_glm  <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = conditioned_b1.2_median_long)
+onetofour_fourtoone_b1_glm_1 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = onetofour_fourtoone_b1_long)
 # would not let me do poisson - but choosing glm
 
-performance::check_model(conditioned__b1.2_median_glm , check = c("qq")) # dots seem to match to line better than lm
-performance::check_model(conditioned__b1.2_median_glm , check = c("homogeneity")) # not flat but better
-performance::check_model(conditioned__b1.2_median_glm , check = c("outliers"))
+performance::check_model(onetofour_fourtoone_b1_glm_1, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(onetofour_fourtoone_b1_glm_1, check = c("homogeneity")) # not flat but better
+performance::check_model(onetofour_fourtoone_b1_glm_1, check = c("outliers"))
 
-# glm qq better for this repeat
+# lm may be better
 
 # summary function, shows t test
-summary(conditioned_rep2_lm)
+summary(onetofour_fourtoone_b1_lm)
 
 # using anova 
-anova(conditioned_rep2_lm)
+anova(onetofour_fourtoone_b1_lm)
 
 # emmeans for tukey analysis 
-emmeans::emmeans(conditioned__b1.2_median_glm, pairwise ~ diet)
+emmeans::emmeans(onetofour_fourtoone_b1_lm, pairwise ~ diet)
 
 
