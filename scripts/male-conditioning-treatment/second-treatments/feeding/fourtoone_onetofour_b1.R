@@ -41,9 +41,10 @@ oonetofour_fourtoone_b1_plot <- oonetofour_fourtoone_b1_summary %>%
   theme_classic()+
   theme(legend.position = "none")
 
-## 
-## Statistical analysis ----
-# First testing a linear model 
+## ## ## ## ## ## ## ## ## ## ## 
+## Statistical analysis ----## ## ## 
+# First testing a linear model ## ## ## 
+## ## ## ## ## ## ## ## ## ## ## 
 onetofour_fourtoone_b1_lm <- lm(fly_numbers ~  diet, data = onetofour_fourtoone_b1_long)
 
 # Assumption Checking of the model 
@@ -52,11 +53,12 @@ performance::check_model(onetofour_fourtoone_b1_lm, check = c("homogeneity")) # 
 performance::check_model(onetofour_fourtoone_b1_lm, check = c("linearity")) # line is very flat.
 performance::check_model(onetofour_fourtoone_b1_lm, check = c("outliers"))
 
+## lm looks good?
 
 
 
 # Trying a generalised linear model
-onetofour_fourtoone_b1_glm_1 <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = onetofour_fourtoone_b1_long)
+onetofour_fourtoone_b1_glm_1 <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = onetofour_fourtoone_b1_long)
 # would not let me do poisson - but choosing glm
 
 performance::check_model(onetofour_fourtoone_b1_glm_1, check = c("qq")) # dots seem to match to line better than lm
