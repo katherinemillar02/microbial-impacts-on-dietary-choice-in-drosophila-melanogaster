@@ -50,7 +50,7 @@ one_to_four_b1_plot <- one_to_four_b1_summary  %>%
 onetofour_b1_lm <- lm(fly_numbers ~  diet, data = one_to_four_b1_long)
 
 # Assumption Checking of the model 
-performance::check_model(onetofour_b1_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed.
+performance::check_model(onetofour_b1_lm, check = c("qq")) # qq look ok
 performance::check_model(onetofour_b1_lm, check = c("homogeneity")) # line is not flat.
 performance::check_model(onetofour_b1_lm, check = c("linearity")) # line is very flat.
 performance::check_model(onetofour_b1_lm, check = c("outliers"))
@@ -68,15 +68,15 @@ performance::check_model(onetofour_b1_glm_2, check = c("qq")) # dots seem to mat
 performance::check_model(onetofour_b1_glm_2, check = c("homogeneity")) # not flat but better
 performance::check_model(onetofour_b1_glm_2, check = c("outliers"))
 
-# lm may be better
+# glm may be better
 
 # summary function, shows t test
-summary(onetofour_b1_lm)
+summary(onetofour_b1_glm_2)
 
 # using anova 
-anova(onetofour_b1_lm)
+anova(onetofour_b1_glm_2)
 
 # emmeans for tukey analysis 
-emmeans::emmeans(onetofour_b1_lm, pairwise ~ diet)
+emmeans::emmeans(onetofour_b1_glm_2, pairwise ~ diet)
 
 
