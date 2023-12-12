@@ -5,31 +5,41 @@ library(patchwork)
 library(colorBlindness)
 
 #### Upload data
-onetofour_fourtoone_b1 <- read_excel("data/4-1_1-4_mc_.xlsx")
+onetofour_fourtoone_b1 <- read_excel("data/t2_4-1_1-4_mean.xlsx")
 
 ## Making the data long 
 onetofour_fourtoone_b1_long <- onetofour_fourtoone_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
-## Median boxplot --
-onetofour_fourtoone_b1_plot <- onetofour_fourtoone_b1_long  %>% 
-  ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
-  geom_boxplot(aes(x = diet, y = fly_numbers, fill = diet))+
-  theme_classic()+
+
+oonetofour_fourtoone_b1_summary <- onetofour_fourtoone_b1_long %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+oonetofour_fourtoone_b1_plot <- oonetofour_fourtoone_b1_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity", aes(fill=diet))+
   scale_fill_brewer(palette = "Set2")+
-  labs(x = "Diet Condition",
-       y = "Median number of flies per diet patch", 
-       title = " Male 1:4 Treatment")+
-  theme(legend.position="none")+ 
-  ylim(-0,4)+
-  geom_jitter(data =  onetofour_fourtoone_b1_long,
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "black",
+                width = 0.2)+
+  geom_jitter(data = onetofour_fourtoone_b1_long ,
               aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
               colour = "#3a3c3d",
               width = 0.2,
-              shape = 21)
-
+              shape = 21)+
+  ylim(0.0, 4)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "4:1 and 1:4 Diets - Feeding")+
+  theme_classic()+
+  theme(legend.position = "none")
 
 ## 
 ## Statistical analysis ----
