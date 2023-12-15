@@ -18,8 +18,8 @@ one_to_four_oviposition_b1_plot <- one_to_four_oviposition_b1_long  %>%
   theme_classic()+
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
-       y = "Median number of flies per diet patch", 
-       title = " Male 1:4 Treatment")+
+       y = "Number of eggs per diet patch", 
+       title = "1:4 Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,100)+
   geom_jitter(data =  one_to_four_oviposition_b1_long,

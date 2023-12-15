@@ -39,10 +39,7 @@ feeding_analysis_sig_2 <- lm(fly_numbers ~ treatment, data =  feeding_analysis_2
 ## looking for sig across treatments for feeding number
 drop1(feeding_analysis_sig_2, test = "F")
 
-
-
 ## trying out a linear model
-
 feeding_analysis_2_lm <- lm(fly_numbers ~ diet, data = feeding_analysis_2)
 
 # Assumption Checking of the model 

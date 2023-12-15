@@ -24,13 +24,13 @@ one_to_four_b1_plot <- one_to_four_b1_summary  %>%
   geom_bar(stat = "identity", aes(fill=diet))+
   scale_fill_brewer(palette = "Set2")+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "black",
                 width = 0.2)+
   geom_jitter(data = one_to_four_b1_long,
               aes(x = diet,
                   y = fly_numbers),
-              fill = "skyblue",
-              colour = "#3a3c3d",
+              fill = "black",
+              colour = "skyblue",
               width = 0.2,
               shape = 21)+
   ylim(0.0, 1.5)+

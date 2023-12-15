@@ -19,7 +19,7 @@ four_to_one_b1_plot <- four_to_one_b1_long  %>%
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = " Male 4:1 Treatment")+
+       title = "4:1 Diets")+
   theme(legend.position="none")+ 
   ylim(-0.01,7)+
   geom_jitter(data =  four_to_one_b1_long,

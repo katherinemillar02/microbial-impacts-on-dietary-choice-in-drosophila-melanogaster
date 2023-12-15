@@ -12,8 +12,8 @@ onetofour_fourtoone_oviposition_b1_long <- onetofour_fourtoone_oviposition_b1  %
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 ## Median boxplot --
-## Making the data long 
-onetofour_fourtoone_oviposition_b1_plot <- ## Making the data long 
+
+onetofour_fourtoone_oviposition_b1_plot <- 
   onetofour_fourtoone_oviposition_b1_long  %>% 
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
@@ -21,7 +21,7 @@ onetofour_fourtoone_oviposition_b1_plot <- ## Making the data long
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = " Male 1:4 Treatment")+
+       title = "1:4 and 4:1 Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,100)+
   geom_jitter(data =  ## Making the data long 

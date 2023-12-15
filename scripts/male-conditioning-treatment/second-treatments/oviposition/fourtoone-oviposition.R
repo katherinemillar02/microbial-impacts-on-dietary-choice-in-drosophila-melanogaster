@@ -12,7 +12,7 @@ four_to_one_oviposition_b1_long <- four_to_one_oviposition_b1  %>%
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 ## Making the data long 
-four_to_one_oviposition_b1_plot <- ## Making the data long 
+four_to_one_oviposition_b1_plot <- 
   four_to_one_oviposition_b1_long  %>% 
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
@@ -20,7 +20,7 @@ four_to_one_oviposition_b1_plot <- ## Making the data long
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Number of eggs per diet patch", 
-       title = " Male 4:1 Treatment")+
+       title = "4:1 Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,100)+
   geom_jitter(data =  ## Making the data long 
