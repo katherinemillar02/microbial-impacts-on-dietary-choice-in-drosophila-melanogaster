@@ -39,7 +39,7 @@ drop1(experiment_t1_sig, test = "F")
 ## no sig between the two so can use?
 
 ## trying out a linear model
-t1_feeding_lm <- lm(fly_numbers ~ diet, data = male_t1_bind_conditioned)
+t1_feeding_lm <- lm(fly_numbers ~ diet + experiment, data = male_t1_bind_conditioned)
 
 # Assumption Checking of the model 
 performance::check_model(t1_feeding_lm, check = c("qq")) # I think qqplot looks okay, few dots dispersed. Line is straightperformance::check_model(egg_analysis_combined_lm, check = c("homogeneity")) # line is not flat.
