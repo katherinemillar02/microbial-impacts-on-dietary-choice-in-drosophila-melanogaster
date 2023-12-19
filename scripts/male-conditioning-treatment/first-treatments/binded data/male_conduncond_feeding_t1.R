@@ -62,7 +62,6 @@ performance::check_model(t1_feeding_glm_2, check = c("homogeneity")) # not flat 
 performance::check_model(t1_feeding_glm_2, check = c("outliers"))
 
 # lm looks better
-
 # summary function, shows t test
 summary(t1_feeding_lm)
 
