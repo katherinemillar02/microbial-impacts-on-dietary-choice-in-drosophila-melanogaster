@@ -1,4 +1,4 @@
-
+#### NEED TO FIX THIS SCRIPT SO MEDIAN IS INCLUDED IN BLOCK 1 
 
 
 # Four to One and One to Four 
@@ -9,7 +9,7 @@ fourtoone_onetofour_t2_bind_1 <- onetofour_fourtoone_b1_long  %>% mutate(experim
 fourtoone_onetofour_t2_bind_2 <- fourtoone_onetofour_b2_long  %>% mutate(experiment = "two")
 
 ## binding the data
-male_t2_bind_conditioned_4to1_1to4 <- rbind(fourtoone_onetofour_t2_bind_1, fourtoone_onetofour_t2_bind_2)
+male_t2_bind_conditioned_4to1_1to4 <- rbind(fourtoone_onetofour_t2_bind_1 , fourtoone_onetofour_t2_bind_2)
 
 male_t2_bind_conditioned_4to1_1to4_plot  <- 
   male_t2_bind_conditioned_4to1_1to4   %>% 
@@ -35,11 +35,11 @@ male_t2_bind_conditioned_4to1_1to4_plot  <-
 ## 
 #### Data Analysis ----
 # First testing a linear model 
-experiment_t2_sig_fourone_onetofour <- lm(fly_numbers ~ diet + experiment, data = male_t2_bind_conditioned_4to1_1to4)
+experiment_t2_sig_fourone_onetofour <- lm(fly_numbers ~ experiment, data = male_t2_bind_conditioned_4to1_1to4 )
 
 ## looking for sig across treatments for feeding number
 drop1(experiment_t2_sig_fourone_onetofour, test = "F")
-## no sig between the two so can use?
+
 
 ## trying out a linear model
 t2_feeding_lm_fourone_onefour <- lm(fly_numbers ~ diet, data = male_t2_bind_conditioned_4to1_1to4)
