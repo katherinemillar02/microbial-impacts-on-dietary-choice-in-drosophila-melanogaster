@@ -6,13 +6,13 @@
 # male binded 
 # adding a variable 
 fourtoone_onetofour_t2_bind_1 <- onetofour_fourtoone_b1_long  %>% mutate(experiment = "one")
-fourtoone_onetofour_t2_bind_1 <- fourtoone_onetofour_b2_long %>% mutate(experiment = "two")
+fourtoone_onetofour_t2_bind_2 <- fourtoone_onetofour_b2_long  %>% mutate(experiment = "two")
 
 ## binding the data
-male_t2_bind_conditioned_4to1_1to4 <- rbind(fourtoone_onetofour_t2_bind_1, fourtoone_onetofour_t2_bind_1)
+male_t2_bind_conditioned_4to1_1to4 <- rbind(fourtoone_onetofour_t2_bind_1, fourtoone_onetofour_t2_bind_2)
 
 male_t2_bind_conditioned_4to1_1to4_plot  <- 
-  male_t2_bind_conditioned_4to1_1to4  %>% 
+  male_t2_bind_conditioned_4to1_1to4   %>% 
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
@@ -47,7 +47,7 @@ t2_feeding_lm_fourone_onefour <- lm(fly_numbers ~ diet, data = male_t2_bind_cond
 # Assumption Checking of the model 
 performance::check_model(t2_feeding_lm_fourone_onefour , check = c("qq")) # I think qqplot looks okay, few dots dispersed. Line is straightperformance::check_model(egg_analysis_combined_lm, check = c("homogeneity")) # line is not flat.
 performance::check_model(t2_feeding_lm_fourone_onefour , check = c("linearity")) # line is very much not flat.
-performance::check_model(t2_feeding_lm_fob  check = c("homogeneity"))
+
 performance::check_model(t2_feeding_lm_fourone, check = c("outliers"))
 
 # doesn't look awful
