@@ -37,7 +37,7 @@ four_to_one_oviposition_b1_plot <-
 ## Statistical analysis ----
 # First testing a linear model 
 ## Making the data long 
-four_to_one_oviposition_b1_lm <- lm(egg_numbers ~  diet, data = ## Making the data long 
+four_to_one_oviposition_b1_lm <- lm(egg_numbers ~  diet, data = 
                                  four_to_one_oviposition_b1_long)
 
 # Assumption Checking of the model 
