@@ -54,19 +54,19 @@ onetofour_oviposition_b2_glm_2  <- glm(egg_numbers ~  diet, family = quasipoisso
 
 
 performance::check_model(onetofour_oviposition_b2_glm_2 , check = c("qq")) # dots seem to match to line better than lm
-performance::check_model(fourtoone_onetofour_b2_glm_2 , check = c("homogeneity")) # not flat but better
-performance::check_model(fourtoone_onetofour_b2_glm_2 , check = c("outliers"))
+performance::check_model(onetofour_oviposition_b2_glm_2 , check = c("homogeneity")) # not flat but better
+performance::check_model(onetofour_oviposition_b2_glm_2 , check = c("outliers"))
 
 # glm looks a bit worse than lm at least for homogeneity 
 # so choosing lm
 
 # summary function, shows t test
-summary(fourtoone_onetofour_b2_lm)
+summary(onetofour_oviposition_b2_lm)
 
 # using anova 
-anova(fourtoone_onetofour_b2_lm)
+anova(onetofour_oviposition_b2_lm)
 
 # emmeans for tukey analysis 
-emmeans::emmeans(fourtoone_onetofour_b2_lm, pairwise ~ diet)
-## sig difference - conditioned more preferred 
+emmeans::emmeans(onetofour_oviposition_b2_lm, pairwise ~ diet)
+## not quite significant
 
