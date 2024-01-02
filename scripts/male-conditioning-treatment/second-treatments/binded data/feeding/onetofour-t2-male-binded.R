@@ -1,6 +1,6 @@
 
 # adding a variable 
-onetofour_t2_bind_1 <- one_to_four_b1_long %>% mutate(experiment = "one")
+onetofour_t2_bind_1 <- one_to_four_b1_median_long  %>% mutate(experiment = "one")
 onetofour_t2_bind_2 <- one_to_four_b2_long %>% mutate(experiment = "two")
 
 ## binding the data
@@ -35,6 +35,7 @@ experiment_t2_sig <- lm(fly_numbers ~ experiment, data = male_t2_bind_conditione
 ## looking for sig across treatments for feeding number
 drop1(experiment_t2_sig, test = "F")
 ## no sig between the two so can use?
+summary(experiment_t2_sig)
 
 ## trying out a linear model
 t2_feeding_lm <- lm(fly_numbers ~ diet, data = male_t2_bind_conditioned)
