@@ -38,7 +38,7 @@ male_t2_bind_conditioned_4to1_1to4_plot  <-
 experiment_t2_sig_fourone_onetofour <- lm(fly_numbers ~ experiment, data = male_t2_bind_conditioned_4to1_1to4)
 
 ## looking for sig across treatments for feeding number
-drop1(experiment_t2_sig_fourone_onetofour, test = "F") ## not at all significant
+drop1(experiment_t2_sig_fourone_onetofour, test = "F") ## really significant? issue? 
 
 
 
