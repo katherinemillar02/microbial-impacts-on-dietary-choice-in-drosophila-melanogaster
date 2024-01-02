@@ -5,7 +5,7 @@
 
 # male binded 
 # adding a variable 
-fourtoone_onetofour_t2_bind_1 <- onetofour_fourtoone_b1_long  %>% mutate(experiment = "one")
+fourtoone_onetofour_t2_bind_1 <- onetofour_fourtoone_b1_median_long   %>% mutate(experiment = "one")
 fourtoone_onetofour_t2_bind_2 <- fourtoone_onetofour_b2_long  %>% mutate(experiment = "two")
 
 ## binding the data
@@ -35,10 +35,11 @@ male_t2_bind_conditioned_4to1_1to4_plot  <-
 ## 
 #### Data Analysis ----
 # First testing a linear model 
-experiment_t2_sig_fourone_onetofour <- lm(fly_numbers ~ experiment, data = male_t2_bind_conditioned_4to1_1to4 )
+experiment_t2_sig_fourone_onetofour <- lm(fly_numbers ~ experiment, data = male_t2_bind_conditioned_4to1_1to4)
 
 ## looking for sig across treatments for feeding number
-drop1(experiment_t2_sig_fourone_onetofour, test = "F")
+drop1(experiment_t2_sig_fourone_onetofour, test = "F") ## not at all significant
+
 
 
 ## trying out a linear model
