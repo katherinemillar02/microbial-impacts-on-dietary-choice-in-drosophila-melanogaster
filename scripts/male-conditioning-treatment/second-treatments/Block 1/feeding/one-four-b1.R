@@ -80,3 +80,12 @@ anova(onetofour_b1_glm_2)
 emmeans::emmeans(onetofour_b1_glm_2, pairwise ~ diet)
 
 
+
+#### median data for the binded data script 
+one_to_four_b1_median <- read_excel("data/m1-4_b1.xlsx")
+
+one_to_four_b1_median_long <- one_to_four_b1_median  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
