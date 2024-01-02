@@ -16,10 +16,10 @@ male_t2_bind_conditioned_4to1_1to4_plot  <-
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "BuPu")+
+  scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = " Male Conditioned and Unconditioned Treatment")+
+       title = "4:1 and 1:4")+
   theme(legend.position="none")+ 
   ylim(-0.01,4)+
   geom_jitter(data =  
@@ -49,31 +49,31 @@ t2_feeding_lm_fourone_onefour <- lm(fly_numbers ~ diet, data = male_t2_bind_cond
 performance::check_model(t2_feeding_lm_fourone_onefour , check = c("qq")) # I think qqplot looks okay, few dots dispersed. Line is straightperformance::check_model(egg_analysis_combined_lm, check = c("homogeneity")) # line is not flat.
 performance::check_model(t2_feeding_lm_fourone_onefour , check = c("linearity")) # line is very much not flat.
 
-performance::check_model(t2_feeding_lm_fourone, check = c("outliers"))
+performance::check_model(t2_feeding_lm_fourone_onefour , check = c("outliers"))
 
 # doesn't look awful
 
 # Trying a generalised linear model
-t2_feeding_glm_fourone <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = male_t2_bind_conditioned_4to1)
-summary(t2_feeding_glm_fourone) # overdispersed
+t2_feeding_glm_fourone_onefour  <- glm(fly_numbers ~  diet, family = poisson(link = "log"), data = male_t2_bind_conditioned_4to1_1to4)
+summary(t2_feeding_lm_fourone_onefour ) # overdispersed
 
-t2_feeding_glm_fourone_2  <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = male_t2_bind_conditioned_4to1)
+t2_feeding_glm_fourone_onefour_2  <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), data = male_t2_bind_conditioned_4to1_1to4)
 
 
 #### Assumption Checking ####
-performance::check_model(t2_feeding_glm_fourone_2, check = c("qq")) # dots seem to match to line better than lm
-performance::check_model(t2_feeding_glm_fourone_2 , check = c("homogeneity")) # not flat but better
-performance::check_model(t2_feeding_glm_fourone_2 , check = c("outliers"))
+performance::check_model(t2_feeding_glm_fourone_onefour_2, check = c("qq")) # dots seem to match to line better than lm
+performance::check_model(t2_feeding_glm_fourone_onefour_2 , check = c("homogeneity")) # not flat but better
+performance::check_model(t2_feeding_glm_fourone_onefour_2 , check = c("outliers"))
 
 # glm may be better 
 
 # summary function, shows t test
-summary(t2_feeding_glm_fourone_2)
+summary(t2_feeding_glm_fourone_onefour_2)
 
 # using anova 
-anova(t2_feeding_glm_fourone_2)
+anova(t2_feeding_glm_fourone_onefour_2)
 
 # emmeans for tukey analysis 
-emmeans::emmeans(t2_feeding_glm_fourone_2, pairwise ~ diet)
+emmeans::emmeans(t2_feeding_lm_fourone_onefour, pairwise ~ diet)
 
 # strong significant difference 
