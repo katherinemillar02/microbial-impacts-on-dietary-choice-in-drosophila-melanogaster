@@ -77,7 +77,7 @@ anova(onetofour_fourtoone_b1_lm)
 emmeans::emmeans(onetofour_fourtoone_b1_lm, pairwise ~ diet)
 
 ## median data to be used for the binded analysis 
-onetofour_fourtoone_b1_median <- read_excel("data/4_1-1_4-t2b2_median.xlsx")
+onetofour_fourtoone_b1_median <- read_excel("data/4-1_1-4_mc_.xlsx")
                 
 onetofour_fourtoone_b1_median_long <- onetofour_fourtoone_b1_median  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
