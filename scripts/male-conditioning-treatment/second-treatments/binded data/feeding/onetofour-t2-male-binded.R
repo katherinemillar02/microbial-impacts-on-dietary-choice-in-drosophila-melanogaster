@@ -11,12 +11,12 @@ male_t2_bind_conditioned_plot <-
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "BuPu")+
+  scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
        title = " Male Conditioned and Unconditioned Treatment")+
   theme(legend.position="none")+ 
-  ylim(-0.01,2)+
+  ylim(-0.01,1.5)+
   geom_jitter(data =  
                 male_t2_bind_conditioned,
               aes(x = diet,
