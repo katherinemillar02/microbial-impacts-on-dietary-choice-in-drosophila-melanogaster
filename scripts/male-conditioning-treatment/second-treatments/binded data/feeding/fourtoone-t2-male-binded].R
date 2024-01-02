@@ -1,5 +1,9 @@
 # Four to One
-
+#### INSTALL PACKAGES 
+library(tidyverse)
+library(readxl)
+library(patchwork)
+library(colorBlindness)
  # male binded 
 # adding a variable 
 fourtoone_t2_bind_1 <- four_to_one_b1_long %>% mutate(experiment = "one")
@@ -13,10 +17,10 @@ male_t2_bind_conditioned_4to1_plot <-
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "BuPu")+
+  scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = " Male Conditioned and Unconditioned Treatment")+
+       title = "4:1")+
   theme(legend.position="none")+ 
   ylim(-0.01,7)+
   geom_jitter(data =  
