@@ -18,7 +18,7 @@ fourone_oviposition_b2_plot  <- fourone_oviposition_b2_long   %>%
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "4:1 and 1:4 Diets")+
+       title = "4:1 Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,100)+
   geom_jitter(data =  fourone_oviposition_b2_long,
