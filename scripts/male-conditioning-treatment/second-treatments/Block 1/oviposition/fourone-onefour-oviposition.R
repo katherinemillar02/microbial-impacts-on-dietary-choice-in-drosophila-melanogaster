@@ -18,7 +18,7 @@ onetofour_fourtoone_oviposition_b1_plot <-
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "Set2")+
+  scale_fill_brewer(palette = "Set3")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
        title = "1:4 and 4:1 Oviposition")+

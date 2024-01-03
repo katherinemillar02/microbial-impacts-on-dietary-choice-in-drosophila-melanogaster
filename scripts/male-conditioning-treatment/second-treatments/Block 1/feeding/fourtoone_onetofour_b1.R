@@ -23,7 +23,7 @@ oonetofour_fourtoone_b1_summary <- onetofour_fourtoone_b1_long %>%
 oonetofour_fourtoone_b1_plot <- oonetofour_fourtoone_b1_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity", aes(fill=diet))+
-  scale_fill_brewer(palette = "Set2")+
+  scale_fill_brewer(palette = "Set3")+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "black",
                 width = 0.2)+

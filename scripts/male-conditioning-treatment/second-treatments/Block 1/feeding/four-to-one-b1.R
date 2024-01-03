@@ -16,7 +16,7 @@ four_to_one_b1_plot <- four_to_one_b1_long  %>%
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "Set2")+
+  scale_fill_brewer(palette = "Set1")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
        title = "4:1 Diets")+

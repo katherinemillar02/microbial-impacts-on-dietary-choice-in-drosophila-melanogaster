@@ -16,10 +16,10 @@ fourtoone_onetofour_b2_oviposition_plot  <- fourtoone_onetofour_b2_oviposition_l
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "Set2")+
+  scale_fill_brewer(palette = "Set3")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "4:1 and 1:4 Diets")+
+       title = "4:1 and 1:4 Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,150)+
   geom_jitter(data =  fourtoone_onetofour_b2_oviposition_long,
