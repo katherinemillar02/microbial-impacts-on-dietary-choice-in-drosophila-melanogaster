@@ -17,7 +17,7 @@ male_t2_bind_conditioned_4to1_plot <-
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "Set2")+
+  scale_fill_brewer(palette = "Set1")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
        title = "4:1")+
