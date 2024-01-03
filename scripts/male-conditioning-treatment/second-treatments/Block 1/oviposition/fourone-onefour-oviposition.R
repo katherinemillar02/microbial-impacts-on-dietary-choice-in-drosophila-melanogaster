@@ -23,7 +23,7 @@ onetofour_fourtoone_oviposition_b1_plot <-
        y = "Median number of flies per diet patch", 
        title = "1:4 and 4:1 Oviposition")+
   theme(legend.position="none")+ 
-  ylim(-0.01,100)+
+  ylim(-0.01,150)+
   geom_jitter(data =  ## Making the data long 
                 onetofour_fourtoone_oviposition_b1_long,
               aes(x = diet,
