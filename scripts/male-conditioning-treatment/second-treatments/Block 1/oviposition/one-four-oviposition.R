@@ -21,7 +21,7 @@ one_to_four_oviposition_b1_plot <- one_to_four_oviposition_b1_long  %>%
        y = "Number of eggs per diet patch", 
        title = "1:4 Oviposition")+
   theme(legend.position="none")+ 
-  ylim(-0.01,100)+
+  ylim(-0.01,150)+
   geom_jitter(data =  one_to_four_oviposition_b1_long,
               aes(x = diet,
                   y = egg_numbers),
