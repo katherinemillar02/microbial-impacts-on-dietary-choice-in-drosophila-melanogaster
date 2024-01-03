@@ -8,12 +8,12 @@ fourone_oviposition_t2_bind_2 <- fourone_oviposition_b2_long %>% mutate(experime
 
 fourone_oviposition_t2 <- rbind(fourone_oviposition_t2_bind_1, fourone_oviposition_t2_bind_2)
 
-male_t2_bind_conditioned_4to1_1to4_plot  <- 
+male_t2_bind_conditioned_4to1_plot  <- 
   fourone_oviposition_t2 %>% 
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "BuPu")+
+  scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
        title = " Male Conditioned and Unconditioned Treatment")+
