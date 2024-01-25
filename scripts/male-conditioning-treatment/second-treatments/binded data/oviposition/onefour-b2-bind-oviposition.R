@@ -1,11 +1,8 @@
-one_to_four_oviposition_b1_long 
-onefour_oviposition_b2_long 
-
-
+# adding an experiment block variable 
 onefour_t2_oviposition_1 <- one_to_four_oviposition_b1_long %>% mutate(experiment = "one")
 onefour_t2_oviposition_2 <- onefour_oviposition_b2_long %>% mutate(experiment = "two")
 
-
+# binding the data 
 onefour_t2_oviposition <- rbind(onefour_t2_oviposition_1, onefour_t2_oviposition_2) 
 
 ## Median boxplot --
