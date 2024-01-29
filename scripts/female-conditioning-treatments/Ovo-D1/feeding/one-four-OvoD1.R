@@ -34,7 +34,7 @@ one_to_four_OvoD1_plot <- one_to_four_OvoD1_long  %>%
               width = 0.2,
               shape = 21)
 ## might have to look at mean average for this plot. 
-## might have messed up plates, need to think about this. 
+
 
 
 #### Data Analysis 
