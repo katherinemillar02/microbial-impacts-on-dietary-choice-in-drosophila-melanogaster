@@ -74,6 +74,7 @@ anova(four_to_one_OvoD1_glm_2)
 # emmeans for tukey analysis 
 emmeans::emmeans(four_to_one_OvoD1_glm_2, pairwise ~ diet)
 ## This shows there is not a significant difference between 4:1 Conditioned and 4:1 Unconditioned. 
+# First Analysis of results however. 
 
 
 
