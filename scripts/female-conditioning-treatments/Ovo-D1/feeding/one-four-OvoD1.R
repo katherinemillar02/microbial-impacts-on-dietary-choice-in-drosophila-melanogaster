@@ -23,7 +23,7 @@ one_to_four_OvoD1_plot <- one_to_four_OvoD1_long  %>%
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "4:1 Diets")+
+       title = "1:4 Conditioned and Unconditioned Feeding")+
   theme(legend.position="none")+ 
   ylim(-0.01,2)+
   geom_jitter(data =  one_to_four_OvoD1_long,
