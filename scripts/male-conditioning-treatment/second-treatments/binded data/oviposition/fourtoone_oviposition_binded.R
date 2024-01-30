@@ -13,10 +13,10 @@ male_t2_bind_conditioned_4to1_plot  <-
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_brewer(palette = "Set3")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "4:1 Oviposition")+
+       title = "4:1 Conditioned and Unconditioned Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,150)+
   geom_jitter(data =  
