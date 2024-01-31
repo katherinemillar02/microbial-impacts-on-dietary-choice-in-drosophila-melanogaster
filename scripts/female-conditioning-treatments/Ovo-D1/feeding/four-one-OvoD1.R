@@ -96,7 +96,7 @@ four_to_one_OvoD1_2_plot <- four_to_one_OvoD1_2_long   %>%
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "1:4 Diets")+
+       title = "4:1 Diets")+
   theme(legend.position="none")+ 
   ylim(-0.01,4)+
   geom_jitter(data =  four_to_one_OvoD1_2_long,
@@ -128,7 +128,7 @@ four_to_one_OvoD1_2_glm_1 <- glm(fly_numbers ~  diet, family = poisson(link = "l
 # overdispersed - trying quasipoisson? not the best thing to do though
 four_to_one_OvoD1_2_glm_2 <- glm(fly_numbers ~  diet, family = quasipoisson(link = "log"), four_to_one_OvoD1_2_long)
 
-
+## Assumption Checking
 performance::check_model(four_to_one_OvoD1_2_glm_2 , check = c("qq")) # lines go a bit sideways compared to lm.
 performance::check_model(four_to_one_OvoD1_2_glm_2 , check = c("homogeneity")) # line is flat almost, bit high. 
 performance::check_model(four_to_one_OvoD1_2_glm_2 , check = c("outliers")) # seems okay? 
