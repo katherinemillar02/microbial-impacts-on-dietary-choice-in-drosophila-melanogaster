@@ -117,7 +117,7 @@ one_to_four_OvoD1_mean_plot <- one_to_four_OvoD1_mean_summary  %>%
   ylim(0.0, 1.5)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "1:4 Diets")+
+       title = "1:4 Conditioned Feeding")+
   theme_classic()+
   theme(legend.position = "none")
 
