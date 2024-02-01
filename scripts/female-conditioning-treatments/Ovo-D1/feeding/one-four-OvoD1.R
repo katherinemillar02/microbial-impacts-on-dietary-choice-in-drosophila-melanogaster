@@ -18,7 +18,7 @@ one_to_four_OvoD1_long <- one_to_four_OvoD1  %>%
 ## Visualising the data 
 one_to_four_OvoD1_plot <- one_to_four_OvoD1_long  %>% 
   ggplot(aes(x = diet, y = fly_numbers, fill = diet))+ 
-  geom_boxplot()+
+  geom_boxplot(outlier.shape  = NA)+
   theme_classic()+
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
@@ -26,15 +26,14 @@ one_to_four_OvoD1_plot <- one_to_four_OvoD1_long  %>%
        title = "1:4 Conditioned and Unconditioned Feeding")+
   theme(legend.position="none")+ 
   ylim(-0.01,2)+
-  geom_jitter(data =  one_to_four_OvoD1_long,
-              aes(x = diet,
+  geom_jitter(aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
               colour = "#3a3c3d",
-              width = 0.2,
+              #width = 0.2,
               shape = 21)
 ## might have to look at mean average for this plot. 
-
+one_to_four_OvoD1_plot
 
 
 #### Data Analysis 
