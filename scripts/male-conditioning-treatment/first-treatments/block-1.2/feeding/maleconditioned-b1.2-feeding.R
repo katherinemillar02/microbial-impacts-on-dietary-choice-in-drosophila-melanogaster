@@ -5,7 +5,7 @@ library(patchwork)
 library(colorBlindness)
 
 #### Upload data
-conditioned_b1.2_median <- read_excel("data/male_block1.2_conditioned.xlsx")
+conditioned_b1.2_median <- read_excel("data/conditioned_t1b1.2_median.xlsx")
 
 ## Making the data long 
 conditioned_b1.2_median_long <- conditioned_b1.2_median %>% 
