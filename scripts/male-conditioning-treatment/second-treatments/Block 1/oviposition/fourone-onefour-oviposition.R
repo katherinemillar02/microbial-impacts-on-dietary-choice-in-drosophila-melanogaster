@@ -4,7 +4,8 @@ library(readxl)
 library(patchwork)
 library(colorBlindness)
 
-#### Upload data
+
+#### Upload data for plot - median calculated 
 onetofour_fourtoone_oviposition_b1 <- read_excel("data/oviposition-4-1_1-4-b1.xlsx")
 
 ## Making the data long 
