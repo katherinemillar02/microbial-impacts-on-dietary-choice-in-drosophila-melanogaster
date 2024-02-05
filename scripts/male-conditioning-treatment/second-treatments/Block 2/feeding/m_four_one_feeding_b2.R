@@ -69,3 +69,26 @@ anova(fourtoone_b2_glm_2)
 emmeans::emmeans(fourtoone_b2_glm_2, pairwise ~ diet)
 ## sig difference - conditioned more preferred 
 
+
+
+
+##### STEP 2 - data analysis with raw data 
+
+## Uploading the raw data
+four_to_one_b2_raw <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m4-1_t2b2.xlsx")
+
+
+## Making the raw data long 
+four_to_one_b2_raw_long <- four_to_one_b2_raw  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+# library(lme4) needed 
+## using the non long data so it gets the variables? 
+bin_mod <- glmer(cbind(`4:1 Conditioned`, `4:1 Unconditioned`) ~ 2 + (plate/observation), data = four_to_one_b2_raw, family = binomial)
+## Get errors
+
+
+
+
+
