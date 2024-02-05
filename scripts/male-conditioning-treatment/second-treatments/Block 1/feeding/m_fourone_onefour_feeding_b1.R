@@ -81,3 +81,16 @@ onetofour_fourtoone_b1_median <- read_excel("data/4-1_1-4_mc_.xlsx")
                 
 onetofour_fourtoone_b1_median_long <- onetofour_fourtoone_b1_median  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+#### THE RAW DATA 
+# uploading the raw data for better data analysis 
+onefour_fourone_b1_raw <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_1-4_t2b1.xlsx")
+
+## Making the raw data long - I don't know if I need to do this 
+onefour_fourone_b1_raw_long <- onefour_fourone_b1_raw %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
+
+
