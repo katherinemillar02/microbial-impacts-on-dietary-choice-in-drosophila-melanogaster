@@ -93,7 +93,7 @@ four_to_one_OvoD1_raw_long <- four_to_one_OvoD1_raw  %>%
 
 
 ## model binomial - cannot get to work. 
-bin_mod_od1_fourone <- glm(cbind('4:1 Conditioned', '4:1 Unconditioned') ~ 2, data = four_to_one_OvoD1_raw, family = binomial)
+bin_mod_od1_fourone <- glm(cbind('4:1 Conditioned', '4:1 Unconditioned') ~ fly_numbers, data = four_to_one_OvoD1_raw_long, family = binomial)
 
 bin_mod <- glmer(cbind( "4:1 Conditioned", "4:1 Unconditioned") + (plate/observation), data = four_to_one_OvoD1_raw, family = binomial)
 
@@ -107,3 +107,5 @@ bin_mod_od1_fourone <- glm(test ~ 2, data = four_to_one_OvoD1_raw, family = bino
 # Error in terms.formula(formula, data = data) : invalid model formula in ExtractVars
 # Error in as.data.frame.default(data, optional = TRUE) : cannot coerce class ‘"function"’ to a data.frame
 
+
+## cannot seem to do a binomial model?? 
