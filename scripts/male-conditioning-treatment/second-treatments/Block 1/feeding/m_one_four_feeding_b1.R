@@ -4,13 +4,15 @@ library(readxl)
 library(patchwork)
 library(colorBlindness)
 
-#### Upload data
+#### Upload data - uploading the mean calculated data 
 one_to_four_b1 <- read_excel("data/mean-1-4_t2_b2.xlsx")
 
 ## Making the data long 
 one_to_four_b1_long <- one_to_four_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
+
+## making a summary of the data to use for a barplot 
 one_to_four_b1_summary <- one_to_four_b1_long %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
@@ -19,6 +21,7 @@ one_to_four_b1_summary <- one_to_four_b1_long %>%
             se = sd/sqrt(n))
 
 
+## code for a bar plot
 one_to_four_b1_plot <- one_to_four_b1_summary  %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity", aes(fill=diet))+
@@ -86,6 +89,20 @@ one_to_four_b1_median <- read_excel("data/m1-4_b1.xlsx")
 
 one_to_four_b1_median_long <- one_to_four_b1_median  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
+
+#### THE RAW DATA 
+# uploading the raw data for better data analysis 
+one_to_four_b1_raw <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m1-4_t2b1.xlsx")
+
+## Making the raw data long - I don't know if I need to do this 
+one_to_four_b1_raw_long <- one_to_four_b1_raw  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
 
 
 
