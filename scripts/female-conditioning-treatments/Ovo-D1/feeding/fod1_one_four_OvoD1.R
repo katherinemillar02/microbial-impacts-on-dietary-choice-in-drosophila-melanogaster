@@ -161,3 +161,18 @@ emmeans::emmeans(one_to_four_OvoD1_mean_glm_2, pairwise ~ diet)
 
 
 
+## THE RAW DATA 
+
+##  uploading the raw data 
+one_to_four_OvoD1_raw <- read_excel("data/female_conditioning/ovod1/block_1/rawresults_fod11-4_t2b1.xlsx")
+
+## making the data long, 
+one_to_four_OvoD1_raw_long <- one_to_four_OvoD1_raw  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
+
+
+
+
