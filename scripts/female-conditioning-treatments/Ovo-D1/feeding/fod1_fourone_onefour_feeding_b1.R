@@ -73,4 +73,7 @@ anova(onefour_fourone_OvoD1_glm_2)
 # emmeans for tukey analysis 
 emmeans::emmeans(onefour_fourone_OvoD1_glm_2, pairwise ~ diet)
 ## This shows no significant difference between 1:4 Conditioned and 1:4 Unconditioned. 
-## Shows a significant difference between 4:1 Conditioned and Unconditioned. 
+## Shows a significant difference between 4:1 Conditioned and Unconditioned.
+
+
+
