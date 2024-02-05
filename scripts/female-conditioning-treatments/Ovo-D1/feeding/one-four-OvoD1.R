@@ -25,7 +25,7 @@ one_to_four_OvoD1_plot <- one_to_four_OvoD1_long  %>%
        y = "Median number of flies per diet patch", 
        title = "1:4 Conditioned and Unconditioned Feeding")+
   theme(legend.position="none")+ 
-  ylim(-0.01,2)+
+  ylim(-0.01,6)+
   geom_jitter(aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
@@ -113,10 +113,10 @@ one_to_four_OvoD1_mean_plot <- one_to_four_OvoD1_mean_summary  %>%
               colour = "skyblue",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 1.5)+
+  ylim(0.0, 6)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "1:4 Conditioned Feeding")+
+       title = "1:4 OvoD1 Female Conditioned and Unconditioned Feeding")+
   theme_classic()+
   theme(legend.position = "none")
 
