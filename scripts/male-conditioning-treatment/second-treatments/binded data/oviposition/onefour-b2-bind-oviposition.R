@@ -10,10 +10,10 @@ onefour_t2_oviposition_plot <- onefour_t2_oviposition  %>%
   ggplot(aes(x = diet, y = egg_numbers, fill = diet))+ 
   geom_boxplot()+
   theme_classic()+
-  scale_fill_brewer(palette = "Set2")+
+  scale_fill_brewer(palette = "Set3")+
   labs(x = "Diet Condition",
        y = "Number of eggs per diet patch", 
-       title = "1:4 Oviposition")+
+       title = "1:4 Conditioned and Unconditioned Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,150)+
   geom_jitter(data =  onefour_t2_oviposition,

@@ -19,7 +19,7 @@ male_t2_bind_conditioned_4to1_1to4_oviposition_plot  <-
   scale_fill_brewer(palette = "Set3")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "4:1 and 1:4 Oviposition")+
+       title = "4:1 and 1:4 Conditioned and Unconditioned Oviposition")+
   theme(legend.position="none")+ 
   ylim(-0.01,150)+
   geom_jitter(data =  
