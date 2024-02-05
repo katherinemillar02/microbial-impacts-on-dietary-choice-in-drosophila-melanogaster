@@ -14,9 +14,9 @@ male_t2_bind_conditioned_plot <-
   scale_fill_brewer(palette = "Set2")+
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = " Male Conditioned and Unconditioned Treatment")+
+       title = "1:4 Conditioned and Unconditioned Feeding")+
   theme(legend.position="none")+ 
-  ylim(-0.01,1.5)+
+  ylim(-0.01,6)+
   geom_jitter(data =  
                 male_t2_bind_conditioned,
               aes(x = diet,

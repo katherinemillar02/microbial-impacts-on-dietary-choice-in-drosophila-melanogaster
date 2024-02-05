@@ -22,7 +22,7 @@ male_t2_bind_conditioned_4to1_plot <-
        y = "Median number of flies per diet patch", 
        title = "4:1 Conditioned and Unconditioned Feeding")+
   theme(legend.position="none")+ 
-  ylim(-0.01,7)+
+  ylim(-0.01,6)+
   geom_jitter(data =  
                 male_t2_bind_conditioned_4to1,
               aes(x = diet,
