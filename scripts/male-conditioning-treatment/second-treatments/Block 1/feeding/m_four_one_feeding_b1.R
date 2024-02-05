@@ -5,9 +5,10 @@ library(patchwork)
 library(colorBlindness)
 
 #### Upload data
-four_to_one_b1 <- read_excel("data/4-1_t2.xlsx")
+## Uploading the median calculated data to generate a neat graph 
+four_to_one_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/m_4-1_t2b1_median.xlsx")
 
-## Making the data long 
+## Making the median calculated data long 
 four_to_one_b1_long <- four_to_one_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
@@ -22,8 +23,7 @@ four_to_one_b1_plot <- four_to_one_b1_long  %>%
        title = "4:1 Diets")+
   theme(legend.position="none")+ 
   ylim(-0.01,7)+
-  geom_jitter(data =  four_to_one_b1_long,
-              aes(x = diet,
+  geom_jitter(aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
               colour = "#3a3c3d",
@@ -67,5 +67,26 @@ anova(fourtoone_b1_glm_2)
 
 # emmeans for tukey analysis 
 emmeans::emmeans(fourtoone_b1_glm_2, pairwise ~ diet)
+
+
+
+
+##### STEP 2 - data analysis with raw data 
+
+## Uploading the raw data
+four_to_one_b1_raw <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_t2b1.xlsx")
+
+
+## Making the raw data long 
+four_to_one_b1_raw_long <- four_to_one_b1_raw  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+# library(lme4) needed 
+## using the non long data so it gets the variables? 
+bin_mod <- glmer(cbind(`4:1 Conditioned`, `4:1 Unconditioned`) ~ 2 + (plate/observation), data = four_to_one_b1_raw, family = binomial)
+## Get errors
+
+
 
 
