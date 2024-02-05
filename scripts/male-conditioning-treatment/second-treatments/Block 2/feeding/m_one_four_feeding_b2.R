@@ -69,3 +69,23 @@ anova(onetofour_b2_glm_2)
 emmeans::emmeans(onetofour_b2_glm_2, pairwise ~ diet)
 ## no significant difference
 
+
+
+##### STEP 2 - data analysis with raw data 
+
+## Uploading the raw data
+one_to_four_b2_raw <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m1-4_t2b2.xlsx")
+
+
+## Making the raw data long 
+one_to_four_b2_raw_long <- one_to_four_b2_raw  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+# library(lme4) needed 
+## using the non long data so it gets the variables? 
+bin_mod <- glmer(cbind(`4:1 Conditioned`, `4:1 Unconditioned`) ~ 2 + (plate/observation), data = one_to_four_b2_raw , family = binomial)
+## Get errors
+
+
+
