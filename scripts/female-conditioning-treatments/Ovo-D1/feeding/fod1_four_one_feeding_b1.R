@@ -59,7 +59,7 @@ ggplot( four_to_one_OvoD1_long, aes(x = diet, y = fly_numbers, pattern = diet, f
               shape = 21) +
    labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "4:1 OvoD1 Female Conditioned and Unconditioned Feeding")+
+       title = "")+
   theme(legend.position="none")
   
 plot_test
