@@ -1,11 +1,12 @@
-####### OvoD1 Conditioning - 4:1 
-
-
+####### OvoD1 Conditioning - 4:1 ####### 
 #### INSTALL PACKAGES 
 library(tidyverse)
 library(readxl)
 library(patchwork)
 library(colorBlindness)
+library(ggplot2)
+library(ggpattern)
+
 
 #### Upload data for plot - median calculated 
 four_to_one_OvoD1 <- read_excel("data/female_conditioning/ovod1/block_1/OvoD1-4_1-median.xlsx")
@@ -31,8 +32,37 @@ four_to_one_OvoD1_plot <- four_to_one_OvoD1_long  %>%
               fill = "skyblue",
               colour = "#3a3c3d",
               width = 0.2,
-              shape = 21)
-
+              shape = 21)  
+ 
+#### NEW CODE FOR PLOT   
+plot_test <-
+ggplot( four_to_one_OvoD1_long, aes(x = diet, y = fly_numbers, pattern = diet, fill = diet)) +
+  geom_boxplot(aes(fill = diet))+
+  scale_fill_manual(name = "Diet", values = c("#FDECCD","#FDECCD" )) +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                       color = "black",
+                       pattern_fill = "white",
+                       pattern_angle = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values=c("stripe", "none", "stripe", "none")) +
+  ylim(0,6)+
+  theme_classic()+
+  theme(legend.position = "none")+
+  geom_jitter(data =  four_to_one_OvoD1_long,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21) +
+   labs(x = "Diet Condition",
+       y = "Median number of flies per diet patch", 
+       title = "4:1 OvoD1 Female Conditioned and Unconditioned Feeding")+
+  theme(legend.position="none")
+  
+plot_test
 
 
 
@@ -81,7 +111,7 @@ emmeans::emmeans(four_to_one_OvoD1_glm_2, pairwise ~ diet)
 
 
 
-##### NEW ANALYSIS 
+##### NEW ANALYSIS #####
 # Analysing from the raw data # 
 
 ##  uploading the raw data 
@@ -90,7 +120,6 @@ four_to_one_OvoD1_raw <- read_excel("data/female_conditioning/ovod1/block_1/rawd
 ## making the data long, 
 four_to_one_OvoD1_raw_long <- four_to_one_OvoD1_raw  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
-
 
 ## model binomial - cannot get to work. 
 bin_mod_od1_fourone <- glm(cbind('4:1 Conditioned', '4:1 Unconditioned') ~ fly_numbers, data = four_to_one_OvoD1_raw_long, family = binomial)
@@ -106,6 +135,5 @@ bin_mod_od1_fourone <- glm(test ~ 1, data = four_to_one_OvoD1_raw, family = bino
 bin_mod_od1_fourone <- glm(test ~ 2, data = four_to_one_OvoD1_raw, family = binomial)
 # Error in terms.formula(formula, data = data) : invalid model formula in ExtractVars
 # Error in as.data.frame.default(data, optional = TRUE) : cannot coerce class ‘"function"’ to a data.frame
-
 
 ## cannot seem to do a binomial model?? 
