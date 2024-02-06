@@ -36,6 +36,37 @@ one_to_four_OvoD1_plot <- one_to_four_OvoD1_long  %>%
 one_to_four_OvoD1_plot
 
 
+#### doing a new median plot 
+plot_test_1 <-
+  ggplot(one_to_four_OvoD1_long , aes(x = diet, y = fly_numbers, pattern = diet, fill = diet)) +
+  geom_boxplot(aes(fill = diet))+
+  scale_fill_manual(name = "Diet", values = c("lightblue","lightblue" )) +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                       color = "black",
+                       pattern_fill = "white",
+                       pattern_angle = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values=c("stripe", "none", "stripe", "none")) +
+  ylim(0,6)+
+  theme_classic()+
+  theme(legend.position = "none")+
+  geom_jitter(data =  one_to_four_OvoD1_long ,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21) +
+  labs(x = "Diet Condition",
+       y = "Median number of flies per diet patch", 
+       title = "")+
+  theme(legend.position="none")
+
+plot_test_1
+
+
 #### Data Analysis 
 
 ## 
