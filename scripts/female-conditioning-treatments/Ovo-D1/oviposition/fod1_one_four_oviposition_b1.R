@@ -11,7 +11,7 @@ onefour_OvoD1_oviposition <- read_excel("data/female_conditioning/ovod1/block_1/
 
 ## Making the data long 
 onefour_OvoD1_oviposition_long <- onefour_OvoD1_oviposition  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
 ## Visualising the data 
@@ -33,7 +33,33 @@ onefour_OvoD1_oviposition_plot <- onefour_OvoD1_oviposition_long %>%
               shape = 21)
 
 
-
+fod1_oviposition_00 <-
+  ggplot( onefour_OvoD1_oviposition_long, aes(x = diet, y = egg_numbers, pattern = diet, fill = diet)) +
+  geom_boxplot(aes(fill = diet))+
+  scale_fill_manual(name = "Diet", values = c("#00cb98", "#00cb98" )) +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                       color = "black",
+                       pattern_fill = "white",
+                       pattern_angle = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values=c("stripe", "none", "stripe", "none")) +
+  ylim(0,250)+
+  theme_classic()+
+  theme(legend.position = "none")+
+  geom_jitter(data =  onefour_OvoD1_oviposition_long ,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21) +
+  labs(x = "Diet Condition",
+       y = "Median number of eggs per diet patch", 
+       title = "")+
+  theme(legend.position="none")+
+  theme(axis.text = element_text(size=6, angle = 0, hjust =0.5))
 
 
 
