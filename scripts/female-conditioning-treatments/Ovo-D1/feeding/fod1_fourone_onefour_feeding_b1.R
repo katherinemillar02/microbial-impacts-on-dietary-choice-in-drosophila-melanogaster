@@ -36,6 +36,39 @@ fourone_onefour_OvoD1_plot <- fourone_onefour_OvoD1_long %>%
 
 
 
+
+### tying a new plot 
+plot_test_2 <-
+  ggplot(fourone_onefour_OvoD1_long, aes(x = diet, y = fly_numbers, pattern = diet, fill = diet)) +
+  geom_boxplot(aes(fill = diet, pattern = diet, pattern_fill = diet))+
+  scale_fill_manual(name = "Diet", values = c("#FDECCD","#FDECCD", "lightblue", "lightblue" )) +
+  geom_boxplot_pattern(color = "black",
+                       pattern_fill = "white",
+                       pattern_angle = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values=c("stripe", "none", "stripe", "none")) +
+  ylim(0,6)+
+  theme_classic()+
+  theme(legend.position = "none")+
+  geom_jitter(data =  fourone_onefour_OvoD1_long,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21) +
+  labs(x = "Diet Condition",
+       y = "Median number of flies per diet patch", 
+       title = "4:1 OvoD1 Female Conditioning - Feeding")+
+  theme(legend.position="none")
+
+
+## Generate a plot 
+plot_test_2
+
+
 #### Data Analysis 
 
 ## 
