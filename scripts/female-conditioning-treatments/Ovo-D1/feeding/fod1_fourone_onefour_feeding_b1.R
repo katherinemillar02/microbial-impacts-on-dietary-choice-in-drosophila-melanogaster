@@ -61,8 +61,9 @@ plot_test_2 <-
               shape = 21) +
   labs(x = "Diet Condition",
        y = "Median number of flies per diet patch", 
-       title = "4:1 OvoD1 Female Conditioning - Feeding")+
-  theme(legend.position="none")
+       title = "")+
+  theme(legend.position="none")+
+  theme(axis.text = element_text(size=6, angle = 0, hjust =0.5))
 
 
 ## Generate a plot 
