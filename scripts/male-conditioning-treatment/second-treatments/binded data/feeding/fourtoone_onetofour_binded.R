@@ -108,4 +108,10 @@ anova(t2_feeding_glm_fourone_onefour_2)
 # emmeans for tukey analysis 
 emmeans::emmeans(t2_feeding_lm_fourone_onefour, pairwise ~ diet)
 
-# strong significant difference 
+# strong significant difference
+
+
+
+
+## above shows block 1 and block 2 binded 
+

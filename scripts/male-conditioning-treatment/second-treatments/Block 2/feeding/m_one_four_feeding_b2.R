@@ -89,3 +89,6 @@ bin_mod <- glmer(cbind(`4:1 Conditioned`, `4:1 Unconditioned`) ~ 2 + (plate/obse
 
 
 
+
+
+
