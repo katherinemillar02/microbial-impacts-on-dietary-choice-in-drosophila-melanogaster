@@ -36,7 +36,7 @@ onefour_OvoD1_oviposition_plot <- onefour_OvoD1_oviposition_long %>%
 fod1_oviposition_00 <-
   ggplot( onefour_OvoD1_oviposition_long, aes(x = diet, y = egg_numbers, pattern = diet, fill = diet)) +
   geom_boxplot(aes(fill = diet))+
-  scale_fill_manual(name = "Diet", values = c("#00cb98", "#00cb98" )) +
+  scale_fill_manual(name = "Diet", values = c("#9FE2BF","#9FE2BF"  )) +
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
                        color = "black",
                        pattern_fill = "white",
