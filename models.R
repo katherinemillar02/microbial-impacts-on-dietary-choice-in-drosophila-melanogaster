@@ -28,44 +28,4 @@ map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is
 read_raw(path) 
 read_raw(path2)
 
-## this creates a list were both data from path 1 and path 2 
-paths<-list(path,path2)
-
-## creating an actual data set that will read the paths
-# first data frame - purr package 
-df<-paths%>% map_df(~read_raw(.x)) #.x is a string or NULL - only applies to dfr apparently
-
-## "second" data frame
-# uses what was generated with "df"
-df2<-df%>% separate(diet, into = c("ratio", "condition"), sep = " ") %>% #separate will turn a single factor column into multiple columns
-  group_by(id,observation, plate, ratio,condition)%>% ## group by what is split
-  summarise(count = sum(fly_numbers)) %>% 
-  pivot_wider(names_from = "condition", values_from = "count")
-
-df2 # does it recognise condition from the long data? 
-
-## should now not include 4:1_1:4 assay but I don't know if this worked
-head(df2)
-
-
-###########
-
-# binomial model
-## The Statistics!!!!
-binomial_model <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2)
-
-# mixed model 
-mixed_model<-glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate/observation) + (1|id), family = binomial, data = df2)
-
-## still says it is not significant
-
-## using the DHARMa package 
-library(DHARMa)
-
-resid.mm<-simulateResiduals(mixed_model)
-plot(resid.mm)
-
-
-
-## creating a data column where flies are not on the plate 
-df2 <- df2 %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
+## this creates a list were both data fr
