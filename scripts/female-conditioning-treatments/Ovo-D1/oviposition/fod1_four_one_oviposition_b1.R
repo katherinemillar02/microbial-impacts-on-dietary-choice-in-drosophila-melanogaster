@@ -55,7 +55,7 @@ onefour_OvoD1_oviposition_plot <- onefour_OvoD1_oviposition_long %>%
 fod1_oviposition_0 <-
   ggplot( fourone_OvoD1_oviposition_long, aes(x = diet, y = egg_numbers, pattern = diet, fill = diet)) +
   geom_boxplot(aes(fill = diet))+
-  scale_fill_manual(name = "Diet", values = c("#fe7669","#fe7669" )) +
+  scale_fill_manual(name = "Diet", values = c( "#FF7F50","#FF7F50" )) +
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
                        color = "black",
                        pattern_fill = "white",
@@ -81,7 +81,7 @@ fod1_oviposition_0 <-
   theme(axis.text = element_text(size=6, angle = 0, hjust =0.5))
 
 
-
+fod1_oviposition_00 + fod1_oviposition_0 + fod1_oviposition_1
 
 
  #### Data Analysis 
