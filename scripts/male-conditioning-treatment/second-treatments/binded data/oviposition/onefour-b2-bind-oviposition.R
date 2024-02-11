@@ -29,7 +29,7 @@ onefour_t2_oviposition_plot <- onefour_t2_oviposition  %>%
 male_oviposition_0 <-
   ggplot( onefour_t2_oviposition, aes(x = diet, y = egg_numbers, pattern = diet, fill = diet)) +
   geom_boxplot(aes(fill = diet))+
-  scale_fill_manual(name = "Diet", values = c("#00cb98", "#00cb98" )) +
+  scale_fill_manual(name = "Diet", values = c("#9FE2BF", "#9FE2BF" )) +
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
                        color = "black",
                        pattern_fill = "white",
@@ -49,12 +49,12 @@ male_oviposition_0 <-
               width = 0.2,
               shape = 21) +
   labs(x = "Diet Condition",
-       y = "Median number of flies per diet patch", 
+       y = "Median number of eggs per diet patch", 
        title = "")+
   theme(legend.position="none")+
   theme(axis.text = element_text(size=6, angle = 0, hjust =0.5))
 
-
+male_oviposition_0 + male_oviposition_1 + male_oviposition_2
 
 ## 
 ## Statistical analysis ----
