@@ -41,7 +41,7 @@ fourone_onefour_OvoD1_plot <- fourone_onefour_OvoD1_long %>%
 plot_test_2 <-
   ggplot(fourone_onefour_OvoD1_long, aes(x = diet, y = fly_numbers, pattern = diet, fill = diet)) +
   geom_boxplot(aes(fill = diet, pattern = diet, pattern_fill = diet))+
-  scale_fill_manual(name = "Diet", values = c("#FDECCD","#FDECCD", "lightblue", "lightblue" )) +
+  scale_fill_manual(name = "Diet", values = c("lightblue", "lightblue","#FDECCD","#FDECCD" )) +
   geom_boxplot_pattern(color = "black",
                        pattern_fill = "white",
                        pattern_angle = 45,
