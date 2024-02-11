@@ -37,7 +37,7 @@ male_t2_bind_conditioned_4to1_1to4_oviposition_plot  <-
 male_oviposition_2 <-
   ggplot(male_t2_bind_conditioned_4to1_1to4_oviposition, aes(x = diet, y = egg_numbers, pattern = diet, fill = diet)) +
   geom_boxplot(aes(fill = diet))+
-  scale_fill_manual(name = "Diet", values = c("#00cb98", "#00cb98","#fe7669","#fe7669" )) +
+  scale_fill_manual(name = "Diet", values = c("#9FE2BF","#9FE2BF", "#FF7F50","#FF7F50")) +
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
                        color = "black",
                        pattern_fill = "white",
