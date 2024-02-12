@@ -1,6 +1,3 @@
-## virgin visualisation 
-
-####### Virgin Conditioning - 4:1 ####### 
 #### INSTALL PACKAGES 
 library(tidyverse)
 library(readxl)
@@ -9,74 +6,64 @@ library(colorBlindness)
 library(ggplot2)
 library(ggpattern)
 
-# Packages
-library(tidyverse)
-library(lmerTest)
-library(readxl)
 
-# Raw data
-## data on treatment 2 block 1 male feeding
+#### Uploading raw data
 
-## Creating a path to the scripts within block 1 and block 2 paths
-## use for when you get both blocks
-pathvirgin <- "data/female_conditioning/virgin"
-
-## This creates  function
-## Path is interchangeable with path 2 
-read_raw_virgin <-function(path = pathvirgin, pattern_to_exclude = "4-1_1-4"){
-  list_of_files <- list.files(path = pathvirgin,
-                              pattern = "rawresults", full.names = T)
-  list_of_files %>%
-    map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is the vector you're inputting? so adding a section of id is the name of the data and the folder its in 
-    pivot_longer(cols = c(4:7), ## this will put all the data files into long data, easy to read
-                 names_to = "diet",
-                 values_to = "fly_numbers") %>%
-    drop_na(fly_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
-}
-
-## read_raw is the function created, and path shows the path made, so the list of files
-read_raw_virgin(pathvirgin) 
-
-## creating an actual data set that will read the paths
-# first data frame - purr package 
-df_virgin <- pathvirgin%>% map_df(~read_raw_virgin(.x)) #.x is a string or NULL - only applies to dfr apparently
+## OvoD1 Females 
 
 
-#### Virgin visualisation 
-#### Upload data for plot - median calculated 
+
+## Virgin females
 four_to_one_virgin <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin.xlsx")
 one_to_four_virgin <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin.xlsx")
 fourone_onefour_virgin <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin.xlsx")
 
-
-
-
-## Making the median data long 
+## Making the  data long 
+## Virgin
+# 4:1
 four_to_one_virgin_long <- four_to_one_virgin  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
- 
-#´
+# 1:4 
 one_to_four_virgin_long <- one_to_four_virgin  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-#
+# 4:1 and 1:4 
 fourone_onefour_virgin_long <- fourone_onefour_virgin %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
-## creating a function to pull the median
-fly_numbers_summary()<- function(data, group_col) {
-  summary <- data %>%
-    group_by(plate, {{ group_col }}) %>%
-    summarise(median = median(fly_numbers))
-  return(summary)
-}
+####--- 
+
+## Males 
+# 4:1 
+four_to_one_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_t2b1.xlsx")
+four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m4-1_t2b2.xlsx")
+# binding the data
+four_to_one_male <- rbind(four_to_one_male_b1, four_to_one_male_b2)
+
+# 1:4 
+one_to_four_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m1-4_t2b1.xlsx")
+one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m1-4_t2b2.xlsx")
+# binding the data
+one_to_four_male <- rbind(one_to_four_male_b1, one_to_four_male_b2)
+
+# 4:1 + 1:4 
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_1-4_t2b1.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m4-1_1-4_t2b2.xlsx")
+# binding the data
+fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
 
-four_one_virgin_summary <- fly_numbers_summary(four_to_one_virgin_long, diet)
-one_four_virgin_summary <- fly_numbers_summary(one_to_four_virgin_long, diet)
-fourone_onefour_virgin_summary <- fly_numbers_summary(fourone_onefour_virgin_long, diet)
 
 
-
+## Making the  data long 
+# 4:1
+four_to_one_male_long <- four_to_one_male  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+# 1:4 
+one_to_four_male_long <- one_to_four_male  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+# 4:1 and 1:4 
+fourone_onefour_male_long <- fourone_onefour_male %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 #### Creating a function for a plot which will allow me to run the same code for different datasets 
@@ -108,9 +95,14 @@ feeding_results <- function(summary_data,boxplot_fill_color ) {
 }
 
 ## Code will allow one to see each of the plots
+
+## Virgin Female
 feeding_results(one_to_four_virgin_long, boxplot_fill_color = c("lightblue", "lightblue"))
 feeding_results(four_to_one_virgin_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
 feeding_results(fourone_onefour_virgin_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
-
+## Male
+feeding_results(one_to_four_male_long, boxplot_fill_color = c("lightblue", "lightblue"))
+feeding_results(four_to_one_male_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
+feeding_results(fourone_onefour_male_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 
