@@ -45,6 +45,8 @@ emmeans::emmeans(binomial_model_ovo, pairwise ~ ratio)
 # mixed model 
 mixed_model_ovo<-glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate/observation) + (1|id), family = binomial, data = df2)
 summary(mixed_model_ovo)
+
+## emmeans will analyse everything
 emmeans::emmeans(mixed_model_ovo, pairwise ~ ratio)
 
 
