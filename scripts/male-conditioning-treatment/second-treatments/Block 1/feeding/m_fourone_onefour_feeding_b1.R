@@ -5,7 +5,7 @@ library(patchwork)
 library(colorBlindness)
 
 #### Upload data MEAN! 
-onetofour_fourtoone_b1 <- read_excel("data/t2_4-1_1-4_mean.xlsx")
+onetofour_fourtoone_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_1-4_t2b1.xlsx")
 
 ## Making the data long 
 onetofour_fourtoone_b1_long <- onetofour_fourtoone_b1  %>% 
