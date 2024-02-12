@@ -10,6 +10,23 @@ library(ggpattern)
 #### Uploading raw data
 
 ## OvoD1 Females 
+four_to_one_ovod1 <- read_excel("data/female_conditioning/ovod1/block_1/rawresults_4-1_ovod1.xlsx")
+one_to_four_ovod1 <- read_excel("data/female_conditioning/ovod1/block_1/rawresults_1-4_ovod1.xlsx")
+fourone_onefour_ovod1 <- read_excel("data/female_conditioning/ovod1/block_1/rawresults_4-1_1-4_ovod1.xlsx")
+
+## Making the  data long 
+## Virgin
+# 4:1
+four_to_one_ovod1_long <- four_to_one_ovod1  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+# 1:4 
+one_to_four_ovod1_long <- one_to_four_ovod1  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+# 4:1 and 1:4 
+fourone_onefour_ovod1_long <- fourone_onefour_ovod1 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+####--- 
 
 
 
@@ -95,7 +112,10 @@ feeding_results <- function(summary_data,boxplot_fill_color ) {
 }
 
 ## Code will allow one to see each of the plots
-
+## Virgin Female
+feeding_results(one_to_four_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue"))
+feeding_results(four_to_one_ovod1_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
+feeding_results(fourone_onefour_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 ## Virgin Female
 feeding_results(one_to_four_virgin_long, boxplot_fill_color = c("lightblue", "lightblue"))
 feeding_results(four_to_one_virgin_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
