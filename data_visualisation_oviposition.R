@@ -15,7 +15,7 @@ one_to_four_oviposition_ovod1 <- read_excel("data/female_conditioning/ovod1/bloc
 fourone_onefour_oviposition_ovod1 <- read_excel("data/female_conditioning/ovod1/block_1/4-1_1-4_oviposition_ovod1.xlsx")
 
 ## Making the  data long 
-## Virgin
+## OvoD1
 # 4:1
 four_to_one_oviposition_ovod1_long <- four_to_one_oviposition_ovod1 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
