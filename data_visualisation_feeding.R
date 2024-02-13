@@ -113,16 +113,23 @@ feeding_results <- function(summary_data,boxplot_fill_color ) {
 
 ## Code will allow one to see each of the plots
 ## Virgin Female
-feeding_results(one_to_four_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue"))
-feeding_results(four_to_one_ovod1_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-feeding_results(fourone_onefour_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
-## Virgin Female
-feeding_results(one_to_four_virgin_long, boxplot_fill_color = c("lightblue", "lightblue"))
-feeding_results(four_to_one_virgin_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-feeding_results(fourone_onefour_virgin_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
-## Male
-feeding_results(one_to_four_male_long, boxplot_fill_color = c("lightblue", "lightblue"))
-feeding_results(four_to_one_male_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-feeding_results(fourone_onefour_male_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+of1 <- feeding_results(one_to_four_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue"))
+of2 <- feeding_results(four_to_one_ovod1_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
+of3 <- feeding_results(fourone_onefour_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
+of1 + of2 + of3
+
+## Virgin Female
+vf1 <- feeding_results(one_to_four_virgin_long, boxplot_fill_color = c("lightblue", "lightblue"))
+vf2 <- feeding_results(four_to_one_virgin_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
+vf3 <- feeding_results(fourone_onefour_virgin_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+
+vf1 + vf2 + vf3
+
+## Male
+mf1 <- feeding_results(one_to_four_male_long, boxplot_fill_color = c("lightblue", "lightblue"))
+mf2 <- feeding_results(four_to_one_male_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
+mf3 <- feeding_results(fourone_onefour_male_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+
+mf1 + mf2 + mf3
 
