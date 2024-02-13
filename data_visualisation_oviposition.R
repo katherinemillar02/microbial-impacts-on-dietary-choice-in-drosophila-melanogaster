@@ -28,11 +28,11 @@ fourone_onefour_oviposition_ovod1_long  <- fourone_onefour_oviposition_ovod1  %>
 
 ####--- 
 
-
+####
 
 ## Virgin females ## NEED OVIPOSITION DATA ## 
 
-
+####
 
 ####--- 
 
