@@ -96,15 +96,18 @@ oviposition_results <- function(summary_data,boxplot_fill_color ) {
 }
 
 ## Code will allow one to see each of the plots
-## Virgin Female
-oviposition_results(one_to_four_oviposition_ovod1_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF"))
-oviposition_results(four_to_one_oviposition_ovod1_long, boxplot_fill_color = c("#FF7F50","#FF7F50")) 
-oviposition_results(fourone_onefour_oviposition_ovod1_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
+## OvoD1 Female
+ov1_egg1 <- oviposition_results(one_to_four_oviposition_ovod1_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF"))
+ov1_egg2 <- oviposition_results(four_to_one_oviposition_ovod1_long, boxplot_fill_color = c("#FF7F50","#FF7F50")) 
+ov1_egg3 <- oviposition_results(fourone_onefour_oviposition_ovod1_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
+
+ov1_egg1 + ov1_egg2 + ov1_egg3
+
 ## Virgin Female
 
 ## Male
-oviposition_results(one_to_four_male_oviposition_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF"))
-oviposition_results(four_to_one_male_oviposition_long , boxplot_fill_color = c("#FF7F50","#FF7F50")) 
-oviposition_results(fourone_onefour_male_oviposition_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
+m_egg1 <- oviposition_results(one_to_four_male_oviposition_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF"))
+m_egg2 <- oviposition_results(four_to_one_male_oviposition_long , boxplot_fill_color = c("#FF7F50","#FF7F50")) 
+m_egg3 <- oviposition_results(fourone_onefour_male_oviposition_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
 
-
+m_egg1 + m_egg2 + m_egg3
