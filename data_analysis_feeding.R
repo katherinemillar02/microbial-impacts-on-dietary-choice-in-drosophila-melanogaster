@@ -15,6 +15,9 @@ malepath2 <-"data/male_conditioning/treatment_2/block_2"
 read_raw_male <- function(path = malepath2, pattern_to_exclude = "4-1_1-4"){
 list_of_files <- list.files(path = malepath2,
                             pattern = "rawdata", full.names = T)
+
+list_of_files <- list_of_files[!grepl(pattern_to_exclude, list_of_files)]
+
 list_of_files %>%
 map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is the vector you're inputting? so adding a section of id is the name of the data and the folder its in 
   pivot_longer(cols = c(4:7), ## this will put all the data files into long data, easy to read
@@ -33,7 +36,7 @@ malepaths <- list(malepath, malepath2)
 ## creating an actual data set that will read the paths
 # first data frame - purr package 
 df_male <- malepaths %>% 
-  map_df(~read_raw(.x)) #.x is a string or NULL - only applies to dfr apparently
+  map_df(~read_raw_male(.x)) #.x is a string or NULL - only applies to dfr apparently
 
 ## "second" data frame
 # uses what was generated with "df"
@@ -91,6 +94,8 @@ pathovod1 <- "data/female_conditioning/ovod1/block_1"
 read_raw_ovod1 <-function(path = pathovod1, pattern_to_exclude = "4-1_1-4"){
   list_of_files <- list.files(path = pathovod1,
                               pattern = "rawresults", full.names = T)
+  list_of_files <- list_of_files[!grepl(pattern_to_exclude, list_of_files)]
+  
   list_of_files %>%
     map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is the vector you're inputting? so adding a section of id is the name of the data and the folder its in 
     pivot_longer(cols = c(4:7), ## this will put all the data files into long data, easy to read
@@ -129,6 +134,8 @@ binomial_model_male <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = b
 ## looking at model 
 summary(binomial_model_male) # 4:1 Conditioned is significant?
 # mixed model, considers other "random" factors
+
+
 mixed_model_male <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate/observation) + (1|id), family = binomial, data = df2_male)
 ## looking at model 
 summary(mixed_model_male) # 4:1 Conditioned is NOT significant?
