@@ -133,3 +133,25 @@ mf3 <- feeding_results(fourone_onefour_male_long, boxplot_fill_color = c("lightb
 
 mf1 + mf2 + mf3
 
+
+
+
+#### A violin plot 
+feeding_results_violin <- function(summary_data, violin_fill_color) {
+  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet)) + 
+    geom_violin(trim = FALSE, width = 0.5, draw_quantiles = c(0.25, 0.5, 0.75)) +
+theme_classic() +
+    labs(x = "Diet Condition",
+         y = "Median number of flies per diet patch",
+         title = "") +
+    scale_fill_manual(values = violin_fill_color) +
+    ylim(-0.01, 6) +
+    theme(legend.position = "none")
+}
+
+
+# male 
+feeding_results_violin(fourone_onefour_male_long, violin_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+
+
+
