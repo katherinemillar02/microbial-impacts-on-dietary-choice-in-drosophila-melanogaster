@@ -26,14 +26,24 @@ one_to_four_oviposition_ovod1_long <- one_to_four_oviposition_ovod1 %>%
 fourone_onefour_oviposition_ovod1_long  <- fourone_onefour_oviposition_ovod1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
-####--- 
-
-####
 
 ## Virgin females ## NEED OVIPOSITION DATA ## 
-
+## OvoD1 Females 
+four_to_one_oviposition_virgin <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin.xlsx")
+one_to_four_oviposition_virgin <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin.xlsx") # need to change excel file name
+fourone_onefour_oviposition_virgin <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin.xlsx")
 ####
-
+## Making the  data long 
+## Virgin
+# 4:1
+four_to_one_oviposition_virgin_long <- four_to_one_oviposition_virgin %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+# 1:4 
+one_to_four_oviposition_virgin_long <- one_to_four_oviposition_virgin %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+# 4:1 and 1:4 
+fourone_onefour_oviposition_virgin_long  <- fourone_onefour_oviposition_virgin  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 ####--- 
 
 ## Males 
@@ -84,7 +94,8 @@ oviposition_results <- function(summary_data,boxplot_fill_color ) {
          title = "")+
     scale_fill_manual(values = boxplot_fill_color) +  # Set fill colors for the boxplot
     scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
-    theme(legend.position = "none") +
+    theme(legend.position = "none",
+          axis.text.x = element_text(size = 6)) +
     ylim(0.1, 250) +
     geom_jitter(data = summary_data,
                 aes(x = diet,
@@ -104,6 +115,11 @@ ov1_egg3 <- oviposition_results(fourone_onefour_oviposition_ovod1_long, boxplot_
 ov1_egg1 + ov1_egg2 + ov1_egg3
 
 ## Virgin Female
+v1_egg1 <- oviposition_results(one_to_four_oviposition_virgin_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF"))
+v1_egg2 <- oviposition_results(four_to_one_oviposition_virgin_long, boxplot_fill_color = c("#FF7F50","#FF7F50")) 
+v1_egg3 <- oviposition_results(fourone_onefour_oviposition_virgin_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
+
+v1_egg1 + v1_egg2 + v1_egg3
 
 ## Male
 m_egg1 <- oviposition_results(one_to_four_male_oviposition_long, boxplot_fill_color = c("#9FE2BF","#9FE2BF"))
