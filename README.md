@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # The effects of fly contaminated diets on dietary choice in mated female *Drosophila melanogaster*
 
 This is a GitHub Repository for my Masters of Science by Research Project. 
@@ -31,3 +32,6 @@ Second project experiment:
 (ii) 1:4 conditioned and unconditioned treatment (1:4 C + 1:4 UC)     
 (iii) 1:4 and 4:1 conditioned and unconditioned treatment (4:1 C, 1:4 C, 4:1 UC,1:4 UC)     
 
+=======
+a
+>>>>>>> 879d591ebd1d33437a1838bcea42c0723db888ae
