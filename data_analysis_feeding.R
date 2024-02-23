@@ -247,10 +247,11 @@ summary(male_all_assay_nb)
 performance::check_model(male_all_assay_nb, check = c("qq"))
 performance::check_model(male_all_assay_nb, check = c("outliers"))
 
+
 model_performance(male_all_assay_nb) # AIC quite high
 
 
-
-
+# Compare Performance 
+compare_performance(male_all_assay, male_all_assay_nb, rank = TRUE, verbose = FALSE)
 
 
