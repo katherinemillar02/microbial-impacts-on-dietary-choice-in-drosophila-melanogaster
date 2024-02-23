@@ -3,6 +3,9 @@ library(tidyverse)
 library(lmerTest)
 library(readxl)
 library(MASS)
+library(performance)
+library(pscl)
+
 
 #### DATA UPLOAD 
 #### MALE ----####----
@@ -210,14 +213,26 @@ fourone_onefour_virgin_summary <- fly_numbers_summary(fourone_onefour_virgin_lon
 #### Data Analysis Feeding 
 
 ## For the 4:1/1:4 Assay only 
+
+
+## MALE ## 
+#### UPLOADING AND BINDING THE CORRECT DATA
 # 4:1 + 1:4 
 fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_1-4_t2b1.xlsx")
 fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m4-1_1-4_t2b2.xlsx")
+
+fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
+fourone_onefour_male_b2 <- fourone_onefour_male_b2  %>% mutate(block = "two")
+
 # binding the data
 fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 # 4:1 and 1:4 
 fourone_onefour_male_long <- fourone_onefour_male %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
+
 
 
 ## Doing poisson 
@@ -233,15 +248,18 @@ summary(male_all_assay)
 
 
 check_zeroinflation(male_all_assay)
+
 # there is zero inflation 
 
 # There is both zero inflation and overdispersion
 
 # trying negative binomial family 
-male_all_assay_nb <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_male_long)
 
+## trying to look for significance of experiment 
+male_all_assay_nb_2 <- glm.nb(fly_numbers ~ block, data = fourone_onefour_male_long)
 
 summary(male_all_assay_nb)
+
 
 ## assumption checks 
 performance::check_model(male_all_assay_nb, check = c("qq"))
@@ -251,7 +269,14 @@ performance::check_model(male_all_assay_nb, check = c("outliers"))
 model_performance(male_all_assay_nb) # AIC quite high
 
 
+## Other option is zero inflated model
+male_all_assay_zi <- zeroinfl(fly_numbers ~ diet, data = fourone_onefour_male_long)
+
+summary(male_all_assay_zi) # completely changes results?? 
+
+
 # Compare Performance 
-compare_performance(male_all_assay, male_all_assay_nb, rank = TRUE, verbose = FALSE)
+compare_performance(male_all_assay, male_all_assay_nb, male_all_assay_zi, rank = TRUE, verbose = FALSE)
 
-
+# Is negative binomial the best? 
+emmeans::emmeans(male_all_assay_nb, pairwise ~ diet)
