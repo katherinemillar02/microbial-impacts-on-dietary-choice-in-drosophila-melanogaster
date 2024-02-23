@@ -12,8 +12,8 @@ malepath2 <-"data/male_conditioning/treatment_2/block_2"
 
 ## This creates  function
 ## Path is interchangeable with path 2 
-read_raw_male <- function(path = malepath2, pattern_to_exclude = "4-1_1-4"){
-list_of_files <- list.files(path = malepath2,
+read_raw_male <- function(path = malepath, pattern_to_exclude = "4-1_1-4"){
+list_of_files <- list.files(path = malepath,
                             pattern = "rawdata", full.names = T)
 
 list_of_files <- list_of_files[!grepl(pattern_to_exclude, list_of_files)]
@@ -150,7 +150,7 @@ binomial_model_virgin <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family =
 ## looking at model 
 summary(binomial_model_virgin) # 4:1 Conditioned is significant?
 # mixed model, considers other "random" factors
-mixed_model_virgin <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate/observation) + (1|id), family = binomial, data = df2_virgin)
+mixed_model_virgin <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + id + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 ## looking at model 
 summary(mixed_model_virgin) # 4:1 Conditioned IS in virgin analysis 
 
@@ -202,3 +202,41 @@ fly_numbers_summary()<- function(data, group_col) {
 four_one_virgin_summary <- fly_numbers_summary(four_to_one_virgin_long, diet)
 one_four_virgin_summary <- fly_numbers_summary(one_to_four_virgin_long, diet)
 fourone_onefour_virgin_summary <- fly_numbers_summary(fourone_onefour_virgin_long, diet)
+
+
+
+
+#### Data Analysis Feeding 
+
+## For the 4:1/1:4 Assay only 
+# 4:1 + 1:4 
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_1-4_t2b1.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m4-1_1-4_t2b2.xlsx")
+# binding the data
+fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
+# 4:1 and 1:4 
+fourone_onefour_male_long <- fourone_onefour_male %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+## Doing poisson 
+male_all_assay <- glm(fly_numbers ~ diet, family = poisson, data = fourone_onefour_male_long)
+
+summary(male_all_assay)
+
+# A bit overdispersed 
+
+
+# Look for 0s 
+
+
+check_zeroinflation(male_all_assay)
+# there is zero inflation 
+
+# There is both zero inflation and overdispersion
+
+# trying negative binomial family 
+male_all_assay <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_male_long)
+
+
+
