@@ -2,6 +2,7 @@
 library(tidyverse)
 library(lmerTest)
 library(readxl)
+library(MASS)
 
 #### DATA UPLOAD 
 #### MALE ----####----
@@ -222,6 +223,7 @@ fourone_onefour_male_long <- fourone_onefour_male %>%
 ## Doing poisson 
 male_all_assay <- glm(fly_numbers ~ diet, family = poisson, data = fourone_onefour_male_long)
 
+
 summary(male_all_assay)
 
 # A bit overdispersed 
@@ -236,7 +238,19 @@ check_zeroinflation(male_all_assay)
 # There is both zero inflation and overdispersion
 
 # trying negative binomial family 
-male_all_assay <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_male_long)
+male_all_assay_nb <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_male_long)
+
+
+summary(male_all_assay_nb)
+
+## assumption checks 
+performance::check_model(male_all_assay_nb, check = c("qq"))
+performance::check_model(male_all_assay_nb, check = c("outliers"))
+
+model_performance(male_all_assay_nb) # AIC quite high
+
+
+
 
 
 
