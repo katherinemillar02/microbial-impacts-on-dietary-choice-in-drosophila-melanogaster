@@ -5,6 +5,7 @@ library(readxl)
 library(MASS)
 library(performance)
 library(pscl)
+library(DHARMa)
 
 
 #### DATA UPLOAD 
@@ -267,6 +268,23 @@ performance::check_model(male_all_assay_nb, check = c("outliers"))
 
 
 model_performance(male_all_assay_nb) # AIC quite high
+
+## Using the DHARMa package 
+testDispersion(male_all_assay_nb)
+
+simulationOutput <- simulateResiduals(fittedModel = male_all_assay_nb, plot = F)
+
+
+simulationOutput <- simulateResiduals(fittedModel = male_all_assay_nb, plot = T)
+plot(simulationOutput)
+# I don't know what I'm looking at here 
+
+## Randomising quantile residuals
+residuals(simulationOutput)
+# calculates randomised quantile residuals  
+
+residuals(simulationOutput, quantileFunction = qnorm, outlierValues = c(-7,7))
+
 
 
 ## Other option is zero inflated model
