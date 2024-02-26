@@ -10,9 +10,23 @@ library(ggpattern)
 #### Uploading raw data
 
 ## OvoD1 Females 
-four_to_one_ovod1 <- read_excel("data/female_conditioning/ovod1/block_1/rawresults_4-1_ovod1.xlsx")
-one_to_four_ovod1 <- read_excel("data/female_conditioning/ovod1/block_1/rawresults_1-4_ovod1.xlsx")
-fourone_onefour_ovod1 <- read_excel("data/female_conditioning/ovod1/block_1/rawresults_4-1_1-4_ovod1.xlsx")
+four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1.xlsx")
+one_to_four_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1.xlsx")
+fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1.xlsx")
+
+## OvoD1 Females 
+four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
+one_to_four_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b2.xlsx")
+fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
+
+
+four_to_one_ovod1 <- rbind(four_to_one_ovod1_b1, four_to_one_ovod1_b2)
+one_to_four_ovod1 <- rbind(one_to_four_ovod1_b1, one_to_four_ovod1_b2)
+fourone_onefour_ovod1 <- rbind(fourone_onefour_ovod1_b1, fourone_onefour_ovod1_b2)
+
+
+
+
 
 ## Making the  data long 
 ## Virgin
@@ -31,9 +45,19 @@ fourone_onefour_ovod1_long <- fourone_onefour_ovod1 %>%
 
 
 ## Virgin females
-four_to_one_virgin <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin.xlsx")
-one_to_four_virgin <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin.xlsx")
-fourone_onefour_virgin <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin.xlsx")
+four_to_one_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin.xlsx")
+one_to_four_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin.xlsx")
+fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin.xlsx")
+
+four_to_one_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx")
+one_to_four_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b2.xlsx")
+fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
+
+
+## Binding the data 
+four_to_one_virgin <- rbind(four_to_one_virgin_b1, four_to_one_virgin_b2 )
+one_to_four_virgin <- rbind(one_to_four_virgin_b1, one_to_four_virgin_b2)
+fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2)
 
 ## Making the  data long 
 ## Virgin
