@@ -324,10 +324,86 @@ emmeans::emmeans(male_all_assay_nb, pairwise ~ diet)
 
 
 # Virgin Female Assay 
-virgin_all_assay <- glm(fly_numbers ~ diet, family = poisson, data = fourone_onefour_virgin_long)
 
-summary(virgin_all_assay)
+# mutating a block variable 
+fourone_onefour_virgin_b1 <- fourone_onefour_virgin_b1  %>% mutate(block = "one")
+fourone_onefour_virgin_b2 <- fourone_onefour_virgin_b2  %>% mutate(block = "two")
 
+# Binding the data
+fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2)
+# Making the data long
+fourone_onefour_virgin_long <- fourone_onefour_virgin %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+# glm with poisson
+virgin_all_assay <- glm(fly_numbers ~ diet * block, family = poisson, data = fourone_onefour_virgin_long)
+
+summary(virgin_all_assay) # shows overdispersion 
+
+# overdispersion so checking for zero inflation
 check_zeroinflation(virgin_all_assay)
 
-male_all_assay_nb_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_male_long)
+virgin_all_assay_nb_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_virgin_long)
+
+drop1(virgin_all_assay_nb_2, test = "F") # diet and block are significant here, so keep in the model?
+
+# Doing model checks 
+
+# easystats/performance
+performance::check_model(virgin_all_assay_nb_2, check = c("qq")) # I am not sure how okay this looks 
+
+
+# Using the DHARMa package for model checks
+testDispersion(virgin_all_assay_nb_2) # residual variables?
+# does this create random data?
+
+# Using the model 
+summary(virgin_all_assay_nb_2)
+
+emmeans::emmeans(virgin_all_assay_nb_2, pairwise ~ diet)
+
+# OvoD1 Conditioning 4:1-1:4 analysis
+# mutating a block variable 
+fourone_onefour_ovod1_b1 <- fourone_onefour_ovod1_b1  %>% mutate(block = "one")
+fourone_onefour_ovod1_b2 <- fourone_onefour_ovod1_b2  %>% mutate(block = "two")
+
+# Binding the data 
+fourone_onefour_ovod1 <- rbind(fourone_onefour_ovod1_b1, fourone_onefour_ovod1_b2)
+
+# Making the data long
+fourone_onefour_ovod1_long <- fourone_onefour_ovod1 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
+# First model 
+ovod1_all_assay <- glm(fly_numbers ~ diet * block, family = poisson, data = fourone_onefour_ovod1_long)
+# looking for overdispersion
+summary(ovod1_all_assay) 
+
+# overdispersion so checking for zero inflation
+check_zeroinflation(ovod1_all_assay)
+
+# Doing a negative binomial as there is zero inflation
+ovod1_all_assay_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_ovod1_long)
+
+# Checking for interaction effect with block 
+drop1(ovod1_all_assay_2, test = "F") # not significant so can drop it from the model 
+
+# New model without block
+ovod1_all_assay_3 <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_ovod1_long)
+
+# Doing model checks 
+
+# easystats checks 
+performance::check_model(ovod1_all_assay_3, check = c("qq"))
+
+# DHARMa checks
+testDispersion(ovod1_all_assay_3) # residual points at 0.6?
+
+# Using the model
+summary(ovod1_all_assay_3)
+emmeans::emmeans(ovod1_all_assay_3, pairwise ~ diet)
+
+
+
