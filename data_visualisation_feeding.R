@@ -54,6 +54,7 @@ one_to_four_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
 
 
+
 ## Binding the data 
 four_to_one_virgin <- rbind(four_to_one_virgin_b1, four_to_one_virgin_b2 )
 one_to_four_virgin <- rbind(one_to_four_virgin_b1, one_to_four_virgin_b2)
