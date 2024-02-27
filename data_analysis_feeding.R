@@ -35,7 +35,6 @@ map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is
 read_raw_male(malepath) 
 
 
-## this creates a list were both data from path 1 and path 2 
 
 
 ## creating an actual data set that will read the paths
@@ -52,6 +51,10 @@ df2_male <- df_male %>%
   pivot_wider(names_from = "condition", values_from = "count")
 
 df2_male # does it recognise condition from the long data? 
+
+# how to mutate a variable to something like this? 
+
+
 
 ## should now not include 4:1_1:4 assay but I don't know if this worked
 head(df2_male)
@@ -250,18 +253,13 @@ fourone_onefour_male_long <- fourone_onefour_male %>%
 
 
 
-## Doing poisson 
+## Doing poisson to begin with 
 male_all_assay <- glm(fly_numbers ~ diet, family = poisson, data = fourone_onefour_male_long)
 
-
-summary(male_all_assay)
-
-# A bit overdispersed 
+summary(male_all_assay) # A bit overdispersed 
 
 
 # Look for 0s 
-
-
 check_zeroinflation(male_all_assay)
 
 # there is zero inflation 
