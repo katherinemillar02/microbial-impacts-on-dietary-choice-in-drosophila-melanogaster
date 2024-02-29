@@ -422,7 +422,7 @@ virgin_all_assay_zi <- zeroinfl(fly_numbers ~ diet * block, data = fourone_onefo
 # looking at the model 
 summary(virgin_all_assay_zi)
 
-## Comparing all 3x models 
+## Comparing all 3x models ??
 compare_performance()
 
 # OvoD1 Conditioning 4:1-1:4 analysis -- 
