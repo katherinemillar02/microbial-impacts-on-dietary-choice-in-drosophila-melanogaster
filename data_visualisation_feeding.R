@@ -76,20 +76,20 @@ fourone_onefour_virgin_long <- fourone_onefour_virgin %>%
 
 ## Males 
 # 4:1 
-four_to_one_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_t2b1.xlsx")
-four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m4-1_t2b2.xlsx")
+four_to_one_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b1.xlsx")
+four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b2.xlsx")
 # binding the data
 four_to_one_male <- rbind(four_to_one_male_b1, four_to_one_male_b2)
 
 # 1:4 
-one_to_four_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m1-4_t2b1.xlsx")
-one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m1-4_t2b2.xlsx")
+one_to_four_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b1.xlsx")
+one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b2.xlsx")
 # binding the data
 one_to_four_male <- rbind(one_to_four_male_b1, one_to_four_male_b2)
 
 # 4:1 + 1:4 
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/rawdata_m4-1_1-4_t2b1.xlsx")
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/rawdata_m4-1_1-4_t2b2.xlsx")
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b1.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b2.xlsx")
 # binding the data
 fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
@@ -156,7 +156,7 @@ mf1 <- feeding_results(one_to_four_male_long, boxplot_fill_color = c("lightblue"
 mf2 <- feeding_results(four_to_one_male_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
 mf3 <- feeding_results(fourone_onefour_male_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
-mf1 + mf2 + mf3
+ mf1 + mf2 + mf3
 
 
 
