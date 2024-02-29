@@ -276,15 +276,45 @@ summary(male_all_assay) # A bit overdispersed
 check_zeroinflation(male_all_assay)
 # there is zero inflation 
 
-# There is both zero inflation and overdispersion
+# There is overdispersion, this could be independent of or because of the zero inflation
 # so trying negative binomial family 
 ## trying to look for significance of experiment with a negative binomial model
 
 # negative binomial model
 male_all_assay_nb_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_male_long)
 
+
+# zero inflated poisson
+
+library(pscl)
+
+zip1 <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = fourone_onefour_male_long)
+
+# zero inflated negative binomial
+
+zinb1 <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = fourone_onefour_male_long)
+
+AIC(male_all_assay, male_all_assay_nb_2, zip1, zinb1)
+
+# check residuals of zip
+
+sresid <- residuals(zip1, type = "pearson")
+
+pred <- fitted(zip1)
+
+hist(sresid)
+
+plot(sresid ~  pred)
+
+# no evidence of overdispersion but still highly skewed residuals do random effects help?
+library(glmmTMB)
+
+male_all_assay <- glmmTMB(fly_numbers ~ diet * block +(1|factor(block)/plate) + (1|observation), family = poisson, data = fourone_onefour_male_long)
+
+simulateResiduals(fittedModel = male_all_assay, plot = T)
+
 # using drop1 to look for any interaction effect of block
-drop1(male_all_assay_nb_2, test = "F") # no interaction effect
+drop1(male_all_assay, test = "F") # no interaction effect
 
 # dropping block from the model 
 male_all_assay_nb <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_male_long)
@@ -393,7 +423,7 @@ virgin_all_assay_zi <- zeroinfl(fly_numbers ~ diet * block, data = fourone_onefo
 summary(virgin_all_assay_zi)
 
 ## Comparing all 3x models 
-
+compare_performance()
 
 # OvoD1 Conditioning 4:1-1:4 analysis -- 
 # mutating a block variable 
