@@ -9,6 +9,10 @@ library(DHARMa)
 
 
 #### DATA UPLOAD 
+
+#### THIS DATA UPLOAD WORKS FOR 4:1 AND 1:4 COMBINING ####
+
+
 #### MALE ----####----
 # Analysing the raw data
 ## Creating a path to the scripts within block 1 and block 2 paths
@@ -36,7 +40,6 @@ read_raw_male(malepath)
 
 
 
-
 ## creating an actual data set that will read the paths
 # first data frame - purr package 
 df_male <- malepath %>% 
@@ -52,12 +55,9 @@ df2_male <- df_male %>%
 
 df2_male # does it recognise condition from the long data? 
 
-# how to mutate a variable to something like this? 
 
 
 
-## should now not include 4:1_1:4 assay but I don't know if this worked
-head(df2_male)
 
 #### VIRGIN FEMALE  ----
 ## Creating a path to the scripts within block 1 and block 2 paths
@@ -151,12 +151,19 @@ df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
 binomial_model_male <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_male)
 ## looking at model 
 summary(binomial_model_male) # 4:1 Conditioned is significant?
+
+
 # mixed model, considers other "random" factors
-
-
 mixed_model_male <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 ## looking at model 
 summary(mixed_model_male) # 4:1 Conditioned is NOT significant?
+
+## how to look at this model in emmeans? 
+emmeans::emmeans(mixed_model_male, pairwise ~ ratio)
+# really want to look at conditioned vs unconditioned
+
+
+
 
 
 
@@ -173,7 +180,7 @@ mixed_model_virgin_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|pla
 
 ## looking at model 
 summary(mixed_model_virgin) # 4:1 Conditioned IS in virgin analysis # Getting some very weird results
-summary(mixed_model_virgin_2) # Results look more better 
+summary(mixed_model_virgin_2) # Results look more better here
 
 
 
@@ -221,6 +228,8 @@ fly_numbers_summary()<- function(data, group_col) {
   return(summary)
 }
 
+
+
 four_one_virgin_summary <- fly_numbers_summary(four_to_one_virgin_long, diet)
 one_four_virgin_summary <- fly_numbers_summary(one_to_four_virgin_long, diet)
 fourone_onefour_virgin_summary <- fly_numbers_summary(fourone_onefour_virgin_long, diet)
@@ -251,64 +260,74 @@ fourone_onefour_male_long <- fourone_onefour_male %>%
 
 
 
-
-
 ## Doing poisson to begin with 
-male_all_assay <- glm(fly_numbers ~ diet, family = poisson, data = fourone_onefour_male_long)
+male_all_assay <- glm(fly_numbers ~ diet * block, family = poisson, data = fourone_onefour_male_long)
 
+# doing assumption checks 
+performance::check_model(male_all_assay, check = c("qq")) # qq looks ok?
+performance::check_model(male_all_assay, check = c("outliers")) # weird 
+
+# should I not have block in their yet?
+
+# checking for overdispersion
 summary(male_all_assay) # A bit overdispersed 
-
 
 # Look for 0s 
 check_zeroinflation(male_all_assay)
-
 # there is zero inflation 
 
 # There is both zero inflation and overdispersion
+# so trying negative binomial family 
+## trying to look for significance of experiment with a negative binomial model
 
-# trying negative binomial family 
-
-## trying to look for significance of experiment 
-
-
+# negative binomial model
 male_all_assay_nb_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_male_long)
 
-drop1(male_all_assay_nb_2, test = "F")
+# using drop1 to look for any interaction effect of block
+drop1(male_all_assay_nb_2, test = "F") # no interaction effect
 
-summary(male_all_assay_nb)
-
+# dropping block from the model 
 male_all_assay_nb <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_male_long)
 
+
+# looking at the analysis results from this model 
 summary(male_all_assay_nb )
 
-
-## assumption checks 
-performance::check_model(male_all_assay_nb, check = c("qq"))
+## assumption checks from new model
+performance::check_model(male_all_assay_nb, check = c("qq")) # qq doesn't look great
 performance::check_model(male_all_assay_nb, check = c("outliers"))
 
+## Checking the AIC of the model 
+model_performance(male_all_assay_nb, check = c("AIC")) # AIC quite high
 
-model_performance(male_all_assay_nb) # AIC quite high
+## Using the DHARMa package to check the model 
+testDispersion(male_all_assay_nb) # shows how powerful the test is?
 
-## Using the DHARMa package 
-testDispersion(male_all_assay_nb)
-
-simulationOutput <- simulateResiduals(fittedModel = male_all_assay_nb, plot = F)
+# simulating tandom residuals? 
+simulationOutput_male <- simulateResiduals(fittedModel = male_all_assay_nb, plot = F)
 
 
-simulationOutput <- simulateResiduals(fittedModel = male_all_assay_nb, plot = T)
-plot(simulationOutput)
-# I don't know what I'm looking at here 
+plotQQunif(simulationOutput_male)
+plotResiduals(simulationOutput_male) 
+testQuantiles(simulationOutput_male) # why NULL?
+
 
 ## Randomising quantile residuals
 residuals(simulationOutput)
 # calculates randomised quantile residuals  
 
-residuals(simulationOutput, quantileFunction = qnorm, outlierValues = c(-7,7))
+residuals(simulationOutput_male, quantileFunction = qnorm, outlierValues = c(-7,7))
 
 
 
-## Other option is zero inflated model
+
+
+
+## Other option is zero inflated model? 
+
+# trying a zero inflated model
 male_all_assay_zi <- zeroinfl(fly_numbers ~ diet, data = fourone_onefour_male_long)
+
 
 summary(male_all_assay_zi) # completely changes results?? 
 
@@ -318,6 +337,8 @@ compare_performance(male_all_assay, male_all_assay_nb, male_all_assay_zi, rank =
 
 # Is negative binomial the best? 
 emmeans::emmeans(male_all_assay_nb, pairwise ~ diet)
+
+
 
 
 
@@ -336,13 +357,16 @@ fourone_onefour_virgin_long <- fourone_onefour_virgin %>%
 # glm with poisson
 virgin_all_assay <- glm(fly_numbers ~ diet * block, family = poisson, data = fourone_onefour_virgin_long)
 
+# looking for overdispersion in the model
 summary(virgin_all_assay) # shows overdispersion 
 
 # overdispersion so checking for zero inflation
-check_zeroinflation(virgin_all_assay)
+check_zeroinflation(virgin_all_assay) 
 
+# trying a negative binomial model
 virgin_all_assay_nb_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_virgin_long)
 
+# Looking for interaction effecr with block
 drop1(virgin_all_assay_nb_2, test = "F") # diet and block are significant here, so keep in the model?
 
 # Doing model checks 
@@ -358,9 +382,20 @@ testDispersion(virgin_all_assay_nb_2) # residual variables?
 # Using the model 
 summary(virgin_all_assay_nb_2)
 
-emmeans::emmeans(virgin_all_assay_nb_2, pairwise ~ diet)
+# More in depth analysis?
+emmeans::emmeans(virgin_all_assay_nb_2, pairwise ~ diet * block) 
 
-# OvoD1 Conditioning 4:1-1:4 analysis
+
+# Trying a zero inflation model 
+virgin_all_assay_zi <- zeroinfl(fly_numbers ~ diet * block, data = fourone_onefour_male_long)
+
+# looking at the model 
+summary(virgin_all_assay_zi)
+
+## Comparing all 3x models 
+
+
+# OvoD1 Conditioning 4:1-1:4 analysis -- 
 # mutating a block variable 
 fourone_onefour_ovod1_b1 <- fourone_onefour_ovod1_b1  %>% mutate(block = "one")
 fourone_onefour_ovod1_b2 <- fourone_onefour_ovod1_b2  %>% mutate(block = "two")
