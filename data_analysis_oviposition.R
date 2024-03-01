@@ -142,6 +142,11 @@ binomial_model_male_oviposition <- glm(cbind(Conditioned, Unconditioned) ~ ratio
 summary(binomial_model_male_oviposition) # 4:1 Conditioned is very significant?
 
 
+# Female Oviposition
+binomial_model_virgin_oviposition <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_virgin_oviposition)
+
+summary(binomial_model_virgin_oviposition)
+
 
 
 
