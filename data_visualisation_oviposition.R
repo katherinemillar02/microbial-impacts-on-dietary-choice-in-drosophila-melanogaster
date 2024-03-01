@@ -28,10 +28,22 @@ fourone_onefour_oviposition_ovod1_long  <- fourone_onefour_oviposition_ovod1  %>
 
 
 ## Virgin females ## NEED OVIPOSITION DATA ## 
-## OvoD1 Females 
-four_to_one_oviposition_virgin <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin.xlsx")
-one_to_four_oviposition_virgin <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin.xlsx") # need to change excel file name
+four_to_one_oviposition_virgin_1 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin.xlsx")
+four_to_one_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_2.xlsx")
+
+# binding the data 
+four_to_one_oviposition_virgin <- rbind(four_to_one_oviposition_virgin_1, four_to_one_oviposition_virgin_2)
+
+
+
+one_to_four_oviposition_virgin <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin.xlsx")
+one_to_four_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_2.xlsx")
+
+
 fourone_onefour_oviposition_virgin <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin.xlsx")
+fourone_onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_2.xlsx")
+
+
 ####
 ## Making the  data long 
 ## Virgin
