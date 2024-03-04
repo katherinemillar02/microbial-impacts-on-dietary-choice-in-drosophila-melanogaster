@@ -399,6 +399,10 @@ summary(virgin_all_assay_zi)
 ## Comparing all 3x models ??
 compare_performance()
 
+
+
+
+
 # OvoD1 Conditioning 4:1-1:4 analysis -- 
 # mutating a block variable 
 fourone_onefour_ovod1_b1 <- fourone_onefour_ovod1_b1  %>% mutate(block = "one")
@@ -408,39 +412,62 @@ fourone_onefour_ovod1_b2 <- fourone_onefour_ovod1_b2  %>% mutate(block = "two")
 fourone_onefour_ovod1 <- rbind(fourone_onefour_ovod1_b1, fourone_onefour_ovod1_b2)
 
 # Making the data long
-fourone_onefour_ovod1_long <- fourone_onefour_ovod1 %>% 
+combined_of <- fourone_onefour_ovod1 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
+# GLM with poisson 
+glm_poisson_of <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_of)
 
-# First model 
-ovod1_all_assay <- glm(fly_numbers ~ diet * block, family = poisson, data = fourone_onefour_ovod1_long)
-# looking for overdispersion
-summary(ovod1_all_assay) 
+# doing model checks 
+performance::check_model(glm_poisson_of, check = c("qq")) # doesn't look great - banana 
+performance::check_model(glm_poisson_of, check = c("homogeneity")) # slopey 
+
+
+# checking for overdispersion
+summary(glm_poisson_of) # there is overdispersion 
 
 # overdispersion so checking for zero inflation
-check_zeroinflation(ovod1_all_assay)
+check_zeroinflation(glm_poisson_of) # there is zero inflation 
 
 # Doing a negative binomial as there is zero inflation
-ovod1_all_assay_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_ovod1_long)
+glm.nb_of<- glm.nb(fly_numbers ~ diet * block, data = combined_of)
 
-# Checking for interaction effect with block 
-drop1(ovod1_all_assay_2, test = "F") # not significant so can drop it from the model 
+# checking the negative binomial glm 
+performance::check_model(glm.nb_of, check = c("qq")) # still very slopey 
 
-# New model without block
-ovod1_all_assay_3 <- glm.nb(fly_numbers ~ diet, data = fourone_onefour_ovod1_long)
+# checking for overdispersion 
+summary(glm.nb_of) # very little overdispersion 
 
-# Doing model checks 
+# trying a mixed GLM 
+glm_mm_of <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_of)
 
-# easystats checks 
-performance::check_model(ovod1_all_assay_3, check = c("qq"))
+# performance checks 
+performance::check_model(glm_mm_of, check = c("qq")) # qq looks a lot better, goes off at the end 
 
-# DHARMa checks
-testDispersion(ovod1_all_assay_3) # residual points at 0.6?
+# ZERO INFLATED MODELS 
 
-# Using the model
-summary(ovod1_all_assay_3)
-emmeans::emmeans(ovod1_all_assay_3, pairwise ~ diet)
+# trying a zero inflated poisson model 
+zi.p_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_of)
+
+# trying a zero inflated negative binomial model 
+zi.nb_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_of )
+
+
+# comparing models 
+AIC(glm_poisson_of, glm.nb_of, glm_mm_of, zi.p_of, zi.nb_of)
+# really close AIC between zero inflated negative binomial and poisson 
+
+# choosing negative binomial? 
+
+# looking for significance in block 
+summary(zi.nb_of) # not significant? 
+
+# dropping block from the model 
+zi.nb_of_2 <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of )
+
+# looking at the results 
+summary(zi.nb_of_2)
 
 
 
