@@ -445,4 +445,29 @@ glm_mm_of <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|o
 # performance checks 
 performance::check_model(glm_mm_of, check = c("qq")) # qq looks a lot better, goes off at the end 
 
-# ZERO INFLATED MODELS
+# ZERO INFLATED MODELS 
+
+# trying a zero inflated poisson model 
+zi.p_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_of)
+
+# trying a zero inflated negative binomial model 
+zi.nb_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_of )
+
+
+# comparing models 
+AIC(glm_poisson_of, glm.nb_of, glm_mm_of, zi.p_of, zi.nb_of)
+# really close AIC between zero inflated negative binomial and poisson 
+
+# choosing negative binomial? 
+
+# looking for significance in block 
+summary(zi.nb_of) # not significant? 
+
+# dropping block from the model 
+zi.nb_of_2 <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of )
+
+# looking at the results 
+summary(zi.nb_of_2)
+
+
+
