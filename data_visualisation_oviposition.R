@@ -30,19 +30,25 @@ fourone_onefour_oviposition_ovod1_long  <- fourone_onefour_oviposition_ovod1  %>
 ## Virgin females ## NEED OVIPOSITION DATA ## 
 four_to_one_oviposition_virgin_1 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin.xlsx")
 four_to_one_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_2.xlsx")
+four_to_one_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_3.xlsx")
 
 # binding the data 
-four_to_one_oviposition_virgin <- rbind(four_to_one_oviposition_virgin_1, four_to_one_oviposition_virgin_2)
+four_to_one_oviposition_virgin <- rbind(four_to_one_oviposition_virgin_1, four_to_one_oviposition_virgin_2, four_to_one_oviposition_virgin_3)
 
 
 
-one_to_four_oviposition_virgin <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin.xlsx")
+one_to_four_oviposition_virgin_1 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin.xlsx")
 one_to_four_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_2.xlsx")
+one_to_four_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_3.xlsx")
 
+one_to_four_oviposition_virgin <- rbind(one_to_four_oviposition_virgin_1, one_to_four_oviposition_virgin_2,one_to_four_oviposition_virgin_3)
 
-fourone_onefour_oviposition_virgin <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin.xlsx")
+fourone_onefour_oviposition_virgin_1 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin.xlsx")
 fourone_onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_2.xlsx")
+fourone_onefour_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_3.xlsx")
 
+
+fouroneone_onefour_oviposition_virgin <- rbind(fourone_onefour_oviposition_virgin_1, fourone_onefour_oviposition_virgin_2, fourone_onefour_oviposition_virgin_3)
 
 ####
 ## Making the  data long 
