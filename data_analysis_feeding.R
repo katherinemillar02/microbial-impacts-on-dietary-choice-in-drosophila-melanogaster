@@ -431,13 +431,25 @@ summary(glm_poisson_of) # there is overdispersion
 check_zeroinflation(glm_poisson_of) # there is zero inflation 
 
 # Doing a negative binomial as there is zero inflation
-glm.nb_of<- glm.nb(fly_numbers ~ diet * block, data = combined_of)
+glm.nb_of <- glm.nb(fly_numbers ~ diet * block, data = combined_of)
 
 # checking the negative binomial glm 
 performance::check_model(glm.nb_of, check = c("qq")) # still very slopey 
 
+# using DHARMa to check 
+testDispersion(glm.nb_of) # this is fairly dispersed 
+
+simulationOutput_of  <- simulateResiduals(fittedModel = glm.nb_of, plot = F)
+
+residuals(simulationOutput_of)
+plot(simulationOutput_of)
+testZeroInflation(simulationOutput_of)
+
+
 # checking for overdispersion 
 summary(glm.nb_of) # very little overdispersion 
+
+
 
 # trying a mixed GLM 
 glm_mm_of <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_of)
@@ -445,29 +457,50 @@ glm_mm_of <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|o
 # performance checks 
 performance::check_model(glm_mm_of, check = c("qq")) # qq looks a lot better, goes off at the end 
 
+# using DHARMa to check 
+testDispersion(glm_mm_of) # this is fairly dispersed 
+
+simulationOutput_ofmm  <- simulateResiduals(fittedModel = glm_mm_of, plot = F)
+
+residuals(simulationOutput_ofmm)
+plot(simulationOutput_ofmm)
+testZeroInflation(simulationOutput_ofmm)
+
+
+
+
 # ZERO INFLATED MODELS 
 
 # trying a zero inflated poisson model 
 zi.p_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_of)
 
+# Using DHARMa to check 
+# cannot run? 
+
+
+
+
 # trying a zero inflated negative binomial model 
 zi.nb_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_of )
+
+# need to do performance checks? 
+
+
 
 
 # comparing models 
 AIC(glm_poisson_of, glm.nb_of, glm_mm_of, zi.p_of, zi.nb_of)
-# really close AIC between zero inflated negative binomial and poisson 
 
 # choosing negative binomial? 
 
 # looking for significance in block 
-summary(zi.nb_of) # not significant? 
+summary(zi.p_of) # not significant? 
 
 # dropping block from the model 
-zi.nb_of_2 <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of )
+zi.p_of <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of )
 
 # looking at the results 
-summary(zi.nb_of_2)
+summary(zi.p_of)
 
-
+emmeans::emmeans(zi.p_of, pairwise ~ diet )
 
