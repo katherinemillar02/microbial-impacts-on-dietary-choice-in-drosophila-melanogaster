@@ -340,11 +340,9 @@ zi.p_m_2 <- zeroinfl(fly_numbers ~ diet | diet , dist = "poisson", link = "logit
 glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  +(1|plate) + (1|observation), family = poisson, data = combined_m)
 
 
-
-
-
-
-
+# checking the results of the model
+summary(glm_mm_m_2) # everything is significant? 
+emmeans::emmeans(glm_mm_m_2, pairwise ~ diet, random = ~ (1|plate) + (1|observation))
 
 
 
