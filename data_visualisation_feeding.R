@@ -31,13 +31,13 @@ fourone_onefour_ovod1 <- rbind(fourone_onefour_ovod1_b1, fourone_onefour_ovod1_b
 ## Making the  data long 
 ## Virgin
 # 4:1
-four_to_one_ovod1_long <- four_to_one_ovod1  %>% 
+fourone_of <- four_to_one_ovod1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 # 1:4 
-one_to_four_ovod1_long <- one_to_four_ovod1  %>% 
+onefour_of <- one_to_four_ovod1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 # 4:1 and 1:4 
-fourone_onefour_ovod1_long <- fourone_onefour_ovod1 %>% 
+combined_of <- fourone_onefour_ovod1 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 ####--- 
@@ -98,13 +98,13 @@ fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
 ## Making the  data long 
 # 4:1
-four_to_one_male_long <- four_to_one_male  %>% 
+fourone_m <- four_to_one_male  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 # 1:4 
-one_to_four_male_long <- one_to_four_male  %>% 
+onefour_m <- one_to_four_male  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 # 4:1 and 1:4 
-fourone_onefour_male_long <- fourone_onefour_male %>% 
+combined_m <- fourone_onefour_male %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
@@ -138,9 +138,9 @@ feeding_results <- function(summary_data,boxplot_fill_color ) {
 
 ## Code will allow one to see each of the plots
 ## Virgin Female
-of1 <- feeding_results(one_to_four_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue"))
-of2 <- feeding_results(four_to_one_ovod1_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-of3 <- feeding_results(fourone_onefour_ovod1_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+of1 <- feeding_results(onefour_of, boxplot_fill_color = c("lightblue", "lightblue"))
+of2 <- feeding_results(fourone_of, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
+of3 <- feeding_results(combined_of, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 of1 + of2 + of3
 
@@ -152,11 +152,11 @@ vf3 <- feeding_results(fourone_onefour_virgin_long, boxplot_fill_color = c("ligh
 vf1 + vf2 + vf3
 
 ## Male
-mf1 <- feeding_results(one_to_four_male_long, boxplot_fill_color = c("lightblue", "lightblue"))
-mf2 <- feeding_results(four_to_one_male_long, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-mf3 <- feeding_results(fourone_onefour_male_long, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+mf1 <- feeding_results(onefour_m, boxplot_fill_color = c("lightblue", "lightblue"))
+mf2 <- feeding_results(fourone_m, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
+mf3 <- feeding_results(combined_m, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
- mf1 + mf2 + mf3
+mf1 + mf2 + mf3
 
 
 
