@@ -49,9 +49,16 @@ four_to_one_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_
 one_to_four_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin.xlsx")
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin.xlsx")
 
+
+
+
+
 four_to_one_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx")
 one_to_four_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b2.xlsx")
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
+
+
+four_to_one_virgin_b3 <- read_excel("data/")
 
 
 
