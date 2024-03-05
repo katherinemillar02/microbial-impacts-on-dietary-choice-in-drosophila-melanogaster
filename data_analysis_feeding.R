@@ -266,20 +266,46 @@ drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped fr
 
 
 ## OVOD1 FEMALE 
+## OVOD1 FEMALE 
 ## creating a data column where flies are not on the plate 
 df2_ovod1 <- df2_ovod1 %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
-## a binomial model, not considering other "random" factors
-binomial_model_ovod1 <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_ovod1)
-## looking at model 
-summary(binomial_model_ovod1) # 4:1 Conditioned is significant?
+
+
+## trying a binomial model
+glm.bin_of <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block , family = binomial, data = df2_ovod1)
+
+# assumption checks for binomial model 
+
+
+summary(glm.bin_of) # there is overdispersion 
+
+
 # mixed model, considers other "random" factors
-mixed_model_ovod1 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) (1|observation), family = binomial, data = df2_ovod1)
-## looking at model 
-summary(mixed_model_ovod1) # 4:1 Conditioned IS not, don't know about other ratios though? 
+glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
+
+
+# assumption checking 
+
+# easystats
+performance::check_model(glmer.mm_of, check = c("qq")) # looks pretty good
+performance::check_model(glmer.mm_of, check = c("homogeneity")) # I think looks okay 
+
+# DHARMa checks 
+testDispersion(glmer.mm_of) # not like the others? 
+
+simulationOutput_glmer.mm_of <- simulateResiduals(fittedModel = glmer.mm_of, plot = F)
+plot(simulationOutput_glmer.mm_of) # all looks the same to me? 
 
 
 
+# using this model
+glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
+# looking at the significance of block
+drop1(glmer.mm_of, test = "Chisq") # block is significant, keep in the model
+
+# checking out the model
+summary(glmer.mm_of) # says block is not significant here? 
 
 
 
