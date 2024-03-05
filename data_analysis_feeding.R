@@ -149,10 +149,18 @@ read_raw_ovod1(pathovod1)
 df_ovod1 <- pathovod1 %>% 
   map_df(~read_raw_ovod1(.x)) #.x is a string or NULL - only applies to dfr apparently
 
+
+df_ovod1 <- df_ovod1 %>% 
+  mutate( block = case_when(
+    str_detect(id, "b1") ~ "one",
+    str_detect(id, "b2") ~ "two",
+    str_detect(id, "b3") ~ "three"
+  ))
+
 # uses what was generated with "df"
 df2_ovod1 <- df_ovod1 %>%
   separate(diet, into = c("ratio", "condition"), sep = " ") %>%#separate will turn a single factor column into multiple columns
-  group_by(id,observation, plate, ratio,condition) %>% ## group by what is split
+  group_by(id,observation, plate, ratio,condition, block) %>% ## group by what is split
   summarise(count = sum(fly_numbers)) %>% 
   pivot_wider(names_from = "condition", values_from = "count")
 
@@ -262,6 +270,10 @@ drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped fr
 
 
 
+glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+
+
+summary(glmer.mm_vf_2)
 
 
 
