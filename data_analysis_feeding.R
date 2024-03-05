@@ -98,10 +98,19 @@ read_raw_virgin(pathvirgin)
 df_virgin <- pathvirgin %>% 
   map_df(~read_raw_virgin(.x)) #.x is a string or NULL - only applies to dfr apparently
 
+df_virgin <- df_virgin %>% 
+  mutate(block = case_when(
+    str_detect(id, "b1") ~ "one",
+    str_detect(id, "b2") ~ "two",
+    str_detect(id, "b3") ~ "three"
+  ))
+
+
+
 # uses what was generated with "df"
 df2_virgin <- df_virgin %>%
   separate(diet, into = c("ratio", "condition"), sep = " ") %>%#separate will turn a single factor column into multiple columns
-  group_by(id,observation, plate, ratio,condition) %>% ## group by what is split
+  group_by(id,observation, plate, ratio,condition, block) %>% ## group by what is split
   summarise(count = sum(fly_numbers)) %>% 
   pivot_wider(names_from = "condition", values_from = "count")
 
@@ -201,12 +210,13 @@ drop1(glmer.mm_m, test = "Chisq")
 # new model 
 glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
-
 summary(glmer.mm_m_2) # only 4:1 is significant? 
 
 ## how to look at this model in emmeans? 
 emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio, random = ~ (1|plate) + (1|observation))
-# really want to look at conditioned vs unconditioned
+# really want to look at Conditioned vs Unconditioned?
+
+
 
 
 
@@ -218,17 +228,39 @@ emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio, random = ~ (1|plate) + (1|obser
 # VIRGIN FEMALE
 ## creating a data column where flies are not on the plate 
 df2_virgin <- df2_virgin %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
-## a binomial model, not considering other "random" factors
-binomial_model_virgin <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_virgin)
-## looking at model 
-summary(binomial_model_virgin) # 4:1 Conditioned is significant?
-# mixed model, considers other "random" factors
-mixed_model_virgin <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + id + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
-mixed_model_virgin_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
-## looking at model 
-summary(mixed_model_virgin) # 4:1 Conditioned IS in virgin analysis # Getting some very weird results
-summary(mixed_model_virgin_2) # Results look more better here
+
+## a binomial model, not considering other "random" factors
+glm.bin_vf <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin)
+
+# assumption checking?? 
+
+
+summary(glm.bin_vf) # model is overdispersed 
+
+
+# mixed model, considers other "random" factors
+glmer.mm_vf <- glmer(cbind(Conditioned, Unconditioned) ~ ratio*block + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+
+# assumption checks 
+performance::check_model(glmer.mm_vf, check = c("qq")) # qq looks pretty great
+performance::check_model(glmer.mm_vf, check = c("homogeneity")) # what is going on? 
+
+
+# DHARMa checks 
+testDispersion(glmer.mm_vf) ## hmm - overdispersed?? 
+
+simulationOutput_glmer.mm_vf <- simulateResiduals(fittedModel = glmer.mm_vf, plot = F)
+plot(simulationOutput_glmer.mm_vf) # all these models look the samen to me 
+
+
+# using this model 
+glmer.mm_vf <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+
+# looking for significance in block 
+drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped from the model
+
+
 
 
 
