@@ -348,61 +348,84 @@ emmeans::emmeans(glm_mm_m_2, pairwise ~ diet, random = ~ (1|plate) + (1|observat
 
 # Virgin Female Assay 
 
+fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin.xlsx")
+fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
+fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
+
+
 # mutating a block variable 
 fourone_onefour_virgin_b1 <- fourone_onefour_virgin_b1  %>% mutate(block = "one")
 fourone_onefour_virgin_b2 <- fourone_onefour_virgin_b2  %>% mutate(block = "two")
-
+fourone_onefour_virgin_b3 <- fourone_onefour_virgin_b3  %>% mutate(block = "three")
 
 # Binding the data
-fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2)
+fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3)
 # Making the data long
-fourone_onefour_virgin_long <- fourone_onefour_virgin %>% 
+combined_vf <- fourone_onefour_virgin %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 # glm with poisson
-virgin_all_assay <- glm(fly_numbers ~ diet * block, family = poisson, data = fourone_onefour_virgin_long)
+glm_poisson_vf <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_vf)
+
+
+# assumption checking
+performance::check_model(glm_poisson_vf, check = c("qq")) # almost banana - not great 
+performance::check_model(glm_poisson_vf, check = c("homogeneity")) # looks okay ? 
 
 # looking for overdispersion in the model
-summary(virgin_all_assay) # shows overdispersion 
+summary(glm_poisson_vf) # shows overdispersion 
 
 # overdispersion so checking for zero inflation
-check_zeroinflation(virgin_all_assay) 
+check_zeroinflation(glm_poisson_vf) 
 
 # trying a negative binomial model
-virgin_all_assay_nb_2 <- glm.nb(fly_numbers ~ diet * block, data = fourone_onefour_virgin_long)
-
-# Looking for interaction effecr with block
-drop1(virgin_all_assay_nb_2, test = "F") # diet and block are significant here, so keep in the model?
-
-# Doing model checks 
-
-# easystats/performance
-performance::check_model(virgin_all_assay_nb_2, check = c("qq")) # I am not sure how okay this looks 
+glm.nb_vf <- glm.nb(fly_numbers ~ diet * block, data = combined_vf)
 
 
-# Using the DHARMa package for model checks
-testDispersion(virgin_all_assay_nb_2) # residual variables?
-# does this create random data?
+performance::check_model(glm.nb_vf, check = c("qq")) # qq looks slighty better? still off 
+performance::check_model(glm.nb_vf, check = c("homogeneity")) # maybe the same 
 
-# Using the model 
-summary(virgin_all_assay_nb_2)
+summary(glm.nb_vf)  # a lot less overdispersion 
 
-# More in depth analysis?
-emmeans::emmeans(virgin_all_assay_nb_2, pairwise ~ diet * block) 
+# trying a mixed model 
+glm_mm_vf <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_vf)
 
+performance::check_model(glm_mm_vf, check = c("qq")) # looks a lot better, slopes off at the end though
 
-# Trying a zero inflation model 
-virgin_all_assay_zi <- zeroinfl(fly_numbers ~ diet * block, data = fourone_onefour_male_long)
-
-# looking at the model 
-summary(virgin_all_assay_zi)
-
-## Comparing all 3x models ??
-compare_performance()
+# performance checking with DHARMa
+simulateResiduals(fittedModel = glm_mm_vf, plot = T)
 
 
+# Trying zero inflated models 
+
+# zero inflated poisson 
+zi.p_vf <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_vf)
+
+# assumption checks?? 
 
 
+# zero inflated negative binomia; 
+zi.nb_vf <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_vf)
+
+# assumption checks?? 
+
+AIC(glm_poisson_vf, glm.nb_vf, glm_mm_vf, zi.p_vf, zi.nb_vf) # maybe choose glm with negative binomial? 
+
+# choosing glm with nb for now 
+glm.nb_vf <- glm.nb(fly_numbers ~ diet * block, data = combined_vf)
+
+# looking at significance of block 
+drop1(glm.nb_vf, test = "F")
+summary(glm.nb_vf)
+
+# block is not significant, can be dropped 
+
+
+glm.nb_vf_2  <- glm.nb(fly_numbers ~ diet, data = combined_vf)
+
+summary(glm.nb_vf_2)
+emmeans::emmeans(glm.nb_vf_2, pairwise ~ diet)
+# conditioning in 1:4 not significant. 
 
 # OvoD1 Conditioning 4:1-1:4 analysis -- 
 # mutating a block variable 
