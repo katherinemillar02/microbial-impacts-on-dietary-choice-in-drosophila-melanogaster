@@ -373,10 +373,22 @@ performance::check_model(glm_poisson_vf, check = c("qq")) # almost banana - not 
 performance::check_model(glm_poisson_vf, check = c("homogeneity")) # looks okay ? 
 
 # looking for overdispersion in the model
-summary(glm_poisson_vf) # shows overdispersion 
+summary(glm_poisson_vf) # shows slight overdispersion 
 
 # overdispersion so checking for zero inflation
-check_zeroinflation(glm_poisson_vf) 
+check_zeroinflation(glm_poisson_vf) # no zero inflation?? 
+
+
+
+
+# trying quasipoisson
+glm_quasipoisson_vf <- glm(fly_numbers ~ diet * block, family = quasipoisson, data = combined_vf)
+
+# assumption checking
+performance::check_model(glm_quasipoisson_vf, check = c("qq")) # almost banana - not great - looks same 
+performance::check_model(glm_quasipoisson_vf, check = c("homogeneity")) # looks okay ? 
+
+
 
 # trying a negative binomial model
 glm.nb_vf <- glm.nb(fly_numbers ~ diet * block, data = combined_vf)
@@ -396,7 +408,11 @@ performance::check_model(glm_mm_vf, check = c("qq")) # looks a lot better, slope
 simulateResiduals(fittedModel = glm_mm_vf, plot = T)
 
 
-# Trying zero inflated models 
+
+
+
+
+# Trying zero inflated models - don't need as do not have zero inflation? 
 
 # zero inflated poisson 
 zi.p_vf <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_vf)
@@ -409,7 +425,7 @@ zi.nb_vf <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin",
 
 # assumption checks?? 
 
-AIC(glm_poisson_vf, glm.nb_vf, glm_mm_vf, zi.p_vf, zi.nb_vf) # maybe choose glm with negative binomial? 
+AIC(glm_poisson_vf, glm_quasipoisson_vf, glm.nb_vf, glm_mm_vf) # maybe choose glm with negative binomial? 
 
 # choosing glm with nb for now 
 glm.nb_vf <- glm.nb(fly_numbers ~ diet * block, data = combined_vf)
@@ -426,6 +442,15 @@ glm.nb_vf_2  <- glm.nb(fly_numbers ~ diet, data = combined_vf)
 summary(glm.nb_vf_2)
 emmeans::emmeans(glm.nb_vf_2, pairwise ~ diet)
 # conditioning in 1:4 not significant. 
+
+
+
+
+
+
+
+
+
 
 # OvoD1 Conditioning 4:1-1:4 analysis -- 
 # mutating a block variable 
