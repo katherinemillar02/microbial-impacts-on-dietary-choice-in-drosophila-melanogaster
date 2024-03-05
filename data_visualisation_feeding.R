@@ -10,9 +10,9 @@ library(ggpattern)
 #### Uploading raw data
 
 ## OvoD1 Females 
-four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1.xlsx")
-one_to_four_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1.xlsx")
-fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1.xlsx")
+four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx")
+one_to_four_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b1.xlsx")
+fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
 
 ## OvoD1 Females 
 four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
