@@ -45,13 +45,23 @@ read_raw_male(malepath)
 df_male <- malepath %>% 
   map_df(~read_raw_male(.x)) #.x is a string or NULL - only applies to dfr apparently
 
-## "second" data frame
-# uses what was generated with "df"
+
+df_male <- df_male %>%
+  mutate(block = case_when(
+    str_detect(id, "t2b1") ~ "one",
+    str_detect(id, "t2b2") ~ "two",
+  
+  ))
+
+# Separate diet column and group by relevant variables
 df2_male <- df_male %>%
-  separate(diet, into = c("ratio", "condition"), sep = " ") %>%#separate will turn a single factor column into multiple columns
-  group_by(id,observation, plate, ratio,condition) %>% ## group by what is split
-  summarise(count = sum(fly_numbers)) %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ") %>%
+  group_by(id, observation, plate, ratio, condition, block) %>%
+  summarise(count = sum(fly_numbers)) %>%
   pivot_wider(names_from = "condition", values_from = "count")
+
+
+
 
 df2_male # does it recognise condition from the long data? 
 
@@ -147,20 +157,58 @@ df2_ovod1 # does it recognise condition from the long data?
 ## MALE
 ## creating a data column where flies are not on the plate 
 df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
+
+## Creating models 
+
+
 ## a binomial model, not considering other "random" factors
-binomial_model_male <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_male)
-## looking at model 
-summary(binomial_model_male) # 4:1 Conditioned is significant?
+glm.bin_m <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_male)
+
+# checking the model
+glm.bin_m_residuals <- residuals(glm.bin_m, type = "pearson")
+
+# pearson residual check
+plot(glm.bin_m_residuals ~ fitted(glm.bin_m), ylab = "Pearson Residuals", xlab = "Fitted Values")
+abline(h = 0, col = "red")
+
+## MODEL CHECK for overdispersion
+summary(binomial_model_male) # overdispersion
 
 
-# mixed model, considers other "random" factors
-mixed_model_male <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
-## looking at model 
-summary(mixed_model_male) # 4:1 Conditioned is NOT significant?
+
+
+
+# trying a mixed model, considers other "random" factors
+glmer.mm_m <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+
+## performance check of data
+performance::check_model(glmer.mm_m, check = c("qq")) # qq looks pretty good 
+performance::check_model(glmer.mm_m, check = c("homogeneity")) #?? 
+
+## DHARMa performance checks
+testDispersion(glmer.mm_m) 
+
+# model is okay? 
+
+# using model for analysis? 
+
+# looking for significance in "block" 
+summary(glmer.mm_m) 
+drop1(glmer.mm_m, test = "Chisq")
+
+# not significant
+
+# new model 
+glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+
+
+summary(glmer.mm_m_2) # only 4:1 is significant? 
 
 ## how to look at this model in emmeans? 
-emmeans::emmeans(mixed_model_male, pairwise ~ ratio)
+emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio, random = ~ (1|plate) + (1|observation))
 # really want to look at conditioned vs unconditioned
+
+
 
 
 
