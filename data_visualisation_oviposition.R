@@ -65,7 +65,7 @@ fourone_onefour_oviposition_virgin_long  <- fourone_onefour_oviposition_virgin  
 ####--- 
 
 ## Males 
-# 4:1 
+
 four_to_one_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/m_4-1_t2b1_oviposition.xlsx")
 four_to_one_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/m_4-1_t2b2_oviposition.xlsx")
 # binding the data
