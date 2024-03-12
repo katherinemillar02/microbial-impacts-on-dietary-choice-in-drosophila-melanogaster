@@ -102,7 +102,8 @@ df_virgin <- df_virgin %>%
   mutate(block = case_when(
     str_detect(id, "b1") ~ "one",
     str_detect(id, "b2") ~ "two",
-    str_detect(id, "b3") ~ "three"
+    str_detect(id, "b3") ~ "three",
+    str_detect(id, "b4") ~ "four"
   ))
 
 
@@ -153,8 +154,7 @@ df_ovod1 <- pathovod1 %>%
 df_ovod1 <- df_ovod1 %>% 
   mutate( block = case_when(
     str_detect(id, "b1") ~ "one",
-    str_detect(id, "b2") ~ "two",
-    str_detect(id, "b3") ~ "three"
+    str_detect(id, "b2") ~ "two"
   ))
 
 # uses what was generated with "df"
@@ -273,7 +273,7 @@ drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped fr
 glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
 
-summary(glmer.mm_vf_2)
+summary(glmer.mm_vf_2) # 4:1 is not significant?
 
 
 
@@ -661,7 +661,8 @@ AIC(glm_poisson_of, glm.nb_of, glm_mm_of, zi.p_of, zi.nb_of)
 # choosing negative binomial? 
 
 # looking for significance in block 
-summary(zi.p_of) # not significant? 
+summary(zi.nb_of) # not significant? 
+
 
 # dropping block from the model 
 zi.p_of <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of )
