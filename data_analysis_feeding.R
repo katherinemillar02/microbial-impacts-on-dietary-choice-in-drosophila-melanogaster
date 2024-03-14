@@ -31,7 +31,7 @@ malepath <- "data/male_conditioning/treatment_2"
 # Mutates a variable for the data file name (id) 
 # Mutates the data frame to have a variable for the amount of flies on a diet and the diet 
 
--############################################################################################################-
+-############################################################################################################----
 read_raw_male <- function(path = malepath, pattern_to_exclude = "4-1_1-4"){
 list_of_files <- list.files(path = malepath,
                             pattern = "rawdata", full.names = T)
@@ -45,7 +45,7 @@ map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is
                values_to = "fly_numbers") %>%
   drop_na(fly_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
 }
--############################################################################################################-
+############################################################################################################-
 
 
 ## read_raw is the function created, and path shows the path made, so the list of files
@@ -150,6 +150,7 @@ df2_virgin
 -####################################-
   #### OvoD1 FEMALE CONDITIONING ### ----
 -####################################-
+  
 pathovod1 <- "data/female_conditioning/ovod1"
 
 
@@ -248,7 +249,7 @@ glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1
 summary(glmer.mm_m_2) # only 4:1 is significant? 
 
 ## how to look at this model in emmeans? 
-emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio, random = ~ (1|plate) + (1|observation))
+emmeans::emmeans(glmer.mm_m_2, condition ~ ratio , random = ~ (1|plate) + (1|observation))
 # really want to look at Conditioned vs Unconditioned?
 
 
@@ -302,7 +303,13 @@ glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1
 
 summary(glmer.mm_vf_2) # 4:1 is not significant?
 
-emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation)
+emmeans::emmeans(glmer.mm_vf_2, pairwise ~ ratio, random = ~ 1 | plate + observation)
+
+
+
+
+
+
 
 
 ## OVOD1 FEMALE 
@@ -343,6 +350,10 @@ glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|pla
 
 # looking at the significance of block
 drop1(glmer.mm_of, test = "Chisq") # block is significant, keep in the model
+
+glmer.mm_of_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio   + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
+
+summary(glmer.mm_of_2)
 
 # checking out the model
 summary(glmer.mm_of) # says block is not significant here? 
@@ -487,7 +498,7 @@ summary(glm_mm_m) # says block is not significant
 zi.p_m_2 <- zeroinfl(fly_numbers ~ diet | diet , dist = "poisson", link = "logit", data = combined_m)
 
 # dropping block from the model (mixed model)
-glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  +(1|plate) + (1|observation), family = poisson, data = combined_m)
+glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  + (1|plate) + (1|observation), family = poisson, data = combined_m)
 
 
 # checking the results of the model
@@ -501,15 +512,17 @@ emmeans::emmeans(glm_mm_m_2, pairwise ~ diet, random = ~ (1|plate) + (1|observat
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin.xlsx")
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
 fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
+fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
 
 
 # mutating a block variable 
 fourone_onefour_virgin_b1 <- fourone_onefour_virgin_b1  %>% mutate(block = "one")
 fourone_onefour_virgin_b2 <- fourone_onefour_virgin_b2  %>% mutate(block = "two")
 fourone_onefour_virgin_b3 <- fourone_onefour_virgin_b3  %>% mutate(block = "three")
+fourone_onefour_virgin_b4 <- fourone_onefour_virgin_b3  %>% mutate(block = "four")
 
 # Binding the data
-fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3)
+fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4 )
 # Making the data long
 combined_vf <- fourone_onefour_virgin %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
@@ -604,6 +617,10 @@ emmeans::emmeans(glm.nb_vf_2, pairwise ~ diet)
 
 # OvoD1 Conditioning 4:1-1:4 analysis -- 
 # mutating a block variable 
+fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
+fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
+
+
 fourone_onefour_ovod1_b1 <- fourone_onefour_ovod1_b1  %>% mutate(block = "one")
 fourone_onefour_ovod1_b2 <- fourone_onefour_ovod1_b2  %>% mutate(block = "two")
 
