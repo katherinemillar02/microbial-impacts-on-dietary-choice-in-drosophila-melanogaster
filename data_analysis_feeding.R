@@ -1,4 +1,4 @@
-# Packages
+# Packages 📦📦📦📦
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -7,20 +7,31 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
-
-#### DATA UPLOAD 
-
-#### THIS DATA UPLOAD WORKS FOR 4:1 AND 1:4 COMBINING ####
+##################---
 
 
-#### MALE ----####----
-# Analysing the raw data
-## Creating a path to the scripts within block 1 and block 2 paths
+
+#### Uploading the data sets
+#### Part 1 
+-#### Uploading the data this way works for 4:1 and 1:4 assays being combined ####-
+
+  
+  
+  
+  
+-####################################-
+#### WILD TYPE MALE CONDITIONING ### ----
+-####################################-
+
+## Creating a path to the scripts for treatment 2 condtioning
 malepath <- "data/male_conditioning/treatment_2"
 
 
-## This creates  function
-## Path is interchangeable with path 2 
+## This creates a function, that finds the path, excludes the 4-1 and 1-4 assay
+# Mutates a variable for the data file name (id) 
+# Mutates the data frame to have a variable for the amount of flies on a diet and the diet 
+
+-############################################################################################################-
 read_raw_male <- function(path = malepath, pattern_to_exclude = "4-1_1-4"){
 list_of_files <- list.files(path = malepath,
                             pattern = "rawdata", full.names = T)
@@ -34,24 +45,27 @@ map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is
                values_to = "fly_numbers") %>%
   drop_na(fly_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
 }
+-############################################################################################################-
+
 
 ## read_raw is the function created, and path shows the path made, so the list of files
-read_raw_male(malepath) 
-
+read_raw_male(malepath) # this will show the new data set 
 
 
 ## creating an actual data set that will read the paths
 # first data frame - purr package 
 df_male <- malepath %>% 
   map_df(~read_raw_male(.x)) #.x is a string or NULL - only applies to dfr apparently
+# this will actually give it a label 
 
-
+# mutating a variable for block from the data id 
 df_male <- df_male %>%
   mutate(block = case_when(
     str_detect(id, "t2b1") ~ "one",
     str_detect(id, "t2b2") ~ "two",
   
   ))
+
 
 # Separate diet column and group by relevant variables
 df2_male <- df_male %>%
@@ -60,22 +74,28 @@ df2_male <- df_male %>%
   summarise(count = sum(fly_numbers)) %>%
   pivot_wider(names_from = "condition", values_from = "count")
 
+## The data set 
+df2_male
 
 
 
-df2_male # does it recognise condition from the long data? 
 
 
 
-
-
-#### VIRGIN FEMALE  ----
-## Creating a path to the scripts within block 1 and block 2 paths
-## use for when you get both blocks
+-####################################-
+  #### VIRGIN FEMALE CONDITIONING ### ----
+-####################################-
+  
+## Creating a path to get to the Virgin Conditioning data files 
 pathvirgin <- "data/female_conditioning/virgin"
 
-## This creates  function
-## Path is interchangeable with path 2 
+## This creates a function ## 
+# Reads into the path where the Virgin - Conditioning data files are 
+# Creates a pattern to exclude data files that are 4:1 and 1:4 in a four choice assay 
+# Pivots a data frame, to include fly numbers and diet, and excludes na where there would not be numbers in the data frame
+
+
+-############################################################################################################-
 read_raw_virgin <-function(path = pathvirgin, pattern_to_exclude = "4-1_1-4"){
   list_of_files <- list.files(path = pathvirgin,
                               pattern = "rawresults", full.names = T)
@@ -89,7 +109,9 @@ read_raw_virgin <-function(path = pathvirgin, pattern_to_exclude = "4-1_1-4"){
                  values_to = "fly_numbers") %>%
     drop_na(fly_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
 }
-
+-############################################################################################################-
+  
+  
 ## read_raw is the function created, and path shows the path made, so the list of files
 read_raw_virgin(pathvirgin) 
 
@@ -98,6 +120,7 @@ read_raw_virgin(pathvirgin)
 df_virgin <- pathvirgin %>% 
   map_df(~read_raw_virgin(.x)) #.x is a string or NULL - only applies to dfr apparently
 
+# Mutating a variable for block, using the 'id' of the different datasets
 df_virgin <- df_virgin %>% 
   mutate(block = case_when(
     str_detect(id, "b1") ~ "one",
@@ -107,22 +130,26 @@ df_virgin <- df_virgin %>%
   ))
 
 
-
-# uses what was generated with "df"
+## This separatess diet into ratio and condition as these are currently joined 
 df2_virgin <- df_virgin %>%
-  separate(diet, into = c("ratio", "condition"), sep = " ") %>%#separate will turn a single factor column into multiple columns
+  separate(diet, into = c("ratio", "condition"), sep = " ") %>% # separate will turn a single factor column into multiple columns
   group_by(id,observation, plate, ratio,condition, block) %>% ## group by what is split
   summarise(count = sum(fly_numbers)) %>% 
   pivot_wider(names_from = "condition", values_from = "count")
 
-df2_virgin # does it recognise condition from the long data? 
-
-## Important to remember line of code to exclude 4-1_1-4 !!!!
-
+# The data frame 
+df2_virgin 
 
 
 
-#### OVOD1 FEMALE  ----
+
+
+
+
+
+-####################################-
+  #### OvoD1 FEMALE CONDITIONING ### ----
+-####################################-
 pathovod1 <- "data/female_conditioning/ovod1"
 
 
@@ -275,6 +302,7 @@ glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1
 
 summary(glmer.mm_vf_2) # 4:1 is not significant?
 
+emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation)
 
 
 ## OVOD1 FEMALE 
@@ -320,6 +348,10 @@ drop1(glmer.mm_of, test = "Chisq") # block is significant, keep in the model
 summary(glmer.mm_of) # says block is not significant here? 
 
 
+
+
+
+glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
 
 
