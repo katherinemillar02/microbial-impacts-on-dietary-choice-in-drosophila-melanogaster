@@ -88,7 +88,7 @@ fourone_onefour_oviposition_virgin_3 <- read_excel("data/female_conditioning/vir
 fourone_onefour_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_4.xlsx")
 
 # Binding the 4:1/1:4 data
-fourone_onefour_oviposition_virgin <- rbind(fourone_onefour_oviposition_virgin_1, fourone_onefour_oviposition_virgin_2, fourone_onefour_oviposition_virgin_3, fourone_onefour_oviposition_virgin_4 )
+fourone_onefour_oviposition_virgin <- rbind( fourone_onefour_oviposition_virgin_2, fourone_onefour_oviposition_virgin_3, fourone_onefour_oviposition_virgin_4 )
 
 
 ####
@@ -119,24 +119,24 @@ combined_ovi_vf <- fourone_onefour_oviposition_virgin  %>%
 ######################
 
 # 4:1 
-four_to_one_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/m_4-1_t2b1_oviposition.xlsx")
-four_to_one_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/m_4-1_t2b2_oviposition.xlsx")
+four_to_one_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_t2b1_oviposition.xlsx")
+four_to_one_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_t2b2_oviposition.xlsx")
 
 # Binding the 4:1 data
 four_to_one_male_oviposition <- rbind(four_to_one_male_oviposition_b1, four_to_one_male_oviposition_b1)
 
 
 # 1:4 
-one_to_four_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/m_1-4_t2b1_oviposition.xlsx")
-one_to_four_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/m_1-4_t2b2_oviposition.xlsx")
+one_to_four_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2//m_1-4_t2b1_oviposition.xlsx")
+one_to_four_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_1-4_t2b2_oviposition.xlsx")
 
 # Binding the 1:4 data
 one_to_four_male_oviposition <- rbind(one_to_four_male_oviposition_b1, one_to_four_male_oviposition_b2)
 
 
 # 4:1 + 1:4 
-fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/block_1/m_4-1_1-4_t2b1_oviposition.xlsx")
-fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/block_2/m_4-1_1-4_t2b2_oviposition.xlsx")
+fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
+fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b2_oviposition.xlsx")
 
 # Binding the data for 4:1/1:4 
 fourone_onefour_male_oviposition <- rbind(fourone_onefour_male_oviposition_b1, fourone_onefour_male_oviposition_b2)
@@ -222,3 +222,4 @@ m_egg3 <- oviposition_results(combined_ovi_m, boxplot_fill_color = c("#9FE2BF","
 
 ## Using patchwork() to combine the plots: 
 m_egg1 + m_egg2 + m_egg3
+
