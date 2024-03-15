@@ -18,27 +18,23 @@ library(ggpattern)
 # 4:1 
 four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx")
 four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
-
 # Binding the 4:1 data blocks 
 four_to_one_ovod1 <- rbind(four_to_one_ovod1_b1, four_to_one_ovod1_b2)
 
 # 1:4 
 one_to_four_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b1.xlsx")
 one_to_four_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b2.xlsx")
-
 # Binding the 1:4 data blocks
 one_to_four_ovod1 <- rbind(one_to_four_ovod1_b1, one_to_four_ovod1_b2)
 
 # 4:1 and 1:4 
 fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
 fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
-
 # Binding the 4:1/1:4 data blocks
 fourone_onefour_ovod1 <- rbind(fourone_onefour_ovod1_b1, fourone_onefour_ovod1_b2)
 
 
-## CHANGING THE VARIABLE NAMEAS OF THE DATA - PIVOTING A DATA FRAME -- 
-
+## CHANGING THE VARIABLE NAMES OF THE DATA - PIVOTING A DATA FRAME -- 
 # 4:1
 fourone_of <- four_to_one_ovod1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
@@ -67,7 +63,6 @@ four_to_one_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_
 four_to_one_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx")
 four_to_one_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b3.xlsx")
 four_to_one_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b4.xlsx")
-
 # Binding the 4:1 data blocks 
 four_to_one_virgin <- rbind(four_to_one_virgin_b1, four_to_one_virgin_b2, four_to_one_virgin_b3, four_to_one_virgin_b4)
 
@@ -93,8 +88,7 @@ fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virg
 
 
 ## CHANGING THE VARIABLE NAMEAS OF THE DATA - PIVOTING A DATA FRAME -- 
-
-
+#  4:1 
 fourone_v <- four_to_one_virgin  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 # 1:4 
@@ -119,14 +113,12 @@ combined_v<- fourone_onefour_virgin %>%
 # 4:1 
 four_to_one_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b1.xlsx")
 four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b2.xlsx")
-
 # Binding the 4:1 data
 four_to_one_male <- rbind(four_to_one_male_b1, four_to_one_male_b2)
 
 # 1:4 
 one_to_four_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b1.xlsx")
 one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b2.xlsx")
-
 # Binding the 1:4 data
 one_to_four_male <- rbind(one_to_four_male_b1, one_to_four_male_b2)
 
@@ -140,7 +132,6 @@ fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
 
 ## CHANGING THE VARIABLE NAMEAS OF THE DATA - PIVOTING A DATA FRAME -- 
-
 # 4:1
 fourone_m <- four_to_one_male  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
@@ -169,7 +160,12 @@ combined_m <- fourone_onefour_male %>%
 
 feeding_results <- function(summary_data,boxplot_fill_color ) {
   ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
-    geom_boxplot(fill = "white", color = "black")+
+    # geom_jitter(aes(x = diet,
+    #                 y = fly_numbers,
+    #                 fill = diet),
+    #             width = 0.1,
+    #             shape = 1) +
+    geom_boxplot()+
     geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
                          color = "black",
                          pattern_fill = "white",
@@ -177,20 +173,19 @@ feeding_results <- function(summary_data,boxplot_fill_color ) {
                          pattern_density = 0.1,
                          pattern_spacing = 0.025,
                          pattern_key_scale_factor = 0.6) +
+    geom_point(aes(),
+               size = 1,
+               shape = 1,
+               position = position_jitterdodge()) +
     theme_classic()+
     labs(x = "Diet Condition",
-         y = "Median number of flies per diet patch", 
-         title = "")+
+         y = "Number of flies per diet patch", 
+         title = "",
+         tag = "a")+
     scale_fill_manual(values = boxplot_fill_color) +  # Set fill colors for the boxplot
     scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
     theme(legend.position = "none") +
-    ylim(-0.01, 6) +
-    geom_jitter(data = summary_data,
-                aes(x = diet,
-                    y = fly_numbers,
-                    fill = diet),
-                width = 0.1,
-                shape = 1)
+    ylim(-0.01, 6) 
   
 }
 
@@ -211,8 +206,12 @@ of_1_4 <- feeding_results(onefour_of, boxplot_fill_color = c("lightblue", "light
 of_4_1  <- feeding_results(fourone_of, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
 of_combined  <- feeding_results(combined_of, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
-## Using patchwork() to combine the different plots of different assays
-of_1_4 + of_4_1 + of_combined
+
+## Using grid.arrange to put the plots together
+ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
+                                     nrow = 1,
+                                     widths = c(0.5,0.5,1),
+                                     heights = c(1))
 
 
 ##############################
@@ -222,10 +221,13 @@ vf_1_4  <- feeding_results(onefour_v, boxplot_fill_color = c("lightblue", "light
 vf_4_1 <- feeding_results(fourone_v, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
 vf_combined <- feeding_results(combined_v, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
-## Using patchwork() to combine the different plots of different assays
-vf_1_4 + vf_4_1 + vf_combined
 
 
+## Using grid.arrange to put the plots together
+virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
+                                       nrow = 1,
+                                       widths = c(0.5,0.5,1),
+                                       heights = c(1))
 
 
 ######################
@@ -235,7 +237,12 @@ m_1_4  <- feeding_results(onefour_m, boxplot_fill_color = c("lightblue", "lightb
 m_4_1 <- feeding_results(fourone_m, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
 m_combined <- feeding_results(combined_m, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
-m_1_4 + m_4_1 + m_combined
+
+## Using grid.arrange to put the plots together
+male_female_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
+                                      nrow = 1,
+                                      widths = c(0.5,0.5,1),
+                                      heights = c(1))
 
 
 
