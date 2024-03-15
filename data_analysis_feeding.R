@@ -7,21 +7,17 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
-##################---
+##################
 
 
 
 #### Uploading the data sets
 #### Part 1 
--#### Uploading the data this way works for 4:1 and 1:4 assays being combined ####-
+#### Uploading the data this way works for 4:1 and 1:4 assays being combined ####-
 
-  
-  
-  
-  
--####################################-
-#### WILD TYPE MALE CONDITIONING ### ----
--####################################-
+####################################-
+#### WILD TYPE MALE CONDITIONING ### 
+####################################-
 
 ## Creating a path to the scripts for treatment 2 condtioning
 malepath <- "data/male_conditioning/treatment_2"
@@ -31,7 +27,7 @@ malepath <- "data/male_conditioning/treatment_2"
 # Mutates a variable for the data file name (id) 
 # Mutates the data frame to have a variable for the amount of flies on a diet and the diet 
 
--############################################################################################################----
+############################################################################################################----
 read_raw_male <- function(path = malepath, pattern_to_exclude = "4-1_1-4"){
 list_of_files <- list.files(path = malepath,
                             pattern = "rawdata", full.names = T)
@@ -82,6 +78,9 @@ df2_male
 
 
 
+
+
+
 -####################################-
   #### VIRGIN FEMALE CONDITIONING ### ----
 -####################################-
@@ -95,7 +94,7 @@ pathvirgin <- "data/female_conditioning/virgin"
 # Pivots a data frame, to include fly numbers and diet, and excludes na where there would not be numbers in the data frame
 
 
--############################################################################################################-
+############################################################################################################-
 read_raw_virgin <-function(path = pathvirgin, pattern_to_exclude = "4-1_1-4"){
   list_of_files <- list.files(path = pathvirgin,
                               pattern = "rawresults", full.names = T)
@@ -109,7 +108,7 @@ read_raw_virgin <-function(path = pathvirgin, pattern_to_exclude = "4-1_1-4"){
                  values_to = "fly_numbers") %>%
     drop_na(fly_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
 }
--############################################################################################################-
+############################################################################################################-
   
   
 ## read_raw is the function created, and path shows the path made, so the list of files
@@ -153,7 +152,6 @@ df2_virgin
   
 pathovod1 <- "data/female_conditioning/ovod1"
 
-
 ## This creates  function
 ## Path is interchangeable with path 2 
 read_raw_ovod1 <-function(path = pathovod1, pattern_to_exclude = "4-1_1-4"){
@@ -196,20 +194,31 @@ df2_ovod1 # does it recognise condition from the long data?
 
 
 
-## Data Analysis!!!! ----
 
 
-## MALE
-## creating a data column where flies are not on the plate 
-df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
-
-## Creating models 
 
 
-## a binomial model, not considering other "random" factors
+
+
+
+########################## Data Analysis!!!! ############################
+
+##########
+## MALE ##
+##########
+
+## Creating a data column where flies are not on the plate 
+df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned)) ## This is currently not used in any of the models
+
+## MODELS 
+
+## MODEL 1
+## A binomial model, not considering other "random" factors
+## cbind() is used - the response variables are Conditioned and Unconditioned
 glm.bin_m <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_male)
 
-# checking the model
+# ASSUMPTION CHECKING:
+## Checking Residuals
 glm.bin_m_residuals <- residuals(glm.bin_m, type = "pearson")
 
 # pearson residual check
@@ -217,40 +226,41 @@ plot(glm.bin_m_residuals ~ fitted(glm.bin_m), ylab = "Pearson Residuals", xlab =
 abline(h = 0, col = "red")
 
 ## MODEL CHECK for overdispersion
-summary(binomial_model_male) # overdispersion
+summary(glm.bin_m) # overdispersion
 
 
-
-
-
+## MODEL 2 
 # trying a mixed model, considers other "random" factors
 glmer.mm_m <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
-## performance check of data
+## Assumption checks 
+
+# Performance check of data using "easystats":
 performance::check_model(glmer.mm_m, check = c("qq")) # qq looks pretty good 
 performance::check_model(glmer.mm_m, check = c("homogeneity")) #?? 
 
 ## DHARMa performance checks
 testDispersion(glmer.mm_m) 
 
-# model is okay? 
+# Model is okay to be used? 
 
-# using model for analysis? 
+# Using MODEL 2 for analysis? 
 
-# looking for significance in "block" 
+# Looking for significance in "block" 
 summary(glmer.mm_m) 
 drop1(glmer.mm_m, test = "Chisq")
+# Block is not significant, so dropping from the model 
 
-# not significant
-
-# new model 
+# MODEL 2.1
 glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
+## Looking at the results of the model 
 summary(glmer.mm_m_2) # only 4:1 is significant? 
 
-## how to look at this model in emmeans? 
-emmeans::emmeans(glmer.mm_m_2, condition ~ ratio , random = ~ (1|plate) + (1|observation))
-# really want to look at Conditioned vs Unconditioned?
+## Trying to look at the results of the model using emmeans()
+emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio , random = ~ (1|plate) + (1|observation))
+# Really want to look at Conditioned vs Unconditioned?
+## Need to know how to interpret this model
 
 
 
@@ -261,31 +271,37 @@ emmeans::emmeans(glmer.mm_m_2, condition ~ ratio , random = ~ (1|plate) + (1|obs
 
 
 
-# VIRGIN FEMALE
-## creating a data column where flies are not on the plate 
+
+
+###################
+## VIRGIN FEMALE ##
+###################
+
+## Creating a data column where flies are not on the plate 
 df2_virgin <- df2_virgin %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
+## This has not been used yet, maybe need to include it in a model somehow?
+# Is it relevant?
 
-
-## a binomial model, not considering other "random" factors
+## MODEL 1 
+## A binomial model, not considering other "random" factors
 glm.bin_vf <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin)
 
-# assumption checking?? 
+# Assumption checks 
+performance::check_model(glm.bin_vf, check = c("qq")) # Can't do easystats assumption checks?? 
+performance::check_model(glm.bin_vf, check = c("homogeneity")) 
 
+# Assumption checking 
+summary(glm.bin_vf) # Model is overdispersed 
 
-summary(glm.bin_vf) # model is overdispersed 
-
-
-# mixed model, considers other "random" factors
+# Mixed model, considers other "random" factors
 glmer.mm_vf <- glmer(cbind(Conditioned, Unconditioned) ~ ratio*block + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
-# assumption checks 
+# Assumption checks 
 performance::check_model(glmer.mm_vf, check = c("qq")) # qq looks pretty great
 performance::check_model(glmer.mm_vf, check = c("homogeneity")) # what is going on? 
 
-
 # DHARMa checks 
 testDispersion(glmer.mm_vf) ## hmm - overdispersed?? 
-
 simulationOutput_glmer.mm_vf <- simulateResiduals(fittedModel = glmer.mm_vf, plot = F)
 plot(simulationOutput_glmer.mm_vf) # all these models look the samen to me 
 
@@ -297,7 +313,7 @@ glmer.mm_vf <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plat
 drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped from the model
 
 
-
+# Model 2 - where block has been removed
 glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
 
@@ -311,19 +327,16 @@ emmeans::emmeans(glmer.mm_vf_2, pairwise ~ ratio, random = ~ 1 | plate + observa
 
 
 
-
-## OVOD1 FEMALE 
-## OVOD1 FEMALE 
+##################--
+## OVOD1 FEMALE ##
+##################--
 ## creating a data column where flies are not on the plate 
 df2_ovod1 <- df2_ovod1 %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
-
 
 ## trying a binomial model
 glm.bin_of <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block , family = binomial, data = df2_ovod1)
 
 # assumption checks for binomial model 
-
-
 summary(glm.bin_of) # there is overdispersion 
 
 
@@ -367,33 +380,12 @@ glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|pla
 
 
 
-## using the DHARMa package 
-library(DHARMa)
-#resid.mm<-simulateResiduals(mixed_model_male)
-#plot(resid.mm)
+
+
+################################################################################################################################################ 
 
 
 
-
-
-
-
-
-
-
-## creating a function to pull the median
-fly_numbers_summary()<- function(data, group_col) {
-  summary <- data %>%
-    group_by(plate, {{ group_col }}) %>%
-    summarise(median = median(fly_numbers))
-  return(summary)
-}
-
-
-
-four_one_virgin_summary <- fly_numbers_summary(four_to_one_virgin_long, diet)
-one_four_virgin_summary <- fly_numbers_summary(one_to_four_virgin_long, diet)
-fourone_onefour_virgin_summary <- fly_numbers_summary(fourone_onefour_virgin_long, diet)
 
 
 
