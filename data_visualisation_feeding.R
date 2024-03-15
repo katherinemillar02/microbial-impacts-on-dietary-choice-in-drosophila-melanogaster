@@ -158,7 +158,7 @@ combined_m <- fourone_onefour_male %>%
 
 #################################### Feeding Results Function Plot ####################################
 
-feeding_results <- function(summary_data,boxplot_fill_color ) {
+feeding_results <- function(summary_data,boxplot_fill_colour ) {
   ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
     # geom_jitter(aes(x = diet,
     #                 y = fly_numbers,
@@ -182,14 +182,14 @@ feeding_results <- function(summary_data,boxplot_fill_color ) {
          y = "Number of flies per diet patch", 
          title = "",
          tag = "a")+
-    scale_fill_manual(values = boxplot_fill_color) +  # Set fill colors for the boxplot
+    scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
     scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
     theme(legend.position = "none") +
     ylim(-0.01, 6) 
   
 }
 
-############################################################################################################
+###########################################################################################################################
 
 
 ################  CODING FOR EACH OF THE DIFFERENT CONDITIONS #################### 
@@ -202,9 +202,9 @@ feeding_results <- function(summary_data,boxplot_fill_color ) {
 #####################
 ## OvoD1 FEMALES ##
 #####################
-of_1_4 <- feeding_results(onefour_of, boxplot_fill_color = c("lightblue", "lightblue"))
-of_4_1  <- feeding_results(fourone_of, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-of_combined  <- feeding_results(combined_of, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = c("lightblue", "lightblue"))
+of_4_1  <- feeding_results(fourone_of, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
+of_combined  <- feeding_results(combined_of, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 
 ## Using grid.arrange to put the plots together
@@ -233,16 +233,33 @@ virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
 ######################
 ## WILD TYPE MALES ##
 #####################
-m_1_4  <- feeding_results(onefour_m, boxplot_fill_color = c("lightblue", "lightblue"))
-m_4_1 <- feeding_results(fourone_m, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-m_combined <- feeding_results(combined_m, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour = c("lightblue", "lightblue"))
+m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
+m_combined <- feeding_results(combined_m, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 
 ## Using grid.arrange to put the plots together
-male_female_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
+male_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
                                       nrow = 1,
                                       widths = c(0.5,0.5,1),
                                       heights = c(1))
+
+
+
+
+
+## OVERALL GRID 
+overall_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
+                                of_1_4, of_4_1, of_combined,
+                                vf_1_4, vf_4_1, vf_combined,  
+                                nrow = 3,
+                                widths = c(0.5,0.5,1),
+                                heights = c(1,1,1),
+                                top = c("Male Conditioned Diets", "OvoD1 Female Conditioned Diets", "Virgin Female Conditioned Diets"))
+
+
+
+
 
 
 
