@@ -75,6 +75,18 @@ df2_male
 
 
 
+### making a dataset without 1:4 
+# Assuming "df2_male" is your dataset
+
+# Use grepl to identify rows with "1-4" pattern in any column
+pattern <- "1-4"
+exclude_rows <- grepl(pattern, df2_male$id)
+
+# Subset the dataframe to exclude rows with the "1-4" pattern
+df2_male_filtered <- df2_male[!exclude_rows, ]
+
+
+
 
 
 
