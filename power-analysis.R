@@ -14,9 +14,11 @@ N <- 15 ## Need to put the appropriate sample size here
 ## Just the 4:1 dataset 
 View(df2_male_filtered)
 ## Working out the trt effect 
-## getting the mean 
+
+## getting the mean effect 
 conditioned_mean <- mean(df2_male_filtered$Conditioned)
 unconditioned_mean <- mean(df2_male_filtered$Unconditioned)
+
 
 trt_mean <- conditioned_mean - unconditioned_mean
 
@@ -39,9 +41,10 @@ combined_sd <- sd(combined_values)
 ### the sd together?? 
 sigma <- 2.027764 # standard deviation of control and treatment groups? 
 
-
+# The mean of 4:1 Unconditioned
 mean.con <-  0.6363636 # mean of control group (mean of 4:1 Unconditioned)
 
+## This is the mean  
 mean.trt <- mean.con + trt.effect # mean of treatment group
 
 control <- rnorm(N, mean.con, sigma) # 20 data points for the control group taken from a normal distribution with known sample size, mean and s.d.
