@@ -85,9 +85,11 @@ pwr.t.test(n = NULL, d = trt.effect / sigma, sig.level = 0.05, power = 0.8)
 
 
 ##### CONFUSED ABOUT THIS PART 
-nvals <- seq(2, 200, length.out = 200)
+nvals <- seq(1, 30, length.out = 30)
 powvals <- sapply(nvals, function(x) pwr.2p.test(h = trt.effect / sigma, n = x, sig.level = 0.05)$power)
 
+
+## Shows sample size against power!! would need a sample size of like 20?? 
 plot(nvals, powvals,
      xlab = "sample size", ylab = "power",
      main = "Power curve for sample size for difference in proportions",
@@ -95,3 +97,5 @@ plot(nvals, powvals,
 )
 
 abline(h = 0.8)
+
+## Is this saying a sample size of 15 is enough
