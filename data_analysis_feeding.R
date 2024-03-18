@@ -735,5 +735,6 @@ zi.p_of <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit",
 # looking at the results 
 summary(zi.p_of)
 
+## Using emmeans for analysis 
 emmeans::emmeans(zi.p_of, pairwise ~ diet )
 
