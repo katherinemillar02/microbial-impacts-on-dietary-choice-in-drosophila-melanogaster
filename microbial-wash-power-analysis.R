@@ -78,14 +78,16 @@ t.test(control, treatment)
 boxplot(cbind(control, treatment))
 
 
-## DOING POWER TESTS 
+
+
+
+## DOING POWER TESTS -- 
 
 ## With the n of replicates used before
 pwr.t.test(n = 15, d = trt.effect / sigma, sig.level = 0.05, power = NULL)
 
 ## Using the power to work out what replicates are needed
 pwr.t.test(n = NULL, d = trt.effect / sigma, sig.level = 0.05, power = 0.8)
-
 
 
 
