@@ -93,9 +93,9 @@ df2_male_filtered <- df2_male[!exclude_rows, ]
 
 
 
--####################################-
+####################################-
   #### VIRGIN FEMALE CONDITIONING ### ----
--####################################-
+####################################-
   
 ## Creating a path to get to the Virgin Conditioning data files 
 pathvirgin <- "data/female_conditioning/virgin"
@@ -158,9 +158,9 @@ df2_virgin
 
 
 
--####################################-
+###################################-
   #### OvoD1 FEMALE CONDITIONING ### ----
--####################################-
+####################################-
   
 pathovod1 <- "data/female_conditioning/ovod1"
 
@@ -269,6 +269,7 @@ glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1
 ## Looking at the results of the model 
 summary(glmer.mm_m_2) # only 4:1 is significant? 
 
+
 ## Trying to look at the results of the model using emmeans()
 emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio , random = ~ (1|plate) + (1|observation))
 # Really want to look at Conditioned vs Unconditioned?
@@ -329,7 +330,7 @@ drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped fr
 glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
 
-summary(glmer.mm_vf_2) # 4:1 is not significant?
+summary(glmer.mm_vf_2) 
 
 emmeans::emmeans(glmer.mm_vf_2, pairwise ~ ratio, random = ~ 1 | plate + observation)
 
@@ -376,12 +377,15 @@ glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|pla
 # looking at the significance of block
 drop1(glmer.mm_of, test = "Chisq") # block is significant, keep in the model
 
+# checking out the model
+summary(glmer.mm_of) # says block is not significant here? what to use? 
+
+
 glmer.mm_of_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio   + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
 summary(glmer.mm_of_2)
 
-# checking out the model
-summary(glmer.mm_of) # says block is not significant here? 
+
 
 
 
@@ -511,9 +515,14 @@ emmeans::emmeans(glm_mm_m_2, pairwise ~ diet, random = ~ (1|plate) + (1|observat
 
 
 
+
+
+
+
+
 # Virgin Female Assay 
 
-fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin.xlsx")
+fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
 fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
 fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
@@ -705,7 +714,9 @@ zi.nb_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin",
 
 # need to do performance checks? 
 
-
+## signifiance of block
+drop1(zi.nb_of, test = "Chisq") 
+summary(zi.nb_of) ## says block is not sig but can we trust that 
 
 
 # comparing models 
@@ -715,6 +726,7 @@ AIC(glm_poisson_of, glm.nb_of, glm_mm_of, zi.p_of, zi.nb_of)
 
 # looking for significance in block 
 summary(zi.nb_of) # not significant? 
+
 
 
 # dropping block from the model 
