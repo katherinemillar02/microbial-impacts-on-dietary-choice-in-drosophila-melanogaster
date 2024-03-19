@@ -41,7 +41,14 @@ map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "observation")) %>% #.x is
                values_to = "fly_numbers") %>%
   drop_na(fly_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
 }
+
+
+
 ############################################################################################################-
+
+
+
+
 
 
 ## read_raw is the function created, and path shows the path made, so the list of files
