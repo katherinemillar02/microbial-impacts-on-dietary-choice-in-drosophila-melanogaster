@@ -217,8 +217,10 @@ df2_male_oviposition # does it recognise condition from the long data?
 
 
 
+########################################################################################################################
+                                               #### DATA ANALYSIS ####
+########################################################################################################################
 
-                                         #### DATA ANALYSIS ####
 
 ###########################
 #### MALE OVIPOSITION #####
@@ -343,6 +345,11 @@ drop1(glmer.ovod1_f_egg, test = "Chisq") ## block is very significant
 
 ## Looking at results, keeping block in 
 summary(glmer.ovod1_f_egg)
+
+
+
+
+
 
 
 
