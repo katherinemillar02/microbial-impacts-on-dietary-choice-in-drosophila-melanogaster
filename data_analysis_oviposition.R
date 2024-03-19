@@ -2,6 +2,9 @@
 library(tidyverse)
 library(lmerTest)
 library(readxl)
+library(DHARMa)
+library(glmmTMB)
+library(lme4)
 ###############
 
 
@@ -165,7 +168,61 @@ df2_male_oviposition # does it recognise condition from the long data?
 
 
 
+
+
 #### DATA ANALYSIS 
+# Male Oviposition
+
+## Male Oviposition Analysis
+binom_m_egg <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_male_oviposition)
+
+## Assumption checking
+performance::check_model(binom_m_egg, check = c("qq")) ## performance not working right now
+
+## Using DHARMa
+testDispersion(binom_m_egg) ## This is quite bad? 
+
+simulation_Output <- simulateResiduals(fittedModel = binom_m_egg, plot = F)
+plot(simulation_Output) ## Think this shows to be quite a bad model 
+
+## looking at model 
+summary(binom_m_egg) # VERY OVERDISPERSED 
+
+
+## Trying a new model with random effects 
+glmer.mm_m_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_male_oviposition)
+
+
+## checking this new model 
+testDispersion(glmer.mm_m_egg) ## This is quite bad? 
+
+simulation_Output <- simulateResiduals(fittedModel = glmer.mm_m_egg, plot = F)
+plot(simulation_Output) ## Think this shows to be quite a bad mod
+
+## Tring to generate an actual qqplot
+
+## Generating residuals 
+residuals <- residuals(glmer.mm_m_egg, type = "pearson")
+
+qnorm(residuals)
+
+## Will generate a qq 
+qqnorm(residuals)
+
+## Using this model for now 
+summary(glmer.mm_m_egg)
+
+
+
+
+
+
+
+
+
+
+
+
 # OvoD1 Oviposition
 binomial_model_ovod1_oviposition <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_ovod1_oviposition)
 ## looking at model 
@@ -173,10 +230,7 @@ summary(binomial_model_ovod1_oviposition) # 4:1 Conditioned is significant?
 
 emmeans::emmeans(binomial_model_ovod1_oviposition, pairwise ~ ratio)
 
-# Male Oviposition
-binomial_model_male_oviposition <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_male_oviposition)
-## looking at model 
-summary(binomial_model_male_oviposition) # 4:1 Conditioned is very significant?
+
 
 
 # Female Oviposition
