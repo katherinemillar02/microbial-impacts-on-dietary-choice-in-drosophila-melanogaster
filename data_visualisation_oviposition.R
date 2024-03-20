@@ -5,6 +5,7 @@ library(patchwork)
 library(colorBlindness) 
 library(ggplot2)
 library(ggpattern)
+library(gridExtra)
 ######################## 📦📦📦📦 
 
 
@@ -146,9 +147,14 @@ combined_ovi_m <- fourone_onefour_male_oviposition  %>%
 #### CREATING A FUNCTION FOR AN OVIPOSITION PLOT #### 
 #########################################################################################################
 #### Creating a function for a plot which will allow me to run the same code for different datasets 
-oviposition_results <- function(summary_data,boxplot_fill_color ) {
-  ggplot(summary_data, aes(x = diet, y = egg_numbers, fill = diet, pattern = diet))+ 
-    geom_boxplot(fill = "white", color = "black")+
+
+
+oviposition_results <- function(summary_data,boxplot_fill_colour ) {
+  ggplot(summary_data, aes(x = diet, y = egg_numbers, fill = diet, pattern = diet))+
+    
+
+    
+    geom_boxplot()+
     geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
                          color = "black",
                          pattern_fill = "white",
@@ -156,27 +162,23 @@ oviposition_results <- function(summary_data,boxplot_fill_color ) {
                          pattern_density = 0.1,
                          pattern_spacing = 0.025,
                          pattern_key_scale_factor = 0.6) +
-    geom_point(aes(),
-               size = 1,
-               shape = 1,
-               position = position_jitterdodge()) +
+  
     theme_classic()+
     labs(x = "Diet Condition",
-         y = "Number of eggs per diet patch", 
-         title = "")+
-    scale_fill_manual(values = boxplot_fill_color) +  
+         y = "Number of flies per diet patch", 
+         title = "",
+         tag = "a")+
+    scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
     scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
-    theme(legend.position = "none",
-          axis.text.x = element_text(size = 6)) +
-    ylim(0.1, 250) 
- # `   geom_jitter(data = summary_data,
- #                aes(x = diet,
- #                    y = egg_numbers,
- #                    fill = diet),
- #                width = 0.1,
- #                shape = 1)
+    theme(legend.position = "none") +
+    ylim(-0.01, 250) 
   
 }
+
+
+
+
+
 
 
 
@@ -184,7 +186,7 @@ oviposition_results <- function(summary_data,boxplot_fill_color ) {
 ## Code will allow one to see each of the plots
 ##################
 ## OvoD1 Female ##
-ov1_egg1 <- oviposition_results(onefour_ovi_of, boxplot_fill_color = c("#9FE2BF","#9FE2BF"))
+ov1_egg1 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 ov1_egg2 <- oviposition_results(fourone_ovi_of, boxplot_fill_color = c("#FF7F50","#FF7F50")) 
 ov1_egg3 <- oviposition_results(combined_ovi_of, boxplot_fill_color = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
 ################
