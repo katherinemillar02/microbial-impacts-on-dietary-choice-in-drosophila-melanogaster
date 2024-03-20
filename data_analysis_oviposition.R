@@ -426,38 +426,23 @@ summary(glmer.virgin_f_egg)
 
 
 
+################################################ DATA ANNALYSIS PART 2 ###################################
+######################################## The Combined 4:1 and 1:4 Assays ###################################
+#######################################################################################################################
 
 
 
 
+###################################
+####### OvoD1 Conditioning #######
+###################################
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##### The Combined 4:1 and 1:4 Assay 
-
-
-
-# OvoD1 Conditioning 4:1-1:4 analysis -- 
-# mutating a block variable 
+## Reading the data in 
 combined_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx")
 combined_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx")
 
-
+# Mutating a block variable 
 combined_ovod1_b1 <- combined_ovod1_b1  %>% mutate(block = "one")
 combined_ovod1_b2 <- combined_ovod1_b2  %>% mutate(block = "two")
 
@@ -469,18 +454,83 @@ combined_of_egg  <- combined_ovod1 %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
-glm_poisson_of_egg <- glm(egg_numbers ~ diet , family = quasipoisson, data = combined_of_egg)
-glm_poisson_of_egg <- glm(egg_numbers ~ diet , family = quasipoisson, data = df2_ovod1_oviposition)
+# Model 1 
+combined_od1_glm.p <- glm(egg_numbers ~ diet * block, family = poisson, combined_of_egg)
+
+## Model assumption checking 
+
+## easystats currently doesn't work 
+
+## DHARMa
+testDispersion(combined_od1_glm.p) ## Does this mean very overdispersed? 
+
+simulationOutput <- simulateResiduals(fittedModel = combined_od1_glm.p, plot = T) ## ? bad 
 
 
-summary(glm_poisson_of_egg)
-emmeans::emmeans(glm_poisson_of_egg , pairwise ~ diet)
+## Checking model dispersion values
+summary(combined_od1_glm.p) ## Very overdispersed 
+
+# Checking for zero inflation
+check_zeroinflation(combined_od1_glm.p) ## No zero inflation?? 
+
+# Looking at qq
+## Generating residuals 
+residuals_p <- residuals(combined_od1_glm.p, type = "pearson")
+qnorm(residuals_p)
+## Will generate a qq 
+qqnorm(residuals_p) ## looks pretty low 
+
+# But model is still very overdispersed 
+# Because of this, first trying a quassipoisson 
+
+## quasipoisson model
+combined_od1_glm_egg.qp <- glm(egg_numbers ~ diet * block, family = quasipoisson, combined_of_egg)
+
+
+## can't do DHARma checks on a quasipoisson model? 
+# Looking at qq
+## Generating residuals 
+residuals_qp <- residuals(combined_od1_glm.qp, type = "pearson")
+qnorm(residuals_qp)
+## Will generate a qq 
+qqnorm(residuals_qp) ## looks the same as the poisson qq ?? 
+
+
+## Don't really know how to interpret the quasipoisson model, doing a mixed model 
+# trying a mixed GLM 
+combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_of_egg)
+
+# Looking at qq
+## Generating residuals 
+residuals_glm_mm <- residuals(combined_glm_mm_od1_egg , type = "pearson")
+qnorm(residuals_glm_mm )
+## Will generate a qq 
+qqnorm(residuals_glm_mm ) ## looks pretty low -- all qq looks the same?? 
 
 
 
+## DHARMa checks 
+testDispersion(combined_glm_mm_od1_egg) ## looks a lot better, still odd 
 
-performance::check_model(glm_poisson_of_egg, check = c("qq")) # doesn't look great - banana 
-performance::check_model(glm_poisson_of_egg, check = c("homogeneity")) # slopey 
+simulation0utput <- simulateResiduals(fittedModel = combined_glm_mm_od1_egg, plot = T) ## Looking slightly better 
+
+
+
+## Comparing the AIC of the models 
+AIC(combined_od1_glm.p, combined_od1_glm.qp, combined_glm_mm_od1_egg)
+ ## Mixed model has the lowest AIC 
+
+## Using this model for now 
+combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_of_egg)
+
+
+## Testing the significance of block
+drop1(combined_glm_mm_od1_egg , test = "Chisq") # block is very signficiant 
+
+summary(combined_glm_mm_od1_egg)
+   ## everything is very significant 
+
+
 
 
 
