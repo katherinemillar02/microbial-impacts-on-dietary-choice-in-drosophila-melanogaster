@@ -528,7 +528,127 @@ combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)
 drop1(combined_glm_mm_od1_egg , test = "Chisq") # block is very signficiant 
 
 summary(combined_glm_mm_od1_egg)
-   ## everything is very significant 
+   ## everything is very significant - dodgy data? 
+
+
+
+
+
+
+
+
+
+
+#################################
+####### Male Conditioning #######
+#################################
+
+# 4:1 + 1:4 
+fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
+fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b2_oviposition.xlsx")
+# Mutating a block variable
+fourone_onefour_male_oviposition_b1 <- fourone_onefour_male_oviposition_b1 %>% mutate(block = "one")
+fourone_onefour_male_oviposition_b2 <- fourone_onefour_male_oviposition_b2%>% mutate(block = "two")
+# Binding the data for 4:1/1:4 
+fourone_onefour_male_oviposition <- rbind(fourone_onefour_male_oviposition_b1, fourone_onefour_male_oviposition_b2)
+
+## Making the data different dataframes
+combined_ovi_m <- fourone_onefour_male_oviposition  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+## Model 1 
+## Beginning with a glm with poisson
+comb_m_egg_glm.p <- glm(egg_numbers ~ diet * block, family = poisson,  combined_ovi_m )
+
+## Assumption checking 
+
+## DHARMa
+testDispersion(comb_m_egg_glm.p) ## Really really overdispersed 
+
+simulationOutput <- simulateResiduals(fittedModel = comb_m_egg_glm.p, plot = T) ## not great
+
+
+## Looking at a qq plot 
+## Generating residuals 
+residuals_glm_p_m <- residuals(combined_glm_mm_od1_egg , type = "pearson")
+qnorm(residuals_glm_p_m)
+## Will generate a qq 
+qqnorm(residuals_glm_p_m) ## ?? 
+
+
+## Checking for overdispersion
+summary(comb_m_egg_glm.p) ## very overdispersed by the looks of it 
+
+## Checking for zeroinflation 
+check_zeroinflation(comb_m_egg_glm.p) ## There is zero inflation 
+
+## Trying a negative binomial model
+glm.nb_of_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
+
+
+## DHARMa checks 
+testDispersion(glm.nb_of_comb_egg) ## model has changed a lot - underdispersed now? 
+
+
+## Looking at a qq plot 
+## Generating residuals 
+residuals_glm_nb_m <- residuals(glm.nb_of_comb_egg , type = "pearson")
+qnorm(residuals_glm_nb_m)
+## Will generate a qq 
+qqnorm(residuals_glm_nb_m) ## points go down compared to previous model
+
+
+
+## Trying a mixed model
+combined_glm_mm_m_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_m)
+
+
+
+## DHARMa checks 
+testDispersion(combined_glm_mm_m_egg) ## overdispersed 
+
+## Looking at a qq plot 
+## Generating residuals 
+residuals_glm_mm_m <- residuals(combined_glm_mm_m_egg , type = "pearson")
+qnorm(combined_glm_mm_m_egg)
+## Will generate a qq 
+qqnorm(combined_glm_mm_m_egg) ## points go down compared to previous model
+   ## Can't do a qqplot with this code 
+
+
+## Trying some zero inflation models as there is zero-inflation 
+
+## zero inflated poisson
+zi.p_m_comb_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_ovi_m)
+
+
+## checks?? 
+
+## zero inflated negative binomial 
+zi.nb_m_comb_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_ovi_m)
+
+
+AIC(comb_m_egg_glm.p, combined_glm_mm_m_egg, glm.nb_of_comb_egg, zi.p_m_comb_egg, zi.nb_m_comb_egg)
+   ## the negative binomial glm has the lowest AIC by a while so is probably the best 
+
+
+## checking the model out 
+glm.nb_of_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
+
+
+## checking significance of block 
+drop1(glm.nb_of_comb_egg, test = "F") ## says block is not significant!! 
+
+## dropping block from the model
+glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_m)
+
+
+## analysing results 
+summary(glm.nb_of_comb_egg_2)
+
+## pairwise test
+emmeans::emmeans(glm.nb_of_comb_egg_2, pairwise ~ diet)
+
 
 
 
