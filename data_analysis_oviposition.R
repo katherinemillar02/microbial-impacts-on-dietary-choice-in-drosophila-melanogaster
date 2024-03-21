@@ -440,14 +440,14 @@ summary(glmer.virgin_f_egg)
 
 ################################################ DATA ANNALYSIS PART 2 ###################################
 ######################################## The Combined 4:1 and 1:4 Assays ###################################
-#######################################################################################################################
+################################################################################################### ---
 
 
 
 
-###################################
-####### OvoD1 Conditioning #######
-###################################
+################################### --
+####### OvoD1 Conditioning ####### 
+################################### ---
 
 
 ## Reading the data in 
@@ -551,9 +551,9 @@ summary(combined_glm_mm_od1_egg)
 
 
 
-#################################
+################################# --
 ####### Male Conditioning #######
-#################################
+################################# --
 
 # 4:1 + 1:4 
 fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
@@ -606,12 +606,12 @@ glm.nb_m_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
 
 
 ## DHARMa checks 
-testDispersion(glm.nb_of_comb_egg) ## model has changed a lot - underdispersed now? 
+testDispersion(glm.nb_m_comb_egg) ## model has changed a lot - underdispersed now? 
 
 
 ## Looking at a qq plot 
 ## Generating residuals 
-residuals_glm_nb_m <- residuals(glm.nb_of_comb_egg , type = "pearson")
+residuals_glm_nb_m <- residuals(glm.nb_m_comb_egg , type = "pearson")
 qnorm(residuals_glm_nb_m)
 ## Will generate a qq 
 qqnorm(residuals_glm_nb_m) ## points go down compared to previous model
@@ -669,6 +669,34 @@ summary(glm.nb_of_comb_egg_2)
 emmeans::emmeans(glm.nb_of_comb_egg_2, pairwise ~ diet)
 
 
+
+
+
+
+
+## Virgin Conditioning ####
+fourone_onefour_oviposition_virgin_b2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx")
+fourone_onefour_oviposition_virgin_b3 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b3.xlsx")
+fourone_onefour_oviposition_virgin_b4 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b4.xlsx")
+
+fourone_onefour_oviposition_virgin_b2 <- fourone_onefour_oviposition_virgin_b2 %>% mutate(block = "two")
+fourone_onefour_oviposition_virgin_b3 <- fourone_onefour_oviposition_virgin_b3 %>% mutate(block = "three")
+fourone_onefour_oviposition_virgin_b4 <- fourone_onefour_oviposition_virgin_b4 %>% mutate(block = "four")
+
+
+
+
+fourone_onefour_oviposition_virgin <- rbind(fourone_onefour_oviposition_virgin_b2, fourone_onefour_oviposition_virgin_b3, fourone_onefour_oviposition_virgin_b4)
+
+
+
+combined_ovi_v <- fourone_onefour_oviposition_virgin  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
+comb_v_egg_glm.p <- glm(egg_numbers ~ diet * block, family = poisson,  combined_ovi_v )
+
+## assumption checking 
 
 
 
