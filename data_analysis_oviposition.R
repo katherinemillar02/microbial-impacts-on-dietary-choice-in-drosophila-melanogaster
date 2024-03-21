@@ -594,8 +594,15 @@ summary(comb_m_egg_glm.p) ## very overdispersed by the looks of it
 ## Checking for zeroinflation 
 check_zeroinflation(comb_m_egg_glm.p) ## There is zero inflation 
 
+
+
+
+
+
+
+
 ## Trying a negative binomial model
-glm.nb_of_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
+glm.nb_m_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
 
 
 ## DHARMa checks 
