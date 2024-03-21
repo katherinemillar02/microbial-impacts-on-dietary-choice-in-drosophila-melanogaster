@@ -1,11 +1,16 @@
-## Packages ##
+## Packages ## 📦📦📦📦
 library(tidyverse)
 library(lmerTest)
 library(readxl)
 library(DHARMa)
 library(glmmTMB)
 library(lme4)
-###############
+library(performance)
+############### 📦📦📦📦
+
+
+
+
 
 
 
@@ -293,6 +298,9 @@ binom_od1_egg <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family =
 # Assumption checking 
 
 # easystats does not work at the moment 
+performance::check_model(binom_od1_egg , check = c("qq")) ## looks okay
+performance::check_model(binom_od1_egg , check = c("homogeneity")) 
+
 
 # DHARMa 
 testDispersion(binom_od1_egg) # looks pretty poor
@@ -419,6 +427,10 @@ drop1(glmer.virgin_f_egg, test = "Chisq") ## block is overall sig
 summary(glmer.virgin_f_egg)
 ## block 3 sig with block 1
 ## block 2 not sig with block 1 
+
+
+
+
 
 
 
