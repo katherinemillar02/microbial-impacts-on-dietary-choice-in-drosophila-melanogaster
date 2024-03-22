@@ -6,6 +6,7 @@ library(DHARMa)
 library(glmmTMB)
 library(lme4)
 library(performance)
+library(pscl)
 ############### 📦📦📦📦
 
 
@@ -673,32 +674,137 @@ emmeans::emmeans(glm.nb_of_comb_egg_2, pairwise ~ diet)
 
 
 
+##############################
+#### Virgin Conditioning ####
+#############################
 
-## Virgin Conditioning ####
+
+## Reading in the different data-sets
 fourone_onefour_oviposition_virgin_b2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx")
 fourone_onefour_oviposition_virgin_b3 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b3.xlsx")
 fourone_onefour_oviposition_virgin_b4 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b4.xlsx")
-
+## Mutating a block variable to the data-sets
 fourone_onefour_oviposition_virgin_b2 <- fourone_onefour_oviposition_virgin_b2 %>% mutate(block = "two")
 fourone_onefour_oviposition_virgin_b3 <- fourone_onefour_oviposition_virgin_b3 %>% mutate(block = "three")
 fourone_onefour_oviposition_virgin_b4 <- fourone_onefour_oviposition_virgin_b4 %>% mutate(block = "four")
 
-
-
-
+## Binding the different data-sets
 fourone_onefour_oviposition_virgin <- rbind(fourone_onefour_oviposition_virgin_b2, fourone_onefour_oviposition_virgin_b3, fourone_onefour_oviposition_virgin_b4)
 
 
-
+## adding some data names
 combined_ovi_v <- fourone_onefour_oviposition_virgin  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
-comb_v_egg_glm.p <- glm(egg_numbers ~ diet * block, family = poisson,  combined_ovi_v )
+
+
+##### Data Analysis
+
+# Model 1
+# glm with poisson
+comb_v_egg_glm.p <- glm(egg_numbers ~ diet * block, family = poisson,  combined_ovi_v)
 
 ## assumption checking 
 
+## easystats
+performance::check_model(comb_v_egg_glm.p, check = c("qq")) ## bit weird 
+performance::check_model(comb_v_egg_glm.p, check = c("homogeneity")) ## slopey 
+    ## Doesn't work for some reason - was "insight" 
+
+
+## DHARMa
+testDispersion(comb_v_egg_glm.p) # really overdispersed data
+
+simulation_Output <- simulateResiduals(fittedModel = comb_v_egg_glm.p, plot = T)
+   ## qq plot doesn't really work
+   ## need to understand residuals vs predicted plot a bit better 
+
+
+## generating a qqplot 
+## Generating residuals 
+residuals_glm_v_egg <- residuals(comb_v_egg_glm.p , type = "pearson")
+qnorm(residuals_glm_v_egg)
+## Will generate a qq 
+qqnorm(residuals_glm_v_egg) ## looks okay? 
+
+
+## Now checking for overdispersion values
+summary(comb_v_egg_glm.p) ## very overdispersed 
+
+## Checking for zero inflation 
+check_zeroinflation(comb_v_egg_glm.p) 
+  ## shows model is underfitting zeros 
 
 
 
+# Model 2 
+## Doing a negative binomial model 
+glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
+
+## Assumption checks for this 
+## easystats
+performance::check_model(glm.nb_v_comb_egg, check = c("qq")) ## pretty much the same as poisson
+performance::check_model(glm.nb_v_comb_egg, check = c("homogeneity")) ## less slopey than poisson
+
+
+## DHARMa checks
+testDispersion(glm.nb_v_comb_egg) ## nor overdispersed or underdispersed now 
+
+simulation_Output <- simulateResiduals(fittedModel = glm.nb_v_comb_egg, plot = T) ## this looks a lot better
+
+
+# Model 3
+
+## Trying a mixed glm 
+glm_mm_v_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_v)
+
+## Assumption checks 
+
+
+## easystats
+## glmmTMB not supported 
+
+
+## DHARMa checks
+testDispersion(glm_mm_v_egg) ## looking overdispersed now 
+
+simulateOutput <- simulateResiduals(fittedModel = glm_mm_v_egg, plot = T) # ? 
+
+## trying a qq plot 
+## Generating residuals 
+residuals_glm_mm_v_egg <- residuals(glm_mm_v_egg , type = "pearson")
+qnorm(residuals_glm_mm_v_egg)
+## Will generate a qq 
+qqnorm(residuals_glm_mm_v_egg) ## doesn't look that different to previous 
+
+
+## trying zero inflation models:: 
+
+# poisson
+zif.p_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_ovi_m)
+
+# negative binomial 
+zif.nb_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_ovi_m)
+
+
+## Comparing the models 
+AIC(comb_v_egg_glm.p , glm.nb_v_comb_egg, glm_mm_v_egg, zif.p_v_egg, zif.nb_v_egg)
+
+## the negative binomial models have the lowest AIC 
+## go with negative binomial glm
+
+
+## Using the negative binomial glm
+glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
+
+## tesing the signifiance of block 
+drop1(glm.nb_v_comb_egg , test = "F") # block is significant 
+
+## using the model 
+summary(glm.nb_v_comb_egg)
+
+emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet * block)
+
+### why is it saying nothing is really significant now? 
 
