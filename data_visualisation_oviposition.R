@@ -76,7 +76,7 @@ fourone_onefour_oviposition_of <- rbind(fourone_onefour_oviposition_ovod1_b1, fo
 
 
 
-## USING PIVOT LONGER TO ADD A VARIABLE TO A DATA FILE 
+## USING PIVOT LONGER TO ADD A VARIABLE TO A DATA FILE ##
 ## OvoD1
 # 4:1
 fourone_ovi_of <- fourone_oviposition_of %>% 
