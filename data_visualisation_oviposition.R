@@ -144,9 +144,9 @@ onefour_ovi_vf_b4 <- one_to_four_oviposition_virgin_4  %>%
 one_to_four_oviposition_virgin <- rbind(one_to_four_oviposition_virgin_2,one_to_four_oviposition_virgin_3, one_to_four_oviposition_virgin_4)
 
 # 4:1/1:4 Virgin ####
-fourone_onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_2.xlsx")
-fourone_onefour_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_3.xlsx")
-fourone_onefour_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_4.xlsx")
+fourone_onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx")
+fourone_onefour_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b3.xlsx")
+fourone_onefour_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b4.xlsx")
 # Binding the 4:1/1:4 data
 fourone_onefour_oviposition_virgin <- rbind( fourone_onefour_oviposition_virgin_2, fourone_onefour_oviposition_virgin_3, fourone_onefour_oviposition_virgin_4)
 
@@ -425,6 +425,9 @@ male_b1_fourone + male_b2_fourone
 #### 4:1 and 1:4 Assays ----
 
 ## Block is sig for OvoD1
+
+## Block is not sig for Males 
+
 
 ## 
 
