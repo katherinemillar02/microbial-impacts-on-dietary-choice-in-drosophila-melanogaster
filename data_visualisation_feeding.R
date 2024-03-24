@@ -181,8 +181,7 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
     theme_classic()+
     labs(x = "Diet Condition",
          y = "Number of flies per diet patch", 
-         title = "",
-         tag = "a")+
+         title = "")+
     scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
     scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
     theme(legend.position = "none") +
@@ -218,9 +217,9 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
 ##############################
 ## VIRGIN WILD TYPE FEMALES ##
 ##############################
-vf_1_4  <- feeding_results(onefour_v, boxplot_fill_color = c("lightblue", "lightblue"))
-vf_4_1 <- feeding_results(fourone_v, boxplot_fill_color = c("#FDECCD","#FDECCD")) 
-vf_combined <- feeding_results(combined_v, boxplot_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+vf_1_4  <- feeding_results(onefour_v, boxplot_fill_colour = c("lightblue", "lightblue"))
+vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
+vf_combined <- feeding_results(combined_v, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 
 
@@ -250,13 +249,17 @@ male_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
 
 
 ## OVERALL GRID 
-overall_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
-                                of_1_4, of_4_1, of_combined,
-                                vf_1_4, vf_4_1, vf_combined,  
+overall_feeding <- grid.arrange(m_1_4 + ggtitle("Male Conditioning"), m_4_1 + ggtitle("Male Conditioning"), m_combined + ggtitle("Male Conditioning"),
+                                of_1_4 + ggtitle("OvoD1 Female Conditioning"), of_4_1 + ggtitle("OvoD1 Female Conditioning"), of_combined + ggtitle("OvoD1 Female Conditioning"),
+                                vf_1_4 + ggtitle("Virgin Female Conditioning"), vf_4_1+ ggtitle("Virgin Female Conditioning"), vf_combined+ ggtitle("Virgin Female Conditioning"),  
                                 nrow = 3,
                                 widths = c(0.5,0.5,1),
-                                heights = c(1,1,1),
-                                top = c("Male Conditioned Diets", "OvoD1 Female Conditioned Diets", "Virgin Female Conditioned Diets"))
+                                heights = c(1,1,1))
+
+
+
+
+
 
 
 
