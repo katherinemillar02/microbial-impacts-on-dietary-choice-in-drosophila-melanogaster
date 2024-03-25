@@ -1,4 +1,4 @@
-#### INSTALL PACKAGES ####
+#### Packages ####
 library(tidyverse)
 library(readxl)
 library(patchwork)
@@ -6,16 +6,16 @@ library(colorBlindness)
 library(ggplot2)
 library(ggpattern)
 library(gridExtra)
-#### #### #### #### ####
+#### #### #### #### #### --
 
 
 
-#### Uploading raw data #### 
+#### Uploading raw data ####  --
 
 
-#####################
-## OvoD1 FEMALES ##
-#####################
+##################### --
+## OvoD1 FEMALES ####
+##################### --
 # 4:1 
 four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx")
 four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
@@ -54,9 +54,9 @@ combined_of <- fourone_onefour_ovod1 %>%
 
 
 
-###################################################
-#👰👰👰👰## VIRGIN WILD TYPE FEMALES ## 👰👰👰👰###
-###################################################
+################################################### --
+#👰👰👰👰VIRGIN WILD TYPE FEMALES 👰👰👰👰####
+################################################### --
 
 
 # 4:1 
@@ -99,16 +99,16 @@ onefour_v <- one_to_four_virgin  %>%
 combined_v<- fourone_onefour_virgin %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
-####----------
+####--
 
 
 
 
 
 
-###########################
+########################### --
 #### ♂️ MALE CONDITIONING ♂️ #### 
-###########################
+########################### --
 
 
 # 4:1 
@@ -189,7 +189,7 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
   
 }
 
-###########################################################################################################################
+########################################################################################################################### --
 
 
 ################  CODING FOR EACH OF THE DIFFERENT CONDITIONS #################### 
@@ -199,9 +199,9 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 # followed by the appropriate colours for the plot depending on the assay 
 
 
-#####################
-## OvoD1 FEMALES ##
-#####################
+##################### --
+## OvoD1 FEMALES ####
+##################### --
 of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = c("lightblue", "lightblue"))
 of_4_1  <- feeding_results(fourone_of, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
 of_combined  <- feeding_results(combined_of, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
@@ -214,9 +214,9 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
                                      heights = c(1))
 
 
-##############################
-## VIRGIN WILD TYPE FEMALES ##
-##############################
+############################## --
+## VIRGIN WILD TYPE FEMALES ####
+############################## --
 vf_1_4  <- feeding_results(onefour_v, boxplot_fill_colour = c("lightblue", "lightblue"))
 vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
 vf_combined <- feeding_results(combined_v, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
@@ -230,9 +230,9 @@ virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
                                        heights = c(1))
 
 
-######################
-## WILD TYPE MALES ##
-#####################
+###################### --
+## WILD TYPE MALES ####
+##################### --
 m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour = c("lightblue", "lightblue"))
 m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
 m_combined <- feeding_results(combined_m, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
@@ -270,10 +270,10 @@ overall_feeding <- grid.arrange(m_1_4 + ggtitle("Male Conditioning"), m_4_1 + gg
 
 
 
-####################################################################################################################################
-## Additional code 
+#################################################################################################################################### --
+## Additional code ####
 
-#### A Violin Plot 
+#### A Violin Plot ####
 feeding_results_violin <- function(summary_data, violin_fill_color) {
   ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet)) + 
     geom_violin(trim = FALSE, width = 0.5, draw_quantiles = c(0.25, 0.5, 0.75)) +
