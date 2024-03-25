@@ -300,61 +300,118 @@ binom_od1_egg <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family =
 
 # easystats does not work at the moment 
 performance::check_model(binom_od1_egg , check = c("qq")) ## looks okay
-performance::check_model(binom_od1_egg , check = c("homogeneity")) 
 
-
-# DHARMa 
-testDispersion(binom_od1_egg) # looks pretty poor
-
-simulationOutput <- simulateResiduals(fittedModel = binom_od1_egg, plot = F)
-plot(simulation_Output) # don't think it looks great 
-
-## Tring to generate an actual qqplot
-
+## comparing this with a different qqplot to understand qq plots 
 ## Generating residuals 
 residuals <- residuals(binom_od1_egg, type = "pearson")
-
 qnorm(residuals)
-
 ## Will generate a qq 
 qqnorm(residuals) ## qq looks bad 
+qqline(residuals, col = "green") ## putting a line there to understand it better
 
-## Using this model for now 
-summary(glmer.mm_m_egg)
+## Understanding the qqplot:  
+ ## There are points in the data below where the data should fall?
+ ## should be straight across if in ascending order? 
+
+## Homogeneity
+# easystats plot
+performance::check_model(binom_od1_egg , check = c("homogeneity")) ## the dots are not really lines up 
+# first one should be homogeneity
+plot(binom_od1_egg) ## lines look sort of lined up but not the best
+   
+## Understanding homogeneity: 
+ # Assumptions: the level of variance for a particular variable is constant across the sample 
+ # Groups of data: the variance of the outcome variable should be the same in each group
+ # So, I think the dots should sort of be in line with eachother? 
+ # This doesn't really happen, so there isn't a great assumption of homogeneity? 
+   
 
 
-## Looking at model 
-summary(binom_od1_egg) # 4:1 Conditioned is significant?
+#### MORE ASSUMPTION CHECKS
+# DHARMa 
+testDispersion(binom_od1_egg) # looks pretty poor
+## easystats overdispersion check
+check_overdispersion(binom_od1_egg) ## overdispersion 
+
+## Understanding overdispersion 
+  ## There is quite a lot of overdispersion
+  ## This means that the variance of the response variable (fly numbers) is greater than what is
+  ## expected by the model
+
+## Another qqplot 
+simulationOutput <- simulateResiduals(fittedModel = binom_od1_egg, plot = T)
+ ## is predicted the same as fitted? 
+ ## is the second plot homogeneity assumptions? 
+
+## understanding the qqplot shows the points are off the usual data and the second plot shows there is not 
+## really homogeneity of variance 
+
+## Overall, this model is really not the best...
 
 
+
+
+## Model 2 
 ## Trying a new model 
+
+## glm with random effects
 glmer.ovod1_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_ovod1_oviposition)
 
 # Assumption checking 
+# easystats 
+performance::check_model(glmer.ovod1_f_egg, check = c("qq"))
+  ## this qqplot looks pretty good, this means the data falls through quite a nice distribution
+  ## data is expected to fall the way the data falls 
 
-# easystats does not work at the moment 
-
-# DHARMa 
-testDispersion(glmer.ovod1_f_egg) # looks a lot better I think 
-
-simulationOutput <- simulateResiduals(fittedModel = glmer.ovod1_f_egg, plot = F)
-plot(simulation_Output) # I don't know 
-
-## qq plot 
-## Tring to generate an actual qqplot
-
+## different way of doing a qqplot
 ## Generating residuals 
 residuals <- residuals(glmer.ovod1_f_egg, type = "pearson")
 qnorm(residuals)
 ## Will generate a qq 
 qqnorm(residuals) ## qq looks a lot better 
+qqline(residuals, col = "green") ## again, points seem to fall along the line 
+
+
+## Homogeneity check 
+performance::check_model(glmer.ovod1_f_egg, check = c("homogeneity")) 
+  ## There is still not great homogeneity assumptions 
+  ## This means the level of variance is not really constant still 
+
+
+
+## MORE ASSUMPTIONS CHECKS 
+# DHARMa 
+
+## Looking for overdispersion
+testDispersion(glmer.ovod1_f_egg) # looks a lot better I think 
+
+# easystats check for overdispersion 
+check_overdispersion(glmer.ovod1_f_egg) ## there is still overdispersion detected 
+
+
+## More DHARMa assumption checks 
+simulationOutput <- simulateResiduals(fittedModel = glmer.ovod1_f_egg, plot = T)
+  ## DHARMa assumption checks show the model to look a lot better 
+
+## Doing an AIC check
+AIC(binom_od1_egg, glmer.ovod1_f_egg)
+   ## The model with random effects (Model 2) is a lot better, as expected from the other assumptions... 
+
+## Using "Model 2" for now as I do not really know what else to do 
+ 
+## Model choice: 
+glmer.ovod1_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_ovod1_oviposition)
 
 ## Looking for significance in block
 drop1(glmer.ovod1_f_egg, test = "Chisq") ## block is very significant 
 
 ## Looking at results, keeping block in 
+
+## Basic summary
 summary(glmer.ovod1_f_egg)
 
+  ## What I am confused about here: 
+# If I am interpreting the results right, why is there no 1:4 conditioned/unconditioned block 2 results?? 
 
 
 
