@@ -18,9 +18,9 @@ library(pscl)
 
 ## OVIPOSITION ##
 
-#######################
+####################### --
 #### VIRGIN FEMALE ####
-#######################
+####################### --
 
 ## Creating a path to Virgin Conditioning Oviposition data
 pathvirginoviposition <- "data/female_conditioning/virgin"
@@ -96,7 +96,7 @@ pathovod1oviposition <- "data/female_conditioning/ovod1"
 
 ## This creates  function
 
-######################################################################################################################## 
+######################################################################################################################## --
 read_raw_ovod1_oviposition <-function(path = pathovod1oviposition, pattern_to_exclude = "4-1_1-4"){
   list_of_files <- list.files(path = pathovod1oviposition,
                               pattern = "oviposition", full.names = T)
@@ -110,7 +110,7 @@ read_raw_ovod1_oviposition <-function(path = pathovod1oviposition, pattern_to_ex
                  values_to = "egg_numbers") %>%
     drop_na(egg_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
 }
-########################################################################################################################
+######################################################################################################################## --
 
 
 
@@ -152,15 +152,15 @@ df2_ovod1_oviposition # does it recognise condition from the long data?
 
 
 
-################ 
+################ --
 #### MALE ####
-################ 
+################ --
 
 ## Creating a path to get to the data
 pathmaleoviposition <- "data/male_conditioning/treatment_2"
 
 
-################################################################################################################
+################################################################################################################ --
 read_raw_male_oviposition <-function(path = pathmaleoviposition, pattern_to_exclude = "4-1_1-4"){
   list_of_files <- list.files(path = pathmaleoviposition,
                               pattern = "oviposition", full.names = T)
@@ -174,7 +174,7 @@ read_raw_male_oviposition <-function(path = pathmaleoviposition, pattern_to_excl
                  values_to = "egg_numbers") %>%
     drop_na(egg_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
 }
-################################################################################################################
+################################################################################################################--
 
 
 ## read_raw is the function created, and path shows the path made, so the list of files
@@ -215,7 +215,7 @@ df2_male_oviposition # does it recognise condition from the long data?
 ## This is the data frame for male oviposition, for just 4:1 and 1:4 - and includes a variable for block one and block two
 
 
-############################################################
+############################################################ --
  
   
 
@@ -223,14 +223,14 @@ df2_male_oviposition # does it recognise condition from the long data?
 
 
 
-########################################################################################################################
+######################################################################################################################## --
                                                #### DATA ANALYSIS ####
-########################################################################################################################
+######################################################################################################################## --
 
 
-###########################
+########################### --
 #### MALE OVIPOSITION #####
-###########################
+########################### --
 
 
 ## Male Oviposition Analysis
@@ -286,9 +286,9 @@ summary(glmer.mm_m_egg) ## says block is significant
 
 
 
-##################################
+################################## --
 ### OvoD1 FEMALE OVIPOSITION ####
-##################################
+################################## --
 
 
 ## Model 1 
@@ -365,9 +365,9 @@ summary(glmer.ovod1_f_egg)
 
 
 
-##############################
-## VIRGIN Female Oviposition ##
-##############################
+############################## --
+## VIRGIN Female Oviposition #### 
+############################## --
 
 ## Model 1 
 
@@ -674,9 +674,9 @@ emmeans::emmeans(glm.nb_of_comb_egg_2, pairwise ~ diet)
 
 
 
-##############################
+############################## --
 #### Virgin Conditioning ####
-#############################
+############################# --
 
 
 ## Reading in the different data-sets
