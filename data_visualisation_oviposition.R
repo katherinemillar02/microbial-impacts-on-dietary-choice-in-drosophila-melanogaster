@@ -270,10 +270,13 @@ oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
                          pattern_density = 0.1,
                          pattern_spacing = 0.025,
                          pattern_key_scale_factor = 0.6) +
+    
     geom_point(aes(),
                size = 1,
                shape = 1,
-               position = position_jitterdodge()) +
+               position = position_dodge(width=0.75)) +
+  
+
     theme_classic()+
     labs(x = "Diet Condition",
          y = "Number of eggs per diet patch", 
@@ -379,7 +382,7 @@ ovod1_b1_onefour + ovod1_b2_onefour
 ovod1_b1_fourone <- oviposition_results(four_one_b1_egg, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 ovod1_b2_fourone <- oviposition_results(four_one_b2_egg, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 
-ovod1_b1_fourone + ovod1_b2_fourone
+ ovod1_b1_fourone + ovod1_b2_fourone
 
 
 
@@ -422,10 +425,39 @@ male_b2_fourone <- oviposition_results(fourone_ovi_m_b2, boxplot_fill_colour = c
 male_b1_fourone + male_b2_fourone
 
 
-male_b1_fourone <- oviposition_results(onefour_ovi_m_b1, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
-male_b2_fourone <- oviposition_results(onefour_ovi_m_b2, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
+male_b1_onefour <- oviposition_results(onefour_ovi_m_b1, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
+male_b2_onefour <- oviposition_results(onefour_ovi_m_b2, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 
-male_b1_fourone + male_b2_fourone
+male_b1_onefour + male_b2_onefour
+
+
+## PUTTING THE PLOTS TOGETHER 
+   ## 
+
+ovod1_b1_onefour + ggtitle("OvoD1 B1") + ovod1_b2_onefour + ggtitle("OvoD1 B2") /
+  ovod1_b1_fourone + ggtitle("OvoD1 B1") + ovod1_b2_fourone + ggtitle("OvoD1 B2") /
+   virgin_b2_fourone + ggtitle("Virgin B2") + virgin_b3_fourone + ggtitle("Virgin B3")/
+   virgin_b2_onefour + ggtitle("Virgin B2")+ virgin_b3_onefour + ggtitle("Virgin B3") + virgin_b4_onefour +  ggtitle("Virgin B4")/
+    male_b1_fourone + ggtitle("Male B1")+ male_b2_fourone + ggtitle("Male B2") /
+  male_b1_onefour + ggtitle("Male B1") + male_b2_onefour + ggtitle("Male B1")
+
+
+
+## works 
+(ovod1_b1_onefour + ggtitle("OvoD1 B1")) + 
+  (ovod1_b2_onefour + ggtitle("OvoD1 B2")) +
+  (ovod1_b1_fourone + ggtitle("OvoD1 B1")) +
+  (ovod1_b2_fourone + ggtitle("OvoD1 B2")) +
+  (virgin_b2_fourone + ggtitle("Virgin B2")) +
+  (virgin_b3_fourone + ggtitle("Virgin B3")) +
+  (virgin_b2_onefour + ggtitle("Virgin B2")) +
+  (virgin_b3_onefour + ggtitle("Virgin B3")) +
+  (virgin_b4_onefour + ggtitle("Virgin B4")) +
+  (male_b1_fourone + ggtitle("Male B1")) +
+  (male_b2_fourone + ggtitle("Male B2")) +
+  (male_b1_onefour + ggtitle("Male B1")) +
+  (male_b2_onefour + ggtitle("Male B1"))
+
 
 
 
