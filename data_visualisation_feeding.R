@@ -6,6 +6,7 @@ library(colorBlindness)
 library(ggplot2)
 library(ggpattern)
 library(gridExtra)
+library(viridis)
 #### #### #### #### #### --
 
 
@@ -160,20 +161,20 @@ combined_m <- fourone_onefour_male %>%
 #################################### Feeding Results Function Plot ####################################
 
 feeding_results <- function(summary_data,boxplot_fill_colour ) {
-  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
+  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet)) + #, pattern = diet))+ 
     # geom_jitter(aes(x = diet,
     #                 y = fly_numbers,
     #                 fill = diet),
     #             width = 0.1,
     #             shape = 1) +
     geom_boxplot()+
-    geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
-                         color = "black",
-                         pattern_fill = "white",
-                         pattern_angle = 45,
-                         pattern_density = 0.1,
-                         pattern_spacing = 0.025,
-                         pattern_key_scale_factor = 0.6) +
+     # geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+     #                     color = "black",
+     #                     pattern_fill = "white",
+     #                     pattern_angle = 45,
+     #                     pattern_density = 0.1,
+     #                     pattern_spacing = 0.025,
+     #                     pattern_key_scale_factor = 0.6) +
     geom_point(aes(),
                size = 1,
                shape = 1,
@@ -183,7 +184,7 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
          y = "Number of flies per diet patch", 
          title = "")+
     scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
-    scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
+    # scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
     theme(legend.position = "none") +
     ylim(-0.01, 6) 
   
@@ -205,6 +206,29 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = c("lightblue", "lightblue"))
 of_4_1  <- feeding_results(fourone_of, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
 of_combined  <- feeding_results(combined_of, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+
+of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis(5))
+of_4_1  <- feeding_results(fourone_of, boxplot_fill_colour = viridis(3))
+of_combined  <- feeding_results(combined_of, boxplot_fill_colour = viridis(4))
+
+
+
+library(viridis)
+
+# Generate colors using viridis palette for the third plot
+colors_of_combined <- viridis(5)
+
+# Extract colors for first plot (matching first two variables of the third plot)
+colors_first_plot <- colors_of_combined[1:2]
+
+# Extract colors for second plot (matching last two variables of the third plot)
+colors_second_plot <- colors_of_combined[3:4]
+
+# Apply colors to the plots
+of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = colors_first_plot)
+of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = colors_second_plot)
+of_combined <- feeding_results(combined_of, boxplot_fill_colour = colors_of_combined)
+
 
 
 ## Using grid.arrange to put the plots together
