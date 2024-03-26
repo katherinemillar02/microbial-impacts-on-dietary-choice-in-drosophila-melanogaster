@@ -2,14 +2,10 @@
 library(pwr)
 ##
 
-######################## Statistical Power Analysis ######################## 
 
-
-
-
+                         ######################## Statistical Power Analysis ######################## 
 
 #### Environmental Computing - https://environmentalcomputing.net/statistics/power-analysis/
-
 
 #### Doing it for the 4:1 Feeding Assay
 
