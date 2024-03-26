@@ -233,47 +233,97 @@ df2_male_oviposition # does it recognise condition from the long data?
 ########################### --
 
 
-## Male Oviposition Analysis
+## Model 1 
+ # glm binial model
 binom_m_egg <- glm(cbind(Conditioned, Unconditioned) ~ ratio, family = binomial, data = df2_male_oviposition)
 
-## Assumption checking
-performance::check_model(binom_m_egg, check = c("qq")) ## performance not working right now
+## Assumption checking 
+
+## easystats
+
+## qq 
+performance::check_model(binom_m_egg, check = c("qq")) ## the qq for this model looks pretty good
+
+## different qq
+residuals_m <- residuals(binom_m_egg, type = "pearson")
+qnorm(residuals_m)
+qqnorm(residuals_m)
+qqline(residuals_m) ## there are still some dispersed lines 
+
+## Homogeneity 
+performance::check_model(binom_m_egg, check = c("homogeneity")) 
+   ## there is still some dispersion between variables
+   ## not everything completley lines up 
+
+## Another way to look at qq and homogeneity 
+plot(binom_m_egg) ## similar results, points aren't completley together 
 
 ## Using DHARMa
 testDispersion(binom_m_egg) ## This is quite bad? 
+  ## seems to be quite overdispersed 
 
+check_overdispersion(binom_m_egg) ## model is quite overdispersed 
+
+## Looking at qq and homogenity again
 simulation_Output <- simulateResiduals(fittedModel = binom_m_egg, plot = F)
-plot(simulation_Output) ## Think this shows to be quite a bad model 
-
-## looking at model 
-summary(binom_m_egg) # VERY OVERDISPERSED 
+plot(simulation_Output) 
+    ## This shows even worse results, why is this? 
 
 
-## Trying a new model with random effects 
+
+
+## Model 2
+## Trying a new glm with random effects 
 glmer.mm_m_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_male_oviposition)
 
+## Assumption Checking 
 
-## checking this new model 
-testDispersion(glmer.mm_m_egg) ## This is quite bad? 
+## qq checking 
+performance::check_model(glmer.mm_m_egg, check = c("qq")) 
+   ## This qqplot seems to go more off at the end 
+   ## but dots are sort of on the line 
 
+
+## different qq
+residuals_m_mixed <- residuals(glmer.mm_m_egg, type = "pearson")
+qnorm(residuals_m_mixed)
+qqnorm(residuals_m_mixed)
+qqline(residuals_m_mixed)
+  ## There is some weird dispersion, goes off at the end 
+
+
+## Homogeneity assumption checking 
+performance::check_model(glmer.mm_m_egg, check = c("homogeneity")) 
+  ## This is all a lot less lined up than the binomial model 
+  ## assumptions do not look greatly met here 
+
+## other ways to look as assumptions 
+plot(glmer.mm_m_egg) ## This doesn't generate everything? 
+
+## Using DHARMa 
+## looking for overdispersion 
+testDispersion(glmer.mm_m_egg) ## This looks pretty good
+
+# easystats dispersion check 
+check_overdispersion(glmer.mm_m_egg) ## still says overdispersion is detected 
+
+## More ways to look at qq and homogeneity
 simulation_Output <- simulateResiduals(fittedModel = glmer.mm_m_egg, plot = F)
-plot(simulation_Output) ## Think this shows to be quite a bad mod
+plot(simulation_Output) 
+  ## Not much really lines up well in either of these 
 
-## Tring to generate an actual qqplot
+## Comparing the two models 
+AIC(binom_m_egg, glmer.mm_m_egg)
+  ## It says the mixed model has a much lower AIC,
+  ## even though I think the assumptions look a bit worse
 
-## Generating residuals 
-residuals <- residuals(glmer.mm_m_egg, type = "pearson")
+## Choosing the mixed model for now: 
+glmer.mm_m_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_male_oviposition)
 
-qnorm(residuals)
+## Looking for the signifince in block
+drop1(glmer.mm_m_egg, test = "Chisq") ## says block is quite significant, keeping it in the model
 
-## Will generate a qq 
-qqnorm(residuals)
-
-
-drop1(glmer.mm_m_egg, tets = "Chisq") ##?? 
-
-
-## Using this model for now 
+## Using model for now, looking at results: 
 summary(glmer.mm_m_egg) ## says block is significant 
 
 
@@ -433,53 +483,98 @@ binom_virgin_egg <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, famil
 
 # Assumption checking 
 
-# easystats does not work at the moment 
+## qq checks 
+performance::check_model(binom_virgin_egg, check = c("qq"))
+  ## the points do not line up greatly, but it is not the worst 
+  ## dispersion at the beginning and the end 
 
-# DHARMa 
-testDispersion(binom_virgin_egg) # looks pretty poor
-
-simulationOutput <- simulateResiduals(fittedModel = binom_virgin_egg, plot = F)
-plot(simulation_Output) # don't think it looks great 
-
-## Tring to generate an actual qqplot
-
-## Generating residuals 
-residuals <- residuals(binom_virgin_egg, type = "pearson")
-
-qnorm(residuals)
-
+## another qq
+residuals_v_binom <- residuals(binom_virgin_egg, type = "pearson")
+qnorm(residuals_v_binom)
 ## Will generate a qq 
-qqnorm(residuals) ## qq looks sort of okay - could be better  
+qqnorm(residuals_v_binom) 
+qqline(residuals_v_binom, col = "green") 
+   ## points sort of fall along the line, but again - not at the beginning and end 
 
 
-summary(binom_virgin_egg) ## very overdispersed 
+## Testing homogeneity assumptions 
+performance::check_model(binom_virgin_egg, check = c("homogeneity"))
+   ## there seems to be quite a lot of variation 
+
+## more ways to test assumptions
+plot(binom_virgin_egg)
+## the way that things line up isn't actually awful 
+
+
+# DHARMa assumption checks 
+
+## Looking for overdispersion 
+testDispersion(binom_virgin_egg) 
+  ## I think this shows to be quite a lot of overdsispersion 
+
+## easystats overdispersion checker 
+check_overdispersion(binom_virgin_egg)
+  ## there is some overdispersion, quite a bit? 
+
+
+## Doing more DHARMa checks 
+simulationOutput <- simulateResiduals(fittedModel = binom_virgin_egg, plot = T)
+    ## Things do not line up too great
 
 
 
-## Trying a new model 
+
+## Model 2
+## a glm mixed model
 glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_virgin_oviposition)
 
 # Assumption checking 
 
-# easystats does not work at the moment 
+# easystats
+performance::check_model(glmer.virgin_f_egg, check = c("qq"))
+   ## this seems to line up better than the binomial model 
+   ## but there are still some dispersed points at the beginning and the end
 
-# DHARMa 
-testDispersion(glmer.virgin_f_egg) # looks a lot better I think 
-
-simulationOutput <- simulateResiduals(fittedModel = glmer.virgin_f_egg, plot = F)
-plot(simulation_Output) # I don't know 
-
-## qq plot 
-## Tring to generate an actual qqplot
-
-## Generating residuals 
-residuals <- residuals(glmer.virgin_f_egg, type = "pearson")
-qnorm(residuals)
+## another qq
+residuals_v_mixed <- residuals(glmer.virgin_f_egg, type = "pearson")
+qnorm(residuals_v_mixed)
 ## Will generate a qq 
-qqnorm(residuals) ## qq looks pretty much the same
+qqnorm(residuals_v_mixed) 
+qqline(residuals_v_mixed , col = "green") 
+   ## again, points sort of fall along the line but there is some dispersion at the beginning and end 
+
+
+## Homogeneity assumption checks 
+performance::check_model(glmer.virgin_f_egg, check = c("homogeneity"))
+  ## there seems to be lots of variation in the points 
+
+# Trying more assumption checks
+plot(glmer.virgin_f_egg)
+   ## Just shows lots of dispersion really
+
+
+# DHARMa assumption checks
+testDispersion(glmer.virgin_f_egg) # quite overdispersed
+
+## easystats dispersion check
+check_overdispersion(glmer.virgin_f_egg) 
+  ## There is overdispersion check 
+
+## More general assumption checks using DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glmer.virgin_f_egg, plot = T)
+ # Some points fall together, but some points are still quite dispersed 
+
+
+## Comparing models
+AIC(binom_virgin_egg, glmer.virgin_f_egg)
+   ## the mixed model has a slightly lower AIC 
+
+## Using the mixed model for now 
+glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_virgin_oviposition)
+
 
 ## Looking for significance in block
-drop1(glmer.virgin_f_egg, test = "Chisq") ## block is overall sig 
+drop1(glmer.virgin_f_egg, test = "Chisq") ## block is significant
 
 ## Looking at results, keeping block in 
 summary(glmer.virgin_f_egg)
