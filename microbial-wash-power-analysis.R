@@ -287,7 +287,6 @@ pwr.t.test(n = NULL, d = trt.effect / sigma, sig.level = 0.05, power = 0.8)
 ########################################################################################################################
 
 
-
 ##### Trying LADA - power analysis - https://ladal.edu.au/pwr.html
 
 ## Basic power analysis
@@ -308,6 +307,6 @@ pwr.anova.test(k=2,
                n = 15)
 ## says power level is one if 15 replicates per patch
 ## doing power analysis for plates not flies per plate right? 
-
+## these results don't seem too good 
 
 
