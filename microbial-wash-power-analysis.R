@@ -310,3 +310,182 @@ pwr.anova.test(k=2,
 ## these results don't seem too good 
 
 
+
+
+######################################## Mixed effect models ####
+
+fixed_effect_Group1 <- 0.535
+fixed_effect_Group2 <- 0.228
+fixed_effect_Group3 <- 0.228
+
+number_of_plates <- c(30, 40, 50, 30, 40, 50, 30, 40, 50)
+number <- c(10,10,10,15,15,15,20,20,20)
+
+
+simulate_power <- function(plates, n){
+  
+  num_significant <- 0  
+  for(i in 1:200){
+    
+    # Simulate random effect with sd = 0.5
+    
+    rand_eff <- data.frame(group = as.factor(seq(1:plates)),
+                           b0 = rnorm(plates, mean = 0, sd = 0.3))
+    
+    
+    Treatment1 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group1 + .)))
+    
+    Treatment1 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment1[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Condition")
+    
+    Treatment2 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group2 + .)))
+    
+    Treatment2 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment2[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Uncondition")
+    
+    
+    Treatment3 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group3 + .)))
+    
+    Treatment3 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment3[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Microbe Filtered")
+    
+    data <- rbind(Treatment1, Treatment2, Treatment3)
+    
+    
+    model <- glmmTMB::glmmTMB(Count ~ Treatment + (1|Plate), data = data, family  = poisson)
+    
+    
+    if (summary(model)$coefficients$cond[2,4] < 0.05) {
+      num_significant <- num_significant + 1
+    }
+  }
+  
+  return(num_significant / 200)
+  
+}
+
+simulation_results <- map2_dbl(number_of_plates, number, simulate_power)### Mixed effect models
+
+fixed_effect_Group1 <- 0.535
+fixed_effect_Group2 <- 0.228
+fixed_effect_Group3 <- 0.228
+
+number_of_plates <- c(30, 40, 50, 30, 40, 50, 30, 40, 50)
+number <- c(10,10,10,15,15,15,20,20,20)
+
+
+simulate_power <- function(plates, n){
+  
+  num_significant <- 0  
+  for(i in 1:200){
+    
+    # Simulate random effect with sd = 0.5
+    
+    rand_eff <- data.frame(group = as.factor(seq(1:plates)),
+                           b0 = rnorm(plates, mean = 0, sd = 0.3))
+    
+    
+    Treatment1 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group1 + .)))
+    
+    Treatment1 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment1[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Condition")
+    
+    Treatment2 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group2 + .)))
+    
+    Treatment2 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment2[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Uncondition")
+    
+    
+    Treatment3 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group3 + .)))
+    
+    Treatment3 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment3[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Microbe Filtered")
+    
+    data <- rbind(Treatment1, Treatment2, Treatment3)
+    
+    
+    model <- glmmTMB::glmmTMB(Count ~ Treatment + (1|Plate), data = data, family  = poisson)
+    
+    
+    if (summary(model)$coefficients$cond[2,4] < 0.05) {
+      num_significant <- num_significant + 1
+    }
+  }
+  
+  return(num_significant / 200)
+  
+}
+
+simulation_results <- map2_dbl(number_of_plates, number, simulate_power)### Mixed effect models
+
+fixed_effect_Group1 <- 0.535
+fixed_effect_Group2 <- 0.228
+fixed_effect_Group3 <- 0.228
+
+number_of_plates <- c(30, 40, 50, 30, 40, 50, 30, 40, 50)
+number <- c(10,10,10,15,15,15,20,20,20)
+
+
+simulate_power <- function(plates, n){
+  
+  num_significant <- 0  
+  for(i in 1:200){
+    
+    # Simulate random effect with sd = 0.5
+    
+    rand_eff <- data.frame(group = as.factor(seq(1:plates)),
+                           b0 = rnorm(plates, mean = 0, sd = 0.3))
+    
+    
+    Treatment1 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group1 + .)))
+    
+    Treatment1 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment1[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Condition")
+    
+    Treatment2 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group2 + .)))
+    
+    Treatment2 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment2[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Uncondition")
+    
+    
+    Treatment3 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group3 + .)))
+    
+    Treatment3 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment3[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Microbe Filtered")
+    
+    data <- rbind(Treatment1, Treatment2, Treatment3)
+    
+    
+    model <- glmmTMB::glmmTMB(Count ~ Treatment + (1|Plate), data = data, family  = poisson)
+    
+    
+    if (summary(model)$coefficients$cond[2,4] < 0.05) {
+      num_significant <- num_significant + 1
+    }
+  }
+  
+  return(num_significant / 200)
+  
+}
+
+simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
+
+
