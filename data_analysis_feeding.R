@@ -1,4 +1,4 @@
-# Packages 📦📦📦📦
+# Packages 📦📦📦📦####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -7,7 +7,7 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
-##################
+##################---
 
 
 
@@ -16,7 +16,7 @@ library(glmmTMB)
 #### Uploading the data this way works for 4:1 and 1:4 assays being combined ####-
 
 ####################################-
-#### WILD TYPE MALE CONDITIONING ### 
+#### WILD TYPE MALE CONDITIONING ####
 ####################################-
 
 ## Creating a path to the scripts for treatment 2 condtioning
@@ -27,7 +27,7 @@ malepath <- "data/male_conditioning/treatment_2"
 # Mutates a variable for the data file name (id) 
 # Mutates the data frame to have a variable for the amount of flies on a diet and the diet 
 
-############################################################################################################----
+############################################################################################################---
 read_raw_male <- function(path = malepath, pattern_to_exclude = "4-1_1-4"){
 list_of_files <- list.files(path = malepath,
                             pattern = "rawdata", full.names = T)
@@ -101,7 +101,7 @@ df2_male_filtered <- df2_male[!exclude_rows, ]
 
 
 ####################################-
-  #### VIRGIN FEMALE CONDITIONING ### ----
+  #### VIRGIN FEMALE CONDITIONING  ----
 ####################################-
   
 ## Creating a path to get to the Virgin Conditioning data files 
@@ -166,7 +166,7 @@ df2_virgin
 
 
 ###################################-
-  #### OvoD1 FEMALE CONDITIONING ### ----
+  #### OvoD1 FEMALE CONDITIONING ----
 ####################################-
   
 pathovod1 <- "data/female_conditioning/ovod1"
@@ -220,11 +220,11 @@ df2_ovod1 # does it recognise condition from the long data?
 
 
 
-########################## Data Analysis!!!! ############################
+########################## Data Analysis Part 1 (4:1 + 1:4) !!!! ############################
 
-##########
-## MALE ##
-##########
+##########--
+## MALE ####
+##########--
 
 ## Creating a data column where flies are not on the plate 
 df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned)) ## This is currently not used in any of the models
@@ -293,9 +293,9 @@ emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio , random = ~ (1|plate) + (1|obse
 
 
 
-###################
-## VIRGIN FEMALE ##
-###################
+###################--
+## VIRGIN FEMALE ####
+###################--
 
 ## Creating a data column where flies are not on the plate 
 df2_virgin <- df2_virgin %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
@@ -348,7 +348,7 @@ emmeans::emmeans(glmer.mm_vf_2, pairwise ~ ratio, random = ~ 1 | plate + observa
 
 
 ##################--
-## OVOD1 FEMALE ##
+## OVOD1 FEMALE ####
 ##################--
 ## creating a data column where flies are not on the plate 
 df2_ovod1 <- df2_ovod1 %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
@@ -405,22 +405,16 @@ glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|pla
 
 
 
-################################################################################################################################################ 
+################################################################################################################################################-- 
 
 
 
-
-
-
-
-
-
-#### Data Analysis Feeding 
+##### Data Analysis Part 2 (4:1/1:4) ####
 
 ## For the 4:1/1:4 Assay only 
 
 
-## MALE ## 
+## MALE ####
 #### UPLOADING AND BINDING THE CORRECT DATA
 # 4:1 + 1:4 
 fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b1.xlsx")
@@ -525,9 +519,7 @@ emmeans::emmeans(glm_mm_m_2, pairwise ~ diet, random = ~ (1|plate) + (1|observat
 
 
 
-
-
-# Virgin Female Assay 
+# Virgin Female Assay ####
 
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
@@ -635,7 +627,8 @@ emmeans::emmeans(glm.nb_vf_2, pairwise ~ diet)
 
 
 
-# OvoD1 Conditioning 4:1-1:4 analysis -- 
+# OvoD1 Conditioning ####
+# 4:1-1:4 analysis -- 
 # mutating a block variable 
 fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
 fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
