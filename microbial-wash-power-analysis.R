@@ -228,7 +228,7 @@ abline(h = 0.8)
 
 
 
-############################################################################################################
+#################################################### --
 
 ## Doing both 4:1 and 1:4 at the same time 
  ## even though I don't get why we would do this 
@@ -285,7 +285,7 @@ pwr.t.test(n = NULL, d = trt.effect / sigma, sig.level = 0.05, power = 0.8)
 
 
 
-########################################################################################################################
+########################################################################### --
 
 
 ##### Trying LADA - power analysis - https://ladal.edu.au/pwr.html
@@ -313,7 +313,7 @@ pwr.anova.test(k=2,
 
 
 
-#####################################
+##################################### --
 
 ### Mixed effect models ####
 
@@ -321,8 +321,10 @@ fixed_effect_Group1 <- 0.535
 fixed_effect_Group2 <- 0.228
 fixed_effect_Group3 <- 0.228
 
-number_of_plates <- c(30, 40, 50, 60, 30, 40, 50, 60, 30, 40, 50, 60)
-number <- c(10,10,10,15,15,15,20,20,20,30,30,30)
+number_of_plates <- c(30, 40, 50, 30, 40, 50, 30, 40, 50)
+number <- c(20,20,20,30,30,30,40,40,40)
+
+
 
 
 simulate_power <- function(plates, n){
@@ -378,6 +380,17 @@ simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
 
 
 
+#### The results from these: 
+number_of_platez <- c(30, 40, 50, 30, 40, 50, 30, 40, 50)
+numberz <- c(20, 20, 20, 30, 30, 30, 40, 40, 40)
+simulated_powerz <- c(0.520, 0.590, 0.615, 0.745, 0.755, 0.775, 0.850, 0.835, 0.865)
+
+
+results_table <- tibble(
+  number_of_platez = number_of_platez,
+  numberz = numberz,
+  simulated_powerz = simulated_powerz
+)
 
 
 
@@ -389,13 +402,17 @@ simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
 
 
 
-########################################################################################
+
+
+
+
+######################################################################################## ---
 
 
 #### 4:1 Results
 
 
-## for this I did -0.6259 + 0.9808  then exp( 0.3549) is this okay
+## for this I did -0.6259 + 0.9808  then exp(0.3549) is this okay
 
 fixed_effect_Group1 <-  1.426038
 fixed_effect_Group2 <- 0.8318526
@@ -455,3 +472,107 @@ simulate_power <- function(plates, n){
 
 simulation_results_2 <- map2_dbl(number_of_plates, number, simulate_power)
 
+
+
+####
+
+fixed_effect_Group1 <- 0.535
+fixed_effect_Group2 <- 0.228
+fixed_effect_Group3 <- 0.228
+fixed_effect_Group4 <-  1.426038
+fixed_effect_Group5 <- 0.8318526
+fixed_effect_Group6 <- 0.8318526
+
+number_of_plates <- c(10, 20, 30, 10, 20, 30, 10, 20, 30)
+number <- c(10,10,10,15,15,15,20,20,20)
+
+
+
+
+simulate_power <- function(plates, n){
+  
+  num_significant <- 0  
+  for(i in 1:200){
+    
+    # Simulate random effect with sd = 0.5
+    
+    rand_eff <- data.frame(group = as.factor(seq(1:plates)),
+                           b0 = rnorm(plates, mean = 0, sd = 0.3))
+    
+    
+    Treatment1 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group1 + .)))
+    
+    Treatment1 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment1[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Condition")
+    
+    Treatment2 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group2 + .)))
+    
+    Treatment2 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment2[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Uncondition")
+    
+    
+    Treatment3 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group4 + .)))
+    
+    Treatment3 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment3[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Microbe Filtered")
+    
+    Treatment4 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group4 + .)))
+    
+    Treatment4 <- map_df(
+      seq_along(Treatment4),
+      ~ tibble(Count = Treatment4[[.]], Plate = .)
+    ) |> mutate(Treatment = "4:1 Condition")
+    
+    Treatment5 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group5 + .)))
+    
+    Treatment5 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment5[[.]], Plate = .)
+    ) |> mutate(Treatment = "4:1 Uncondition")
+    
+    
+    Treatment6 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group6 + .)))
+    
+    Treatment6 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment6[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Microbe Filtered")
+    
+    
+    
+    
+    data <- rbind(Treatment1, Treatment2, Treatment3, Treatment4, Treatment5, Treatment6)
+    
+    
+    model <- glmmTMB::glmmTMB(Count ~ Treatment + (1|Plate), data = data, family  = poisson)
+    
+    
+    if (summary(model)$coefficients$cond[2,4] < 0.05) {
+      num_significant <- num_significant + 1
+    }
+  }
+  
+  return(num_significant / 200)
+  
+}
+
+simulation_results_3 <- map2_dbl(number_of_plates, number, simulate_power)
+
+
+
+number_of <- c(10, 20, 30, 10, 20, 30, 10, 20, 30)
+numbe <- c(10,10,10,15,15,15,20,20,20)
+simulated_powe <- c(1,1,1,1,1,1,1,1,1)
+
+# Create a table
+results_table <- tibble(
+  number_of_plates = number_of,
+  number = numbe,
+  simulated_power = simulated_powe
+)
