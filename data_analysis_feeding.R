@@ -498,21 +498,25 @@ plot(sresid ~  pred)
 
 
 
+# this model to be chosen 
+glm_mm_m <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_m)
 
-# looking at the results
-summary(zi.p_m) # says block is no significant 
-summary(glm_mm_m) # says block is not significant 
+drop1(glm_mm_m, test = "Chi") # says block is significant? 
+summary(glm_mm_m) # says block is not significant! 
 
-# dropping block from the model (zero inflation poisson)
-zi.p_m_2 <- zeroinfl(fly_numbers ~ diet | diet , dist = "poisson", link = "logit", data = combined_m)
 
 # dropping block from the model (mixed model)
 glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  + (1|plate) + (1|observation), family = poisson, data = combined_m)
 
 
-# checking the results of the model
-summary(glm_mm_m_2) # everything is significant? 
-emmeans::emmeans(glm_mm_m_2, pairwise ~ diet, random = ~ (1|plate) + (1|observation))
+## results of model with block 
+summary(glm_mm_m)
+
+# checking the results of the model without block 
+summary(glm_mm_m_2) 
+## here block is removed, but it seems to remove block two that had an extra 5 plates. 
+# instead of keeping it binded. 
+
 
 
 
