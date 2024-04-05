@@ -576,3 +576,7 @@ results_table <- tibble(
   number = numbe,
   simulated_power = simulated_powe
 )
+
+
+
+## Didn't save yesterdays work!! 
