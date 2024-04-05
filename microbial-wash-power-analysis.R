@@ -579,4 +579,246 @@ results_table <- tibble(
 
 
 
-## Didn't save yesterdays work!! 
+## Didn't save yesterdays work!!
+### Mixed effect models
+
+
+## using these values for 
+# 1:4
+# at the moment
+# but i need to doublecheck the model so these are subject to change
+
+fixed_effect_Group1 <- 0.535
+fixed_effect_Group2 <- 0.228
+fixed_effect_Group3 <- 0.228
+
+number_of_plates <- c(10, 20, 30, 10, 20, 30, 10, 20, 30)
+number <- c(10,10,10,15,15,15,20,20,20)
+
+
+simulate_power <- function(plates, n){
+  
+  num_significant <- 0  
+  
+  sims <- 1000
+  for(i in 1:sims){
+    
+    # Simulate random effect with sd = 0.5
+    
+    rand_eff <- data.frame(group = as.factor(seq(1:plates)),
+                           b0 = rnorm(plates, mean = 0, sd = 0.4))
+    
+    rand_eff2 <- data.frame(repeats = as.factor(seq(1:n)),
+                            b1 = rnorm(n, mean = 0, sd = 0.3))
+    
+    
+    rand_eff_duplicated <- rand_eff[rep(row.names(rand_eff), each = n), ]
+    rownames(rand_eff_duplicated) <- NULL  # Resetting row names
+    
+    rand_eff_duplicated2 <- rand_eff2[rep(row.names(rand_eff2), times = plates), ]
+    rownames(rand_eff_duplicated2) <- NULL  # Resetting row names
+    
+    rand_eff_total <- as_tibble(cbind(rand_eff_duplicated, rand_eff_duplicated2)) |> 
+      mutate(rand_eff_total = b0 + b1 )
+    
+    Treatment1 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group1 + rand_eff_total$rand_eff_total))
+    
+    #Treatment1 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group1 + .)))
+    Treatment1 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment1[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Condition")
+    
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment1))
+    
+    Treatment1$id <- repeating_vector
+    
+    #Treatment2 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group2 + . + rnorm(n=1, mean = 0, sd = .3))))
+    Treatment2 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group2 + rand_eff_total$rand_eff_total))
+    
+    Treatment2 <- map_df(
+      seq_along(Treatment2),
+      ~ tibble(Count = Treatment2[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Uncondition")
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment2))
+    
+    Treatment2$id <- repeating_vector
+    
+    
+    #Treatment3 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group3 + . + rnorm(n=1, mean = 0, sd = .3))))
+    
+    Treatment3 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group3 + rand_eff_total$rand_eff_total))
+    
+    Treatment3 <- map_df(
+      seq_along(Treatment3),
+      ~ tibble(Count = Treatment3[[.]], Plate = .)
+    ) |> mutate(Treatment = "1:4 Microbe Filtered")
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment3))
+    
+    Treatment3$id <- repeating_vector
+    
+    data <- rbind(Treatment1, Treatment2, Treatment3)
+    
+    
+    model <- glmmTMB::glmmTMB(Count ~ Treatment + (1|Plate) +(1|id) , data = data, family  = poisson)
+    
+    
+    if (summary(model)$coefficients$cond[2,4] < 0.05) {
+      num_significant <- num_significant + 1
+    }
+  }
+  
+  return(num_significant / sims)
+  
+}
+
+simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
+
+# 0.777 0.974 0.998 0.932 0.995 1.000 0.971 1.000 1.000
+
+
+
+################################################################################
+
+
+## using these values for 
+# 1:4
+# at the moment
+# but i need to doublecheck the model so these are subject to change
+
+
+fixed_effect_Group1 <- 0.535
+fixed_effect_Group2 <- 0.228
+fixed_effect_Group3 <- 0.228
+fixed_effect_Group4 <-  1.426038
+fixed_effect_Group5 <- 0.8318526
+fixed_effect_Group6 <- 0.8318526
+
+
+number_of_plates <- c(10, 20, 30, 10, 20, 30, 10, 20, 30)
+number <- c(10,10,10,15,15,15,20,20,20)
+
+
+simulate_power <- function(plates, n){
+  
+  num_significant <- 0  
+  
+  sims <- 1000
+  for(i in 1:sims){
+    
+    # Simulate random effect with sd = 0.5
+    
+    rand_eff <- data.frame(group = as.factor(seq(1:plates)),
+                           b0 = rnorm(plates, mean = 0, sd = 0.4))
+    
+    rand_eff2 <- data.frame(repeats = as.factor(seq(1:n)),
+                            b1 = rnorm(n, mean = 0, sd = 0.3))
+    
+    
+    rand_eff_duplicated <- rand_eff[rep(row.names(rand_eff), each = n), ]
+    rownames(rand_eff_duplicated) <- NULL  # Resetting row names
+    
+    rand_eff_duplicated2 <- rand_eff2[rep(row.names(rand_eff2), times = plates), ]
+    rownames(rand_eff_duplicated2) <- NULL  # Resetting row names
+    
+    rand_eff_total <- as_tibble(cbind(rand_eff_duplicated, rand_eff_duplicated2)) |> 
+      mutate(rand_eff_total = b0 + b1 )
+    
+    Treatment1 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group1 + rand_eff_total$rand_eff_total))
+    
+    #Treatment1 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group1 + .)))
+    Treatment1 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment1[[.]], Plate = .)
+    ) |> mutate(Treatment = "4:1 Condition")
+    
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment1))
+    
+    Treatment1$id <- repeating_vector
+    
+    #Treatment2 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group2 + . + rnorm(n=1, mean = 0, sd = .3))))
+    Treatment2 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group2 + rand_eff_total$rand_eff_total))
+    
+    Treatment2 <- map_df(
+      seq_along(Treatment2),
+      ~ tibble(Count = Treatment2[[.]], Plate = .)
+    ) |> mutate(Treatment = "4:1 Uncondition")
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment2))
+    
+    Treatment2$id <- repeating_vector
+    
+    
+    #Treatment3 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group3 + . + rnorm(n=1, mean = 0, sd = .3))))
+    
+    Treatment3 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group3 + rand_eff_total$rand_eff_total))
+    
+    Treatment3 <- map_df(
+      seq_along(Treatment3),
+      ~ tibble(Count = Treatment3[[.]], Plate = .)
+    ) |> mutate(Treatment = "4:1 Microbe Filtered")
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment3))
+    
+    Treatment3$id <- repeating_vector
+    
+    Treatment4 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group4 + rand_eff_total$rand_eff_total))
+    
+    #Treatment4 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group4 + .)))
+    Treatment4 <- map_df(
+      seq_along(Treatment1),
+      ~ tibble(Count = Treatment4[[.]], Plate = .)
+    ) |> mutate(Treatment = "")
+    
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment4))
+    
+    Treatment4$id <- repeating_vector
+    
+    #Treatment2 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group2 + . + rnorm(n=1, mean = 0, sd = .3))))
+    Treatment5 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group5 + rand_eff_total$rand_eff_total))
+    
+    Treatment5<- map_df(
+      seq_along(Treatment2),
+      ~ tibble(Count = Treatment5[[.]], Plate = .)
+    ) |> mutate(Treatment = "")
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment5))
+    
+    Treatment5$id <- repeating_vector
+    
+    
+    #Treatment3 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group3 + . + rnorm(n=1, mean = 0, sd = .3))))
+    
+    Treatment6 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group6 + rand_eff_total$rand_eff_total))
+    
+    Treatment6 <- map_df(
+      seq_along(Treatment6),
+      ~ tibble(Count = Treatment6[[.]], Plate = .)
+    ) |> mutate(Treatment = "")
+    
+    repeating_vector <- rep(1:n, length.out = nrow(Treatment6))
+    
+    Treatment6$id <- repeating_vector
+    
+    data <- rbind(Treatment1, Treatment2, Treatment3,Treatment4, Treatment5, Treatment6)
+    
+    
+    model <- glmmTMB::glmmTMB(Count ~ Treatment + (1|Plate) +(1|id) , data = data, family  = poisson)
+    
+    
+    if (summary(model)$coefficients$cond[2,4] < 0.05) {
+      num_significant <- num_significant + 1
+    }
+  }
+  
+  return(num_significant / sims)
+  
+}
+
+simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
+
