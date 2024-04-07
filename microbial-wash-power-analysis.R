@@ -822,3 +822,4 @@ simulate_power <- function(plates, n){
 
 simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
 
+# 0.906 0.995 1.000 0.979 1.000 1.000 0.994 1.000 1.000
