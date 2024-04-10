@@ -246,6 +246,10 @@ vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour = c("#FDECCD","#FDECCD"
 vf_combined <- feeding_results(combined_v, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 
+vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = colors_first_plot)
+vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour = colors_second_plot)
+vf_combined <- feeding_results(combined_v, boxplot_fill_colour = colors_of_combined)
+
 
 ## Using grid.arrange to put the plots together
 virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
@@ -267,6 +271,13 @@ male_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
                                       nrow = 1,
                                       widths = c(0.5,0.5,1),
                                       heights = c(1))
+
+
+m_1_4 <- feeding_results(onefour_m, boxplot_fill_colour = colors_first_plot)
+m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = colors_second_plot)
+m_combined  <- feeding_results(combined_m, boxplot_fill_colour = colors_of_combined)
+ m_1_4 + m_4_1
+
 
 
 
