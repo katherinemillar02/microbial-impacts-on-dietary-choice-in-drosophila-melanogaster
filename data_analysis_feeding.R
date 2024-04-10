@@ -382,7 +382,8 @@ plot(simulationOutput_glmer.mm_of) # all looks the same to me?
 glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
 # looking at the significance of block
-drop1(glmer.mm_of, test = "Chisq") # block is significant, keep in the model
+drop1(glmer.mm_of, test = "Chisq") 
+# block is significant, keep in the model
 
 # checking out the model
 summary(glmer.mm_of) # says block is not significant here? what to use? 
@@ -401,7 +402,7 @@ summary(glmer.mm_of_2)
 glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
 
-
+summary(glmer.mm_of)
 
 
 
