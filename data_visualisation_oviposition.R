@@ -72,6 +72,15 @@ onefour_oviposition_of <- rbind(one_to_four_oviposition_ovod1_b1, one_to_four_ov
 
 fourone_onefour_oviposition_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx")
 fourone_onefour_oviposition_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx")
+
+
+fourone_onefour_oviposition_ovod1_b1  <- fourone_onefour_oviposition_ovod1_b1  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+fourone_onefour_oviposition_ovod1_b2  <- fourone_onefour_oviposition_ovod1_b2  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
 # Binding the 4:1/1:4 data
 fourone_onefour_oviposition_of <- rbind(fourone_onefour_oviposition_ovod1_b1, fourone_onefour_oviposition_ovod1_b2)
 
@@ -263,14 +272,14 @@ oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
     #             width = 0.1,
     #             shape = 1) +
     geom_boxplot()+
-    geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
-                         color = "black",
-                         pattern_fill = "white",
-                         pattern_angle = 45,
-                         pattern_density = 0.1,
-                         pattern_spacing = 0.025,
-                         pattern_key_scale_factor = 0.6) +
-    
+    # geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+    #                      color = "black",
+    #                      pattern_fill = "white",
+    #                      pattern_angle = 45,
+    #                      pattern_density = 0.1,
+    #                      pattern_spacing = 0.025,
+    #                      pattern_key_scale_factor = 0.6) +
+    # 
     geom_point(aes(),
                size = 1,
                shape = 1,
@@ -375,6 +384,11 @@ overall_oviposition <- grid.arrange(m_egg1 + ggtitle("Male Conditioning"), m_egg
 ovod1_b1_onefour <- oviposition_results(one_four_b1_egg, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 ovod1_b2_onefour <- oviposition_results(one_four_b2_egg, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 
+
+
+fourone_onefour_oviposition_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx")
+fourone_onefour_oviposition_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx")
+
 ovod1_b1_onefour + ovod1_b2_onefour
 
 
@@ -382,10 +396,42 @@ ovod1_b1_onefour + ovod1_b2_onefour
 ovod1_b1_fourone <- oviposition_results(four_one_b1_egg, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 ovod1_b2_fourone <- oviposition_results(four_one_b2_egg, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 
+
+
+
+
+
+
  ovod1_b1_fourone + ovod1_b2_fourone
-
-
-
+ library(viridis)
+ 
+ # Get Viridis palette starting from the third color
+ viridis_colors <- viridis(6)
+ 
+ # For 1:4 OvoD1
+ ovod1_b1_onefour <- oviposition_results(one_four_b1_egg, boxplot_fill_colour = viridis_colors[5:6])
+ ovod1_b2_onefour <- oviposition_results(one_four_b2_egg, boxplot_fill_colour = viridis_colors[5:6])
+ 
+ # For 4:1 OvoD1
+ ovod1_b1_fourone <- oviposition_results(four_one_b1_egg, boxplot_fill_colour = viridis_colors[3:4])
+ ovod1_b2_fourone <- oviposition_results(four_one_b2_egg, boxplot_fill_colour = viridis_colors[3:4])
+ 
+ 
+ ## Combined 4:1 and 1:4 
+ ovod1_b1_combined <- oviposition_results(fourone_onefour_oviposition_ovod1_b1 , boxplot_fill_colour = viridis_colors[3:6] )
+ ovod1_b2_combined <- oviposition_results(fourone_onefour_oviposition_ovod1_b2 ,  boxplot_fill_colour = viridis_colors[3:6] )
+ 
+ # Plotting 1:4 OvoD1
+ plot_1_4 <- ovod1_b1_onefour + ovod1_b2_onefour
+ 
+ # Plotting 4:1 OvoD1
+ plot_4_1 <- ovod1_b1_fourone + ovod1_b2_fourone
+ 
+ # Displaying plots
+ plot_1_4
+ plot_4_1
+ 
+ plot_1_4 +  plot_4_1
 ############ --
 ## VIRGIN Female ####
 ############ --
@@ -444,10 +490,95 @@ ovod1_b1_onefour + ggtitle("OvoD1 B1") + ovod1_b2_onefour + ggtitle("OvoD1 B2") 
 
 
 ## works 
-(ovod1_b1_onefour + ggtitle("OvoD1 B1")) + 
-  (ovod1_b2_onefour + ggtitle("OvoD1 B2")) +
-  (ovod1_b1_fourone + ggtitle("OvoD1 B1")) +
-  (ovod1_b2_fourone + ggtitle("OvoD1 B2")) +
+(ovod1_b1_onefour + ggtitle("OvoD1 Block 1")) + 
+  (ovod1_b1_fourone + ggtitle("OvoD1 Block 1")) +
+  (ovod1_b1_combined + ggtitle("OvoD1 Block 1")) 
+
+
+o_b1_onefour <- ovod1_b1_onefour + ggtitle("OvoD1 Block 1")
+o_b1_fourone <- ovod1_b1_fourone + ggtitle("OvoD1 Block 1")
+o_b1_combined <- ovod1_b1_combined + ggtitle("OvoD1 Block 1")
+
+o_b2_onefour <- ovod1_b2_onefour + ggtitle("OvoD1 Block 2")
+o_b2_fourone <- ovod1_b2_fourone + ggtitle("OvoD1 Block 2")
+o_b2_combined <- ovod1_b2_combined + ggtitle("OvoD1 Block 2")
+
+
+ovod1_female_oviposition_b1 <- grid.arrange(o_b1_onefour, o_b1_fourone, o_b1_combined,
+                                            o_b2_onefour, o_b2_fourone, o_b2_combined,
+                                     nrow = 1,
+                                     widths = c(0.5,0.5,1,0.5,0.5,1),
+                                     heights = c(2))
+
+
+ovod1_female_oviposition_b2 <- grid.arrange(o_b1_onefour, o_b1_fourone, o_b1_combined,
+                                            nrow = 1,1,
+                                            widths = c(0.5,0.5,1),
+                                            heights = c(1,1))
+library(gridExtra)
+
+
+## this code works
+ovod1_female_oviposition_b1 <- grid.arrange(
+  o_b1_onefour, o_b1_fourone, o_b1_combined,
+  o_b2_onefour, o_b2_fourone, o_b2_combined,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1)
+)
+
+
+
+
+ovod1_female_oviposition_b1 + ovod1_female_oviposition_b2 
+
+
+
+  (ovod1_b2_onefour + ggtitle("OvoD1 Block 2")) +
+  (ovod1_b2_fourone + ggtitle("OvoD1 Block 2")) + 
+  (ovod1_b2_combined + ggtitle("OvoD1 Block 2"))
+
+library(patchwork)
+library(ggplot2)
+library(grid)
+
+# Define plots
+plot1 <- ovod1_b1_onefour
+plot2 <- ovod1_b1_fourone
+plot3 <- ovod1_b1_combined
+plot4 <- ovod1_b2_onefour
+plot5 <- ovod1_b2_fourone
+plot6 <- ovod1_b2_combined
+
+# Convert plots to grob objects
+g1 <- ggplotGrob(plot1)
+g2 <- ggplotGrob(plot2)
+g3 <- ggplotGrob(plot3)
+g4 <- ggplotGrob(plot4)
+g5 <- ggplotGrob(plot5)
+g6 <- ggplotGrob(plot6)
+
+# Define size multiplier for the two plots you want to be slightly bigger
+size_multiplier <- 1.2
+
+# Scale the width and height of the grobs
+g3$widths <- lapply(g3$widths, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
+g3$heights <- lapply(g3$heights, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
+g6$widths <- lapply(g6$widths, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
+g6$heights <- lapply(g6$heights, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
+
+# Convert back to plots
+plot3 <- as.ggplot(g3)
+plot6 <- as.ggplot(g6)
+
+# Arrange plots with patchwork
+final_plot <- plot1 + plot2 + plot3 + plot4 + plot5 + plot6
+
+# Display final plot
+final_plot
+
+
   (virgin_b2_fourone + ggtitle("Virgin B2")) +
   (virgin_b3_fourone + ggtitle("Virgin B3")) +
   (virgin_b2_onefour + ggtitle("Virgin B2")) +
