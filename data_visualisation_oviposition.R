@@ -365,7 +365,7 @@ overall_oviposition <- grid.arrange(m_egg1 + ggtitle("Male Conditioning"), m_egg
 
 
 
-
+###### ###### INDIVIDUAL BLOCK CODE NEEDS A BIT OF CLEANING ###### ###### 
 # Indiviual Block ----
 
 #### MORE PLOTS 
@@ -476,6 +476,10 @@ male_b2_onefour <- oviposition_results(onefour_ovi_m_b2, boxplot_fill_colour = c
 
 male_b1_onefour + male_b2_onefour
 
+## changing colours for male 
+ 
+
+
 
 ## PUTTING THE PLOTS TOGETHER 
    ## 
@@ -519,7 +523,17 @@ library(gridExtra)
 
 
 ## this code works
-ovod1_female_oviposition_b1 <- grid.arrange(
+ovod1_female_oviposition <- grid.arrange(
+  o_b1_onefour, o_b1_fourone, o_b1_combined,
+  o_b2_onefour, o_b2_fourone, o_b2_combined,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1)
+)
+
+# male 
+ovod1_female_oviposition <- grid.arrange(
   o_b1_onefour, o_b1_fourone, o_b1_combined,
   o_b2_onefour, o_b2_fourone, o_b2_combined,
   ncol = 3,
@@ -539,44 +553,6 @@ ovod1_female_oviposition_b1 + ovod1_female_oviposition_b2
   (ovod1_b2_fourone + ggtitle("OvoD1 Block 2")) + 
   (ovod1_b2_combined + ggtitle("OvoD1 Block 2"))
 
-library(patchwork)
-library(ggplot2)
-library(grid)
-
-# Define plots
-plot1 <- ovod1_b1_onefour
-plot2 <- ovod1_b1_fourone
-plot3 <- ovod1_b1_combined
-plot4 <- ovod1_b2_onefour
-plot5 <- ovod1_b2_fourone
-plot6 <- ovod1_b2_combined
-
-# Convert plots to grob objects
-g1 <- ggplotGrob(plot1)
-g2 <- ggplotGrob(plot2)
-g3 <- ggplotGrob(plot3)
-g4 <- ggplotGrob(plot4)
-g5 <- ggplotGrob(plot5)
-g6 <- ggplotGrob(plot6)
-
-# Define size multiplier for the two plots you want to be slightly bigger
-size_multiplier <- 1.2
-
-# Scale the width and height of the grobs
-g3$widths <- lapply(g3$widths, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
-g3$heights <- lapply(g3$heights, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
-g6$widths <- lapply(g6$widths, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
-g6$heights <- lapply(g6$heights, function(x) grid::unit(as.numeric(x) * size_multiplier, "npc"))
-
-# Convert back to plots
-plot3 <- as.ggplot(g3)
-plot6 <- as.ggplot(g6)
-
-# Arrange plots with patchwork
-final_plot <- plot1 + plot2 + plot3 + plot4 + plot5 + plot6
-
-# Display final plot
-final_plot
 
 
   (virgin_b2_fourone + ggtitle("Virgin B2")) +
