@@ -272,13 +272,21 @@ male_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
                                       widths = c(0.5,0.5,1),
                                       heights = c(1))
 
+m_1_4 + labs(tag = "a")
+
+
 
 m_1_4 <- feeding_results(onefour_m, boxplot_fill_colour = colors_first_plot)
 m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = colors_second_plot)
 m_combined  <- feeding_results(combined_m, boxplot_fill_colour = colors_of_combined)
  m_1_4 + m_4_1
 
+ onefour_m
 
+ library(ggplot2)
+ 
+
+ 
 
 
 
