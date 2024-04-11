@@ -315,8 +315,12 @@ pwr.anova.test(k=2,
 
 ##################################### --
 
-### Mixed effect models ####
 
+## PL code sesssion 1  -  Mixed effect models ####
+
+
+## The original code 
+## this is wrong as is a code for fly numbers 
 fixed_effect_Group1 <- 0.535
 fixed_effect_Group2 <- 0.228
 fixed_effect_Group3 <- 0.228
@@ -391,17 +395,6 @@ results_table <- tibble(
   numberz = numberz,
   simulated_powerz = simulated_powerz
 )
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -580,33 +573,40 @@ results_table <- tibble(
 
 
 ## Didn't save yesterdays work!!
-### Mixed effect models
 
 
-## using these values for 
+### PL code - session 2 Mixed effect models ####
+
+## Using these values for: 
 # 1:4
-# at the moment
-# but i need to doublecheck the model so these are subject to change
+# At the moment
+# But I need to double-check the model so these are subject to change
 
+
+## Fixed effect 
 fixed_effect_Group1 <- 0.535
 fixed_effect_Group2 <- 0.228
 fixed_effect_Group3 <- 0.228
+   ## These values are taken from the estimate when running summary() of a GLMM
 
+## Simulating the number of different petri dishes used 
 number_of_plates <- c(10, 20, 30, 10, 20, 30, 10, 20, 30)
+
+## Number here represents the number of observations taken
 number <- c(10,10,10,15,15,15,20,20,20)
 
 
-simulate_power <- function(plates, n){
+simulate_power <- function(plates, n){ # I have n = 10 because there were n = 10 plates in my model
   
-  num_significant <- 0  
+  num_significant <- 0  # ? 
   
   sims <- 1000
   for(i in 1:sims){
     
-    # Simulate random effect with sd = 0.5
+    # Simulate random effect with sd = 0.5? - 0.4 - this was the sd in my model? 
     
     rand_eff <- data.frame(group = as.factor(seq(1:plates)),
-                           b0 = rnorm(plates, mean = 0, sd = 0.4))
+                           b0 = rnorm(plates, mean = 0, sd = 0.4)) 
     
     rand_eff2 <- data.frame(repeats = as.factor(seq(1:n)),
                             b1 = rnorm(n, mean = 0, sd = 0.3))
@@ -623,8 +623,14 @@ simulate_power <- function(plates, n){
     
     Treatment1 <- rpois(n = nrow(rand_eff_total), lambda = exp(fixed_effect_Group1 + rand_eff_total$rand_eff_total))
     
+    
+    
+    
+    ## Here, I am generating code for my new assay design "treatment" represents a diet patch within an assay 
+    
+    
     #Treatment1 <- map(rand_eff$b0, ~ rpois(n = n, lambda = exp(fixed_effect_Group1 + .)))
-    Treatment1 <- map_df(
+    Treatment1 <- map_df( 
       seq_along(Treatment1),
       ~ tibble(Count = Treatment1[[.]], Plate = .)
     ) |> mutate(Treatment = "1:4 Condition")
@@ -677,6 +683,8 @@ simulate_power <- function(plates, n){
 
 simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
 
+
+## The results from simulating this 1000x: 
 # 0.777 0.974 0.998 0.932 0.995 1.000 0.971 1.000 1.000
 
 
