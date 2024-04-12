@@ -318,7 +318,7 @@ AIC(binom_m_egg, glmer.mm_m_egg)
   ## even though I think the assumptions look a bit worse
 
 ## Choosing the mixed model for now: 
-glmer.mm_m_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_male_oviposition)
+glmer.mm_m_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_male_oviposition)
 
 ## Looking for the signifince in block
 drop1(glmer.mm_m_egg, test = "Chisq") ## says block is quite significant, keeping it in the model
@@ -450,10 +450,10 @@ AIC(binom_od1_egg, glmer.ovod1_f_egg)
 ## Using "Model 2" for now as I do not really know what else to do 
  
 ## Model choice: 
-glmer.ovod1_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_ovod1_oviposition)
+glmer.ovod1_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
 
 ## Looking for significance in block
-drop1(glmer.ovod1_f_egg, test = "Chisq") ## block is very significant 
+drop1(glmer.ovod1_f_egg, test = "Chisq") ## block is  significant with ratio
 
 ## Looking at results, keeping block in 
 
@@ -570,7 +570,7 @@ AIC(binom_virgin_egg, glmer.virgin_f_egg)
    ## the mixed model has a slightly lower AIC 
 
 ## Using the mixed model for now 
-glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_virgin_oviposition)
+glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
 
 
 ## Looking for significance in block
@@ -810,6 +810,7 @@ glm.nb_of_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
 
 ## checking significance of block 
 drop1(glm.nb_of_comb_egg, test = "F") ## says block is not significant!! 
+summary(glm.nb_of_comb_egg)
 
 ## dropping block from the model
 glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_m)
@@ -948,7 +949,7 @@ AIC(comb_v_egg_glm.p , glm.nb_v_comb_egg, glm_mm_v_egg, zif.p_v_egg, zif.nb_v_eg
 
 
 ## Using the negative binomial glm
-glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
+glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet + block, data =  combined_ovi_v)
 
 ## tesing the signifiance of block 
 drop1(glm.nb_v_comb_egg , test = "F") # block is significant 
@@ -956,7 +957,7 @@ drop1(glm.nb_v_comb_egg , test = "F") # block is significant
 ## using the model 
 summary(glm.nb_v_comb_egg)
 
-emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet * block)
+emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet + block)
 
 ### why is it saying nothing is really significant now? 
 
