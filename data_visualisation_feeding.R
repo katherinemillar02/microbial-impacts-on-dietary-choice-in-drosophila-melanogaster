@@ -225,9 +225,9 @@ colors_first_plot <- colors_of_combined[1:2]
 colors_second_plot <- colors_of_combined[3:4]
 
 # Apply colors to the plots
-of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = colors_first_plot)
-of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = colors_second_plot)
-of_combined <- feeding_results(combined_of, boxplot_fill_colour = colors_of_combined)
+of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis_colors[5:6])
+of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = viridis_colors[7:8])
+of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[5:8])
 
 
 
@@ -261,9 +261,9 @@ virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
 ###################### --
 ## WILD TYPE MALES ####
 ##################### --
-m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour = c("lightblue", "lightblue"))
-m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
-m_combined <- feeding_results(combined_m, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
+m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour = viridis_colors[5:6])
+m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = viridis_colors[7:8])
+m_combined <- feeding_results(combined_m, boxplot_fill_colour = viridis_colors[5:8])
 
 
 ## Using grid.arrange to put the plots together

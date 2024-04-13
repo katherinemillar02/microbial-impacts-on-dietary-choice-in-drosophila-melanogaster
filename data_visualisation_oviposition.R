@@ -305,14 +305,13 @@ oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
 ################## --
 ## OvoD1 Female ####
 ov1_egg1 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
-ov1_egg1 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[3:4])
+ov1_egg1 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[1:2])
 
 ov1_egg2 <- oviposition_results(fourone_ovi_of, boxplot_fill_colour = c("#FF7F50","#FF7F50")) 
-ov1_egg2 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[5:6])
+ov1_egg2 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[3:4])
 
 ov1_egg3 <- oviposition_results(combined_ovi_of, boxplot_fill_colour = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
-ov1_egg3 <- oviposition_results(combined_ovi_of, boxplot_fill_colour = viridis_colors[3:6])
-
+ov1_egg3 <- oviposition_results(combined_ovi_of,boxplot_fill_colour = viridis_colors[1:4])
 ################ --
 
 ## Using grid.arrange to put the plots together
@@ -351,9 +350,9 @@ virgin_female_oviposition <- grid.arrange(v1_egg1, v1_egg2, v1_egg3,
 
 #################### --
 ## Wild type Male ####
-m_egg1 <- oviposition_results(onefour_ovi_m, boxplot_fill_colour = viridis_colors[3:4])
-m_egg2 <- oviposition_results(fourone_ovi_m, boxplot_fill_colour = viridis_colors[5:6]) 
-m_egg3 <- oviposition_results(combined_ovi_m, boxplot_fill_colour = viridis_colors[3:6])
+m_egg1 <- oviposition_results(onefour_ovi_m, boxplot_fill_colour = viridis_colors[1:2])
+m_egg2 <- oviposition_results(fourone_ovi_m, boxplot_fill_colour = viridis_colors[3:4]) 
+m_egg3 <- oviposition_results(combined_ovi_m, boxplot_fill_colour = viridis_colors[1:4])
 
 
 m_egg1 <- m_egg1
@@ -429,16 +428,16 @@ ovod1_b2_fourone <- oviposition_results(four_one_b2_egg, boxplot_fill_colour = c
  library(viridis)
  
  # Get Viridis palette starting from the third color
- viridis_colors <- viridis(6) 
+ viridis_colors <- viridis(8) 
  
  
  # For 1:4 OvoD1
- ovod1_b1_onefour <- oviposition_results(one_four_b1_egg, boxplot_fill_colour = viridis_colors[5:6])
+ ovod1_b1_onefour <- oviposition_results(one_four_b1_egg, boxplot_fill_colour = viridis_colors[1:2])
  ovod1_b2_onefour <- oviposition_results(one_four_b2_egg, boxplot_fill_colour = viridis_colors[5:6])
  
  # For 4:1 OvoD1
  ovod1_b1_fourone <- oviposition_results(four_one_b1_egg, boxplot_fill_colour = viridis_colors[3:4])
- ovod1_b2_fourone <- oviposition_results(four_one_b2_egg, boxplot_fill_colour = viridis_colors[3:4])
+ ovod1_b2_fourone <- oviposition_results(four_one_b2_egg, boxplot_fill_colour = viridis_colors[7:8])
  
  
  ## Combined 4:1 and 1:4 
@@ -492,7 +491,7 @@ virgin_b2_onefour + virgin_b3_onefour + virgin_b4_onefour
 male_b1_fourone <- oviposition_results(fourone_ovi_m_b1, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 male_b2_fourone <- oviposition_results(fourone_ovi_m_b2, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
 
-male_b1_fourone <- oviposition_results(fourone_ovi_m_b1, boxplot_fill_colour = viridis_colors[5:6])
+male_b1_fourone <- oviposition_results(fourone_ovi_m_b1, boxplot_fill_colour = viridis_colors[1:2])
 male_b2_fourone <- oviposition_results(fourone_ovi_m_b2, boxplot_fill_colour = viridis_colors[5:6])
 
 
