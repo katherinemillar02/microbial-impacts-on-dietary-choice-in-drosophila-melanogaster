@@ -35,15 +35,27 @@ fly_fitness_tidy$sex_treatment <- paste(fly_fitness_tidy$sex, fly_fitness_tidy$t
 
 library(ggplot2)
 
-ggplot(fly_fitness_tidy, aes(x = time_hours, y = count, fill = sex_treatment)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Time (hours)", y = "Count", title = "Counts over time by vial and sex-treatment combination") + 
-  theme_classic()
+# Assuming your time_hours column is in fly_fitness_tidy dataframe
+fly_fitness_tidy$time_category <- cut(fly_fitness_tidy$time_hours, breaks = c(350, 450, 550), labels = c("350-450", "450-550"), include.lowest = TRUE)
+
+# Assuming your time_hours column is in fly_fitness_tidy dataframe
+# Creating two separate dataframes based on time_category
+
+# Subset for time category 350-450
+fly_fitness_350_450 <- fly_fitness_tidy[fly_fitness_tidy$time_category == "350-450", ]
+
+# Subset for time category 450-550
+fly_fitness_450_550 <- fly_fitness_tidy[fly_fitness_tidy$time_category == "450-550", ]
 
 
 
-ggplot(fly_fitness_tidy, aes(x = time_hours, y = count, fill = sex_treatment)) +
-  geom_bar(position="dodge", stat="identity")
+one <- ggplot(fly_fitness_350_450 , aes(x = time_hours, y = count, fill = sex_treatment)) +
+  geom_bar(position="dodge", stat="identity") +
+  theme(legend.position = "none")
 
+two <- ggplot(fly_fitness_450_550 , aes(x = time_hours, y = count, fill = sex_treatment)) +
+  geom_bar(position="dodge", stat="identity") + 
+  theme(legend.position = "none")
 
+one + two
 
