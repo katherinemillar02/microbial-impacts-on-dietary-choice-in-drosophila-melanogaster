@@ -327,14 +327,14 @@ ovod1_female_oviposition <- grid.arrange(ov1_egg1, ov1_egg2, ov1_egg3,
 ## Wild Type Virgin Female ####
 v1_egg1 <- oviposition_results(onefour_ovi_vf, boxplot_fill_colour = c("#9FE2BF","#9FE2BF"))
 
-v1_egg1 <- oviposition_results(onefour_ovi_vf, boxplot_fill_colour = viridis_colors[3:4])
+v1_egg1 <- oviposition_results(onefour_ovi_vf, boxplot_fill_colour = viridis_colors[1:2])
 
 v1_egg2 <- oviposition_results(fourone_ovi_vf, boxplot_fill_colour = c("#FF7F50","#FF7F50")) 
 
-v1_egg2 <- oviposition_results(fourone_ovi_vf, boxplot_fill_colour = viridis_colors[5:6])
+v1_egg2 <- oviposition_results(fourone_ovi_vf, boxplot_fill_colour = viridis_colors[3:4])
 
 v1_egg3 <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
-v1_egg3 <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = viridis_colors[3:6])
+v1_egg3 <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = viridis_colors[1:4])
 
 
 
