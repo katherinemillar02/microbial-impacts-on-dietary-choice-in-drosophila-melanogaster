@@ -246,9 +246,9 @@ vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour = c("#FDECCD","#FDECCD"
 vf_combined <- feeding_results(combined_v, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 
-vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = colors_first_plot)
-vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour = colors_second_plot)
-vf_combined <- feeding_results(combined_v, boxplot_fill_colour = colors_of_combined)
+vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[5:6])
+vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[7:8])
+vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[5:8])
 
 
 ## Using grid.arrange to put the plots together
