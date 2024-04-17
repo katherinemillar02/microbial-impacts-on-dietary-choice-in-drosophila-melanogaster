@@ -14,11 +14,25 @@ viridis_colors <- viridis(10)
 pupae_fitness_plot <- ggplot(pupae_fitness, aes(x = `time (hours)`, y = pupae, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
   #geom_line(aes(col = treatment), position = position_dodge(width = 1)) +
-  scale_fill_manual(values = viridis_colors[c(1,8)]) +
+  scale_fill_manual(values = viridis_colors[c(3,6)], labels =  c("Conditioned", "Unconditioned")) +
   theme_classic() +
+  theme(legend.position = "top",
+        legend.justification = "right") + 
   labs(x = "Time (hours) since eggs laid", 
-       y = "Pupae") 
+       y = "Number of Pupae emerged") +
+  labs(fill = "Treatment")
 
+
+fly_fitness_plot <- ggplot(fly_fitness_tidy, aes(x = `time_hours`, y = count, fill = sex_treatment)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  #geom_line(aes(col = treatment), position = position_dodge(width = 1)) +
+  scale_fill_manual(values = viridis_colors[c(1,7,3,8)], labels =  c("Female Conditioned", "Female Unconditioned", "Male Conditioned", 'Male Unconditioned')) +
+  theme_classic() + 
+  theme(legend.position = "top",
+        legend.justification = "right") + 
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Pupae") +
+  labs(fill = "Treatment")
 
 ## Read data in
 fly_fitness <- read_excel("data/fitness_experiment/fly_data.xlsx")
@@ -51,11 +65,18 @@ fly_fitness_450_550 <- fly_fitness_tidy[fly_fitness_tidy$time_category == "450-5
 
 one <- ggplot(fly_fitness_350_450 , aes(x = time_hours, y = count, fill = sex_treatment)) +
   geom_bar(position="dodge", stat="identity") +
-  theme(legend.position = "none")
+  theme_bw() + 
+  theme(legend.position = "none") + 
+  ylim(0,30) +
+  xlim(350,450) 
 
 two <- ggplot(fly_fitness_450_550 , aes(x = time_hours, y = count, fill = sex_treatment)) +
   geom_bar(position="dodge", stat="identity") + 
-  theme(legend.position = "none")
+  theme_bw() +
+  theme(legend.position = "none") + 
+  ylim(0,30)+
+  xlim(450,550) + 
+  ylab("") 
 
 one + two
 
