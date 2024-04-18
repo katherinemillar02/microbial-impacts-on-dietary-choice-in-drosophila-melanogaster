@@ -458,7 +458,7 @@ drop1(glmer.ovod1_f_egg, test = "Chisq") ## block is  significant with ratio
 ## Looking at results, keeping block in 
 
 ## Basic summary
-summary(glmer.ovod1_f_egg)
+summary(glmer.ovod1_f_egg) 
 
   ## What I am confused about here: 
 # If I am interpreting the results right, why is there no 1:4 conditioned/unconditioned block 2 results?? 
