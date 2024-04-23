@@ -83,13 +83,91 @@ fly_females_plot /
 
 
 
-# 
-# 
-# 
-# fly_fitness_tidy_females <- tidyr::pivot_longer(data = fly_fitness ,
-#                                  cols = c(females),
-#                                  names_to = "females",
-#                                  values_to = "count")
+
+total_females <- sum(females_data$females, na.rm = TRUE)
+total_males <- sum(df$males, na.rm = TRUE)
+
+
+total_females <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females"])
+
+# Calculate the total number of females for conditioned treatment
+total_conditioned_females <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "conditioned"], na.rm = TRUE)
+
+# Calculate the total number of females for unconditioned treatment
+total_unconditioned_females <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "unconditioned"], na.rm = TRUE)
+
+
+## Does this code right for Females v Males 
+
+
+total_conditioned_males <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "males" & fly_fitness_tidy$treatment == "conditioned"], na.rm = TRUE)
+
+# Calculate the total number of females for unconditioned treatment
+total_unconditioned_males <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "males" & fly_fitness_tidy$treatment == "unconditioned"], na.rm = TRUE)
+
+
+
+totals <- data.frame(
+  Gender = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"),
+  Total = c(total_conditioned_females, total_unconditioned_females, total_conditioned_males, total_unconditioned_males)
+)
+
+
+totals$Gender <- factor(totals$Gender, levels = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"))
+
+
+
+
+total_plot <- ggplot(totals, aes(x = Gender, y = Total, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = viridis_colors[c(2,4,6,8)]) +
+  labs(title = "",
+       y = "Total Flies",
+       x = "Sex and Treatment") +
+  theme(legend.position = "none") +
+  theme_classic()
+
+
+
+
+# Print the totals
+cat("Total Conditioned Females:", total_conditioned_females, "\n")
+cat("Total Unconditioned Females:", total_unconditioned_females, "\n")
+
+
+fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
+                                 cols = c(females, males),
+                                 names_to = "gender",
+                                 values_to = "count")
+
+
+
+
+fly_fitness %>% count(females)
+
+total_females <- fly_fitness %>% 
+  summarise(total_females = sum(females))
+
+
+
+
+fly_total_plot <- ggplot(fly_fitness_tidy, aes(x = gender, y = count, fill = treatment)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = viridis_colors[c(3,6)], labels =  c("Conditioned", "Unconditioned")) +
+  theme_classic() +
+  theme(legend.position = "top",
+        legend.justification = "right") +
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Number of Females Emerged") +
+  labs(fill = "Treatment") + 
+  ylim(0,300)
+
+
+
+
+
+
+
 # 
 # fly_fitness_tidy_males <- tidyr::pivot_longer(data = fly_fitness ,
 #                                                 cols = c(males),
