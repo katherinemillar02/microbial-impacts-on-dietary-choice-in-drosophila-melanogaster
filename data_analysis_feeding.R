@@ -510,6 +510,7 @@ summary(glm_mm_m) #
 
 # dropping block from the model (mixed model)
 glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  + block + (1|block/plate) + (1|observation), family = poisson, data = combined_m)
+glm_mm_m_3 <- glmmTMB(fly_numbers ~ diet  + (1|plate) + (1|observation), family = poisson, data = combined_m)
 
 
 ## results of model with block 
@@ -522,7 +523,7 @@ summary(glm_mm_m_2)
 
 
 
-
+summary(glm_mm_m_3)
 
 
 
