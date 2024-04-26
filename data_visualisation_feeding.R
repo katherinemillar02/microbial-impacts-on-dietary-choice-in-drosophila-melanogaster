@@ -181,7 +181,7 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
                position = position_jitterdodge()) +
     theme_classic()+
     labs(x = "Diet Condition",
-         y = "Number of flies per diet patch", 
+         y = "Flies", 
          title = "")+
     scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
     # scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
@@ -334,4 +334,187 @@ theme_classic() +
 feeding_results_violin(fourone_onefour_male_long, violin_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
 
 
+
+
+#### MAKING PLOTS FOR SEPARATE BLOCKS 
+
+
+########################################
+#### MALES 
+
+four_to_one_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b1.xlsx")
+four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b2.xlsx")
+
+
+fourone_of_b1 <- four_to_one_male_b1  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+fourone_of_b2 <- four_to_one_male_b2  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+
+
+
+one_to_four_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b1.xlsx")
+one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b2.xlsx")
+
+
+onefour_of_b1 <- one_to_four_male_b1  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+onefour_of_b2 <- one_to_four_male_b2  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+
+
+
+
+
+# 4:1 + 1:4 
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b1.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b2.xlsx")
+
+fouroneonefour_male_b1 <- fourone_onefour_male_b1  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+fouroneonefour_male_b2 <- fourone_onefour_male_b2  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+
+m_1_4_b1  <- feeding_results(onefour_of_b1 , boxplot_fill_colour = viridis_colors[5:6])
+m_1_4_b2  <- feeding_results(onefour_of_b2, boxplot_fill_colour = viridis_colors[5:6])
+
+
+m_4_1_b1 <- feeding_results(fourone_of_b1 , boxplot_fill_colour = viridis_colors[7:8])
+m_4_1_b2 <- feeding_results(fourone_of_b2, boxplot_fill_colour = viridis_colors[7:8])
+
+
+m_combined_b1 <- feeding_results(fouroneonefour_male_b1, boxplot_fill_colour = viridis_colors[5:8])
+m_combined_b2 <- feeding_results(fouroneonefour_male_b2, boxplot_fill_colour = viridis_colors[5:8])
+
+m_4_1_b1 <- m_4_1_b1 + ggtitle("Male Block 1")
+m_4_1_b2 <- m_4_1_b2 + ggtitle("Male Block 2")
+m_1_4_b1 <- m_1_4_b1 + ggtitle("Male Block 1")
+m_1_4_b2 <- m_1_4_b2 + ggtitle("Male Block 2")
+m_combined_b1  <- m_combined_b1  + ggtitle("Male Block 1")
+m_combined_b2 <- m_combined_b2+ ggtitle("Male Block 2")
+
+
+male_oviposition <- grid.arrange(
+  m_4_1_b1, m_1_4_b1, m_combined_b1 ,
+  m_4_1_b2, m_1_4_b2, m_combined_b2,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1)
+)
+
+
+
+
+#### VIRGIN FEMALES 
+
+# 4:1 
+four_to_one_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b1.xlsx")
+four_to_one_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx")
+four_to_one_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b3.xlsx")
+four_to_one_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b4.xlsx")
+
+fourone_v_1 <- four_to_one_virgin_b1   %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+fourone_v_2 <- four_to_one_virgin_b2  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+fourone_v_3 <- four_to_one_virgin_b3 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+fourone_v_4 <- four_to_one_virgin_b4 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+# 1:4 
+one_to_four_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b1.xlsx")
+one_to_four_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b2.xlsx")
+one_to_four_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b3.xlsx")
+one_to_four_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b4.xlsx")
+
+
+# 1:4 
+onefour_v_1 <- one_to_four_virgin_b1  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+onefour_v_2 <- one_to_four_virgin_b2  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+onefour_v_3 <- one_to_four_virgin_b3  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+onefour_v_4 <- one_to_four_virgin_b4  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+
+
+
+# 4:1 and 1:4 
+fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
+fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
+fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
+fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
+
+
+# 4:1 and 1:4 
+combined_v_1 <- fourone_onefour_virgin_b1 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+combined_v_2 <- fourone_onefour_virgin_b2 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+combined_v_3 <- fourone_onefour_virgin_b3 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+combined_v_4 <- fourone_onefour_virgin_b4%>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+v_1_4_b1  <- feeding_results(onefour_v_1 , boxplot_fill_colour = viridis_colors[5:6])
+v_1_4_b2  <- feeding_results(onefour_v_2, boxplot_fill_colour = viridis_colors[5:6])
+v_1_4_b3  <- feeding_results(onefour_v_3 , boxplot_fill_colour = viridis_colors[5:6])
+v_1_4_b4  <- feeding_results(onefour_v_4, boxplot_fill_colour = viridis_colors[5:6])
+
+v_4_1_b1 <- feeding_results(fourone_v_1 , boxplot_fill_colour = viridis_colors[7:8])
+v_4_1_b2 <- feeding_results(fourone_v_2, boxplot_fill_colour = viridis_colors[7:8])
+v_4_1_b3 <- feeding_results(fourone_v_3 , boxplot_fill_colour = viridis_colors[7:8])
+v_4_1_b4 <- feeding_results(fourone_v_4, boxplot_fill_colour = viridis_colors[7:8])
+
+
+v_combined_b1 <- feeding_results(combined_v_1, boxplot_fill_colour = viridis_colors[5:8])
+v_combined_b2 <- feeding_results(combined_v_2, boxplot_fill_colour = viridis_colors[5:8])
+v_combined_b3 <- feeding_results(combined_v_3, boxplot_fill_colour = viridis_colors[5:8])
+v_combined_b4 <- feeding_results(combined_v_4, boxplot_fill_colour = viridis_colors[5:8])
+
+
+v_4_1_b1 <- v_4_1_b1 + ggtitle("Virgin Female Block 1")
+v_4_1_b2 <- v_4_1_b2 + ggtitle("Virgin Female  Block 2")
+v_4_1_b3 <- v_4_1_b3 + ggtitle("Virgin Female  Block 3")
+v_4_1_b4 <- v_4_1_b4 + ggtitle("Virgin Female  Block 4")
+
+v_1_4_b1 <- v_1_4_b1 + ggtitle("Virgin Female Block 1")
+v_1_4_b2 <- v_1_4_b2 + ggtitle("Virgin Female Block 2")
+v_1_4_b3 <- v_1_4_b3 + ggtitle("Virgin Female Block 3")
+v_1_4_b4 <- v_1_4_b4 + ggtitle("Virgin Female Block 4")
+
+v_combined_b1  <- v_combined_b1  + ggtitle("Virgin Female Block 1")
+v_combined_b2 <- v_combined_b2 + ggtitle("Virgin Female Block 2")
+v_combined_b3  <- v_combined_b3  + ggtitle("Virgin Female Block 3")
+v_combined_b4 <- v_combined_b4 + ggtitle("Virgin Female Block 4")
+
+virgin_oviposition <- grid.arrange(
+  v_4_1_b1, v_1_4_b1, v_combined_b1 ,
+  v_4_1_b2, v_1_4_b2, v_combined_b2,
+  v_4_1_b3, v_1_4_b3, v_combined_b3 ,
+  v_4_1_b4, v_1_4_b4, v_combined_b4,
+  ncol = 3,
+  nrow = 4,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1, 1,1)
+)
 
