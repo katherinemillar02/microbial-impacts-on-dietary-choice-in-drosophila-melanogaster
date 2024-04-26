@@ -7,6 +7,7 @@ library(glmmTMB)
 library(lme4)
 library(performance)
 library(pscl)
+library(MASS)
 ############### 📦📦📦📦
 
 
@@ -458,11 +459,12 @@ drop1(glmer.ovod1_f_egg, test = "Chisq") ## block is  significant with ratio
 ## Looking at results, keeping block in 
 
 ## Basic summary
-summary(glmer.ovod1_f_egg) 
+summary(glmer.ovod1_f_egg_2) 
 
   ## What I am confused about here: 
 # If I am interpreting the results right, why is there no 1:4 conditioned/unconditioned block 2 results?? 
 
+glmer.ovod1_f_egg_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
 
 
 
@@ -572,6 +574,9 @@ AIC(binom_virgin_egg, glmer.virgin_f_egg)
 ## Using the mixed model for now 
 glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
 
+glmer.virgin_f_egg_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
+
+summary(glmer.virgin_f_egg_2)
 
 ## Looking for significance in block
 drop1(glmer.virgin_f_egg, test = "Chisq") ## block is significant
@@ -581,6 +586,7 @@ summary(glmer.virgin_f_egg)
 ## block 3 sig with block 1
 ## block 2 not sig with block 1 
 
+glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
 
 
 
@@ -695,9 +701,10 @@ drop1(combined_glm_mm_od1_egg , test = "Chisq") # block is very signficiant
 summary(combined_glm_mm_od1_egg)
    ## everything is very significant - dodgy data? 
 
+combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet  + (1|plate/block) , family = poisson, data = combined_of_egg)
 
 
-
+emmeans::emmeans(combined_glm_mm_od1_egg, pairwise ~ diet)
 
 
 
@@ -957,7 +964,15 @@ drop1(glm.nb_v_comb_egg , test = "F") # block is significant
 ## using the model 
 summary(glm.nb_v_comb_egg)
 
-emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet + block)
+glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet + block, data =  combined_ovi_v)
+
+glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
+
+summary(glm.nb_v_comb_egg_2) 
+
+
+
+emmeans::emmeans(glm.nb_v_comb_egg_2, pairwise ~ diet)
 
 ### why is it saying nothing is really significant now? 
 
