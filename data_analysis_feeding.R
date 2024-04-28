@@ -379,7 +379,9 @@ plot(simulationOutput_glmer.mm_of) # all looks the same to me?
 
 
 # using this model
-glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
+glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
+
+summary(glmer.mm_of )
 
 # looking at the significance of block
 drop1(glmer.mm_of, test = "Chisq") 
@@ -509,7 +511,7 @@ summary(glm_mm_m) #
 
 
 # dropping block from the model (mixed model)
-glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  + block + (1|block/plate) + (1|observation), family = poisson, data = combined_m)
+glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  * block + (1|plate/block) + (1|observation), family = poisson, data = combined_m)
 glm_mm_m_3 <- glmmTMB(fly_numbers ~ diet  + (1|plate) + (1|observation), family = poisson, data = combined_m)
 
 
@@ -615,7 +617,8 @@ glm.nb_vf <- glm.nb(fly_numbers ~ diet * block, data = combined_vf)
 
 # looking at significance of block 
 drop1(glm.nb_vf, test = "F")
-summary(glm.nb_vf)
+summary(glm.nb_vf) 
+
 
 # block is not significant, can be dropped 
 
@@ -718,7 +721,7 @@ zi.p_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson",
 
 
 # trying a zero inflated negative binomial model 
-zi.nb_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_of )
+zi.nb_of <- zeroinfl(fly_numbers ~ diet * block , dist = "negbin", link = "logit", data = combined_of )
 
 # need to do performance checks? 
 
