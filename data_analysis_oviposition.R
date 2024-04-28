@@ -453,6 +453,8 @@ AIC(binom_od1_egg, glmer.ovod1_f_egg)
 ## Model choice: 
 glmer.ovod1_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
 
+summary(glmer.ovod1_f_egg)
+
 ## Looking for significance in block
 drop1(glmer.ovod1_f_egg, test = "Chisq") ## block is  significant with ratio
 
@@ -692,7 +694,7 @@ AIC(combined_od1_glm.p, combined_od1_glm.qp, combined_glm_mm_od1_egg)
  ## Mixed model has the lowest AIC 
 
 ## Using this model for now 
-combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_of_egg)
+combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet * block + (1|plate/block) , family = poisson, data = combined_of_egg)
 
 
 ## Testing the significance of block
