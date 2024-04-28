@@ -5,7 +5,7 @@ library(readxl)
 library(viridis)
 
 ## Read data in
-pupae_fitness <- read_excel("data/fitness_experiment/pupae_data.xlsx")
+pupae_fitness <- read_excel("data/puape_data.xlsx")
 
 ## choosing colours from virids to use
 viridis_colors <- viridis(10)
@@ -45,7 +45,7 @@ fly_fitness_plot <- ggplot(fly_fitness_tidy_females, aes(x = `time_hours`, y = c
 
 
 ## Read data in
-fly_fitness <- read_excel("data/fitness_experiment/fly_data.xlsx")
+fly_fitness <- read_excel("data/fly_data.xlsx")
 
 females_data <- subset(fly_fitness, select = c(time_hours, females, treatment))
 
@@ -165,10 +165,25 @@ fly_total_plot <- ggplot(fly_fitness_tidy, aes(x = gender, y = count, fill = tre
 
 
 
+summary_data <- fly_fitness %>%
+  group_by(treatment, time_hours) %>%
+  summarize(total_females = sum(females, na.rm = TRUE),
+            total_males = sum(males, na.rm = TRUE)) %>%
+  ungroup()
 
 
 
-# 
+
+
+# Calculate total females and males for each treatment and time_hours
+summary_data <- fly_fitness %>%
+  group_by(treatment, time_hours) %>%
+  summarize(total_females = sum(females, na.rm = TRUE),
+            total_males = sum(males, na.rm = TRUE)) %>%
+  ungroup()
+
+data <- summary_data[order(summary_data$total_females, summary_data$total_males), ]
+
 # fly_fitness_tidy_males <- tidyr::pivot_longer(data = fly_fitness ,
 #                                                 cols = c(males),
 #                                                 names_to = "males",
