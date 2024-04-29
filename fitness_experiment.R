@@ -14,15 +14,15 @@ viridis_colors <- viridis(10)
 #### PUPAE PLOT ####
 
 ## Creating a plot (bar plot for now)
-pupae_fitness_plot <- ggplot(pupae_fitness, aes(x = `time_hours`, y = pupae, fill = treatment)) +
+pupae_fitness_plot <- ggplot(pupae_fitness, aes(x = `time (hours)`, y = pupae, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
   #geom_line(aes(col = treatment), position = position_dodge(width = 1)) +
-  scale_fill_manual(values = viridis_colors[c(3,6)], labels =  c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right")+
   labs(x = "Time (hours) since eggs laid", 
-       y = "Number of Pupae from eggs") +
+       y = "Number of Pupae emerged") +
   labs(fill = "Treatment")
 
 
@@ -52,7 +52,7 @@ females_data <- subset(fly_fitness, select = c(time_hours, females, treatment))
 
 fly_females_plot <- ggplot(females_data, aes(x = time_hours, y = females, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual(values = viridis_colors[c(3,6)], labels =  c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right") +
@@ -68,7 +68,7 @@ males_data <- subset(fly_fitness, select = c(time_hours, males, treatment))
 
 fly_males_plot <- ggplot(males_data, aes(x = time_hours, y = males, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual(values = viridis_colors[c(3,6)], labels =  c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme_classic() +
   theme(legend.position = "none") +
   labs(x = "Time (hours) since eggs laid", 
@@ -130,9 +130,7 @@ total_plot <- ggplot(totals, aes(x = Gender, y = Total, fill = Gender)) +
 
 
 
-# Print the totals
-cat("Total Conditioned Females:", total_conditioned_females, "\n")
-cat("Total Unconditioned Females:", total_unconditioned_females, "\n")
+
 
 
 fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
@@ -165,6 +163,10 @@ fly_total_plot <- ggplot(fly_fitness_tidy, aes(x = gender, y = count, fill = tre
 
 
 
+
+
+
+## Finds the sumn
 summary_data <- fly_fitness %>%
   group_by(treatment, time_hours) %>%
   summarize(total_females = sum(females, na.rm = TRUE),
@@ -172,17 +174,40 @@ summary_data <- fly_fitness %>%
   ungroup()
 
 
+most_males_by_treatment <- summary_data %>%
+  group_by(treatment) %>%
+  summarise(max_total_males = max(total_males))
 
-
-
-# Calculate total females and males for each treatment and time_hours
-summary_data <- fly_fitness %>%
-  group_by(treatment, time_hours) %>%
-  summarize(total_females = sum(females, na.rm = TRUE),
-            total_males = sum(males, na.rm = TRUE)) %>%
-  ungroup()
+most_females_by_treatment <- summary_data %>%
+  group_by(treatment) %>%
+  summarise(max_total_males = max(total_males))
 
 data <- summary_data[order(summary_data$total_females, summary_data$total_males), ]
+
+
+summary_data_2 <- fly_fitness %>%
+  group_by(treatment, time_hours) %>%
+  summarize(total_females = median(females, na.rm = TRUE),
+            total_males = median(males, na.rm = TRUE)) %>%
+  ungroup()
+
+
+most_males_by_treatment_2 <- summary_data_2 %>%
+  group_by(treatment) %>%
+  summarise(max_total_males = max(total_males))
+
+most_females_by_treatment_2 <- summary_data_2 %>%
+  group_by(treatment) %>%
+  summarise(max_total_males = max(total_males))
+
+data_2 <- summary_data_2[order(summary_data_2$total_females, summary_data_2$total_males), ]
+
+## same results for median 
+
+
+
+
+
 
 # fly_fitness_tidy_males <- tidyr::pivot_longer(data = fly_fitness ,
 #                                                 cols = c(males),
