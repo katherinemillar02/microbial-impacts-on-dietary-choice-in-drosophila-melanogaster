@@ -134,9 +134,14 @@ total_plot <- ggplot(totals, aes(x = Gender, y = Total, fill = Gender)) +
 
 
 fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
-                                 cols = c(females, males),
+                                 cols = c( females, males),
                                  names_to = "gender",
-                                 values_to = "count")
+                                 values_to = "count") %>% 
+mutate(vial = vial)
+  
+
+
+
 
 
 
@@ -149,16 +154,7 @@ total_females <- fly_fitness %>%
 
 
 
-fly_total_plot <- ggplot(fly_fitness_tidy, aes(x = gender, y = count, fill = treatment)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual(values = viridis_colors[c(3,6)], labels =  c("Conditioned", "Unconditioned")) +
-  theme_classic() +
-  theme(legend.position = "top",
-        legend.justification = "right") +
-  labs(x = "Time (hours) since eggs laid", 
-       y = "Number of Females Emerged") +
-  labs(fill = "Treatment") + 
-  ylim(0,300)
+
 
 
 
@@ -203,6 +199,210 @@ most_females_by_treatment_2 <- summary_data_2 %>%
 data_2 <- summary_data_2[order(summary_data_2$total_females, summary_data_2$total_males), ]
 
 ## same results for median 
+
+
+library(dplyr)
+
+median_conditioned_females <- fly_fitness_tidy %>%
+  filter(gender == "females", treatment == "conditioned") %>%
+  group_by(vial) %>%
+  summarise(median_count = median(count, na.rm = TRUE))
+
+median_unconditioned_females <- fly_fitness_tidy %>%
+  filter(gender == "females", treatment == "unconditioned") %>%
+  group_by(vial) %>%
+  summarise(median_count = median(count, na.rm = TRUE))
+
+median_conditioned_males <- fly_fitness_tidy %>%
+  filter(gender == "males", treatment == "conditioned") %>%
+  group_by(vial) %>%
+  summarise(median_count = median(count, na.rm = TRUE))
+
+median_unconditioned_males <- fly_fitness_tidy %>%
+  filter(gender == "males", treatment == "unconditioned") %>%
+  group_by(vial) %>%
+  summarise(median_count = median(count, na.rm = TRUE))
+
+
+# Creating separate data frames for each condition
+medians_conditioned_females <- data.frame(
+  Gender = "Conditioned Females",
+  Total = median_conditioned_females
+)
+
+medians_unconditioned_females <- data.frame(
+  Gender = "Unconditioned Females",
+  Total = median_unconditioned_females
+)
+
+medians_conditioned_males <- data.frame(
+  Gender = "Conditioned Males",
+  Total = median_conditioned_males
+)
+
+medians_unconditioned_males <- data.frame(
+  Gender = "Unconditioned Males",
+  Total = median_unconditioned_males
+)
+
+# Combining the data frames into a single data frame
+medians <- bind_rows(medians_conditioned_females, 
+                     medians_unconditioned_females, 
+                     medians_conditioned_males, 
+                     medians_unconditioned_males)
+
+
+boxplot <- ggplot(medians, aes(x = Gender, y = Total.median_count, fill = Gender)) +
+  geom_boxplot() +
+  geom_point(aes(),
+             size = 1,
+             shape = 1,
+             position = position_jitterdodge()) +
+  # You can customize the appearance of the plot as needed
+  labs(title = "Boxplot of Medians by Condition and Gender",
+       x = "Group",
+       y = "Median Value") +
+  theme_classic()
+library(ggplot2)
+
+# Assuming your data has columns 'Gender' and 'Total.median_count' where 'Gender' indicates the gender (male/female), and 'Total.median_count' contains the median values
+
+library(ggplot2)
+
+# Assuming your data has columns 'Gender' and 'Total.median_count' where 'Gender' indicates the gender (male/female), and 'Total.median_count' contains the median values
+
+
+
+fly_total_plots <- ggplot(fly_fitness_tidy, aes(x = gender, y = count, fill = treatment)) +
+  geom_boxplot() +
+  scale_fill_manual(values = viridis_colors[c(3,6)], labels =  c("Conditioned", "Unconditioned")) +
+  theme_classic() +
+  theme(legend.position = "top",
+        legend.justification = "right") +
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Number of Flies Emerged", 
+       fill = "Treatment") +
+  geom_point(aes(),
+             size = 1,
+             shape = 1,
+             position = position_dodge(width=0.75)) +
+  scale_x_discrete(labels = c("Females", "Males")) + 
+  ylim(0,5)
+
+
+
+
+  ggplot(medians, aes(x = Gender, y = Total.median_count, fill = Gender, pattern = Gender))+ 
+    # geom_jitter(aes(x = diet,
+    #                 y = fly_numbers,
+    #                 fill = diet),
+    #             width = 0.1,
+    #             shape = 1) +
+    geom_boxplot()+
+    geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                        color = "black",
+                        pattern_fill = "white",
+                        pattern_angle = 45,
+                        pattern_density = 0.1,
+                        pattern_spacing = 0.025,
+                        pattern_key_scale_factor = 0.6) +
+    geom_point(aes(),
+               size = 1,
+               shape = 1,
+               position = position_jitterdodge()) +
+    theme_classic()+
+    labs(x = "Diet Condition",
+         y = "Flies", 
+         title = "")+
+    scale_fill_manual(values = "red", "blue", "red", "blue") +  # Set fill colors for the boxplot
+    scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
+    theme(legend.position = "none") +
+    ylim(-0.01, 6)
+
+
+
+
+
+# Calculate the total number of females for conditioned treatment
+median_conditioned_females <- median(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "conditioned"], na.rm = TRUE)
+
+# Calculate the total number of females for unconditioned treatment
+median_unconditioned_females <- median(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "unconditioned"], na.rm = TRUE)
+
+
+## Does this code right for Females v Males 
+
+
+median_conditioned_males <- median(fly_fitness_tidy$count[fly_fitness_tidy$gender == "males" & fly_fitness_tidy$treatment == "conditioned"], na.rm = TRUE)
+
+# Calculate the total number of females for unconditioned treatment
+median_unconditioned_males <- median(fly_fitness_tidy$count[fly_fitness_tidy$gender == "males" & fly_fitness_tidy$treatment == "unconditioned"], na.rm = TRUE)
+
+
+
+medians <- data.frame(
+  Gender = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"),
+  Total = c(median_conditioned_females, median_unconditioned_females, median_conditioned_males, median_unconditioned_males)
+)
+
+
+medians$Gender <- factor(medians$Gender, levels = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"))
+
+
+
+
+median_plot <- ggplot(medians, aes(x = Gender, y = Total, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = viridis_colors[c(2,4,6,8)]) +
+  labs(title = "",
+       y = "Total Flies",
+       x = "Sex and Treatment") +
+  theme(legend.position = "none") +
+  theme_classic()
+
+
+
+
+
+
+
+
+
+
+
+
+# Calculate the mean number of females for conditioned treatment
+mean_conditioned_females <- mean(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "conditioned"], na.rm = TRUE)
+
+# Calculate the mean number of females for unconditioned treatment
+mean_unconditioned_females <- mean(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "unconditioned"], na.rm = TRUE)
+
+# Calculate the mean number of males for conditioned treatment
+mean_conditioned_males <- mean(fly_fitness_tidy$count[fly_fitness_tidy$gender == "males" & fly_fitness_tidy$treatment == "conditioned"], na.rm = TRUE)
+
+# Calculate the mean number of males for unconditioned treatment
+mean_unconditioned_males <- mean(fly_fitness_tidy$count[fly_fitness_tidy$gender == "males" & fly_fitness_tidy$treatment == "unconditioned"], na.rm = TRUE)
+
+means <- data.frame(
+  Gender = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"),
+  Total = c(mean_conditioned_females, mean_unconditioned_females, mean_conditioned_males, mean_unconditioned_males)
+)
+
+means$Gender <- factor(means$Gender, levels = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"))
+
+mean_plot <- ggplot(means, aes(x = Gender, y = Total, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  geom_point() +
+  scale_fill_manual(values = viridis_colors[c(2,4,6,8)]) +
+  labs(title = "",
+       y = "Total Flies",
+       x = "Sex and Treatment") +
+  theme(legend.position = "none") +
+  theme_classic()
+
+
+
+
 
 
 
