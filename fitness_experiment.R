@@ -287,7 +287,7 @@ fly_total_plots <- ggplot(fly_fitness_tidy, aes(x = gender, y = count, fill = tr
              shape = 1,
              position = position_dodge(width=0.75)) +
   scale_x_discrete(labels = c("Females", "Males")) + 
-  ylim(0,5)
+  ylim(0,25)
 
 
 
