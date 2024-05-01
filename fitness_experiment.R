@@ -4,16 +4,22 @@ library(ggplot2)
 library(readxl)
 library(viridis)
 
-## Read data in
-pupae_fitness <- read_excel("data/puape_data.xlsx")
 
-## choosing colours from virids to use
+## Choosing colours from viridis to use: 
 viridis_colors <- viridis(10)
 
+################################################ PUPAE ANALYSIS ####
 
-#### PUPAE PLOT ####
 
-## Creating a plot (bar plot for now)
+## Reading pupae data in
+pupae_fitness <- read_excel("data/puape_data.xlsx")
+
+################################################ PUPAE DATA VISUALISATION ####
+
+## Creating a barplot
+## Pupae plot 1 
+# This plot uses the raw data set with time and hours set out normally 
+## This plot shows two counts per day (usually)
 pupae_fitness_plot <- ggplot(pupae_fitness, aes(x = `time (hours)`, y = pupae, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
   #geom_line(aes(col = treatment), position = position_dodge(width = 1)) +
@@ -29,27 +35,50 @@ pupae_fitness_plot <- ggplot(pupae_fitness, aes(x = `time (hours)`, y = pupae, f
 
 
 
+## Reading the second pupae data set in 
+# This is the same data, but only shows one collection per day 
+# The middle hour point has been found, and the counts of both have been summed 
+pupae_fitness_2 <- read_excel("data/pupae_data_2.xlsx")
 
-#### FLY FITNESS PLOT ####
-fly_fitness_plot <- ggplot(fly_fitness_tidy_females, aes(x = `time_hours`, y = count, fill = females)) +
+
+## The second plot - pupae plot 2
+## This plot shows one collection per day, with data merged as described above
+pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
   #geom_line(aes(col = treatment), position = position_dodge(width = 1)) +
-  scale_fill_manual(values = viridis_colors[c(1,7,3,8)], labels =  c("Female Conditioned", "Female Unconditioned", "Male Conditioned", 'Male Unconditioned')) +
-  theme_classic() + 
+  scale_fill_manual(values = viridis_colors[c(1,6)], labels =  c("Conditioned", "Unconditioned")) +
+  theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right")+
   labs(x = "Time (hours) since eggs laid", 
-       y = "Flies (male or female)") +
+       y = "Number of Pupae emerged") +
   labs(fill = "Treatment")
 
+
+################################################ FLY DATA VISUALISATION ####
 
 
 ## Read data in
 fly_fitness <- read_excel("data/fly_data.xlsx")
 
+############
+
+## Separating the data into female and male columns 
+fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
+                                        cols = c( females, males),
+                                        names_to = "gender",
+                                        values_to = "count") 
+
+
+
+
+## Subsetting the data into female and male plots
+
+## Just Female data
 females_data <- subset(fly_fitness, select = c(time_hours, females, treatment))
 
 
+## Just a female plot
 fly_females_plot <- ggplot(females_data, aes(x = time_hours, y = females, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
@@ -62,10 +91,11 @@ fly_females_plot <- ggplot(females_data, aes(x = time_hours, y = females, fill =
 
 
 
-
+## Just Male data
 males_data <- subset(fly_fitness, select = c(time_hours, males, treatment))
 
 
+## Just a Male plot
 fly_males_plot <- ggplot(males_data, aes(x = time_hours, y = males, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
@@ -76,10 +106,86 @@ fly_males_plot <- ggplot(males_data, aes(x = time_hours, y = males, fill = treat
   labs(fill = "Treatment")
 
 
+
 ## The Male and Female Plots 
 
 fly_females_plot /
   fly_males_plot
+
+
+
+#### The second dataset 
+## Where the data has been re-organised to only show one data per day
+fly_fitness_2 <- read_excel("data/fly_data_2.xlsx")
+
+## Subsetting the data for the second dataset 
+females_data_2 <- subset(fly_fitness_2, select = c(time_hours, females, treatment))
+
+
+## Visualising the data for the second dataset 
+fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fill = treatment)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
+  theme_classic() +
+  theme(legend.position = "top",
+        legend.justification = "right") +
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Number of Females Emerged") +
+  labs(fill = "Treatment")
+
+## Subsetting the data for the second male data set 
+males_data_2 <- subset(fly_fitness_2, select = c(time_hours, males, treatment))
+
+
+## Visualising the data for the second dataset for males 
+fly_males_plot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill = treatment)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
+  theme_classic() +
+  theme(legend.position = "none") +
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Number of Males Emerged") +
+  labs(fill = "Treatment")
+
+
+## The Male and Female Plots with the newly arranged datasets
+
+fly_females_plot_2 /
+  fly_males_plot_2
+
+##### PUTTING OVERALL EMERGENCE DATA OF FLIES ACROSS VIALS TOGETHER
+
+#### A TOTAL PLOT 
+fly_emergence_overall <- fly_fitness_tidy %>%
+  filter(gender %in% c("females", "males")) %>%
+  group_by(vial, gender, treatment) %>%
+  summarise(total_count = sum(count, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(Gender_Treatment = paste(treatment, gender, sep = " ")) %>%
+  mutate(Gender_Treatment = factor(Gender_Treatment,
+                                   levels = c("conditioned females", "unconditioned females",
+                                              "conditioned males", "unconditioned males")))
+
+
+
+#### CALCULATIONS 
+## Calculating median emergence by vial
+
+vial_overall_emergence <- fly_fitness_tidy %>%
+  filter(gender %in% c("females", "males")) %>%
+  group_by(vial, treatment) %>%
+  summarise(overall_emergence = sum(count, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(gender_treatment = paste(treatment, "overall", sep = " ")) %>%
+  mutate(gender_treatment = factor(gender_treatment,
+                                   levels = c("conditioned overall", "unconditioned overall")))
+
+
+vial_overall_emergence_median <- vial_overall_emergence  %>%
+  group_by(treatment) %>%
+  summarise(median_count = median(overall_emergence, na.rm = TRUE))
+
+
 
 
 
@@ -91,7 +197,7 @@ total_males <- sum(df$males, na.rm = TRUE)
 total_females <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females"])
 
 # Calculate the total number of females for conditioned treatment
-total_conditioned_females <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "conditioned"], na.rm = TRUE)
+total_conditioned_females <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "conditioned" ], na.rm = TRUE)
 
 # Calculate the total number of females for unconditioned treatment
 total_unconditioned_females <- sum(fly_fitness_tidy$count[fly_fitness_tidy$gender == "females" & fly_fitness_tidy$treatment == "unconditioned"], na.rm = TRUE)
@@ -111,6 +217,7 @@ totals <- data.frame(
   Gender = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"),
   Total = c(total_conditioned_females, total_unconditioned_females, total_conditioned_males, total_unconditioned_males)
 )
+
 
 
 totals$Gender <- factor(totals$Gender, levels = c("Conditioned Females", "Unconditioned Females", "Conditioned Males", "Unconditioned Males"))
@@ -134,11 +241,9 @@ total_plot <- ggplot(totals, aes(x = Gender, y = Total, fill = Gender)) +
 
 
 fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
-                                 cols = c( females, males),
-                                 names_to = "gender",
-                                 values_to = "count") %>% 
-mutate(vial = vial)
-  
+                                        cols = c( females, males),
+                                        names_to = "gender",
+                                        values_to = "count") 
 
 
 
@@ -289,35 +394,49 @@ fly_total_plots <- ggplot(fly_fitness_tidy, aes(x = gender, y = count, fill = tr
   scale_x_discrete(labels = c("Females", "Males")) + 
   ylim(0,25)
 
+fly_fitness_tidy_summary <- fly_fitness %>%  
+  group_by(treatment) %>% 
+  summarise(median = median(count, na.rm = TRUE),
+            mean = mean(count, na.rm = TRUE),
+            sd = sd(count, na.rm = TRUE),
+            n = sum(!is.na(count)),
+            se = sd/sqrt(n))
+
+mean_count_by_vial_and_treatment <- fly_fitness_tidy %>%
+  group_by(vial, treatment) %>%
+  summarise(mean_count = mean(count, na.rm = TRUE))
 
 
 
-  ggplot(medians, aes(x = Gender, y = Total.median_count, fill = Gender, pattern = Gender))+ 
-    # geom_jitter(aes(x = diet,
-    #                 y = fly_numbers,
-    #                 fill = diet),
-    #             width = 0.1,
-    #             shape = 1) +
-    geom_boxplot()+
-    geom_boxplot_pattern(position = position_dodge(preserve = "single"),
-                        color = "black",
-                        pattern_fill = "white",
-                        pattern_angle = 45,
-                        pattern_density = 0.1,
-                        pattern_spacing = 0.025,
-                        pattern_key_scale_factor = 0.6) +
-    geom_point(aes(),
-               size = 1,
-               shape = 1,
-               position = position_jitterdodge()) +
-    theme_classic()+
-    labs(x = "Diet Condition",
-         y = "Flies", 
-         title = "")+
-    scale_fill_manual(values = "red", "blue", "red", "blue") +  # Set fill colors for the boxplot
-    scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
-    theme(legend.position = "none") +
-    ylim(-0.01, 6)
+
+
+
+ggplot(medians, aes(x = Gender, y = Total.median_count, fill = Gender, pattern = Gender))+ 
+  # geom_jitter(aes(x = diet,
+  #                 y = fly_numbers,
+  #                 fill = diet),
+  #             width = 0.1,
+  #             shape = 1) +
+  geom_boxplot()+
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                       color = "black",
+                       pattern_fill = "white",
+                       pattern_angle = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  geom_point(aes(),
+             size = 1,
+             shape = 1,
+             position = position_jitterdodge()) +
+  theme_classic()+
+  labs(x = "Diet Condition",
+       y = "Flies", 
+       title = "")+
+  scale_fill_manual(values = "red", "blue", "red", "blue") +  # Set fill colors for the boxplot
+  scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
+  theme(legend.position = "none") +
+  ylim(-0.01, 6)
 
 
 
@@ -410,9 +529,10 @@ mean_plot <- ggplot(means, aes(x = Gender, y = Total, fill = Gender)) +
 
 
 # fly_fitness_tidy_males <- tidyr::pivot_longer(data = fly_fitness ,
-#                                                 cols = c(males),
-#                                                 names_to = "males",
-#                                                 values_to = "count")
+#                                                 cols = c(females, males),
+#                                                 names_to = "gender",
+#                                                 values_to = "count",
+)
 # 
 # 
 # fly_fitness_tidy_females$females <- paste(fly_fitness_tidy$females, fly_fitness_tidy$treatment, sep = "_")
