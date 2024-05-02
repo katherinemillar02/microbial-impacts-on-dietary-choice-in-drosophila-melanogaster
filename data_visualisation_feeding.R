@@ -580,68 +580,83 @@ virgin_oviposition <- grid.arrange(
 ##################### --
 ## OvoD1 FEMALES ####
 ##################### --
+
+
 # 4:1 
 
-
-
+## Block 1 
 four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx")
-four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
 
-
+# Adding variable names to Block 1
 fourone_of_1 <- four_to_one_ovod1_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+
+## Block 2 
+four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
+
+# Adding variable names to Block 2
 fourone_of_2 <- four_to_one_ovod1_b2  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # 1:4 
-one_to_four_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b1.xlsx")
-one_to_four_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b2.xlsx")
 
+## Block 1
+one_to_four_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b1.xlsx")
+
+## Adding variable names to Block 1
 onefour_of_1 <- one_to_four_ovod1_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+## Block 2
+one_to_four_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b2.xlsx")
+
+## Adding variable names to Block 2
 onefour_of_2 <- one_to_four_ovod1_b2  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
 # 4:1 and 1:4 
+
+## Block 1
 fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
 
+# Adding variable names to block 1
 combined_of_1 <- fourone_onefour_ovod1_b1 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
+## Block 2
+fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
 
+## Adding variable names to Block 2 
 combined_of_2 <- fourone_onefour_ovod1_b2 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
+#### VISUALISING THE DATA FOR OVOD1 FEMALES 
 
-
-
-
+## 1:4 
 of_1_4_b1  <- feeding_results(onefour_of_1 , boxplot_fill_colour = viridis_colors[5:6])
 of_1_4_b2  <- feeding_results(onefour_of_2, boxplot_fill_colour = viridis_colors[5:6])
 
 
+## 4:1 
 of_4_1_b1 <- feeding_results(fourone_of_1 , boxplot_fill_colour = viridis_colors[7:8])
 of_4_1_b2 <- feeding_results(fourone_of_2, boxplot_fill_colour = viridis_colors[7:8])
 
 
-
+## 4:1 and 1:4 
 of_combined_b1 <- feeding_results(combined_of_1, boxplot_fill_colour = viridis_colors[5:8])
 of_combined_b2 <- feeding_results(combined_of_2, boxplot_fill_colour = viridis_colors[5:8])
 
 
+
+## Adding titles to OvoD1 plots 
 of_4_1_b1 <- of_4_1_b1 + ggtitle("OvoD1 Female Block 1")
 of_4_1_b2 <- of_4_1_b2 + ggtitle("OvoD1 Female  Block 2")
-
-
 of_1_4_b1 <- of_1_4_b1 + ggtitle("OvoD1 Female Block 1")
 of_1_4_b2 <- of_1_4_b2 + ggtitle("OvoD1 Female Block 2")
-
-
 of_combined_b1  <- of_combined_b1  + ggtitle("OvoD1 Female Block 1")
 of_combined_b2 <- of_combined_b2 + ggtitle("OvoD1 Female Block 2")
 
