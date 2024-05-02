@@ -17,6 +17,11 @@ library(viridis)
 ##################### --
 ## OvoD1 FEMALES ####
 ##################### --
+
+#### COMBINING THE BLOCKS 
+
+# The Dietary Assays 
+
 # 4:1 
 four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx")
 four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
@@ -199,32 +204,12 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 # Plot function included, followed by the specific data set, 
 # followed by the appropriate colours for the plot depending on the assay 
 
+## Setting colours 
+viridis_colours <- viridis(10)
 
 ##################### --
 ## OvoD1 FEMALES ####
 ##################### --
-of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = c("lightblue", "lightblue"))
-of_4_1  <- feeding_results(fourone_of, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
-of_combined  <- feeding_results(combined_of, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
-
-of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis(5))
-of_4_1  <- feeding_results(fourone_of, boxplot_fill_colour = viridis(3))
-of_combined  <- feeding_results(combined_of, boxplot_fill_colour = viridis(4))
-
-
-
-library(viridis)
-
-# Generate colors using viridis palette for the third plot
-colors_of_combined <- viridis(5)
-
-# Extract colors for first plot (matching first two variables of the third plot)
-colors_first_plot <- colors_of_combined[1:2]
-
-# Extract colors for second plot (matching last two variables of the third plot)
-colors_second_plot <- colors_of_combined[3:4]
-
-# Apply colors to the plots
 of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis_colors[5:6])
 of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = viridis_colors[7:8])
 of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[5:8])
@@ -241,11 +226,6 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
 ############################## --
 ## VIRGIN WILD TYPE FEMALES ####
 ############################## --
-vf_1_4  <- feeding_results(onefour_v, boxplot_fill_colour = c("lightblue", "lightblue"))
-vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour = c("#FDECCD","#FDECCD")) 
-vf_combined <- feeding_results(combined_v, boxplot_fill_colour = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
-
-
 vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[5:6])
 vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[7:8])
 vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[5:8])
@@ -272,23 +252,9 @@ male_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
                                       widths = c(0.5,0.5,1),
                                       heights = c(1))
 
-m_1_4 + labs(tag = "a")
 
-
-
-m_1_4 <- feeding_results(onefour_m, boxplot_fill_colour = colors_first_plot)
-m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = colors_second_plot)
-m_combined  <- feeding_results(combined_m, boxplot_fill_colour = colors_of_combined)
- m_1_4 + m_4_1
-
- onefour_m
-
- library(ggplot2)
- 
 
  
-
-
 
 
 ## OVERALL GRID 
@@ -303,65 +269,49 @@ overall_feeding <- grid.arrange(m_1_4 + ggtitle("Male Conditioning"), m_4_1 + gg
 
 
 
+#### MAKING PLOTS FOR SEPARATE BLOCKS  ####
 
 
 
+#### MALES ####
 
+## Reading in the block data
 
+## 4:1 
 
-
-
-
-
-#################################################################################################################################### --
-## Additional code ####
-
-#### A Violin Plot ####
-feeding_results_violin <- function(summary_data, violin_fill_color) {
-  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet)) + 
-    geom_violin(trim = FALSE, width = 0.5, draw_quantiles = c(0.25, 0.5, 0.75)) +
-theme_classic() +
-    labs(x = "Diet Condition",
-         y = "Median number of flies per diet patch",
-         title = "") +
-    scale_fill_manual(values = violin_fill_color) +
-    ylim(-0.01, 6) +
-    theme(legend.position = "none")
-}
-
-
-# Male code for example 
-feeding_results_violin(fourone_onefour_male_long, violin_fill_color = c("lightblue", "lightblue","#FDECCD","#FDECCD"))
-
-
-
-
-#### MAKING PLOTS FOR SEPARATE BLOCKS 
-
-
-########################################
-#### MALES 
-
+# Block 1
 four_to_one_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b1.xlsx")
-four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b2.xlsx")
 
-
+## Changing the variable names of Block 1 
 fourone_of_b1 <- four_to_one_male_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+# Block 2 
+four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b2.xlsx")
+
+## Changing the variable names of Block 2
 fourone_of_b2 <- four_to_one_male_b2  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
 
 
+
+
+## 1:4 
+
+# Block 1
 one_to_four_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b1.xlsx")
-one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b2.xlsx")
 
-
+# Changing the variable names of Block 1
 onefour_of_b1 <- one_to_four_male_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+
+# Block 2
+one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b2.xlsx")
+
+# Changing the variable names of Block 2 
 onefour_of_b2 <- one_to_four_male_b2  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
@@ -369,29 +319,49 @@ onefour_of_b2 <- one_to_four_male_b2  %>%
 
 
 
-
 # 4:1 + 1:4 
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b1.xlsx")
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b2.xlsx")
 
+# Block 1 
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b1.xlsx")
+
+# Changing the variable names of Block 1 
 fouroneonefour_male_b1 <- fourone_onefour_male_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+# Block 2
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b2.xlsx")
+
+# Changing the variable names of Block 2
 fouroneonefour_male_b2 <- fourone_onefour_male_b2  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
+
+#### DATA VISUALISATION OF BLOCKS 
+
+## MALE CONDITIONED DIETS
+
+## 1:4 
 m_1_4_b1  <- feeding_results(onefour_of_b1 , boxplot_fill_colour = viridis_colors[5:6])
 m_1_4_b2  <- feeding_results(onefour_of_b2, boxplot_fill_colour = viridis_colors[5:6])
 
 
+
+
+## 4:1 
 m_4_1_b1 <- feeding_results(fourone_of_b1 , boxplot_fill_colour = viridis_colors[7:8])
 m_4_1_b2 <- feeding_results(fourone_of_b2, boxplot_fill_colour = viridis_colors[7:8])
 
 
+
+## 4:1 and 1:4 
 m_combined_b1 <- feeding_results(fouroneonefour_male_b1, boxplot_fill_colour = viridis_colors[5:8])
 m_combined_b2 <- feeding_results(fouroneonefour_male_b2, boxplot_fill_colour = viridis_colors[5:8])
 
+
+
+## Adding titles to the separate blocks,
+## keeping the names the same 
 m_4_1_b1 <- m_4_1_b1 + ggtitle("Male Block 1")
 m_4_1_b2 <- m_4_1_b2 + ggtitle("Male Block 2")
 m_1_4_b1 <- m_1_4_b1 + ggtitle("Male Block 1")
@@ -400,6 +370,8 @@ m_combined_b1  <- m_combined_b1  + ggtitle("Male Block 1")
 m_combined_b2 <- m_combined_b2+ ggtitle("Male Block 2")
 
 
+
+## Generating a combined plot of the different blocks 
 male_oviposition <- grid.arrange(
   m_4_1_b1, m_1_4_b1, m_combined_b1 ,
   m_4_1_b2, m_1_4_b2, m_combined_b2,
@@ -412,101 +384,184 @@ male_oviposition <- grid.arrange(
 
 
 
-#### VIRGIN FEMALES 
+#### VIRGIN FEMALE CONDITIONED DIETS ######## 
 
-# 4:1 
+######## 4:1 ######## 
+
+
+
+# Reading the Data in: 
+
+## Block 1
 four_to_one_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b1.xlsx")
-four_to_one_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx")
-four_to_one_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b3.xlsx")
-four_to_one_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b4.xlsx")
 
+## Changing the variable names of Block 1
 fourone_v_1 <- four_to_one_virgin_b1   %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+## Block 2
+four_to_one_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx")
+
+## Changing the variable names of Block 2
 fourone_v_2 <- four_to_one_virgin_b2  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+## Block 3
+four_to_one_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b3.xlsx")
+
+## Changing the variable names of Block 3
 fourone_v_3 <- four_to_one_virgin_b3 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+
+## Block 4
+four_to_one_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b4.xlsx")
+
+## Changing the variable names of Block 4 
 fourone_v_4 <- four_to_one_virgin_b4 %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
-# 1:4 
+
+
+
+
+
+
+
+ 
+
+###### 1:4 ###### 
+
+# Block 1
 one_to_four_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b1.xlsx")
-one_to_four_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b2.xlsx")
-one_to_four_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b3.xlsx")
-one_to_four_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b4.xlsx")
 
-
-# 1:4 
+## Changing the variable names in block 1
 onefour_v_1 <- one_to_four_virgin_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
-onefour_v_2 <- one_to_four_virgin_b2  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+
+# Block 2
+one_to_four_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b2.xlsx")
+
+## Changing the variable names in block 2
+onefour_v_2 <- one_to_four_virgin_b2  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+
+
+
+# Block 3
+one_to_four_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b3.xlsx")
+
+## Changing the variable names in block 3
 onefour_v_3 <- one_to_four_virgin_b3  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
+
+
+
+
+# Block 4
+one_to_four_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b4.xlsx")
+
+## Changing the variable names in block 3
 onefour_v_4 <- one_to_four_virgin_b4  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
 
-# 4:1 and 1:4 
+
+
+############# 4:1 and 1:4 ##########
+
+# Block 1
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
-fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
-fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
-fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
 
-
-# 4:1 and 1:4 
+# Changing the variable names in block 1
 combined_v_1 <- fourone_onefour_virgin_b1 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
+
+# Block 2 
+fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
+
+
+# Changing the variable names in block 2
 combined_v_2 <- fourone_onefour_virgin_b2 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
+
+# Block 3
+fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
+
+# Changing the variable names in block 3
 combined_v_3 <- fourone_onefour_virgin_b3 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
+
+# Block 4 
+fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
+
+
+# Changing the variable names in block 4
 combined_v_4 <- fourone_onefour_virgin_b4%>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
+
+
+### DATA VISUALISATION FOR VIRGIN CONDITIONING 
+
+##  1:4 
 v_1_4_b1  <- feeding_results(onefour_v_1 , boxplot_fill_colour = viridis_colors[5:6])
 v_1_4_b2  <- feeding_results(onefour_v_2, boxplot_fill_colour = viridis_colors[5:6])
 v_1_4_b3  <- feeding_results(onefour_v_3 , boxplot_fill_colour = viridis_colors[5:6])
 v_1_4_b4  <- feeding_results(onefour_v_4, boxplot_fill_colour = viridis_colors[5:6])
 
+
+
+
+## 4:1 
 v_4_1_b1 <- feeding_results(fourone_v_1 , boxplot_fill_colour = viridis_colors[7:8])
 v_4_1_b2 <- feeding_results(fourone_v_2, boxplot_fill_colour = viridis_colors[7:8])
 v_4_1_b3 <- feeding_results(fourone_v_3 , boxplot_fill_colour = viridis_colors[7:8])
 v_4_1_b4 <- feeding_results(fourone_v_4, boxplot_fill_colour = viridis_colors[7:8])
 
 
+
+## 4:1 and 1:4 
 v_combined_b1 <- feeding_results(combined_v_1, boxplot_fill_colour = viridis_colors[5:8])
 v_combined_b2 <- feeding_results(combined_v_2, boxplot_fill_colour = viridis_colors[5:8])
 v_combined_b3 <- feeding_results(combined_v_3, boxplot_fill_colour = viridis_colors[5:8])
 v_combined_b4 <- feeding_results(combined_v_4, boxplot_fill_colour = viridis_colors[5:8])
 
 
+
+## Setting the titles 
+
+## 4:1 
 v_4_1_b1 <- v_4_1_b1 + ggtitle("Virgin Female Block 1")
 v_4_1_b2 <- v_4_1_b2 + ggtitle("Virgin Female  Block 2")
 v_4_1_b3 <- v_4_1_b3 + ggtitle("Virgin Female  Block 3")
 v_4_1_b4 <- v_4_1_b4 + ggtitle("Virgin Female  Block 4")
 
+
+## 1:4 
 v_1_4_b1 <- v_1_4_b1 + ggtitle("Virgin Female Block 1")
 v_1_4_b2 <- v_1_4_b2 + ggtitle("Virgin Female Block 2")
 v_1_4_b3 <- v_1_4_b3 + ggtitle("Virgin Female Block 3")
 v_1_4_b4 <- v_1_4_b4 + ggtitle("Virgin Female Block 4")
 
+
+## 4:1 and 1:4 
 v_combined_b1  <- v_combined_b1  + ggtitle("Virgin Female Block 1")
 v_combined_b2 <- v_combined_b2 + ggtitle("Virgin Female Block 2")
 v_combined_b3  <- v_combined_b3  + ggtitle("Virgin Female Block 3")
 v_combined_b4 <- v_combined_b4 + ggtitle("Virgin Female Block 4")
 
+
+## Creating a combined plots for virgin separate blocks 
 virgin_oviposition <- grid.arrange(
   v_4_1_b1, v_1_4_b1, v_combined_b1 ,
   v_4_1_b2, v_1_4_b2, v_combined_b2,
@@ -521,10 +576,14 @@ virgin_oviposition <- grid.arrange(
 
 
 
+
 ##################### --
 ## OvoD1 FEMALES ####
 ##################### --
 # 4:1 
+
+
+
 four_to_one_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx")
 four_to_one_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
 
