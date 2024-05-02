@@ -256,7 +256,6 @@ male_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
 
  
 
-
 ## OVERALL GRID 
 overall_feeding <- grid.arrange(m_1_4 + ggtitle("Male Conditioning"), m_4_1 + ggtitle("Male Conditioning"), m_combined + ggtitle("Male Conditioning"),
                                 of_1_4 + ggtitle("OvoD1 Female Conditioning"), of_4_1 + ggtitle("OvoD1 Female Conditioning"), of_combined + ggtitle("OvoD1 Female Conditioning"),
