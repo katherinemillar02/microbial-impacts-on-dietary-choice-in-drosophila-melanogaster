@@ -11,8 +11,11 @@ bodyweight <- read_excel("data/bodyweight_flies.xlsx")
 
 ##
 
+## Multiplying the data by * 1000 so it can be visualised 
 bodyweight$weight_mg <- bodyweight$weight_mg * 1000
 
+
+## Visualising the data
 bodyweight_plot <- ggplot(bodyweight, aes(x = sex, y = weight_mg, fill = treatment)) +
   geom_boxplot() +
   geom_jitter(position=position_jitter(height=0, width=0.2), size = 0.5, colour = "black") +
