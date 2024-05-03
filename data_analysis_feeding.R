@@ -87,18 +87,18 @@ df2_male
 
 # Use grepl to identify rows with "1-4" pattern in any column
 one_four <- "1-4"
-exclude_rows <- grepl(one_four, df2_male$id)
+exclude_onefour <- grepl(one_four, df2_male$id)
 
 # Subset the dataframe to exclude rows with the "1-4" pattern
-df2_male_filtered <- df2_male[!exclude_rows, ]
+df2_male_exclude_onefour <- df2_male[!exclude_onefour, ]
 
 
 # Use grepl to identify rows with "1-4" pattern in any column
 fourone <- "4-1"
-exclude_rows <- grepl(fourone, df2_male$id)
+exclude_fourone <- grepl(fourone, df2_male$id)
 
 # Subset the dataframe to exclude rows with the "1-4" pattern
-df2_male_filtered <- df2_male[!exclude_rows, ]
+df2_male_exclude_fourone <- df2_male[!exclude_fourone, ]
 
 
 
@@ -200,7 +200,7 @@ read_raw_ovod1(pathovod1)
 df_ovod1 <- pathovod1 %>% 
   map_df(~read_raw_ovod1(.x)) #.x is a string or NULL - only applies to dfr apparently
 
-
+# Adding block variables
 df_ovod1 <- df_ovod1 %>% 
   mutate( block = case_when(
     str_detect(id, "b1") ~ "one",
@@ -214,7 +214,7 @@ df2_ovod1 <- df_ovod1 %>%
   summarise(count = sum(fly_numbers)) %>% 
   pivot_wider(names_from = "condition", values_from = "count")
 
-df2_ovod1 # does it recognise condition from the long data? 
+
 
 
 
