@@ -37,6 +37,7 @@ four_one_b2_egg <- four_to_one_oviposition_ovod1_b2 %>%
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
 
+
 # Binding the separate 4:1 data's
 fourone_oviposition_of <- rbind(four_to_one_oviposition_ovod1_b1, four_to_one_oviposition_ovod1_b2)
 
@@ -60,7 +61,9 @@ one_to_four_oviposition_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/1
 one_four_b2_egg <- one_to_four_oviposition_ovod1_b2 %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
-# Binding the 1:4 data 
+
+
+# Binding the separate 1:4 data 
 onefour_oviposition_of <- rbind(one_to_four_oviposition_ovod1_b1, one_to_four_oviposition_ovod1_b2)
 
 
@@ -70,17 +73,18 @@ onefour_oviposition_of <- rbind(one_to_four_oviposition_ovod1_b1, one_to_four_ov
 
 # 4:1./1:4
 
-#fourone_onefour_oviposition_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx")
+# reading the data in - block 1
+fourone_onefour_oviposition_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx")
+# Making it long
+fourone_onefour_oviposition_ovod1_b1_long <- fourone_onefour_oviposition_ovod1_b1  %>%
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
+## reading the data in - Block 2 
 fourone_onefour_oviposition_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx")
-# Making it long 
+# Making it long - Block 2
 fourone_onefour_oviposition_ovod1_b2  <- fourone_onefour_oviposition_ovod1_b2  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
-fourone_onefour_oviposition_ovod1_b3 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b3.xlsx")
-# Making it long 
-fourone_onefour_oviposition_ovod1_b3  <- fourone_onefour_oviposition_ovod1_b3  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
 
@@ -97,10 +101,7 @@ fourone_onefour_oviposition_of <- rbind(fourone_onefour_oviposition_ovod1_b1, fo
 
 
 
-
-
-
-## USING PIVOT LONGER TO ADD A VARIABLE TO A DATA FILE ##
+## USING PIVOT LONGER TO ADD A VARIABLE TO A DATA FILE ## THE COMBINED DATA 
 ## OvoD1
 # 4:1
 fourone_ovi_of <- fourone_oviposition_of %>% 
@@ -113,64 +114,114 @@ combined_ovi_of  <- fourone_onefour_oviposition_of   %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
+
+
+
+
+
+
+
 ############################### --
 ## VIRGIN WILD TYPE FEMALES ####
 ############################## --
 # Virgin Conditioning Oviposition data is not included as was done differently 
 
-# 4:1 Virgin ####
+# 4:1 Virgin - Block 2
 four_to_one_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b2.xlsx")
 
-# 4:1 - oviposition 
+# 4:1 - oviposition  - Block 2 - adding variable names
 fourone_ovi_vf_b2 <- four_to_one_oviposition_virgin_2 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
-
+# 4:1 Virgin - Block 3
 four_to_one_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b3.xlsx")
 
+# 4:1 - oviposition  - Block 3 - adding variable names
 fourone_ovi_vf_b3 <- four_to_one_oviposition_virgin_3 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
-
+# 4:1 Virgin - Block 4
 four_to_one_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b4.xlsx")
 
+# 4:1 - oviposition  - Block 4 - adding variable names
 fourone_ovi_vf_b4 <- four_to_one_oviposition_virgin_4 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
-# Binding the 4:1 data 
+
+
+
+
+# Binding the 4:1 data - where the blocks are combined
 four_to_one_oviposition_virgin <- rbind(four_to_one_oviposition_virgin_2, four_to_one_oviposition_virgin_3, four_to_one_oviposition_virgin_4)
+
+
+
+
 
 # 1:4 Virgin ####
 
-##
+## Reading the data in - Block 2
 one_to_four_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b2.xlsx")
 
+# 1:4 - oviposition  - Block 2 - adding variable names
 onefour_ovi_vf_b2 <- one_to_four_oviposition_virgin_2  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
 
 
-
+## Reading the data in - Block 3
 one_to_four_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b3.xlsx")
 
+# 1:4 - oviposition  - Block 3 - adding variable names
 onefour_ovi_vf_b3 <- one_to_four_oviposition_virgin_3  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
 
+
+
+## Reading the data in - Block 4
 one_to_four_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b4.xlsx")
 
+# 1:4 - oviposition  - Block 4 - adding variable names
 onefour_ovi_vf_b4 <- one_to_four_oviposition_virgin_4  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
 
 
-# Binding the 1:4 data 
+
+# Binding the 1:4 data - for the combined scripts 
 one_to_four_oviposition_virgin <- rbind(one_to_four_oviposition_virgin_2,one_to_four_oviposition_virgin_3, one_to_four_oviposition_virgin_4)
 
+
+
+
+
 # 4:1/1:4 Virgin ####
+
+## Reading the data in - Block 2 
 fourone_onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx")
+
+# Adding variable names to the data - Block 2
+fourone_ovi_vf_b2 <- fourone_onefour_oviposition_virgin_2 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+
+## Reading the data in - Block 3
 fourone_onefour_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b3.xlsx")
+
+# Adding variable names to the data - Block 3
+fourone_ovi_vf_b3 <- fourone_onefour_oviposition_virgin_3 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+
+
+## Reading the data in - Block 4 
 fourone_onefour_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b4.xlsx")
+
+# Adding variable names to the data - Block 4
+fourone_ovi_vf_b4 <- fourone_onefour_oviposition_virgin_4 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+
+
+
 # Binding the 4:1/1:4 data
 fourone_onefour_oviposition_virgin <- rbind( fourone_onefour_oviposition_virgin_2, fourone_onefour_oviposition_virgin_3, fourone_onefour_oviposition_virgin_4)
 
@@ -189,9 +240,7 @@ combined_ovi_vf <- fourone_onefour_oviposition_virgin  %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 ####--- 
 
-# 4:1
-fourone_ovi_vf <- four_to_one_oviposition_virgin %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+
 
 
 
@@ -199,59 +248,9 @@ fourone_ovi_vf <- four_to_one_oviposition_virgin %>%
 
 ####################### ####################### ####################### ####################### ####################### 
 
-## Virgin
-
-## 1:4 
-onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b2.xlsx")
-onefour_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b3.xlsx")
-onefour_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b4.xlsx")
 
 
-# 4:1 
-fourone_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b2.xlsx")
-fourone_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b3.xlsx")
-fourone_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b4.xlsx")
 
-# 4:1 + 1:4 
-fourone_onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx")
-fourone_onefour_oviposition_virgin_3 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b3.xlsx")
-fourone_onefour_oviposition_virgin_4 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b4.xlsx")
-
-####  Making the data long 
-
-# 4:1
-fourone_ovi_v_b2 <- fourone_oviposition_virgin_2  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-
-fourone_ovi_v_b3 <- fourone_oviposition_virgin_3  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-fourone_ovi_v_b4 <- fourone_oviposition_virgin_4  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-
-# 1:4 
-onefour_ovi_v_b2 <- onefour_oviposition_virgin_2  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-
-onefour_ovi_v_b3 <- onefour_oviposition_virgin_3  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-onefour_ovi_v_b4 <- onefour_oviposition_virgin_4  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-
-# 4:1 and 1:4 
-fourone_onefour_ovi_v_b2 <- fourone_onefour_oviposition_virgin_2   %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-fourone_onefour_ovi_v_b3 <- fourone_onefour_oviposition_virgin_3   %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-fourone_onefour_ovi_v_b4 <- fourone_onefour_oviposition_virgin_4  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
 ####################### ####################### ####################### ####################### #######################  
 ####################### ---
@@ -259,50 +258,84 @@ fourone_onefour_ovi_v_b4 <- fourone_onefour_oviposition_virgin_4  %>%
 ###################### ---
 
 # 4:1 Male ####
+
+## Reading the data in - Block 1
 four_to_one_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_t2b1_oviposition.xlsx")
 
-
+## Adding variable names to the data - Block 1
 fourone_ovi_m_b1 <- four_to_one_male_oviposition_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
+
+
+## Reading the data in - Block 2
 four_to_one_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_t2b2_oviposition.xlsx")
 
+## Adding variable names to the data - Block 2
 fourone_ovi_m_b2 <- four_to_one_male_oviposition_b2  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
-# Binding the 4:1 data
+
+# Binding the 4:1 data - separate data sets 
 four_to_one_male_oviposition <- rbind(four_to_one_male_oviposition_b1, four_to_one_male_oviposition_b2)
 
 
 
 
 
+
 # 1:4 Male ####
+
+## Reading the data in - Block 1
 one_to_four_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2//m_1-4_t2b1_oviposition.xlsx")
 
-
+## Adding variable names to the data - Block 1
 onefour_ovi_m_b1 <- one_to_four_male_oviposition_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
+
+
+## Reading the data in - Block 2
 one_to_four_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_1-4_t2b2_oviposition.xlsx")
 
+## Adding variable names to the data - Block 2
 onefour_ovi_m_b2 <- one_to_four_male_oviposition_b2  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
 
-# Binding the 1:4 data
+
+# Binding the 1:4 data - separate data sets 
 one_to_four_male_oviposition <- rbind(one_to_four_male_oviposition_b1, one_to_four_male_oviposition_b2)
 
 
+
+
 # 4:1 + 1:4 Male ####
+
+## Reading the data in - block 1 
 fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
+
+## Adding variable names to the data - Block 1
+combined_ovi_m_b1 <- fourone_onefour_male_oviposition_b1  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
+## Reading the data in - Block 2
 fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b2_oviposition.xlsx")
-# Binding the data for 4:1/1:4 
+
+## Adding variable names to the data - Block 2
+combined_ovi_m_b2 <- fourone_onefour_male_oviposition_b2  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
+
+
+# Binding the data for 4:1/1:4 - separate data sets
 fourone_onefour_male_oviposition <- rbind(fourone_onefour_male_oviposition_b1, fourone_onefour_male_oviposition_b2)
 
 
 
-## Pivoting data frames 
+## Pivoting data frames for combined data sets
 # 4:1
 fourone_ovi_m <- four_to_one_male_oviposition  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
@@ -314,6 +347,9 @@ combined_ovi_m <- fourone_onefour_male_oviposition  %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
+
+
+#### #### #### ####  DATA VISUALISATION #### #### #### #### 
 
 
 
@@ -369,13 +405,14 @@ oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
 ## Code will allow one to see each of the plots
 ################## --
 ## OvoD1 Female ####
-ov1_egg1 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
+
+# 1:4 
 ov1_egg1 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[1:2])
 
-ov1_egg2 <- oviposition_results(fourone_ovi_of, boxplot_fill_colour = c("#FF7F50","#FF7F50")) 
-ov1_egg2 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[3:4])
+# 4:1 
+ov1_egg2 <- oviposition_results(fourone_ovi_of, boxplot_fill_colour = viridis_colors[3:4])
 
-ov1_egg3 <- oviposition_results(combined_ovi_of, boxplot_fill_colour = c("#9FE2BF","#9FE2BF","#FF7F50","#FF7F50"))
+
 ov1_egg3 <- oviposition_results(combined_ovi_of,boxplot_fill_colour = viridis_colors[1:4])
 ################ --
 
