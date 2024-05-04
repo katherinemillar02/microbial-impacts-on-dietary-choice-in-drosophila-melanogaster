@@ -7,12 +7,10 @@ A GitHub Repository for my Masters of Science by Research project at the Univers
 
 ## Scripts 📜
 
-### Effects of a Conditioned Diet on Dietary Choice: 
+### 🗂️ dietary-choice: Effects of a Conditioned Diet on Dietary Choice: 
 
 ### data_visualisation_feeding.R    
 This script includes visualisation for the preferred feeding diet for a mated female when allowed to choose across different diets that have been conditioned or unconditioned. There are boxplots which show experimental repeats which have been combined, and plots for separate blocks. 
-
-
 ### data_analysis_feeding.R    
 This script includes data analysis for the feeding assays. 
 In this analysis `glmer()` and `glmmTB()` models were used.
@@ -25,7 +23,31 @@ This script includes data analysis for the oviposition assays.
 In this analysis `glmer()` and `glmmTB()` models were used.
 
 
-### Effects of a Conditioned Diet on Fly Fitness: 
+   
+
+### 🗂️ dietary-fitness: Effects of a Conditioned Diet on Fly Fitness: 
 
 ### fly_development_noncontrolled.R    
 This script includes data visualisation, and some data analysis of the development of pupae and flies who were in no choice conditioned and unconditioned vials. 
+
+
+### bodyweight_fitness.R         
+
+
+### fly_fitness_random_select.R          
+
+
+
+
+### 🗂️ density-conditioning: Effects of Conditoning Density on Dietary Choice:
+
+
+### density_feeding.R   
+
+
+
+### 🗂️power-analysis: Using previous data to check power of future experiments.
+
+
+
+
