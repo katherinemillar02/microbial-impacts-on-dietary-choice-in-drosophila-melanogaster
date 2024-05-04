@@ -225,12 +225,13 @@ df2_male_oviposition # does it recognise condition from the long data?
 
 
 ######################################################################################################################## --
-                                               #### DATA ANALYSIS ####
+                                               #### Data Analysis ####
+# 4:1 and 1:4 Two-Choice Assays ####
 ######################################################################################################################## --
 
 
 ########################### --
-#### MALE OVIPOSITION #####
+#### Male Oviposition #####
 ########################### --
 
 
@@ -338,7 +339,7 @@ summary(glmer.mm_m_egg) ## says block is significant
 
 
 ################################## --
-### OvoD1 FEMALE OVIPOSITION ####
+### OvoD1 Female  Oviposition ####
 ################################## --
 
 
@@ -477,7 +478,7 @@ glmer.ovod1_f_egg_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  + (1|pla
 
 
 ############################## --
-## VIRGIN Female Oviposition #### 
+## Virgin Female Oviposition #### 
 ############################## --
 
 ## Model 1 
@@ -599,8 +600,8 @@ glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + 
 
 
 
-################################################ DATA ANNALYSIS PART 2 ###################################
-######################################## The Combined 4:1 and 1:4 Assays ###################################
+################################################ Data Analysis ###################################
+########################################  4:1 and 1:4 Four-Choice Assays ###################################
 ################################################################################################### ---
 
 
@@ -966,15 +967,16 @@ drop1(glm.nb_v_comb_egg , test = "F") # block is significant
 ## using the model 
 summary(glm.nb_v_comb_egg)
 
+## with block
 glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet + block, data =  combined_ovi_v)
 
+## without block
 glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
 
+
+## viewing the data results 
 summary(glm.nb_v_comb_egg_2) 
-
-
 
 emmeans::emmeans(glm.nb_v_comb_egg_2, pairwise ~ diet)
 
-### why is it saying nothing is really significant now? 
 
