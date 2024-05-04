@@ -611,6 +611,35 @@ virgin_b4_combined <- oviposition_results(fourone_onefour_ovi_vf_b4, boxplot_fil
 
 
 
+## virgin
+
+
+v_b2_onefour <- virgin_b2_onefour + ggtitle("Virgin Block 2")
+v_b2_fourone <- virgin_b2_fourone + ggtitle("Virgin Block 2")
+v_b2_combined <- virgin_b2_combined + ggtitle("Virgin Block 2")
+
+v_b3_onefour <- virgin_b3_onefour + ggtitle("Virgin Block 3")
+v_b3_fourone <- virgin_b3_fourone + ggtitle("Virgin Block 3")
+v_b3_combined <- virgin_b3_combined + ggtitle("Virgin Block 3")
+
+v_b4_onefour <- virgin_b4_onefour + ggtitle("Virgin Block 4")
+v_b4_fourone <- virgin_b4_fourone + ggtitle("Virgin Block 4")
+v_b4_combined <- virgin_b4_combined + ggtitle("Virgin Block 4")
+
+
+## this code works
+
+
+
+virgin_female_oviposition <- grid.arrange(
+  v_b2_onefour, v_b2_fourone, v_b2_combined,
+  v_b3_onefour, v_b3_fourone, v_b3_combined,
+  v_b4_onefour, v_b4_fourone, v_b4_combined,
+  ncol = 3,
+  nrow = 3,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1, 1)
+)
 
 ############ --
 ## MALE ####
@@ -668,139 +697,4 @@ male_oviposition <- grid.arrange(
 
 
 
-## PUTTING THE PLOTS TOGETHER 
-## 
-
-ovod1_b1_onefour + ggtitle("OvoD1 B1") + ovod1_b2_onefour + ggtitle("OvoD1 B2") /
-  ovod1_b1_fourone + ggtitle("OvoD1 B1") + ovod1_b2_fourone + ggtitle("OvoD1 B2") /
-  virgin_b2_fourone + ggtitle("Virgin B2") + virgin_b3_fourone + ggtitle("Virgin B3")/
-  virgin_b2_onefour + ggtitle("Virgin B2")+ virgin_b3_onefour + ggtitle("Virgin B3") + virgin_b4_onefour +  ggtitle("Virgin B4")/
-  male_b1_fourone + ggtitle("Male B1")+ male_b2_fourone + ggtitle("Male B2") /
-  male_b1_onefour + ggtitle("Male B1") + male_b2_onefour + ggtitle("Male B1")
-
-
-
-
-
-
-
-
-## virgin
-
-
-v_b2_onefour <- virgin_b2_onefour + ggtitle("Virgin Block 2")
-v_b2_fourone <- virgin_b2_fourone + ggtitle("Virgin Block 2")
-v_b2_combined <- virgin_b2_combined + ggtitle("Virgin Block 2")
-
-v_b3_onefour <- virgin_b3_onefour + ggtitle("Virgin Block 3")
-v_b3_fourone <- virgin_b3_fourone + ggtitle("Virgin Block 3")
-v_b3_combined <- virgin_b3_combined + ggtitle("Virgin Block 3")
-
-v_b4_onefour <- virgin_b4_onefour + ggtitle("Virgin Block 4")
-v_b4_fourone <- virgin_b4_fourone + ggtitle("Virgin Block 4")
-v_b4_combined <- virgin_b4_combined + ggtitle("Virgin Block 4")
-
-
-## this code works
-
-
-
-virgin_female_oviposition <- grid.arrange(
-  v_b2_onefour, v_b2_fourone, v_b2_combined,
-  v_b3_onefour, v_b3_fourone, v_b3_combined,
-  v_b4_onefour, v_b4_fourone, v_b4_combined,
-  ncol = 3,
-  nrow = 3,
-  widths = c(0.5, 0.5, 1),
-  heights = c(1, 1, 1)
-)
-
-
-
-
-
-
-
-
-
-ovod1_female_oviposition_b1 + ovod1_female_oviposition_b2 
-
-
-
-(ovod1_b2_onefour + ggtitle("OvoD1 Block 2")) +
-  (ovod1_b2_fourone + ggtitle("OvoD1 Block 2")) + 
-  (ovod1_b2_combined + ggtitle("OvoD1 Block 2"))
-
-
-
-(virgin_b2_fourone + ggtitle("Virgin B2")) +
-  (virgin_b3_fourone + ggtitle("Virgin B3")) +
-  (virgin_b2_onefour + ggtitle("Virgin B2")) +
-  (virgin_b3_onefour + ggtitle("Virgin B3")) +
-  (virgin_b4_onefour + ggtitle("Virgin B4")) +
-  (male_b1_fourone + ggtitle("Male B1")) +
-  (male_b2_fourone + ggtitle("Male B2")) +
-  (male_b1_onefour + ggtitle("Male B1")) +
-  (male_b2_onefour + ggtitle("Male B1"))
-
-
-
-
-
-#### 4:1 and 1:4 Assays ----
-## Block is significant for OvoD1
-## Block is not significant for Males 
-## Block is significant for Virgins 
-
-
-# 4:1 + 1:4 Male ####
-fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
-fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b2_oviposition.xlsx")
-
-fourone_onefour_ovi_m_b1 <- fourone_onefour_male_oviposition_b1  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
-
-
-fourone_onefour_ovi_m_b2 <- fourone_onefour_male_oviposition_b2  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
-
-
-
-
-fourone_onefour_female_oviposition_b1 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx")
-fourone_onefour_female_oviposition_b2 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx")
-
-fourone_onefour_ovi_od1_b1 <- fourone_onefour_female_oviposition_b1  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
-
-
-fourone_onefour_ovi_od1_b2 <- fourone_onefour_female_oviposition_b1  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
-
-
-
-############ VISUALISING THE DENSITY DATA ############
-
-
-
-fourone_onefour_oviposition_50mm <- read_excel("data/50mm_combined_egg.xlsx")
-# Making it long 
-fourone_onefour_oviposition_50mm_long  <- fourone_onefour_oviposition_50mm  %>% 
-  pivot_longer(cols = ("1:4 Unconditioned":"4:1 Conditioned"), names_to = "diet", values_to = "egg_numbers")
-
-fiftydensity_combined <- oviposition_results(fourone_onefour_oviposition_50mm_long , boxplot_fill_colour = viridis_colors[c(1,2,3,4)])
-
-
-fourone_onefour_oviposition_90mm <- read_excel("data/90mm_combined_egg.xlsx")
-# Making it long 
-fourone_onefour_oviposition_90mm_long  <- fourone_onefour_oviposition_90mm  %>% 
-  pivot_longer(cols = ("1:4 Unconditioned":"4:1 Conditioned"), names_to = "diet", values_to = "egg_numbers")
-
-ninentydensity_combined <- oviposition_results(fourone_onefour_oviposition_90mm_long , boxplot_fill_colour = viridis_colors[c(1,2,3,4)])
-
-fiftydensity_combined <- fiftydensity_combined + ggtitle("50 mm dish")
-ninentydensity_combined <- ninentydensity_combined + ggtitle("90 mm dish")
-
-
-ninentydensity_combined + fiftydensity_combined 
 
