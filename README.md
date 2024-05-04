@@ -3,7 +3,7 @@
 
 A GitHub Repository for my Masters of Science by Research project at the University of East Anglia. 
 
-<img title="droso pic" alt="drosopAlt text" src="dietarychoice.png" width=100 height=200>
+<img title="droso pic" alt="drosopAlt text" src="images/dietarychoice.png" width=100 height=200>
 
 ## Scripts 📜
 
