@@ -15,13 +15,16 @@ library(viridis)
 ########################### -- 
 
 
-## UPLOADING THE DATA IN ####
+
 
 ################### --
-## OvoD1 FEMALES ####
+## OvoD1 FEMALES #### 
 ################### --
 
-########### 4:1 OvoD1 ########### 
+## Reading the data in ####
+
+
+########### 4:1  ####
 
 ## Reading B1 in 
 four_to_one_oviposition_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/4-1_oviposition_ovod1_b1.xlsx")
@@ -47,7 +50,7 @@ fourone_oviposition_of <- rbind(four_to_one_oviposition_ovod1_b1, four_to_one_ov
 
 
 
-############ 1:4 OvoD1 ###########
+############ 1:4  ####
 
 ## Reading B1 in:
 one_to_four_oviposition_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b1.xlsx")
@@ -69,7 +72,7 @@ onefour_oviposition_of <- rbind(one_to_four_oviposition_ovod1_b1, one_to_four_ov
 
 
 
-###### 4:1 + 1:4 OvoD1 ######
+###### 4:1 + 1:4 ####
 
 # 4:1./1:4
 
@@ -86,10 +89,6 @@ fourone_onefour_ovo_b2  <- fourone_onefour_oviposition_ovod1_b2  %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
-
-
-
-###### ###### ###### 
 
 
 
@@ -126,7 +125,10 @@ combined_ovi_of  <- fourone_onefour_oviposition_of   %>%
 ############################## --
 # Virgin Conditioning Oviposition data is not included as was done differently 
 
-# 4:1 Virgin - Block 2
+## 4:1 ####
+
+
+# 4:1 Virgin - Block 2 
 four_to_one_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b2.xlsx")
 
 # 4:1 - oviposition  - Block 2 - adding variable names
@@ -158,7 +160,7 @@ four_to_one_oviposition_virgin <- rbind(four_to_one_oviposition_virgin_2, four_t
 
 
 
-# 1:4 Virgin ####
+# 1:4  ####
 
 ## Reading the data in - Block 2
 one_to_four_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b2.xlsx")
@@ -196,7 +198,7 @@ one_to_four_oviposition_virgin <- rbind(one_to_four_oviposition_virgin_2,one_to_
 
 
 
-# 4:1/1:4 Virgin ####
+# 4:1 and 1:4  ####
 
 ## Reading the data in - Block 2 
 fourone_onefour_oviposition_virgin_2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx")
@@ -246,18 +248,21 @@ combined_ovi_vf <- fourone_onefour_oviposition_virgin  %>%
 
 
 
-####################### ####################### ####################### ####################### ####################### 
+####################### ####################### ####################### ####################### ####################### --
 
 
 
 
 
-####################### ####################### ####################### ####################### #######################  
+####################### ####################### ####################### ####################### #######################  --
+
+
+
 ####################### ---
 ## WILD TYPE MALES ######
 ###################### ---
 
-# 4:1 Male ####
+# 4:1 ####
 
 ## Reading the data in - Block 1
 four_to_one_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_t2b1_oviposition.xlsx")
@@ -284,7 +289,7 @@ four_to_one_male_oviposition <- rbind(four_to_one_male_oviposition_b1, four_to_o
 
 
 
-# 1:4 Male ####
+# 1:4  ####
 
 ## Reading the data in - Block 1
 one_to_four_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2//m_1-4_t2b1_oviposition.xlsx")
@@ -310,7 +315,7 @@ one_to_four_male_oviposition <- rbind(one_to_four_male_oviposition_b1, one_to_fo
 
 
 
-# 4:1 + 1:4 Male ####
+# 4:1 + 1:4  ####
 
 ## Reading the data in - block 1 
 fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
@@ -335,6 +340,7 @@ fourone_onefour_male_oviposition <- rbind(fourone_onefour_male_oviposition_b1, f
 
 
 
+
 ## Pivoting data frames for combined data sets
 # 4:1
 fourone_ovi_m <- four_to_one_male_oviposition  %>% 
@@ -349,7 +355,7 @@ combined_ovi_m <- fourone_onefour_male_oviposition  %>%
 
 
 
-#### #### #### ####  DATA VISUALISATION #### #### #### #### 
+####  DATA VISUALISATION #### 
 
 
 
@@ -401,10 +407,15 @@ oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
 
 
 
-## Combined data sets ####
+
+
+## Combined Block Data Visualisation ####
+
+  
 ## Code will allow one to see each of the plots
 ################## --
 ## OvoD1 Female ####
+
 
 # 1:4 
 ov1_egg_1_4 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[1:2])
@@ -497,22 +508,17 @@ overall_oviposition <- grid.arrange(m_egg_1_4 + ggtitle("Male Conditioning"), m_
 
 
 
-###### ###### INDIVIDUAL BLOCK CODE NEEDS A BIT OF CLEANING ###### ###### 
-# Indiviual Block ----
-
-#### MORE PLOTS 
-
-
-
+###### ###### Individual Block Data Visualisation ####
+viridis_colours <- viridis(10)
 ## - 
 ############ --
-## OVOD1 Female ####
+## OvoD1 Female ####
 ############ --
 
 
 ## Visualising the individual blocks as data shows these to be significant ## 
 
-viridis_colours <- viridis(10)
+
 
 
 # For 1:4 OvoD1
@@ -570,10 +576,10 @@ ovod1_female_oviposition <- grid.arrange(
 
 
 ############ --
-## VIRGIN Female ####
+## Virgin Female ####
 ############ --
 
-## 4:1 Virgin ####
+## 4:1 Virgin 
 
 # Block 2 
 virgin_b2_fourone <- oviposition_results( fourone_ovi_vf_b2 , boxplot_fill_colour  = viridis_colours[3:4])
@@ -586,7 +592,7 @@ virgin_b4_fourone <- oviposition_results( fourone_ovi_vf_b4, boxplot_fill_colour
 
 
 
-# 1:4 Virgin ####
+# 1:4 Virgin
 
 # Block 2 
 virgin_b2_onefour <- oviposition_results(onefour_ovi_vf_b2  , boxplot_fill_colour = viridis_colours[1:2])
@@ -598,7 +604,7 @@ virgin_b3_onefour <- oviposition_results(onefour_ovi_vf_b3 , boxplot_fill_colour
 virgin_b4_onefour <- oviposition_results(onefour_ovi_vf_b4 , boxplot_fill_colour  = viridis_colours[1:2])
 
 
-## 4:1 + 1:4 Virgin ####
+## 4:1 + 1:4 Virgin 
 
 # Block 2
 virgin_b2_combined <- oviposition_results(fourone_onefour_ovi_vf_b2 , boxplot_fill_colour  = viridis_colours[c(1:4)])
@@ -642,7 +648,7 @@ virgin_female_oviposition <- grid.arrange(
 )
 
 ############ --
-## MALE ####
+## Male ####
 ############ -- 
 
 ## 1:4 
