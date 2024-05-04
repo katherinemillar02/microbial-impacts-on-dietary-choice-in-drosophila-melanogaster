@@ -23,8 +23,8 @@ bodyweight_plot <- ggplot(bodyweight, aes(x = sex, y = weight_mg, fill = treatme
   theme_classic() +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme(legend.position = "right") +
-  labs(x = "Weight (μg)", 
-       y = "Number of Males Emerged") +
+  labs(x = "Sex", 
+       y = "Body Weight (μg) of fly") +
   labs(fill = "Treatment")+
   ylim(0,700)
 
