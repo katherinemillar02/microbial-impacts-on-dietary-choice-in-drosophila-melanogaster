@@ -1,7 +1,7 @@
 library(tidyverse)
 
 
-#### POWER ANALYSIS 1 ####
+#### POWER ANALYSIS 1 #### - Density Wash Experiment
 
 
 ## Fixed effect 
