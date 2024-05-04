@@ -616,25 +616,33 @@ virgin_b4_combined <- oviposition_results(fourone_onefour_ovi_vf_b4, boxplot_fil
 ## MALE ####
 ############ -- 
 
-male_b1_fourone <- oviposition_results(fourone_ovi_m_b1, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
-male_b2_fourone <- oviposition_results(fourone_ovi_m_b2, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
+## 1:4 
 
-male_b1_fourone <- oviposition_results(fourone_ovi_m_b1, boxplot_fill_colour = viridis_colors[1:2])
-male_b2_fourone <- oviposition_results(fourone_ovi_m_b2, boxplot_fill_colour = viridis_colors[5:6])
+# Block 1
+male_b1_onefour <- oviposition_results(onefour_ovi_m_b1, boxplot_fill_colour = viridis_colours[1:2])
+
+# Block 2
+male_b2_onefour <- oviposition_results(onefour_ovi_m_b2, boxplot_fill_colour = viridis_colours[1:2])
+
+## 4:1
+
+# Block 1 
+male_b1_fourone <- oviposition_results(fourone_ovi_m_b1, boxplot_fill_colour = viridis_colours[3:4])
+
+# Block 2 
+male_b2_fourone <- oviposition_results(fourone_ovi_m_b2, boxplot_fill_colour = viridis_colours[3:4])
 
 
-male_b1_fourone + male_b2_fourone
+## 1:4 and 4:1
+
+# Block 1 
+male_b1_fourone_onefour <- oviposition_results(fourone_onefour_ovi_m_b1, boxplot_fill_colour = viridis_colours[1:4])
+
+# Block 2
+male_b2_fourone_onefour <- oviposition_results(fourone_onefour_ovi_m_b2, boxplot_fill_colour = viridis_colours[1:4])
 
 
-male_b1_onefour <- oviposition_results(onefour_ovi_m_b1, boxplot_fill_colour = viridis_colors[5:6])
-male_b2_onefour <- oviposition_results(onefour_ovi_m_b2, boxplot_fill_colour = viridis_colors[5:6])
-
-male_b1_onefour <- oviposition_results(onefour_ovi_m_b1, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
-male_b2_onefour <- oviposition_results(onefour_ovi_m_b2, boxplot_fill_colour = c("#9FE2BF", "#9FE2BF"))
-
-male_b1_fourone_onefour <- oviposition_results(fourone_onefour_ovi_m_b1, boxplot_fill_colour = viridis_colors[3:6])
-male_b2_fourone_onefour <- oviposition_results(boxplot_fill_colour = viridis_colors[3:6])
-
+## Adding titles to blocks 
 male_b1_fourone <- male_b1_fourone + ggtitle("Male Block 1")
 male_b2_fourone <- male_b2_fourone + ggtitle("Male Block 2")
 male_b1_onefour <- male_b1_onefour + ggtitle("Male Block 1")
@@ -655,7 +663,6 @@ male_oviposition <- grid.arrange(
 )
 
 
-male_b1_onefour + male_b2_onefour
 
 
 
@@ -673,10 +680,6 @@ ovod1_b1_onefour + ggtitle("OvoD1 B1") + ovod1_b2_onefour + ggtitle("OvoD1 B2") 
 
 
 
-## works 
-(ovod1_b1_onefour + ggtitle("OvoD1 Block 1")) + 
-  (ovod1_b1_fourone + ggtitle("OvoD1 Block 1")) +
-  (ovod1_b1_combined + ggtitle("OvoD1 Block 1")) 
 
 
 
