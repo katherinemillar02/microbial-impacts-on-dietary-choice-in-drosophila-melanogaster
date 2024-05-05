@@ -52,11 +52,11 @@ A script for visualising and analysing the data of the denisty feeding experimen
 ### 🗂️power-analysis: Using previous data to check power of future experiments.
 
 
-### poweranalysis-densityexperiment
+### poweranalysis-densityexperiment.R
 
 A simulation which allows one to see if the dietary assays will have enough power for the density conditioning dietary choice experiment.
 
-### poweranalysis-microbialwash 
+### poweranalysis-microbialwash.R
 
 A simulation which allows one to see if the dietary assays will have enough power for the microbial wash dietary choice experiment.
 
