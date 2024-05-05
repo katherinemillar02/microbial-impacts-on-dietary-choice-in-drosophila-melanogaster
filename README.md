@@ -5,7 +5,7 @@ A GitHub Repository for my Masters of Science by Research project at the Univers
 
 <img title="droso pic" alt="drosopAlt text" src="images/dietarychoice.png" width=100 height=200>
 
-## Scripts 📜
+## 🗂 Scripts 📜
 
 ### 🗂️ dietary-choice: Effects of a Conditioned Diet on Dietary Choice: 
 
@@ -33,9 +33,11 @@ This script includes data visualisation, and some data analysis of the developme
 
 ### bodyweight_fitness.R         
 
+Visualising the data for the bodyweight of the adult flies from conditioning and unconditioning no-choice assays.
 
 ### fly_fitness_random_select.R          
 
+A random selection of data from throughout the different vial replicates. 
 
 
 
@@ -44,9 +46,19 @@ This script includes data visualisation, and some data analysis of the developme
 
 ### density_feeding.R   
 
+A script for visualising and analysing the data of the denisty feeding experiments. 
 
 
 ### 🗂️power-analysis: Using previous data to check power of future experiments.
+
+
+### poweranalysis-densityexperiment
+
+A simulation which allows one to see if the dietary assays will have enough power for the density conditioning dietary choice experiment.
+
+### poweranalysis-microbialwash 
+
+A simulation which allows one to see if the dietary assays will have enough power for the microbial wash dietary choice experiment.
 
 
 
