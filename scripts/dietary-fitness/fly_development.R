@@ -90,10 +90,8 @@ fly_females_plot <- ggplot(females_data, aes(x = time_hours, y = females, fill =
   labs(fill = "Treatment")
 
 
-
-## Just Male data
+## subsetting males data
 males_data <- subset(fly_fitness, select = c(time_hours, males, treatment))
-
 
 ## Just a Male plot
 fly_males_plot <- ggplot(males_data, aes(x = time_hours, y = males, fill = treatment)) +
@@ -202,7 +200,7 @@ overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = to
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme(legend.position = "none") +
   labs(x = "Time (hours) since eggs laid", 
-       y = "Number of Males Emerged") +
+       y = "Number of total flies emerged per vial") +
   labs(fill = "Treatment")+
   ylim(0,80)
 
@@ -216,15 +214,7 @@ emergence_per_time <- fly_fitness %>%
   ungroup()
 
 
-## Max males emerged in one collection 
-most_males_by_treatment <- summary_data %>%
-  group_by(treatment, time_hours) %>%
-  summarise(max_total_males = max(total_males))
 
-# Max females emerged in one collection
-most_females_by_treatment <- summary_data %>%
-  group_by(treatment, time_hours) %>%
-  summarise(max_total_females = max(total_females))
 
 
 
