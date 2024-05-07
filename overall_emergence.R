@@ -32,16 +32,18 @@ fly_emergence_sex <- fly_fitness_tidy %>%
                                 levels = c("conditioned females", "unconditioned females",
                                            "conditioned males", "unconditioned males")))
 
+
+
 ## Starting with a basic model 
 
 ## Basic glm poisson 
-glm_poisson_fly <- glm(count ~ treatment * sex, family = poisson, data = fly_emergence_sex)
+glm_poisson_fly <- glm(total_count ~ treatment * sex, family = poisson, data = fly_emergence_sex)
 
 
 #### ASSUMPTION CHECKS 
 performance::check_model(glm_poisson_fly, check = c("qq")) # doesn't show 
 performance::check_model(glm_poisson_fly, check = c("outliers")) # weird? 
-performance::check_model(glm_poisson_fly, check = c("homogeneity")) # think this looks alright 
+performance::check_model(glm_poisson_fly, check = c("homogeneity")) # a bit bumpy
 
 ## Checking for overdispersion 
 check_overdispersion(glm_poisson_fly) ## overdispersion detected
@@ -51,32 +53,47 @@ check_zeroinflation(glm_poisson_fly) ## there is zero inflation
 
 
 ## Trying a negative binomial model
-glm.nb_fly <- glm.nb(count ~ treatment * sex, fly_emergence_sex)
+glm.nb_fly <- glm.nb(total_count ~ treatment * sex, fly_emergence_sex)
 
 
 #### ASSUMPTION CHECKS 
 performance::check_model(glm.nb_fly, check = c("qq")) # does not show. 
 performance::check_model(glm.nb_fly, check = c("outliers")) 
-performance::check_model(glm.nb_fly, check = c("homogeneity")) # looks a bit worse than glm poisson 
+performance::check_model(glm.nb_fly, check = c("homogeneity")) # still slopey
 
 ## Checking for overdispersion 
-check_overdispersion(glm.nb_fly) ## overdispersion NO LONGER detected
+check_overdispersion(glm.nb_fly) ## overdispersion still detected
 
 
 
-## testing for an interaction effect 
-drop1(glm_mm_fly, test = "Chi") ## no interaction effect
 
 # model without interaction
-glm_mm_fly <- glmmTMB(count ~ treatment + sex + (1|sex/vial), family = poisson, data = fly_fitness_tidy)
+glm_mm_fly <- glmmTMB(total_count ~ treatment * sex + (1|sex/vial), family = poisson, data = fly_emergence_sex)
 
 ## qq plot from the model
 residuals <- residuals(glm_mm_fly)
 qqnorm(residuals)
-qqline(residuals, col = 2) # qq does not look great 
+qqline(residuals, col = 2) # qq looks pretty goos
 
 
+## performance easystats
+performance::check_model(glm_mm_fly, check = c("homogeneity")) # bit slopish
+
+## Checking AIC of different models so far 
+AIC(glm_poisson_fly, glm.nb_fly, glm_mm_fly)
+ # glm nb - lowest AIC 
 
 
+## using glm.nb_fly so far
+glm.nb_fly <- glm.nb(total_count ~ treatment * sex, fly_emergence_sex)
 
+## checking for interaction effect 
+drop1(glm.nb_fly, test = "F") ## no interaction effect
 
+## model without sex being an interaction effect
+glm.nb_fly_2 <- glm.nb(total_count ~ treatment + sex, fly_emergence_sex)
+
+## looking at data analysis 
+## no diff between males and females
+## significant difference between conditioned and unconditioned
+summary(glm.nb_fly_2)
