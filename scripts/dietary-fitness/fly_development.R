@@ -38,7 +38,7 @@ pupae_fitness_plot <- ggplot(pupae_fitness, aes(x = `time (hours)`, y = pupae, f
 ## Reading the second pupae data set in 
 # This is the same data, but only shows one collection per day 
 # The middle hour point has been found, and the counts of both have been summed 
-pupae_fitness_2 <- read_excel("data/pupae_data_2.xlsx")
+pupae_fitness_2 <- read_excel("data/fitness_development/pupae_data_2.xlsx")
 
 
 ## The second plot - pupae plot 2
@@ -55,11 +55,25 @@ pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae,
   labs(fill = "Treatment")
 
 
+## Boxplot
+fly_pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
+  geom_boxplot() +
+  geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
+  scale_fill_manual(values = viridis_colors[c(4,8)]) +
+  scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
+  theme_classic() +
+  theme(legend.position = "none") +
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Number of pupae emerged",
+       fill = "Treatment") +
+  facet_grid(~time_hours, scales = "free_x")
+
+
 ################################################ FLY DATA VISUALISATION ####
 
 
 ## Read data in
-fly_fitness <- read_excel("data/fly_data.xlsx")
+fly_fitness <- read_excel("data//fitness_development/fly_data.xlsx")
 
 ############
 
@@ -90,8 +104,12 @@ fly_females_plot <- ggplot(females_data, aes(x = time_hours, y = females, fill =
   labs(fill = "Treatment")
 
 
-## subsetting males data
+
+
+
+## Just Male data
 males_data <- subset(fly_fitness, select = c(time_hours, males, treatment))
+
 
 ## Just a Male plot
 fly_males_plot <- ggplot(males_data, aes(x = time_hours, y = males, fill = treatment)) +
@@ -114,7 +132,7 @@ fly_females_plot /
 
 #### The second dataset 
 ## Where the data has been re-organised to only show one data per day
-fly_fitness_2 <- read_excel("data/fly_data_2.xlsx")
+fly_fitness_2 <- read_excel("data/fitness_development/fly_data_2.xlsx")
 
 ## Subsetting the data for the second dataset 
 females_data_2 <- subset(fly_fitness_2, select = c(time_hours, females, treatment))
@@ -131,6 +149,19 @@ fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fi
        y = "Number of Females Emerged") +
   labs(fill = "Treatment")
 
+fly_females_boxplot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fill = treatment)) +
+  geom_boxplot() +
+  geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
+  scale_fill_manual(values = viridis_colors[c(4,8)]) +
+  scale_x_continuous(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
+  theme_classic() +
+  theme(legend.position = "none") +
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Number of females emerged",
+       fill = "Treatment") +
+  facet_grid(~time_hours, scales = "free_x")
+
+
 ## Subsetting the data for the second male data set 
 males_data_2 <- subset(fly_fitness_2, select = c(time_hours, males, treatment))
 
@@ -145,6 +176,19 @@ fly_males_plot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill = t
        y = "Number of Males Emerged") +
   labs(fill = "Treatment")
 
+## Boxplot
+fly_males_boxplot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill = treatment)) +
+  geom_boxplot() +
+  geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
+  scale_fill_manual(values = viridis_colors[c(4,8)]) +
+  scale_x_continuous(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) +
+  theme_classic() +
+  theme(legend.position = "none") +
+  labs(x = "Time (hours) since eggs laid", 
+       y = "Number of males emerged",
+       fill = "Treatment") +
+  facet_grid(~time_hours, scales = "free_x")
+
 
 ## The Male and Female Plots with the newly arranged datasets
 
@@ -153,7 +197,8 @@ fly_females_plot_2 /
 
 
 
-
+fly_females_boxplot_2 /
+  fly_males_boxplot_2
 
 
 ##### PUTTING OVERALL EMERGENCE DATA OF FLIES ACROSS VIALS TOGETHER
@@ -166,8 +211,8 @@ fly_emergence_sex <- fly_fitness_tidy %>%
   ungroup() %>%
   mutate(sex_treatment = paste(treatment, sex, sep = " ")) %>%
   mutate(sex_treatment = factor(sex_treatment,
-                                   levels = c("conditioned females", "unconditioned females",
-                                              "conditioned males", "unconditioned males")))
+                                levels = c("conditioned females", "unconditioned females",
+                                           "conditioned males", "unconditioned males")))
 
 
 
@@ -181,7 +226,7 @@ fly_emergence_overall <- fly_fitness_tidy %>%
   ungroup() %>%
   mutate(sex_treatment = paste(treatment, "overall", sep = " ")) %>%
   mutate(sex_treatment = factor(sex_treatment,
-                                   levels = c("conditioned overall", "unconditioned overall")))
+                                levels = c("conditioned overall", "unconditioned overall")))
 
 
 ## This code shows the median overall emergence (males and females combined) 
@@ -200,7 +245,7 @@ overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = to
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme(legend.position = "none") +
   labs(x = "Time (hours) since eggs laid", 
-       y = "Number of total flies emerged per vial") +
+       y = "Number of Males Emerged") +
   labs(fill = "Treatment")+
   ylim(0,80)
 
@@ -214,7 +259,15 @@ emergence_per_time <- fly_fitness %>%
   ungroup()
 
 
+## Max males emerged in one collection 
+most_males_by_treatment <- summary_data %>%
+  group_by(treatment, time_hours) %>%
+  summarise(max_total_males = max(total_males))
 
+# Max females emerged in one collection
+most_females_by_treatment <- summary_data %>%
+  group_by(treatment, time_hours) %>%
+  summarise(max_total_females = max(total_females))
 
 
 
