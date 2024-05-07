@@ -55,7 +55,7 @@ pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae,
   labs(fill = "Treatment")
 
 
-## Boxplot
+## Boxplot ## 
 fly_pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
   geom_boxplot() +
   geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
