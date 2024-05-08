@@ -116,11 +116,13 @@ simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
 
 ### Mixed effect models
 
-fixed_effect_Group1 <- 0.535
-fixed_effect_Group2 <- 0.228
+# fixed_effect_Group1 <- 0.535
+# fixed_effect_Group2 <- 0.228
 
+fixed_effect_Group1 <- 0.6073804
+fixed_effect_Group2 <-  0.944783
 
-number_of_plates <- c(7, 8, 9, 7, 8, 9, 7, 8, 9)
+number_of_plates <- c(4, 7, 10, 4, 7, 10, 4, 7, 10)
 number <- c(10,10,10,16,16,16,20,20,20)
 
 
@@ -128,7 +130,7 @@ simulate_power <- function(plates, n){
   
   num_significant <- 0  
   
-  sims <- 200
+  sims <- 10
   for(i in 1:sims){
     
     # Simulate random effect with sd = 0.5
@@ -196,3 +198,6 @@ simulation_results <- map2_dbl(number_of_plates, number, simulate_power)
 #  0.690 0.655 0.730 0.855 0.905 0.895 0.935 0.900 0.955
 
 ## Think it's good with more observations for one block
+
+
+## Power analysis for 4:1 as only had four plates but did 16 observations - seems to be lots of power 
