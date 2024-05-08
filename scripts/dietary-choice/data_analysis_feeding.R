@@ -20,7 +20,7 @@ library(glmmTMB)
 ####################################-
 
 ## Creating a path to the scripts for treatment 2 condtioning
-malepath <- "data/male_conditioning/treatment_2"
+malepath <- "data/male_conditioning"
 
 
 ## This creates a function, that finds the path, excludes the 4-1 and 1-4 assay
@@ -424,8 +424,8 @@ summary(glmer.mm_of)
 ## MALE ####
 #### UPLOADING AND BINDING THE CORRECT DATA
 # 4:1 + 1:4 
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b1.xlsx")
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b2.xlsx")
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b1.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b2.xlsx")
 
 # mutating a variable for block 
 fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
@@ -530,6 +530,7 @@ summary(glm_mm_m_2)
 
 
 summary(glm_mm_m_3)
+
 
 
 
