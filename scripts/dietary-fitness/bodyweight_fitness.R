@@ -4,10 +4,10 @@ library(ggplot2)
 library(readxl)
 library(viridisLite)
 
-
+viridis_colours <- viridis(10)
 
 ## Reading body weight data in
-bodyweight <- read_excel("data/bodyweight_flies.xlsx")
+bodyweight <- read_excel("data/fitness_development/bodyweight_flies.xlsx")
 
 ##
 
@@ -21,12 +21,15 @@ bodyweight_plot <- ggplot(bodyweight, aes(x = sex, y = weight_mg, fill = treatme
   geom_jitter(position=position_jitter(height=0, width=0.2), size = 0.5, colour = "black") +
   scale_y_continuous(breaks=seq(0,10,2)) +
   theme_classic() +
-  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colours[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme(legend.position = "right") +
   labs(x = "Sex", 
        y = "Body Weight (μg) of fly") +
   labs(fill = "Treatment")+
   ylim(0,700)
+
+
+
 
 
 
