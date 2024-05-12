@@ -18,7 +18,10 @@ bodyweight$weight_mg <- bodyweight$weight_mg * 1000
 ## Visualising the data
 bodyweight_plot <- ggplot(bodyweight, aes(x = sex, y = weight_mg, fill = treatment)) +
   geom_boxplot() +
-  geom_jitter(position=position_jitter(height=0, width=0.2), size = 0.5, colour = "black") +
+  geom_point(aes(),
+             size = 1,
+             shape = 1,
+             position = position_jitterdodge()) +
   scale_y_continuous(breaks=seq(0,10,2)) +
   theme_classic() +
   scale_fill_manual(values = viridis_colours[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +

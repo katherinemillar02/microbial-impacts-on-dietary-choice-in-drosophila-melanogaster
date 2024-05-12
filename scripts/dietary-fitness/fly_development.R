@@ -12,7 +12,7 @@ viridis_colors <- viridis(10)
 
 
 ## Reading pupae data in
-pupae_fitness <- read_excel("data/puape_data.xlsx")
+pupae_fitness <- read_excel("data/fitness_development/puape_data.xlsx")
 
 ################################################ PUPAE DATA VISUALISATION ####
 
@@ -56,13 +56,15 @@ pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae,
 
 
 ## Boxplot ## 
-fly_pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
+
+pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
   geom_boxplot() +
   geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
-  scale_fill_manual(values = viridis_colors[c(4,8)]) +
+  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
   theme_classic() +
-  theme(legend.position = "none") +
+  theme(legend.position = "top",
+        legend.justification = "right")+
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of pupae emerged",
        fill = "Treatment") +
@@ -152,10 +154,11 @@ fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fi
 fly_females_boxplot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fill = treatment)) +
   geom_boxplot() +
   geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
-  scale_fill_manual(values = viridis_colors[c(4,8)]) +
+  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
   theme_classic() +
-  theme(legend.position = "none") +
+  theme(legend.position = "top",
+        legend.justification = "right")+
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of females emerged",
        fill = "Treatment") +
@@ -239,11 +242,15 @@ vial_overall_emergence_median <- vial_overall_emergence  %>%
 ## DATA VISUALISA5ION - Visualising overall emergence across vials 
 overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = total_count, fill = treatment)) +
   geom_boxplot() +
-  geom_jitter(position=position_jitter(height=0, width=0.2)) +
+  geom_point(aes(),
+             size = 1,
+             shape = 1,
+             position = position_jitterdodge()) +
   scale_y_continuous(breaks=seq(0,10,2)) +
   theme_classic() +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
-  theme(legend.position = "none") +
+  theme(legend.position = "top",
+        legend.justification = "right") +
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of Males Emerged") +
   labs(fill = "Treatment")+
@@ -259,15 +266,6 @@ emergence_per_time <- fly_fitness %>%
   ungroup()
 
 
-## Max males emerged in one collection 
-most_males_by_treatment <- summary_data %>%
-  group_by(treatment, time_hours) %>%
-  summarise(max_total_males = max(total_males))
-
-# Max females emerged in one collection
-most_females_by_treatment <- summary_data %>%
-  group_by(treatment, time_hours) %>%
-  summarise(max_total_females = max(total_females))
 
 
 

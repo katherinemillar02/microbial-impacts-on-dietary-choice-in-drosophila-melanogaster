@@ -9,11 +9,11 @@ library(gridExtra)
 library(viridis)
 
 
-fourone_90mm <- read_excel("data/density_experiment/densityexperiment_90mm_4-1.xlsx")
+fourone_90mm <- read_excel("data/density_experiment/90mm_4-1_oviposition_2.xlsx")
 
-onefour_90mm <- read_excel("data/density_experiment/densityexperiment_90mm_1-4.xlsx")
+#onefour_90mm <- read_excel("data/density_experiment/90mm_1-4_oviposition_2.xlsx")
 
-fourone_onefour_90mm <- read_excel("data/density_experiment/densityexperiment_90mm_4-1_1-4.xlsx")
+fourone_onefour_90mm <- read_excel("data/density_experiment/90mm_combined_oviposition_2.xlsx")
 
 
 fourone_90mm_long <- fourone_90mm   %>% 
@@ -30,11 +30,11 @@ fourone_onefour_90mm_long <- fourone_onefour_90mm  %>%
 
 
 
-fourone_50mm <- read_excel("data/density_experiment/densityexperiment_50mm_4-1.xlsx")
+fourone_50mm <- read_excel("data/density_experiment/50mm_4-1_oviposition_2.xlsx")
 
-onefour_50mm <- read_excel("data/density_experiment/densityexperiment_50mm_1-4.xlsx")
+onefour_50mm <- read_excel("data/density_experiment/50mm_1-4_oviposition_2.xlsx")
 
-fourone_onefour_50mm <- read_excel("data/density_experiment/densityexperiment_50mm_4-1_1-4.xlsx")
+fourone_onefour_50mm <- read_excel("data/density_experiment/50mm_combined_oviposition_2.xlsx")
 
 
 
@@ -55,7 +55,7 @@ fourone_onefour_50mm_long <- fourone_onefour_50mm  %>%
 
 #################################### Feeding Results Function Plot ####################################
 
-feeding_results <- function(summary_data,boxplot_fill_colour ) {
+oviposition_results <- function(summary_data,boxplot_fill_colour ) {
   ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet)) + #, pattern = diet))+ 
     # geom_jitter(aes(x = diet,
     #                 y = fly_numbers,
@@ -80,9 +80,8 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
          title = "")+
     scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
     # scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
-    theme(legend.position = "none", 
-          axis.text.x = element_text(size = 7)) + 
-    ylim(-0.01, 6) 
+    theme(legend.position = "none") +
+    ylim(-0.01, 200) 
   
 }
 
@@ -90,19 +89,19 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 viridis_colours <- viridis(10)
 
 
-ninety_1_4 <- feeding_results(onefour_90mm_long , boxplot_fill_colour = viridis_colours[5:6])
-ninety_4_1 <- feeding_results(fourone_90mm_long , boxplot_fill_colour = viridis_colours[7:8])
-ninety_combined <- feeding_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colours[5:8])
+ninety_1_4 <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colours[5:6])
+ninety_4_1 <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = viridis_colours[7:8])
+ninety_combined <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colours[5:8])
 
-ninety <- ninety_1_4 + ninety_4_1 + ninety_combined
+ninety <- ninety_4_1 + ninety_combined
 
 
 
-fifty_1_4 <- feeding_results(onefour_50mm_long , boxplot_fill_colour = viridis_colours[5:6])
-fifty_4_1 <- feeding_results(fourone_50mm_long , boxplot_fill_colour = viridis_colours[7:8])
-fifty_combined <- feeding_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colours[5:8])
+fifty_1_4 <- oviposition_results(onefour_50mm_long , boxplot_fill_colour = viridis_colours[5:6])
+fifty_4_1 <- oviposition_results(fourone_50mm_long , boxplot_fill_colour = viridis_colours[7:8])
+fifty_combined <- oviposition_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colours[5:8])
 
-fifty <- fifty_1_4 + fifty_4_1 + fifty_combined 
+fifty <-  fifty_4_1 + fifty_combined 
 
 ninety / 
   fifty
