@@ -69,6 +69,7 @@ drop1(glm_mm_fly, test = "Chi") ## no interaction effect
 # model without interaction
 glm_mm_fly <- glmmTMB(count ~ treatment + sex + (1|sex/vial) + (1|time_hours), family = poisson, data = fly_fitness_tidy)
 
+summary(glm_mm_fly)
 
 
 
