@@ -11,7 +11,7 @@ library(viridis)
 
 fourone_90mm <- read_excel("data/density_experiment/90mm_4-1_oviposition_2.xlsx")
 
-#onefour_90mm <- read_excel("data/density_experiment/90mm_1-4_oviposition_2.xlsx")
+onefour_90mm <- read_excel("data/density_experiment/90mm_1-4_oviposition_2.xlsx")
 
 fourone_onefour_90mm <- read_excel("data/density_experiment/90mm_combined_oviposition_2.xlsx")
 
@@ -20,6 +20,9 @@ fourone_90mm_long <- fourone_90mm   %>%
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 # 1:4 
+
+
+
 onefour_90mm_long <- onefour_90mm  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
@@ -89,19 +92,19 @@ oviposition_results <- function(summary_data,boxplot_fill_colour ) {
 viridis_colours <- viridis(10)
 
 
-ninety_1_4 <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colours[5:6])
-ninety_4_1 <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = viridis_colours[7:8])
-ninety_combined <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colours[5:8])
+ninety_1_4 <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colours[1:2])
+ninety_4_1 <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = viridis_colours[3:4])
+ninety_combined <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colours[1:84])
 
-ninety <- ninety_4_1 + ninety_combined
+ninety <- ninety_1_4 + ninety_4_1 + ninety_combined
 
 
 
-fifty_1_4 <- oviposition_results(onefour_50mm_long , boxplot_fill_colour = viridis_colours[5:6])
-fifty_4_1 <- oviposition_results(fourone_50mm_long , boxplot_fill_colour = viridis_colours[7:8])
-fifty_combined <- oviposition_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colours[5:8])
+fifty_1_4 <- oviposition_results(onefour_50mm_long , boxplot_fill_colour = viridis_colours[1:2])
+fifty_4_1 <- oviposition_results(fourone_50mm_long , boxplot_fill_colour = viridis_colours[3:4])
+fifty_combined <- oviposition_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colours[1:4])
 
-fifty <-  fifty_4_1 + fifty_combined 
+fifty <- fifty_1_4 +  fifty_4_1 + fifty_combined 
 
 ninety / 
   fifty
