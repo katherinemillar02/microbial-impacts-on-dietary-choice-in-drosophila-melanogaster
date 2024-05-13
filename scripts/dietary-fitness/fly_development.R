@@ -58,13 +58,21 @@ pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae,
 ## Boxplot ## 
 
 pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
-  geom_boxplot() +
-  geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
+  geom_boxplot(outliers = FALSE) +
+  geom_point(aes(fill = treatment),
+             size = 1,
+             shape = 21,
+    
+             position = position_jitterdodge(jitter.width = 10)) +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
+
   theme_classic() +
   theme(legend.position = "top",
-        legend.justification = "right")+
+        legend.justification = "right",
+        strip.placement = "outside", 
+        strip.background = element_blank(),  
+        strip.text = element_blank())+
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of pupae emerged",
        fill = "Treatment") +
@@ -153,12 +161,19 @@ fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fi
 
 fly_females_boxplot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fill = treatment)) +
   geom_boxplot() +
-  geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
+  geom_point(aes(fill = treatment),
+             size = 1,
+             position = position_jitterdodge(jitter.width = 15), 
+             shape = 21,
+             color = "black") +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
   theme_classic() +
   theme(legend.position = "top",
-        legend.justification = "right")+
+        legend.justification = "right",
+        strip.placement = "outside", 
+        strip.background = element_blank(),  
+        strip.text = element_blank())+
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of females emerged",
        fill = "Treatment") +
@@ -181,12 +196,19 @@ fly_males_plot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill = t
 
 ## Boxplot
 fly_males_boxplot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill = treatment)) +
-  geom_boxplot() +
-  geom_point(position = position_jitterdodge(), size = 1, shape = 1) +
+  geom_boxplot(outlier.size = 0) +
+  geom_point(aes(fill = treatment),
+             size = 1,
+             position = position_jitterdodge(jitter.width = 15), 
+             shape = 21,
+             color = "black") +
   scale_fill_manual(values = viridis_colors[c(4,8)]) +
   scale_x_continuous(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) +
   theme_classic() +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        strip.placement = "outside", 
+        strip.background = element_blank(),  
+        strip.text = element_blank()) +  
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of males emerged",
        fill = "Treatment") +
@@ -241,18 +263,19 @@ vial_overall_emergence_median <- vial_overall_emergence  %>%
 
 ## DATA VISUALISA5ION - Visualising overall emergence across vials 
 overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = total_count, fill = treatment)) +
-  geom_boxplot() +
+  geom_boxplot(lwd=2) +
   geom_point(aes(),
-             size = 1,
-             shape = 1,
-             position = position_jitterdodge()) +
+             size = 2,
+             shape = 19,
+             # color = "black", fill = "lightgray",
+             position = position_jitterdodge(jitter.width = 0.1)) +
   scale_y_continuous(breaks=seq(0,10,2)) +
   theme_classic() +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme(legend.position = "top",
         legend.justification = "right") +
   labs(x = "Time (hours) since eggs laid", 
-       y = "Number of Males Emerged") +
+       y = "Number of Flies Emerged") +
   labs(fill = "Treatment")+
   ylim(0,80)
 
