@@ -66,7 +66,6 @@ pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill =
              position = position_jitterdodge(jitter.width = 10)) +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
-
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right",
