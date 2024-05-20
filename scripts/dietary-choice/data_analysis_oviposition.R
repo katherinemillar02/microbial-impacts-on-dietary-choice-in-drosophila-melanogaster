@@ -158,7 +158,7 @@ df2_ovod1_oviposition # does it recognise condition from the long data?
 ################ --
 
 ## Creating a path to get to the data
-pathmaleoviposition <- "data/male_conditioning/treatment_2"
+pathmaleoviposition <- "data/male_conditioning"
 
 
 ################################################################################################################ --
@@ -328,6 +328,7 @@ drop1(glmer.mm_m_egg, test = "Chisq") ## says block is quite significant, keepin
 ## Using model for now, looking at results: 
 summary(glmer.mm_m_egg) ## says block is significant 
 
+emmeans::emmeans(glmer.mm_m_egg, ~ ratio, type = "response")
 
 
 
@@ -452,7 +453,9 @@ AIC(binom_od1_egg, glmer.ovod1_f_egg)
 ## Using "Model 2" for now as I do not really know what else to do 
  
 ## Model choice: 
-glmer.ovod1_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
+glmer.ovod1_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
+
+emmeans::emmeans(glmer.ovod1_f_egg, ~ ratio, type = "response")
 
 summary(glmer.ovod1_f_egg)
 
@@ -591,6 +594,10 @@ summary(glmer.virgin_f_egg)
 
 glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
 
+summary(glmer.virgin_f_egg 
+        )
+
+emmeans::emmeans(glmer.virgin_f_egg, ~ ratio, type = "response")
 
 
 
@@ -695,7 +702,11 @@ AIC(combined_od1_glm.p, combined_od1_glm.qp, combined_glm_mm_od1_egg)
  ## Mixed model has the lowest AIC 
 
 ## Using this model for now 
-combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet * block + (1|plate/block) , family = poisson, data = combined_of_egg)
+combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet + block + (1|plate/block) , family = poisson, data = combined_of_egg)
+
+emmeans::emmeans(combined_glm_mm_od1_egg, ~ diet, type = "response")
+
+emmeans::emmeans(combined_glm_mm_od1_egg, pairwise ~ diet)
 
 
 ## Testing the significance of block
@@ -714,13 +725,14 @@ emmeans::emmeans(combined_glm_mm_od1_egg, pairwise ~ diet)
 
 
 
+
 ################################# --
 ####### Male Conditioning #######
 ################################# --
 
 # 4:1 + 1:4 
-fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
-fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b2_oviposition.xlsx")
+fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_1-4_t2b1_oviposition.xlsx")
+fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_1-4_t2b2_oviposition.xlsx")
 # Mutating a block variable
 fourone_onefour_male_oviposition_b1 <- fourone_onefour_male_oviposition_b1 %>% mutate(block = "one")
 fourone_onefour_male_oviposition_b2 <- fourone_onefour_male_oviposition_b2%>% mutate(block = "two")
@@ -764,6 +776,7 @@ check_zeroinflation(comb_m_egg_glm.p) ## There is zero inflation
 
 
 
+
 ## Trying a negative binomial model
 glm.nb_m_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
 
@@ -784,7 +797,7 @@ qqnorm(residuals_glm_nb_m) ## points go down compared to previous model
 ## Trying a mixed model
 combined_glm_mm_m_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_m)
 
-
+summary(combined_glm_mm_m_egg)
 
 ## DHARMa checks 
 testDispersion(combined_glm_mm_m_egg) ## overdispersed 
@@ -818,21 +831,24 @@ AIC(comb_m_egg_glm.p, combined_glm_mm_m_egg, glm.nb_of_comb_egg, zi.p_m_comb_egg
 glm.nb_of_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
 
 
+
+
+
 ## checking significance of block 
 drop1(glm.nb_of_comb_egg, test = "F") ## says block is not significant!! 
 summary(glm.nb_of_comb_egg)
 
 ## dropping block from the model
-glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_m)
+glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ diet , data =  combined_ovi_m)
 
 
 ## analysing results 
 summary(glm.nb_of_comb_egg_2)
 
 ## pairwise test
-emmeans::emmeans(glm.nb_of_comb_egg_2, pairwise ~ diet)
+emmeans::emmeans(glm.nb_of_comb_egg_2, ~ diet, type = "response")
 
-
+emmeans(glm_mm_m_3, specs = ~ diet, type = "response" )
 
 
 
@@ -945,10 +961,10 @@ qqnorm(residuals_glm_mm_v_egg) ## doesn't look that different to previous
 ## trying zero inflation models:: 
 
 # poisson
-zif.p_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_ovi_m)
+zif.p_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_ovi_v)
 
 # negative binomial 
-zif.nb_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_ovi_m)
+zif.nb_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_ovi_v)
 
 
 ## Comparing the models 
@@ -967,8 +983,10 @@ drop1(glm.nb_v_comb_egg , test = "F") # block is significant
 ## using the model 
 summary(glm.nb_v_comb_egg)
 
+emmeans::emmeans(glm.nb_v_comb_egg, ~ diet, type = "response")
+
 ## with block
-glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet + block, data =  combined_ovi_v)
+glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
 
 ## without block
 glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
@@ -977,6 +995,6 @@ glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
 ## viewing the data results 
 summary(glm.nb_v_comb_egg_2) 
 
-emmeans::emmeans(glm.nb_v_comb_egg_2, pairwise ~ diet)
+emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet)
 
 

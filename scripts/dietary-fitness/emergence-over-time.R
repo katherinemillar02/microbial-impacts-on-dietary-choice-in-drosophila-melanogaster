@@ -73,5 +73,49 @@ summary(glm_mm_fly)
 
 
 
+### Chosen models 
+
+## Pupae 
+
+pupae_model <- glmmTMB(count ~ treatment * time_hours + (1| vial), family = poisson, data = data)
+
+
+## Flies 
+
+fly_model <- glmmTMB(count ~ treatment * time_hours * sex + (1| vial), family = poisson, data =  fly_fitness_tidy)
+
+## Assumption checks 
+
+# DHARMa checks 
+plot(simulateResiduals(fly_model)) ## doesn't look too bad? 
+
+check_zeroinflation(fly_model) ## There is zero inflation
+
+check_overdispersion(fly_model) ## There is over dispersion 
+
+### Doing negative binomial 
+
+glm.nb_fly <- glm.nb(count ~ treatment * time_hours * sex + (1| vial), data = fly_fitness_tidy)
+
+
+# DHARMa checks 
+plot(simulateResiduals(glm.nb_fly)) ## looks quite okay
+
+# easystats checks 
+check_zeroinflation(glm.nb_fly) ## No zero inflation
+
+check_overdispersion(glm.nb_fly) ## There is UNDER dispersion 
+
+## Doing zero inflation model 
+
+zi.p_fly <- zeroinfl(count ~ treatment * time_hours * sex | treatment * time_hours * sex, dist = "poisson", link = "logit", data = fly_fitness_tidy)
+
+## cannot do DHARMa checks 
+
+
+AIC(fly_model,glm.nb_fly, zi.p_fly)
+
+## Best is glm.nb_fly by quite a bit, no vial - but use anyway? 
+
 
 

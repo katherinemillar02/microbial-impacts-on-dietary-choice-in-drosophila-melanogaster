@@ -63,7 +63,7 @@ pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill =
              size = 1,
              shape = 21,
     
-             position = position_jitterdodge(jitter.width = 10)) +
+             position = position_jitterdodge(jitter.width = 18)) +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
   theme_classic() +
@@ -91,6 +91,11 @@ fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
                                         cols = c( females, males),
                                         names_to = "sex",
                                         values_to = "count") 
+
+
+fly_fitness_tidy_2 <- fly_fitness %>%
+  pivot_longer(cols = c(females, males), names_to = "sex", values_to = "count") %>%
+  mutate(sex_treatment = paste(sex, treatment, sep = "_"))
 
 
 
@@ -174,7 +179,7 @@ fly_females_boxplot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females,
         strip.background = element_blank(),  
         strip.text = element_blank())+
   labs(x = "Time (hours) since eggs laid", 
-       y = "Number of females emerged",
+       y = "Number of Females Emerged",
        fill = "Treatment") +
   facet_grid(~time_hours, scales = "free_x")
 
@@ -209,7 +214,7 @@ fly_males_boxplot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill 
         strip.background = element_blank(),  
         strip.text = element_blank()) +  
   labs(x = "Time (hours) since eggs laid", 
-       y = "Number of males emerged",
+       y = "Number of Males Emerged",
        fill = "Treatment") +
   facet_grid(~time_hours, scales = "free_x")
 
@@ -262,9 +267,9 @@ vial_overall_emergence_median <- vial_overall_emergence  %>%
 
 ## DATA VISUALISA5ION - Visualising overall emergence across vials 
 overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = total_count, fill = treatment)) +
-  geom_boxplot(lwd=2) +
+  geom_boxplot(lwd=1.5) +
   geom_point(aes(),
-             size = 2,
+             size = 1,
              shape = 19,
              # color = "black", fill = "lightgray",
              position = position_jitterdodge(jitter.width = 0.1)) +

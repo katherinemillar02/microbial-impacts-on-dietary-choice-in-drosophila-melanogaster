@@ -254,8 +254,9 @@ summary(glm.bin_m) # overdispersion
 
 ## MODEL 2 
 # trying a mixed model, considers other "random" factors
-glmer.mm_m <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+glmer.mm_m <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
+emmeans::emmeans(pa)
 ## Assumption checks 
 
 # Performance check of data using "easystats":
@@ -282,7 +283,7 @@ summary(glmer.mm_m_2) # only 4:1 is significant?
 
 
 ## Trying to look at the results of the model using emmeans()
-emmeans::emmeans(glmer.mm_m_2, pairwise ~ ratio , random = ~ (1|plate) + (1|observation))
+emmeans::emmeans(glmer.mm_m, pairwise ~ ratio , random = ~ (1|plate) + (1|observation))
 # Really want to look at Conditioned vs Unconditioned?
 ## Need to know how to interpret this model
 
@@ -338,7 +339,7 @@ drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped fr
 
 
 # Model 2 - where block has been removed
-glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
 
 summary(glmer.mm_vf_2) 
@@ -346,6 +347,7 @@ summary(glmer.mm_vf_2)
 emmeans::emmeans(glmer.mm_vf_2, pairwise ~ ratio, random = ~ 1 | plate + observation)
 
 
+emmeans::emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation, type = "response")
 
 
 
@@ -383,9 +385,11 @@ plot(simulationOutput_glmer.mm_of) # all looks the same to me?
 
 
 # using this model
-glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
+glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
 
 summary(glmer.mm_of )
+
+emmeans::emmeans(glmer.mm_of, ~ ratio, type = "response")
 
 # looking at the significance of block
 drop1(glmer.mm_of, test = "Chisq") 
@@ -516,8 +520,9 @@ summary(glm_mm_m) #
 
 # dropping block from the model (mixed model)
 glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  * block + (1|plate/block) + (1|observation), family = poisson, data = combined_m)
-glm_mm_m_3 <- glmmTMB(fly_numbers ~ diet  + (1|plate) + (1|observation), family = poisson, data = combined_m)
+glm_mm_m_3 <- glmmTMB(fly_numbers ~ diet  + block + (1|plate) + (1|observation), family = poisson, data = combined_m)
 
+conditional_effects(glm_mm_m_3, terms = "diet")
 
 ## results of model with block 
 summary(glm_mm_m)
@@ -531,6 +536,7 @@ summary(glm_mm_m_2)
 
 summary(glm_mm_m_3)
 
+emmeans::emmeans(glm_mm_m_3, pairwise ~ diet)
 
 
 
@@ -625,13 +631,14 @@ drop1(glm.nb_vf, test = "F")
 summary(glm.nb_vf) 
 
 
-# block is not significant, can be dropped 
 
 
-glm.nb_vf_2  <- glm.nb(fly_numbers ~ diet, data = combined_vf)
+glm.nb_vf_2  <- glm.nb(fly_numbers ~ diet + block, data = combined_vf)
 
 summary(glm.nb_vf_2)
 emmeans::emmeans(glm.nb_vf_2, pairwise ~ diet)
+
+emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
 # conditioning in 1:4 not significant. 
 
 
@@ -697,8 +704,13 @@ summary(glm.nb_of) # very little overdispersion
 
 
 # trying a mixed GLM 
-glm_mm_of <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_of)
+glm_mm_of <- glmmTMB(fly_numbers ~ diet + block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_of)
 
+summary(glm_mm_of)
+
+
+emmeans::emmeans(glm_mm_of, pairwise ~ diet)
+emmeans::emmeans(glm_mm_of,  ~ diet, type = "response")
 # performance checks 
 performance::check_model(glm_mm_of, check = c("qq")) # qq looks a lot better, goes off at the end 
 
@@ -726,7 +738,10 @@ zi.p_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson",
 
 
 # trying a zero inflated negative binomial model 
-zi.nb_of <- zeroinfl(fly_numbers ~ diet * block , dist = "negbin", link = "logit", data = combined_of )
+zi.nb_of <- zeroinfl(fly_numbers ~ diet + block , dist = "negbin", link = "logit", data = combined_of )
+
+emmeans::emmeans(zi.nb_of, ~ diet, type = "response")
+
 
 # need to do performance checks? 
 
