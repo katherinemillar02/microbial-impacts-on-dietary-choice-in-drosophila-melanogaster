@@ -77,12 +77,54 @@ summary(glm_mm_fly)
 
 ## Pupae 
 
-pupae_model <- glmmTMB(count ~ treatment * time_hours + (1| vial), family = poisson, data = data)
+pupae_model <- glmmTMB(pupae ~ treatment * `time (hours)` + (1| vial), family = poisson, data = pupae_fitness)
 
+
+# DHARMa checks 
+plot(simulateResiduals(pupae_model)) ## doesn't look too bad? 
+
+check_zeroinflation(pupae_model) ## There is zero inflation
+
+check_overdispersion(pupae_model) ## There is over dispersion 
+
+
+glm.nb_pupae <- glm.nb(pupae ~ treatment * `time (hours)` + (1| vial), data = pupae_fitness)
+
+drop1(glm.nb_pupae, tets = "F")
+
+
+summary(glm.nb_pupae)
+
+# DHARMa checks 
+plot(simulateResiduals(glm.nb_pupae)) ## doesn't look too bad? 
+
+check_zeroinflation(glm.nb_pupae) ## There is zero inflation
+
+check_overdispersion(glm.nb_pupae) ## There is NO over dispersion 
+
+# There is still zero inflation 
+
+## zero inflation model 
+zi.p_pupae <- zeroinfl(pupae ~ treatment | treatment, dist = "poisson", link = "logit", data = pupae_fitness)
+
+## don't know how to do checks 
+
+drop1(glm.nb_pupae, test = "F")
+
+summary(glm.nb_pupae)
+
+
+# trying a zero inflated negative binomial model 
+zi.nb_pupae <- zeroinfl(pupae ~ treatment | treatment, dist = "negbin", link = "logit", data = pupae_fitness)
+
+
+## AIC check 
+AIC(pupae_model, glm.nb_pupae, zi.p_pupae, zi.nb_pupae)
 
 ## Flies 
 
 fly_model <- glmmTMB(count ~ treatment * time_hours * sex + (1| vial), family = poisson, data =  fly_fitness_tidy)
+
 
 ## Assumption checks 
 
@@ -96,6 +138,7 @@ check_overdispersion(fly_model) ## There is over dispersion
 ### Doing negative binomial 
 
 glm.nb_fly <- glm.nb(count ~ treatment * time_hours * sex + (1| vial), data = fly_fitness_tidy)
+
 
 
 # DHARMa checks 
@@ -115,7 +158,10 @@ zi.p_fly <- zeroinfl(count ~ treatment * time_hours * sex | treatment * time_hou
 
 AIC(fly_model,glm.nb_fly, zi.p_fly)
 
-## Best is glm.nb_fly by quite a bit, no vial - but use anyway? 
+## Best is glm.nb_fly by quite a bit, - but use anyway? 
 
+drop1(glm.nb_fly, test = "F")
 
+zi.p_fly_2 <- zeroinfl(count ~ treatment + time_hours + sex | treatment + time_hours + sex, dist = "poisson", link = "logit", data = fly_fitness_tidy)
 
+summary(zi.p_fly_2)

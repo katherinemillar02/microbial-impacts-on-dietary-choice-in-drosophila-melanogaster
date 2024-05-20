@@ -52,7 +52,17 @@ glm.nb_density <- glm.nb(fly_numbers ~ diet * density, data = combined_density)
 
 check_overdispersion(glm.nb_density) ## no overdispersion
 
-glm_mm_density <- glmmTMB(fly_numbers ~ diet + density + (1|plate) + (1|observation), family = poisson, data = combined_density)
+glm_mm_density <- glmmTMB(fly_numbers ~ diet * density + (1|plate) + (1|observation), family = poisson, data = combined_density)
+
+## AIC isn't the best but go for it anyway
+
+summary(glm_mm_density)
+drop1(glm_mm_density, test = "Chisq") ## no sig at all 
+
+# doing sep models 
+
+glm_mm_90 <- glmmTMB(fly_numbers ~ diet  + (1|plate) + (1|observation), family = poisson, data = combined_density)
+
 
 ## DHARMa checks 
 
