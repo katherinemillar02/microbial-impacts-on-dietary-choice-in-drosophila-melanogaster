@@ -50,8 +50,6 @@ read_raw_virgin_oviposition(pathvirginoviposition)
 ### making a dataset without block 1
 
 
-
-
 ## creating an actual data set that will read the paths
 # first data frame - purr package 
 df_virgin_oviposition <- pathvirginoviposition %>% 
@@ -489,6 +487,9 @@ glmer.ovod1_f_egg_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  + (1|pla
 # Binomial model 
 binom_virgin_egg <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin_oviposition)
 
+summary(binom_virgin_egg )
+
+
 # Assumption checking 
 
 ## qq checks 
@@ -594,8 +595,13 @@ summary(glmer.virgin_f_egg)
 
 glmer.virgin_f_egg <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
 
-summary(glmer.virgin_f_egg 
-        )
+
+
+
+
+emmeans::emmeans(glm_test, pairwise ~ diet)
+
+summary(glmer.virgin_f_egg )
 
 emmeans::emmeans(glmer.virgin_f_egg, ~ ratio, type = "response")
 
