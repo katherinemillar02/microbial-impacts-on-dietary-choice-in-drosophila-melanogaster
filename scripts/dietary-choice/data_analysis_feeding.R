@@ -353,6 +353,13 @@ emmeans::emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation, typ
 
 
 
+
+
+
+
+
+
+
 ##################--
 ## OVOD1 FEMALE ####
 ##################--
@@ -399,7 +406,7 @@ drop1(glmer.mm_of, test = "Chisq")
 summary(glmer.mm_of) # says block is not significant here? what to use? 
 
 
-glmer.mm_of_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio   + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
+glmer.mm_of_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  + block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
 summary(glmer.mm_of_2)
 
@@ -409,10 +416,9 @@ summary(glmer.mm_of_2)
 
 
 
-glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
+   glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
-
-summary(glmer.mm_of)
+ summary(glmer.mm_of)
 
 
 
