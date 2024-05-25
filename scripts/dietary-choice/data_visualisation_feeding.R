@@ -166,20 +166,20 @@ combined_m <- fourone_onefour_male %>%
 #################################### Feeding Results Function Plot ####################################
 
 feeding_results <- function(summary_data,boxplot_fill_colour ) {
-  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet)) + #, pattern = diet))+ 
+  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
     # geom_jitter(aes(x = diet,
     #                 y = fly_numbers,
     #                 fill = diet),
     #             width = 0.1,
     #             shape = 1) +
-    geom_boxplot()+
-     # geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
-     #                     color = "black",
-     #                     pattern_fill = "white",
-     #                     pattern_angle = 45,
-     #                     pattern_density = 0.1,
-     #                     pattern_spacing = 0.025,
-     #                     pattern_key_scale_factor = 0.6) +
+    geom_boxplot(outlier.size = 0)+
+     geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                         color = "black",
+                         pattern_fill = "white",
+                         pattern_angle = 45,
+                         pattern_density = 0.1,
+                         pattern_spacing = 0.025,
+                         pattern_key_scale_factor = 0.6) +
     geom_point(aes(),
                size = 1,
                shape = 1,
@@ -188,8 +188,8 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
     labs(x = "Diet Condition",
          y = "Flies", 
          title = "")+
-    scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
-    # scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
+    scale_fill_manual(values = boxplot_fill_colour) + 
+     scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
     theme(legend.position = "none") +
     ylim(-0.01, 6) 
   
@@ -210,9 +210,13 @@ viridis_colours <- viridis(10)
 ##################### --
 ## OvoD1 FEMALES ####
 ##################### --
-of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis_colors[5:6])
-of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = viridis_colors[7:8])
-of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[5:8])
+of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis_colors[c(6,6)])
+
+
+
+of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = viridis_colors[c(8,8)])
+
+of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
 
 
 
@@ -226,9 +230,9 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
 ############################## --
 ## VIRGIN WILD TYPE FEMALES ####
 ############################## --
-vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[5:6])
-vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[7:8])
-vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[5:8])
+vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[c(6,6)])
+vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[c(8,8)])
+vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
 
 
 ## Using grid.arrange to put the plots together
@@ -241,9 +245,9 @@ virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
 ###################### --
 ## WILD TYPE MALES ####
 ##################### --
-m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour = viridis_colors[5:6])
-m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour = viridis_colors[7:8])
-m_combined <- feeding_results(combined_m, boxplot_fill_colour = viridis_colors[5:8])
+m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour  = viridis_colors[c(6,6)])
+m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour  = viridis_colors[c(8,8)])
+m_combined <- feeding_results(combined_m, boxplot_fill_colour  = viridis_colors[c(6,6,8,8)])
 
 
 ## Using grid.arrange to put the plots together
@@ -279,14 +283,14 @@ overall_feeding <- grid.arrange(m_1_4 + ggtitle("Male Conditioning"), m_4_1 + gg
 ## 4:1 
 
 # Block 1
-four_to_one_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b1.xlsx")
+four_to_one_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_t2b1.xlsx")
 
 ## Changing the variable names of Block 1 
 fourone_of_b1 <- four_to_one_male_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 # Block 2 
-four_to_one_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_t2b2.xlsx")
+four_to_one_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_t2b2.xlsx")
 
 ## Changing the variable names of Block 2
 fourone_of_b2 <- four_to_one_male_b2  %>% 
@@ -300,7 +304,7 @@ fourone_of_b2 <- four_to_one_male_b2  %>%
 ## 1:4 
 
 # Block 1
-one_to_four_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b1.xlsx")
+one_to_four_male_b1 <- read_excel("data/male_conditioning/rawdata_m1-4_t2b1.xlsx")
 
 # Changing the variable names of Block 1
 onefour_of_b1 <- one_to_four_male_b1  %>% 
@@ -308,7 +312,7 @@ onefour_of_b1 <- one_to_four_male_b1  %>%
 
 
 # Block 2
-one_to_four_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m1-4_t2b2.xlsx")
+one_to_four_male_b2 <- read_excel("data/male_conditioning/rawdata_m1-4_t2b2.xlsx")
 
 # Changing the variable names of Block 2 
 onefour_of_b2 <- one_to_four_male_b2  %>% 
@@ -321,14 +325,14 @@ onefour_of_b2 <- one_to_four_male_b2  %>%
 # 4:1 + 1:4 
 
 # Block 1 
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b1.xlsx")
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b1.xlsx")
 
 # Changing the variable names of Block 1 
 fouroneonefour_male_b1 <- fourone_onefour_male_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 # Block 2
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/treatment_2/rawdata_m4-1_1-4_t2b2.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b2.xlsx")
 
 # Changing the variable names of Block 2
 fouroneonefour_male_b2 <- fourone_onefour_male_b2  %>% 
