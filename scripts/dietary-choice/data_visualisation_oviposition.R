@@ -265,7 +265,7 @@ combined_ovi_vf <- fourone_onefour_oviposition_virgin  %>%
 # 4:1 ####
 
 ## Reading the data in - Block 1
-four_to_one_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_t2b1_oviposition.xlsx")
+four_to_one_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_t2b1_oviposition.xlsx")
 
 ## Adding variable names to the data - Block 1
 fourone_ovi_m_b1 <- four_to_one_male_oviposition_b1  %>% 
@@ -274,7 +274,7 @@ fourone_ovi_m_b1 <- four_to_one_male_oviposition_b1  %>%
 
 
 ## Reading the data in - Block 2
-four_to_one_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_t2b2_oviposition.xlsx")
+four_to_one_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_t2b2_oviposition.xlsx")
 
 ## Adding variable names to the data - Block 2
 fourone_ovi_m_b2 <- four_to_one_male_oviposition_b2  %>% 
@@ -292,7 +292,7 @@ four_to_one_male_oviposition <- rbind(four_to_one_male_oviposition_b1, four_to_o
 # 1:4  ####
 
 ## Reading the data in - Block 1
-one_to_four_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2//m_1-4_t2b1_oviposition.xlsx")
+one_to_four_male_oviposition_b1 <- read_excel("data/male_conditioning/m_1-4_t2b1_oviposition.xlsx")
 
 ## Adding variable names to the data - Block 1
 onefour_ovi_m_b1 <- one_to_four_male_oviposition_b1  %>% 
@@ -301,7 +301,7 @@ onefour_ovi_m_b1 <- one_to_four_male_oviposition_b1  %>%
 
 
 ## Reading the data in - Block 2
-one_to_four_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_1-4_t2b2_oviposition.xlsx")
+one_to_four_male_oviposition_b2 <- read_excel("data/male_conditioning/m_1-4_t2b2_oviposition.xlsx")
 
 ## Adding variable names to the data - Block 2
 onefour_ovi_m_b2 <- one_to_four_male_oviposition_b2  %>% 
@@ -318,7 +318,7 @@ one_to_four_male_oviposition <- rbind(one_to_four_male_oviposition_b1, one_to_fo
 # 4:1 + 1:4  ####
 
 ## Reading the data in - block 1 
-fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b1_oviposition.xlsx")
+fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_1-4_t2b1_oviposition.xlsx")
 
 ## Adding variable names to the data - Block 1
 combined_ovi_m_b1 <- fourone_onefour_male_oviposition_b1  %>% 
@@ -326,7 +326,7 @@ combined_ovi_m_b1 <- fourone_onefour_male_oviposition_b1  %>%
 
 
 ## Reading the data in - Block 2
-fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/treatment_2/m_4-1_1-4_t2b2_oviposition.xlsx")
+fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_1-4_t2b2_oviposition.xlsx")
 
 ## Adding variable names to the data - Block 2
 combined_ovi_m_b2 <- fourone_onefour_male_oviposition_b2  %>% 
@@ -379,14 +379,13 @@ oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
     #             width = 0.1,
     #             shape = 1) +
     geom_boxplot()+
-    # geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
-    #                      color = "black",
-    #                      pattern_fill = "white",
-    #                      pattern_angle = 45,
-    #                      pattern_density = 0.1,
-    #                      pattern_spacing = 0.025,
-    #                      pattern_key_scale_factor = 0.6) +
-    # 
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                        color = "black",
+                        pattern_fill = "white",
+                        pattern_angle = 45,
+                        pattern_density = 0.1,
+                        pattern_spacing = 0.025,
+                        pattern_key_scale_factor = 0.6) +
     geom_point(aes(),
                size = 1,
                shape = 1,
@@ -418,13 +417,13 @@ oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
 
 
 # 1:4 
-ov1_egg_1_4 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[1:2])
+ov1_egg_1_4 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis_colors[c(6,6)])
 
 # 4:1 
-ov1_egg_4_1 <- oviposition_results(fourone_ovi_of, boxplot_fill_colour = viridis_colors[3:4])
+ov1_egg_4_1 <- oviposition_results(fourone_ovi_of, boxplot_fill_colour = viridis_colors[c(8,8)])
 
 
-ov1_egg_combined <- oviposition_results(combined_ovi_of,boxplot_fill_colour = viridis_colors[1:4])
+ov1_egg_combined <- oviposition_results(combined_ovi_of, boxplot_fill_colour = viridis_colors[c(6, 6, 8, 8)])
 ################ --
 
 ## Using grid.arrange to put the plots together
@@ -440,13 +439,13 @@ ovod1_female_oviposition <- grid.arrange(ov1_egg_1_4, ov1_egg_4_1, ov1_egg_combi
 ## Wild Type Virgin Female ####
 
 # 1:4 
-v1_egg_1_4  <- oviposition_results(onefour_ovi_vf, boxplot_fill_colour = viridis_colors[1:2])
+v1_egg_1_4  <- oviposition_results(onefour_ovi_vf, boxplot_fill_colour = viridis_colors[c(6,6)])
 
 # 4:1 
-v1_egg_4_1 <- oviposition_results(fourone_ovi_vf, boxplot_fill_colour = viridis_colors[3:4])
+v1_egg_4_1 <- oviposition_results(fourone_ovi_vf, boxplot_fill_colour = viridis_colors[c(8,8)])
 
 # 4:1 and 1:4 
-v1_egg_combined <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = viridis_colors[1:4])
+v1_egg_combined <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
 
 
 
@@ -469,13 +468,13 @@ virgin_female_oviposition <- grid.arrange(v1_egg_1_4, v1_egg_4_1, v1_egg_combine
 ## Wild type Male ####
 
 # 1:4 
-m_egg_1_4 <- oviposition_results(onefour_ovi_m, boxplot_fill_colour = viridis_colors[1:2])
+m_egg_1_4 <- oviposition_results(onefour_ovi_m, boxplot_fill_colour  = viridis_colors[c(6,6)])
 
 # 4:1 
-m_egg_4_1 <- oviposition_results(fourone_ovi_m, boxplot_fill_colour = viridis_colors[3:4])
+m_egg_4_1 <- oviposition_results(fourone_ovi_m, boxplot_fill_colour  = viridis_colors[c(8,8)])
 
 # 1:4 and 4:1 
-m_egg_combined <- oviposition_results(combined_ovi_m, boxplot_fill_colour = viridis_colors[1:4])
+m_egg_combined <- oviposition_results(combined_ovi_m, boxplot_fill_colour  = viridis_colors[c(6,6,8,8)])
 
 
 
