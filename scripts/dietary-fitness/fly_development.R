@@ -61,9 +61,9 @@ pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill =
   geom_boxplot(outliers = FALSE) +
   geom_point(aes(fill = treatment),
              size = 1,
-             shape = 21,
+             shape = 16,
     
-             position = position_jitterdodge(jitter.width = 18)) +
+             position = position_jitterdodge(jitter.width = 15)) +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
   theme_classic() +
@@ -203,9 +203,8 @@ fly_males_boxplot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill 
   geom_boxplot(outlier.size = 0) +
   geom_point(aes(fill = treatment),
              size = 1,
-             position = position_jitterdodge(jitter.width = 15), 
              shape = 21,
-             color = "black") +
+             position = position_jitter(width = 10, height = 2)) +
   scale_fill_manual(values = viridis_colors[c(4,8)]) +
   scale_x_continuous(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) +
   theme_classic() +
