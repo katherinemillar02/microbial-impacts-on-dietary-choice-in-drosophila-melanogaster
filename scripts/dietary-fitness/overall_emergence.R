@@ -95,5 +95,6 @@ glm.nb_fly_2 <- glm.nb(total_count ~ treatment + sex, fly_emergence_sex)
 
 ## looking at data analysis 
 ## no diff between males and females
+
 ## significant difference between conditioned and unconditioned
 summary(glm.nb_fly_2)
