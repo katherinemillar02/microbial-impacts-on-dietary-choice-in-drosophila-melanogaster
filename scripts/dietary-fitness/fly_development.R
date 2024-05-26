@@ -60,15 +60,15 @@ pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae,
 pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
   geom_boxplot(outliers = FALSE) +
   geom_point(aes(fill = treatment),
-             size = 1,
+             size = 1.5,
              shape = 16,
-    
-             position = position_jitterdodge(jitter.width = 15)) +
+      position = position_jitter(width = 9)) +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right",
+        legend.direction = "vertical",
         strip.placement = "outside", 
         strip.background = element_blank(),  
         strip.text = element_blank())+
@@ -76,7 +76,6 @@ pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill =
        y = "Number of pupae emerged",
        fill = "Treatment") +
   facet_grid(~time_hours, scales = "free_x")
-
 
 ################################################ FLY DATA VISUALISATION ####
 
@@ -158,7 +157,8 @@ fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fi
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme_classic() +
   theme(legend.position = "top",
-        legend.justification = "right") +
+        legend.justification = "right",
+        legend.direction = "vertical") +
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of Females Emerged") +
   labs(fill = "Treatment")
@@ -168,13 +168,14 @@ fly_females_boxplot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females,
   geom_point(aes(fill = treatment),
              size = 1,
              position = position_jitterdodge(jitter.width = 15), 
-             shape = 21,
+             shape = 16,
              color = "black") +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right",
+        legend.direction = "vertical",
         strip.placement = "outside", 
         strip.background = element_blank(),  
         strip.text = element_blank())+
@@ -203,13 +204,15 @@ fly_males_boxplot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill 
   geom_boxplot(outlier.size = 0) +
   geom_point(aes(fill = treatment),
              size = 1,
-             shape = 21,
-             position = position_jitter(width = 10, height = 2)) +
+              position = position_jitterdodge(jitter.width = 15),
+             shape = 16,
+             colour = "black") +
   scale_fill_manual(values = viridis_colors[c(4,8)]) +
   scale_x_continuous(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) +
   theme_classic() +
   theme(legend.position = "none",
-        strip.placement = "outside", 
+        strip.placement = "outside",
+        legend.direction = "vertical",
         strip.background = element_blank(),  
         strip.text = element_blank()) +  
   labs(x = "Time (hours) since eggs laid", 
@@ -273,10 +276,12 @@ overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = to
              # color = "black", fill = "lightgray",
              position = position_jitterdodge(jitter.width = 0.1)) +
   scale_y_continuous(breaks=seq(0,10,2)) +
+  scale_x_discrete(labels = c("Females", "Males")) + 
   theme_classic() +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme(legend.position = "top",
-        legend.justification = "right") +
+        legend.justification = "right",
+        legend.direction = "vertical") +
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of Flies Emerged") +
   labs(fill = "Treatment")+
