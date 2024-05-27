@@ -16,7 +16,7 @@ onefour_90mm_long <- onefour_90mm  %>%
 fourone_50mm_long <- fourone_50mm   %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
-fourone_50mm_long <- onefour_50mm  %>% 
+onefour_50mm_long <- onefour_50mm  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
@@ -35,40 +35,51 @@ onefour_90mm_long <- onefour_90mm_long  %>%
 fourone_50mm_long <- fourone_50mm_long %>%  
   mutate(id = "4-1_50")
 
+
 onefour_50mm_long <- onefour_50mm_long  %>%  
   mutate(id = "1-4_50")
 
 
 
 
-two_choice_density <- rbind(fourone_90mm_long, onefour_90mm_long, fourone_50mm_long, onefour_50mm_long)
 
-two_choice_density <- two_choice_density %>%
+
+
+
+two_choice_density <- rbind( fourone_50mm_long, onefour_50mm_long, fourone_90mm_long, onefour_90mm_long )
+
+two_choice_density_1 <- two_choice_density %>%
   mutate(density = case_when(
     str_detect(id, "50") ~ "50",
     str_detect(id, "90") ~ "90",
-    
-  ))
+    ))
 
-two_choice_density_df <- two_choice_density %>%
+
+two_choice_density_df <- two_choice_density_1 %>%
   separate(diet, into = c("ratio", "condition"), sep = " ") %>%
   group_by(id, observation, plate, ratio, condition, density) %>%
   summarise(count = sum(fly_numbers)) %>%
   pivot_wider(names_from = "condition", values_from = "count")
 
 
+# Ensure 'id' column is treated as character
+two_choice_density_df$id <- as.character(two_choice_density_df$id)
+
+# Define the string to search for
 ninety <- "90"
-exclude_ninenty <- grepl(ninety, two_choice_density_df$id)
 
-# Subset the dataframe to exclude rows with the "1-4" pattern
-two_choice_density_df_fifty <- two_choice_density_df[!exclude_ninenty, ]
+# Identify rows where 'id' contains "90"
+exclude_ninety <- grepl(ninety, two_choice_density_df$id)
 
-
-glmer.mm_fifty <- glmer(cbind(Conditioned, Unconditioned) ~ ratio   + (1|plate) + (1|observation) , family = binomial, data = two_choice_density_df_fifty)
-
-summary(glmer.mm_fifty)
+# Filter out those rows
+two_choice_density_df_fifty <- two_choice_density_df[!exclude_ninety, ]
 
 
+
+glmer.mm <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * density   + (1|plate) + (1|observation) , family = binomial, data = two_choice_density_df)
+
+summary(glmer.mm)
+drop1(glmer.mm, test = "Chisq")
 
 fifty <- "50"
 exclude_fifty <- grepl(fifty, two_choice_density_df$id)

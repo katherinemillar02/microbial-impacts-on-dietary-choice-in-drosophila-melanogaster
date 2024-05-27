@@ -56,20 +56,20 @@ fourone_onefour_50mm_long <- fourone_onefour_50mm  %>%
 #################################### Feeding Results Function Plot ####################################
 
 feeding_results <- function(summary_data,boxplot_fill_colour ) {
-  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet)) + #, pattern = diet))+ 
+  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
     # geom_jitter(aes(x = diet,
     #                 y = fly_numbers,
     #                 fill = diet),
     #             width = 0.1,
     #             shape = 1) +
     geom_boxplot()+
-    # geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
-    #                     color = "black",
-    #                     pattern_fill = "white",
-    #                     pattern_angle = 45,
-    #                     pattern_density = 0.1,
-    #                     pattern_spacing = 0.025,
-    #                     pattern_key_scale_factor = 0.6) +
+    geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                        color = "black",
+                        pattern_fill = "white",
+                        pattern_angle = 45,
+                        pattern_density = 0.1,
+                        pattern_spacing = 0.025,
+                        pattern_key_scale_factor = 0.6) +
     geom_point(aes(),
                size = 1,
                shape = 1,
@@ -79,7 +79,7 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
          y = "Flies", 
          title = "")+
     scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
-    # scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
+   scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
     theme(legend.position = "none", 
           axis.text.x = element_text(size = 7)) + 
     ylim(-0.01, 6) 
@@ -90,19 +90,19 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 viridis_colours <- viridis(10)
 
 
-ninety_1_4 <- feeding_results(onefour_90mm_long , boxplot_fill_colour = viridis_colours[5:6])
-ninety_4_1 <- feeding_results(fourone_90mm_long , boxplot_fill_colour = viridis_colours[7:8])
-ninety_combined <- feeding_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colours[5:8])
+ninety_1_4 <- feeding_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(6,6)])
+ninety_4_1 <- feeding_results(fourone_90mm_long , boxplot_fill_colour = viridis_colors[c(8,8)])
+ninety_combined <- feeding_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
 
-ninety <- ninety_1_4 + ninety_4_1 + ninety_combined
+ninety <- ninety_1_4 + ggtitle("90 mm") + ninety_4_1 + ninety_combined
 
 
 
-fifty_1_4 <- feeding_results(onefour_50mm_long , boxplot_fill_colour = viridis_colours[5:6])
-fifty_4_1 <- feeding_results(fourone_50mm_long , boxplot_fill_colour = viridis_colours[7:8])
-fifty_combined <- feeding_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colours[5:8])
+fifty_1_4 <- feeding_results(onefour_50mm_long , boxplot_fill_colour  = viridis_colors[c(6,6)])
+fifty_4_1 <- feeding_results(fourone_50mm_long , boxplot_fill_colour = viridis_colors[c(8,8)])
+fifty_combined <- feeding_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
 
-fifty <- fifty_1_4 + fifty_4_1 + fifty_combined 
+fifty <- fifty_1_4 + ggtitle("50 mm") + fifty_4_1 + fifty_combined 
 
 ninety / 
   fifty
