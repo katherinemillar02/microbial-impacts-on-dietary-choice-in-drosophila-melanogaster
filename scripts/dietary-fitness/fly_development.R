@@ -58,11 +58,10 @@ pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae,
 ## Boxplot ## 
 
 pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
-  geom_boxplot(outliers = FALSE) +
+  geom_boxplot(outliers = FALSE, alpha =.4, position = position_dodge (width = 20)) + #width =10 ) +
   geom_point(aes(fill = treatment),
-             size = 1.5,
-             shape = 16,
-      position = position_jitter(width = 9)) +
+             size = 1.5, shape = 21,
+      position = position_jitterdodge(jitter.width = 6, dodge.width = 20)) +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
   theme_classic() +
@@ -77,8 +76,11 @@ pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill =
        fill = "Treatment") +
   facet_grid(~time_hours, scales = "free_x")
 
-################################################ FLY DATA VISUALISATION ####
 
+
+
+
+################################################ FLY DATA VISUALISATION ####
 
 ## Read data in
 fly_fitness <- read_excel("data//fitness_development/fly_data.xlsx")
@@ -164,12 +166,10 @@ fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fi
   labs(fill = "Treatment")
 
 fly_females_boxplot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fill = treatment)) +
-  geom_boxplot() +
+  geom_boxplot(outliers = FALSE, alpha =.4, position = position_dodge (width = 20)) + #width =10 ) +
   geom_point(aes(fill = treatment),
-             size = 1,
-             position = position_jitterdodge(jitter.width = 15), 
-             shape = 16,
-             color = "black") +
+             size = 1, shape = 21,
+             position = position_jitterdodge(jitter.width = 6, dodge.width = 20)) +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   scale_x_continuous(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
   theme_classic() +
@@ -201,12 +201,10 @@ fly_males_plot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill = t
 
 ## Boxplot
 fly_males_boxplot_2 <- ggplot(males_data_2, aes(x = time_hours, y = males, fill = treatment)) +
-  geom_boxplot(outlier.size = 0) +
+  geom_boxplot(outliers = FALSE, alpha =.4, position = position_dodge (width = 20)) + #width =10 ) +
   geom_point(aes(fill = treatment),
-             size = 1,
-              position = position_jitterdodge(jitter.width = 15),
-             shape = 16,
-             colour = "black") +
+             size = 1, shape = 21,
+             position = position_jitterdodge(jitter.width = 6, dodge.width = 20)) +
   scale_fill_manual(values = viridis_colors[c(4,8)]) +
   scale_x_continuous(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) +
   theme_classic() +
@@ -269,23 +267,22 @@ vial_overall_emergence_median <- vial_overall_emergence  %>%
 
 ## DATA VISUALISA5ION - Visualising overall emergence across vials 
 overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = total_count, fill = treatment)) +
-  geom_boxplot(lwd=1.5) +
-  geom_point(aes(),
-             size = 1,
-             shape = 19,
-             # color = "black", fill = "lightgray",
-             position = position_jitterdodge(jitter.width = 0.1)) +
-  scale_y_continuous(breaks=seq(0,10,2)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) + 
+  geom_point(aes(fill = treatment), 
+             size = 2, shape = 21, 
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
+  scale_y_continuous(breaks = seq(0, 80, 10)) +
   scale_x_discrete(labels = c("Females", "Males")) + 
   theme_classic() +
-  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   theme(legend.position = "top",
         legend.justification = "right",
         legend.direction = "vertical") +
-  labs(x = "Time (hours) since eggs laid", 
-       y = "Number of Flies Emerged") +
-  labs(fill = "Treatment")+
-  ylim(0,80)
+  labs(x = "Sex", 
+       y = "Number of Flies Emerged", 
+       fill = "Treatment") +
+  ylim(0, 80)
+
 
 
 

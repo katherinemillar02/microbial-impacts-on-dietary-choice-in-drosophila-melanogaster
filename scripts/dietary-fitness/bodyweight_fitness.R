@@ -3,6 +3,15 @@ library(tidyverse)
 library(ggplot2)
 library(readxl)
 library(viridisLite)
+library(tidyverse)
+library(lmerTest)
+library(readxl)
+library(MASS)
+library(performance)
+library(pscl)
+library(DHARMa)
+library(glmmTMB)
+
 
 viridis_colours <- viridis(10)
 
@@ -66,10 +75,26 @@ bodyweight_plot  + bodyweight_plot_2
 
 #### Statistical Analyses 
 
-glm_mm_weight <- glmmTMB(weight_mg ~ treatment * sex + (1|sex/sample_number), family = poisson, data = bodyweight)
+glm_mm_weight <- glmmTMB(weight_mg ~ treatment + sex, family = poisson, data = bodyweight)
 
 ## qq plot from the model
 residuals <- residuals(glm_mm_weight)
+qqnorm(residuals)
+qqline(residuals, col = 2) # qq looks pretty goos
+ 
+
+check_overdispersion(glm_mm_weight)
+check_zeroinflation(glm_mm_weight) ## alright 
+
+drop1(glm_mm_weight, test = "Chisq")
+
+summary(glm_mm_weight)
+
+
+glm_mm_weight_2 <- glmmTMB(weight_mg ~ treatment + sex, family = poisson, data = bodyweight_2)
+
+## qq plot from the model
+residuals <- residuals(glm_mm_weight_2)
 qqnorm(residuals)
 qqline(residuals, col = 2) # qq looks pretty goos
 
@@ -77,4 +102,7 @@ qqline(residuals, col = 2) # qq looks pretty goos
 check_overdispersion(glm_mm_weight)
 check_zeroinflation(glm_mm_weight) ## alright 
 
+drop1(glm_mm_weight_2, test = "Chisq")
+
+summary(glm_mm_weight_2)
 
