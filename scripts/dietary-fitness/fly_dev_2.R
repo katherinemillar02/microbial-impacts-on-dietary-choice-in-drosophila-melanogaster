@@ -1,8 +1,5 @@
-library(tidyverse)
-library(readxl)
 
-
-pupae_fitness_part2 <- read_excel("data/fitness_development/pupae-data-manipulated.xlsx")
+pupae_fitness_part2 <- read_excel("data/fitness_development/pupae-data-p2.xlsx")
 
 
 
@@ -20,24 +17,19 @@ pupae_boxplot_p2 <- ggplot(pupae_fitness_part2, aes(x = as.factor(time_hours), y
         strip.placement = "outside", 
         strip.background = element_blank(),  
         strip.text = element_blank()) +
-  ylim(0,50) + 
-  labs(x = "Time (hours) since L2 placed", 
+  labs(x = "Time (hours) since eggs laid", 
        y = "Number of pupae emerged",
        fill = "Treatment")
 
-fly_fitness_part2 <- read_excel("data/fitness_development/fly_part2.xlsx")
-
-
-
+fly_fitness_part2 <- read_excel("data//fitness_development/fly_part2.xlsx")
 
 females_data_2 <- subset(fly_fitness_part2, select = c(time_hours, females, treatment))
 
-
 fly_females_boxplot_part2 <- ggplot(females_data_2, aes(x = factor(time_hours), y = females, fill = treatment)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.9)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) +
   geom_point(aes(fill = treatment),
              size = 2, shape = 21,
-             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9)) +
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
   scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   scale_x_discrete(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
   theme_classic() +
@@ -47,10 +39,10 @@ fly_females_boxplot_part2 <- ggplot(females_data_2, aes(x = factor(time_hours), 
         strip.placement = "outside", 
         strip.background = element_blank(),  
         strip.text = element_blank()) +
-  labs(x = "Time (hours) since L2 Placed", 
+  labs(x = "Time (hours) since eggs laid", 
        y = "Number of Females Emerged",
        fill = "Treatment") +
-  ylim(0, 8) +
+  ylim(0, 5) +
   facet_grid(~ time_hours, scales = "free_x")
 
 males_data_2 <- subset(fly_fitness_part2, select = c(time_hours, males, treatment))
@@ -59,12 +51,12 @@ males_data_2 <- subset(fly_fitness_part2, select = c(time_hours, males, treatmen
 
 
 fly_males_boxplot_part2 <- ggplot(males_data_2, aes(x = factor(time_hours), y = males, fill = treatment)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.9)) +  
+  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) +
   geom_point(aes(fill = treatment),
              size = 2, shape = 21,
-             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9)) + h
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
   scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
-  scale_x_discrete(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) + 
+  scale_x_discrete(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) + # Ensure correct scale
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right",
@@ -72,12 +64,11 @@ fly_males_boxplot_part2 <- ggplot(males_data_2, aes(x = factor(time_hours), y = 
         strip.placement = "outside", 
         strip.background = element_blank(),  
         strip.text = element_blank()) +
-  labs(x = "Time (hours) since L2 Placed", 
+  labs(x = "Time (hours) since eggs laid", 
        y = "Number of Males Emerged",
        fill = "Treatment") +
-  ylim(0, 8) +
+  ylim(0, 5) +
   facet_grid(~ factor(time_hours), scales = "free_x")
-
 
 
 fly_females_boxplot_part2 / 
