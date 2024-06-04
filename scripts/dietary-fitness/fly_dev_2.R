@@ -2,7 +2,7 @@ library(tidyverse)
 library(readxl)
 
 
-pupae_fitness_part2 <- read_excel("data/fitness_development/pupae-data-p2.xlsx")
+pupae_fitness_part2 <- read_excel("data/fitness_development/pupae-data-manipulated.xlsx")
 
 
 
@@ -25,9 +25,13 @@ pupae_boxplot_p2 <- ggplot(pupae_fitness_part2, aes(x = as.factor(time_hours), y
        y = "Number of pupae emerged",
        fill = "Treatment")
 
-fly_fitness_part2 <- read_excel("data//fitness_development/fly_part2.xlsx")
+fly_fitness_part2 <- read_excel("data/fitness_development/fly_part2.xlsx")
+
+
+
 
 females_data_2 <- subset(fly_fitness_part2, select = c(time_hours, females, treatment))
+
 
 fly_females_boxplot_part2 <- ggplot(females_data_2, aes(x = factor(time_hours), y = females, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.9)) +
@@ -55,12 +59,12 @@ males_data_2 <- subset(fly_fitness_part2, select = c(time_hours, males, treatmen
 
 
 fly_males_boxplot_part2 <- ggplot(males_data_2, aes(x = factor(time_hours), y = males, fill = treatment)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.9)) +  # Increased dodge width
+  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.9)) +  
   geom_point(aes(fill = treatment),
              size = 2, shape = 21,
-             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9)) +  # Increased dodge width
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9)) + h
   scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
-  scale_x_discrete(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) + # Ensure correct scale
+  scale_x_discrete(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) + 
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right",
