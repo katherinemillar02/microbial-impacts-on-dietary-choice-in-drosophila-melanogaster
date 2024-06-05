@@ -1,6 +1,11 @@
+library(tidyverse)
+library(readxl)
+library(viridisLite)
 
-pupae_fitness_part2 <- read_excel("data/fitness_development/pupae-data-p2.xlsx")
 
+pupae_fitness_part2 <- read_excel("data/fitness_development/pupae-data-manipulated.xlsx")
+
+viridis_colours <- viridis(10)
 
 
 pupae_boxplot_p2 <- ggplot(pupae_fitness_part2, aes(x = as.factor(time_hours), y = pupae, fill = treatment)) +
@@ -8,7 +13,7 @@ pupae_boxplot_p2 <- ggplot(pupae_fitness_part2, aes(x = as.factor(time_hours), y
   geom_point(aes(fill = treatment),
              size = 1.5, shape = 21,
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.8)) +
-  scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colours[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   scale_x_discrete(labels = unique(pupae_fitness_part2$time_hours)) +
   theme_classic() +
   theme(legend.position = "top",
@@ -30,7 +35,7 @@ fly_females_boxplot_part2 <- ggplot(females_data_2, aes(x = factor(time_hours), 
   geom_point(aes(fill = treatment),
              size = 2, shape = 21,
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
-  scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colours[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   scale_x_discrete(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
   theme_classic() +
   theme(legend.position = "top",
@@ -55,7 +60,7 @@ fly_males_boxplot_part2 <- ggplot(males_data_2, aes(x = factor(time_hours), y = 
   geom_point(aes(fill = treatment),
              size = 2, shape = 21,
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
-  scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colours[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   scale_x_discrete(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) + # Ensure correct scale
   theme_classic() +
   theme(legend.position = "top",
