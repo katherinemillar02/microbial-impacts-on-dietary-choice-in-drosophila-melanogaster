@@ -205,7 +205,7 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 # followed by the appropriate colours for the plot depending on the assay 
 
 ## Setting colours 
-viridis_colours <- viridis(10)
+viridis_colors <- viridis(10)
 
 ##################### --
 ## OvoD1 FEMALES ####
