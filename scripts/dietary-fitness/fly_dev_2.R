@@ -79,3 +79,16 @@ fly_males_boxplot_part2 <- ggplot(males_data_2, aes(x = factor(time_hours), y = 
 fly_females_boxplot_part2 / 
   fly_males_boxplot_part2
 
+
+
+## Playing around with data 
+
+pupae_totals <- pupae_fitness_part2 %>%
+  group_by(vial, treatment) %>%
+  summarise(total_pupae = sum(pupae))
+
+   ## Over populated the vials 
+
+
+
+
