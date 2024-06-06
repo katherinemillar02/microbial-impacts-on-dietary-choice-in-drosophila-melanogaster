@@ -76,7 +76,7 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
                position = position_jitterdodge()) +
     theme_classic()+
     labs(x = "Diet Condition",
-         y = "Flies", 
+         y = "Flies per diet patch", 
          title = "")+
     scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
    scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
@@ -107,5 +107,5 @@ fifty <- fifty_1_4 + ggtitle("50 mm") + fifty_4_1 + fifty_combined
 ninety / 
   fifty
 
-ninety <- ninety + ggtitle("90 mm")
-fifty <- fifty + ggtitle("50 mm")
+ninety <- ninety 
+fifty <- fifty
