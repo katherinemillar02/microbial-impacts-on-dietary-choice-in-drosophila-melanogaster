@@ -408,7 +408,7 @@ summary(glmer.mm_of) # says block is not significant here? what to use?
 
 glmer.mm_of_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  + block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
 
-summary(glmer.mm_of_2)
+summary(glmer.mm_of_2) 
 
 
 
@@ -531,7 +531,7 @@ glm_mm_m_3 <- glmmTMB(fly_numbers ~ diet  + block + (1|plate) + (1|observation),
 conditional_effects(glm_mm_m_3, terms = "diet")
 
 ## results of model with block 
-summary(glm_mm_m)
+summary(glm_mm_m)  
 
 # checking the results of the model without block 
 summary(glm_mm_m_2) 
