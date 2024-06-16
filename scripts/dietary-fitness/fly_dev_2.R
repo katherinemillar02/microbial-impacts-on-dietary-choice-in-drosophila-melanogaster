@@ -33,7 +33,7 @@ females_data_2 <- subset(fly_fitness_part2, select = c(time_hours, females, trea
 fly_females_boxplot_part2 <- ggplot(females_data_2, aes(x = factor(time_hours), y = females, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) +
   geom_point(aes(fill = treatment),
-             size = 2, shape = 21,
+             size = 1, shape = 21,
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
   scale_fill_manual(values = viridis_colours[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   scale_x_discrete(breaks = unique(females_data_2$time_hours), labels = unique(females_data_2$time_hours)) +
@@ -47,7 +47,6 @@ fly_females_boxplot_part2 <- ggplot(females_data_2, aes(x = factor(time_hours), 
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of Females Emerged",
        fill = "Treatment") +
-  ylim(0, 5) +
   facet_grid(~ time_hours, scales = "free_x")
 
 males_data_2 <- subset(fly_fitness_part2, select = c(time_hours, males, treatment))
@@ -58,7 +57,7 @@ males_data_2 <- subset(fly_fitness_part2, select = c(time_hours, males, treatmen
 fly_males_boxplot_part2 <- ggplot(males_data_2, aes(x = factor(time_hours), y = males, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) +
   geom_point(aes(fill = treatment),
-             size = 2, shape = 21,
+             size = 1, shape = 21,
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
   scale_fill_manual(values = viridis_colours[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   scale_x_discrete(breaks = unique(males_data_2$time_hours), labels = unique(males_data_2$time_hours)) + # Ensure correct scale
@@ -72,7 +71,6 @@ fly_males_boxplot_part2 <- ggplot(males_data_2, aes(x = factor(time_hours), y = 
   labs(x = "Time (hours) since eggs laid", 
        y = "Number of Males Emerged",
        fill = "Treatment") +
-  ylim(0, 5) +
   facet_grid(~ factor(time_hours), scales = "free_x")
 
 
@@ -87,8 +85,20 @@ pupae_totals <- pupae_fitness_part2 %>%
   group_by(vial, treatment) %>%
   summarise(total_pupae = sum(pupae))
 
+pupae_totals <- pupae_fitness_part2 %>%
+  group_by(treatment) %>%
+  summarise(total_pupae = sum(pupae))
+
    ## Over populated the vials 
 
 
 
+fly_totals <- fly_fitness_part2 %>%
+  group_by(treatment) %>%
+  summarise(total_flies = sum(flies))
+pupae_totals <- pupae_fitness_part2 %>%
+  group_by(treatment) %>%
+  summarise(total_pupae = sum(pupae))
 
+
+fly_fitness_part2$flies <- fly_fitness_part2$males + fly_fitness_part2$females
