@@ -123,8 +123,9 @@ AIC(pupae_model, glm.nb_pupae, zi.p_pupae, zi.nb_pupae)
 
 ## Flies 
 
-fly_model <- glmmTMB(count ~ treatment * time_hours * sex + (1| vial), family = poisson, data =  fly_fitness_tidy)
+fly_model <- glmmTMB(count ~ treatment * time_hours + sex + (1| vial), family = poisson, data =  fly_fitness_tidy)
 
+summary(fly_model)
 
 ## Assumption checks 
 
@@ -138,7 +139,7 @@ check_overdispersion(fly_model) ## There is over dispersion
 ### Doing negative binomial 
 
 glm.nb_fly <- glm.nb(count ~ treatment * time_hours * sex + (1| vial), data = fly_fitness_tidy)
-
+summary(glm.nb_fly)
 
 
 # DHARMa checks 
