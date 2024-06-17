@@ -723,6 +723,12 @@ summary(combined_glm_mm_od1_egg)
 
 combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet  + (1|plate/block) , family = poisson, data = combined_of_egg)
 
+combined_of_egg <- combined_of_egg %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ ratio * condition + block  + (1|plate/block) , family = poisson, data = combined_of_egg)
+
+drop1(combined_glm_mm_od1_egg, test = "Chisq") ## interaction effecr
 
 emmeans::emmeans(combined_glm_mm_od1_egg, pairwise ~ diet)
 
@@ -846,6 +852,15 @@ summary(glm.nb_of_comb_egg)
 
 ## dropping block from the model
 glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ diet , data =  combined_ovi_m)
+
+
+combined_ovi_m <- combined_ovi_m %>% 
+  separate(diet, into = c("ratio", "condition"))
+
+
+glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ ratio * condition + block , data =  combined_ovi_m)
+
+drop1(glm.nb_of_comb_egg_2, test = "F") ## doesnt do test
 
 
 ## analysing results 
@@ -996,6 +1011,15 @@ glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
 
 ## without block
 glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
+
+combined_ovi_v <- combined_ovi_v %>% 
+  separate(diet, into = c("ratio", "condition"))
+
+glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ ratio * condition + block, data =  combined_ovi_v)
+
+drop1(glm.nb_v_comb_egg_2, test = "F") ## doesnt do??
+
+summary(glm.nb_v_comb_egg_2)
 
 
 ## viewing the data results 
