@@ -523,12 +523,20 @@ summary(glm_mm_m) #
 
 ## says intercation term is sig 
 
-
+> combined_m <- combined_m %>%
+     separate(diet, into = c("ratio", "condition"), sep = " ")
 # dropping block from the model (mixed model)
 glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  * block + (1|plate/block) + (1|observation), family = poisson, data = combined_m)
-glm_mm_m_3 <- glmmTMB(fly_numbers ~ diet  + block + (1|plate) + (1|observation), family = poisson, data = combined_m)
 
-conditional_effects(glm_mm_m_3, terms = "diet")
+glm_mm_m_3 <- glmmTMB(fly_numbers ~ ratio * condition  + block + (1|plate) + (1|observation), family = poisson, data = combined_m)
+
+summary(glm_mm_m_3 )
+drop1(glm_mm_m_3, test = "Chisq" ) ## no interaction effect between ratio and treatment
+
+# New model
+glm_mm_m_3 <- glmmTMB(fly_numbers ~ ratio + condition  + block + (1|plate) + (1|observation), family = poisson, data = combined_m)
+
+summary(glm_mm_m_3 ) ## learn how to read the data again
 
 ## results of model with block 
 summary(glm_mm_m)  
@@ -639,7 +647,23 @@ summary(glm.nb_vf)
 
 
 
-glm.nb_vf_2  <- glm.nb(fly_numbers ~ diet + block, data = combined_vf)
+
+
+
+# splitting diet up 
+
+
+combined_vf <- combined_vf %>% 
+  separate(diet, into = c("ratio", "condition", sep = " "))
+
+
+# new model
+glm.nb_vf_2  <- glm.nb(fly_numbers ~ ratio * condition + block, data = combined_vf)
+
+drop1(glm.nb_vf_2, test = "Chisq") ## can't test ratio condition?? 
+
+
+glm.nb_vf_2  <- glm.nb(fly_numbers ~ ratio + condition + block, data = combined_vf)
 
 summary(glm.nb_vf_2)
 emmeans::emmeans(glm.nb_vf_2, pairwise ~ diet)
@@ -767,7 +791,19 @@ summary(zi.nb_of) # not significant?
 
 
 # dropping block from the model 
-zi.p_of <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of )
+zi.p_of <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of)
+
+
+# new model 
+
+combined_of <- combined_of %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+zi.p_of <- zeroinfl(fly_numbers ~ ratio * condition, dist = "negbin", link = "logit", data = combined_of )
+
+drop1(zi.p_of, test = "Chisq") ## interaction effect!!
+
 
 # looking at the results 
 summary(zi.p_of)
