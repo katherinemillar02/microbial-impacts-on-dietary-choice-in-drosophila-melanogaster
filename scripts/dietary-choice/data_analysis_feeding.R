@@ -654,13 +654,13 @@ summary(glm.nb_vf)
 
 
 combined_vf <- combined_vf %>% 
-  separate(diet, into = c("ratio", "condition", sep = " "))
+  separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
 # new model
 glm.nb_vf_2  <- glm.nb(fly_numbers ~ ratio * condition + block, data = combined_vf)
 
-drop1(glm.nb_vf_2, test = "Chisq") ## can't test ratio condition?? 
+drop1(glm.nb_vf_2, test = "Chisq") ## no interaction effect
 
 
 glm.nb_vf_2  <- glm.nb(fly_numbers ~ ratio + condition + block, data = combined_vf)
