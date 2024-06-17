@@ -755,6 +755,12 @@ fourone_onefour_male_oviposition <- rbind(fourone_onefour_male_oviposition_b1, f
 combined_ovi_m <- fourone_onefour_male_oviposition  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
+
+combined_ovi_m <- combined_ovi_m %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+
 ## Model 1 
 ## Beginning with a glm with poisson
 comb_m_egg_glm.p <- glm(egg_numbers ~ diet * block, family = poisson,  combined_ovi_m )
@@ -854,13 +860,11 @@ summary(glm.nb_of_comb_egg)
 glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ diet , data =  combined_ovi_m)
 
 
-combined_ovi_m <- combined_ovi_m %>% 
-  separate(diet, into = c("ratio", "condition"))
 
 
 glm.nb_of_comb_egg_2 <- glm.nb(egg_numbers ~ ratio * condition + block , data =  combined_ovi_m)
 
-drop1(glm.nb_of_comb_egg_2, test = "F") ## doesnt do test
+drop1(glm.nb_of_comb_egg_2, test = "F") ## not sig
 
 
 ## analysing results 
@@ -1013,11 +1017,11 @@ glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
 glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
 
 combined_ovi_v <- combined_ovi_v %>% 
-  separate(diet, into = c("ratio", "condition"))
+  separate(diet, into = c("ratio", "condition"), sep = " ")
 
 glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ ratio * condition + block, data =  combined_ovi_v)
 
-drop1(glm.nb_v_comb_egg_2, test = "F") ## doesnt do??
+drop1(glm.nb_v_comb_egg_2, test = "F") ## not sig
 
 summary(glm.nb_v_comb_egg_2)
 
