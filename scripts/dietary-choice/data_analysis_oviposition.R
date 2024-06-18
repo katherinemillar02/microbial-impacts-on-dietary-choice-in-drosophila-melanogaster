@@ -721,7 +721,7 @@ drop1(combined_glm_mm_od1_egg , test = "Chisq") # block is very signficiant
 summary(combined_glm_mm_od1_egg)
    ## everything is very significant - dodgy data? 
 
-combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet  + (1|plate/block) , family = poisson, data = combined_of_egg)
+combined_glm_mm_od1_egg <- glmmTMB(egg_numbers ~ diet  + block + (1|plate/block) , family = poisson, data = combined_of_egg)
 
 combined_of_egg <- combined_of_egg %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
