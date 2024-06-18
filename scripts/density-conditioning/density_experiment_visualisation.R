@@ -92,17 +92,19 @@ viridis_colours <- viridis(10)
 
 ninety_1_4 <- feeding_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(6,6)])
 ninety_4_1 <- feeding_results(fourone_90mm_long , boxplot_fill_colour = viridis_colors[c(8,8)])
-ninety_combined <- feeding_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
+ninety_combined <- feeding_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(4,4,8,8)])
 
-ninety <- ninety_1_4 + ggtitle("90 mm") + ninety_4_1 + ninety_combined
+ninety <- ninety_1_4 + ggtitle("90 mm") + ninety_4_1 
 
 
+ninety_combined /
+  fifty_combined
 
 fifty_1_4 <- feeding_results(onefour_50mm_long , boxplot_fill_colour  = viridis_colors[c(6,6)])
 fifty_4_1 <- feeding_results(fourone_50mm_long , boxplot_fill_colour = viridis_colors[c(8,8)])
-fifty_combined <- feeding_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
+fifty_combined <- feeding_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colors[c(4,4,8,8)])
 
-fifty <- fifty_1_4 + ggtitle("35 mm") + fifty_4_1 + fifty_combined 
+fifty <- fifty_1_4 + ggtitle("35 mm") + fifty_4_1
 
 ninety / 
   fifty
