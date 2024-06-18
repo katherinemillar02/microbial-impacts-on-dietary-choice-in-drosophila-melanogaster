@@ -75,7 +75,7 @@ exclude_ninety <- grepl(ninety, two_choice_density_df$id)
 two_choice_density_df_fifty <- two_choice_density_df[!exclude_ninety, ]
 
 
-
+## two choice densiry 
 glmer.mm <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * density   + (1|plate) + (1|observation) , family = binomial, data = two_choice_density_df)
 
 summary(glmer.mm)
@@ -112,3 +112,19 @@ drop1(glmer.mm_density, test = "Chisq")
 
 
 summary(glmer.mm_density)
+
+
+## Four choice density 
+fourone_90mm <- read_excel("data/density_experiment/densityexperiment_90mm_4-1.xlsx")
+onefour_90mm <- read_excel("data/density_experiment/densityexperiment_90mm_1-4.xlsx")
+
+fourone_50mm <- read_excel("data/density_experiment/densityexperiment_50mm_4-1.xlsx")
+onefour_50mm <- read_excel("data/density_experiment/densityexperiment_50mm_1-4.xlsx")
+
+
+glmer.mm_density <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + density  + (1|plate) + (1|observation) , family = binomial, data = two_choice_density_df)
+drop1(glmer.mm_density, test = "Chisq")
+
+summary(glmer.mm_density)
+
+## used cbind so can't do interaction effecr
