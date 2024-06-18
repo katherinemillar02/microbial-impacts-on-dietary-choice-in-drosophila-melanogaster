@@ -93,8 +93,11 @@ oviposition_results <- function(summary_data,boxplot_fill_colour ) {
 viridis_colours <- viridis(10)
 
 
-ninety_1_4 <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(6,6)])
+ninety_1_4 <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(4,4)])
 ninety_4_1 <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = viridis_colors[c(8,8)])
+
+
+
 ninety_combined <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
 
 ninety_1_4 <- ninety_1_4 + ggtitle("90 mm")
@@ -102,17 +105,34 @@ ninety_1_4 <- ninety_1_4 + ggtitle("90 mm")
 ninety <- ninety_1_4 + ninety_4_1 + ninety_combined
 
 
+ninety_1_4 + ninety_4_1
 
-fifty_1_4 <- oviposition_results(onefour_50mm_long , boxplot_fill_colour = viridis_colors[c(6,6)])
+fifty_1_4 <- oviposition_results(onefour_50mm_long , boxplot_fill_colour = viridis_colors[c(4,4)])
 fifty_4_1 <- oviposition_results(fourone_50mm_long , boxplot_fill_colour = viridis_colors[c(8,8)])
+
 fifty_combined <- oviposition_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
 
 fifty_1_4 <- fifty_1_4 + ggtitle("35 mm")
 
+nine <- ninety_1_4 + ninety_4_1 
+
+nine <- nine + ggtitle("90 mm")
+three <- three + ggtitle("35 mm")
+
+
+three <- fifty_1_4 +  fifty_4_1
+
+nine / 
+  three
 
 fifty <- fifty_1_4 +  fifty_4_1 + fifty_combined 
 
 ninety / 
   fifty
+
+fifty_combined /
+  ninety_combined
+  
+
 
 
