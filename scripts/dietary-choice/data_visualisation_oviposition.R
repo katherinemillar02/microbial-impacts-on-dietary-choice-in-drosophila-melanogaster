@@ -423,7 +423,7 @@ ov1_egg_1_4 <- oviposition_results(onefour_ovi_of, boxplot_fill_colour = viridis
 ov1_egg_4_1 <- oviposition_results(fourone_ovi_of, boxplot_fill_colour = viridis_colors[c(8,8)])
 
 
-ov1_egg_combined <- oviposition_results(combined_ovi_of, boxplot_fill_colour = viridis_colors[c(6, 6, 8, 8)])
+ov1_egg_combined <- oviposition_results(combined_ovi_of, boxplot_fill_colour = viridis_colors[c(4, 4, 8, 8)])
 ################ --
 
 ## Using grid.arrange to put the plots together
@@ -445,7 +445,7 @@ v1_egg_1_4  <- oviposition_results(onefour_ovi_vf, boxplot_fill_colour = viridis
 v1_egg_4_1 <- oviposition_results(fourone_ovi_vf, boxplot_fill_colour = viridis_colors[c(8,8)])
 
 # 4:1 and 1:4 
-v1_egg_combined <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
+v1_egg_combined <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = viridis_colors[c(4,4,8,8)])
 
 
 
@@ -474,7 +474,7 @@ m_egg_1_4 <- oviposition_results(onefour_ovi_m, boxplot_fill_colour  = viridis_c
 m_egg_4_1 <- oviposition_results(fourone_ovi_m, boxplot_fill_colour  = viridis_colors[c(8,8)])
 
 # 1:4 and 4:1 
-m_egg_combined <- oviposition_results(combined_ovi_m, boxplot_fill_colour  = viridis_colors[c(6,6,8,8)])
+m_egg_combined <- oviposition_results(combined_ovi_m, boxplot_fill_colour  = viridis_colors[c(4,4,8,8)])
 
 
 
