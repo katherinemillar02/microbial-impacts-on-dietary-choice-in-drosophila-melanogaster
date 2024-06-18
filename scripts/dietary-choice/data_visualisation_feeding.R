@@ -216,7 +216,7 @@ of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis_colors[c(6,6
 
 of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = viridis_colors[c(8,8)])
 
-of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
+of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[c(4,4,8,8)])
 
 
 
@@ -232,7 +232,9 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
 ############################## --
 vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[c(6,6)])
 vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[c(8,8)])
-vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(6,6,8,8)])
+vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(4,4,8,8)])
+
+combined_plot <- grid.arrange(v_1_4, v_4_1, nrow = 1, top = "Model: cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation)")
 
 
 ## Using grid.arrange to put the plots together
@@ -245,9 +247,13 @@ virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
 ###################### --
 ## WILD TYPE MALES ####
 ##################### --
-m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour  = viridis_colors[c(6,6)])
+m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour  = viridis_colors[c(4,4)])
 m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour  = viridis_colors[c(8,8)])
-m_combined <- feeding_results(combined_m, boxplot_fill_colour  = viridis_colors[c(6,6,8,8)])
+m_combined <- feeding_results(combined_m, boxplot_fill_colour  = viridis_colors[c(4,4,8,8)])
+
+combined_plot <- grid.arrange(m_1_4, m_4_1, nrow = 1, top = "Model: cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation)")
+
+
 
 
 ## Using grid.arrange to put the plots together
@@ -263,7 +269,7 @@ male_feeding <- grid.arrange(m_1_4, m_4_1, m_combined,
 ## OVERALL GRID 
 overall_feeding <- grid.arrange(m_1_4 + ggtitle("Male Conditioning"), m_4_1 + ggtitle("Male Conditioning"), m_combined + ggtitle("Male Conditioning"),
                                 of_1_4 + ggtitle("OvoD1 Female Conditioning"), of_4_1 + ggtitle("OvoD1 Female Conditioning"), of_combined + ggtitle("OvoD1 Female Conditioning"),
-                                vf_1_4 + ggtitle("Virgin Female Conditioning"), vf_4_1+ ggtitle("Virgin Female Conditioning"), vf_combined+ ggtitle("Virgin Female Conditioning"),  
+                                vf_1_4 + ggtitle("Virgin Female Conditioning"), vf_4_1 + ggtitle("Virgin Female Conditioning"), vf_combined+ ggtitle("Virgin Female Conditioning"),  
                                 nrow = 3,
                                 widths = c(0.5,0.5,1),
                                 heights = c(1,1,1))
