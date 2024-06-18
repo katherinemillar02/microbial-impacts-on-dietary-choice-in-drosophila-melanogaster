@@ -288,6 +288,7 @@ emmeans::emmeans(glmer.mm_m, pairwise ~ ratio , random = ~ (1|plate) + (1|observ
 ## Need to know how to interpret this model
 
 
+glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
 
 
@@ -361,7 +362,7 @@ emmeans::emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation, typ
 
 
 ##################--
-## OVOD1 FEMALE ####
+## OVOD1 FEMALE ##
 ##################--
 ## creating a data column where flies are not on the plate 
 df2_ovod1 <- df2_ovod1 %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
@@ -523,8 +524,10 @@ summary(glm_mm_m) #
 
 ## says intercation term is sig 
 
-> combined_m <- combined_m %>%
+combined_m <- combined_m %>%
      separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
 # dropping block from the model (mixed model)
 glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  * block + (1|plate/block) + (1|observation), family = poisson, data = combined_m)
 
@@ -791,7 +794,7 @@ summary(zi.nb_of) # not significant?
 
 
 # dropping block from the model 
-zi.p_of <- zeroinfl(fly_numbers ~ diet  | diet, dist = "negbin", link = "logit", data = combined_of)
+
 
 
 # new model 
