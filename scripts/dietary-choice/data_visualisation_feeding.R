@@ -207,16 +207,17 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 ## Setting colours 
 viridis_colors <- viridis(10)
 
+viridis_colors <- inferno(10)
 ##################### --
 ## OvoD1 FEMALES ####
 ##################### --
-of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis_colors[c(6,6)])
+of_1_4 <- feeding_results(onefour_of, boxplot_fill_colour = viridis_colors[c(9,9)])
 
 
 
-of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = viridis_colors[c(8,8)])
+of_4_1 <- feeding_results(fourone_of, boxplot_fill_colour = viridis_colors[c(7,7)])
 
-of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[c(4,4,8,8)])
+of_combined <- feeding_results(combined_of, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
 
 
 
@@ -230,9 +231,9 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
 ############################## --
 ## VIRGIN WILD TYPE FEMALES ####
 ############################## --
-vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[c(6,6)])
-vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[c(8,8)])
-vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(4,4,8,8)])
+vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[c(9,9)])
+vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[c(7,7)])
+vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
 
 combined_plot <- grid.arrange(v_1_4, v_4_1, nrow = 1, top = "Model: cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation)")
 
@@ -247,9 +248,9 @@ virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
 ###################### --
 ## WILD TYPE MALES ####
 ##################### --
-m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour  = viridis_colors[c(4,4)])
-m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour  = viridis_colors[c(8,8)])
-m_combined <- feeding_results(combined_m, boxplot_fill_colour  = viridis_colors[c(4,4,8,8)])
+m_1_4  <- feeding_results(onefour_m, boxplot_fill_colour  = viridis_colors[c(9,9)])
+m_4_1 <- feeding_results(fourone_m, boxplot_fill_colour  = viridis_colors[c(7,7)])
+m_combined <- feeding_results(combined_m, boxplot_fill_colour  = viridis_colors[c(9,9,7,7)])
 
 combined_plot <- grid.arrange(m_1_4, m_4_1, nrow = 1, top = "Model: cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation)")
 
