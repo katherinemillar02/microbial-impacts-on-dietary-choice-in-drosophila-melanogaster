@@ -80,7 +80,7 @@ df2_male <- df_male %>%
 df2_male
 
 
-
+###########################################################################---
 ###  using the 4:1 and 1:4 dataset and making a dataset without 1:4 
 
 
@@ -99,7 +99,7 @@ exclude_fourone <- grepl(fourone, df2_male$id)
 # Subset the dataframe to exclude rows with the "1-4" pattern
 df2_male_exclude_fourone <- df2_male[!exclude_fourone, ]
 
-
+###########################################################################---
 
 
 
@@ -224,13 +224,20 @@ df2_ovod1 <- df_ovod1 %>%
 
 
 
+
+
+
+
+
+
+
 ########################## Data Analysis Part 1 (4:1 + 1:4) !!!! ############################
 
 ##########--
 ## MALE ####
 ##########--
 
-## Creating a data column where flies are not on the plate 
+## Creating a data column where flies are not on the plate - possibly analysis to consider at some point?
 df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned)) ## This is currently not used in any of the models
 
 ## MODELS 
@@ -238,57 +245,63 @@ df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned)) #
 ## MODEL 1
 ## A binomial model, not considering other "random" factors
 ## cbind() is used - the response variables are Conditioned and Unconditioned
-glm.bin_m <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_male)
+glm.bin.m <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_male)
 
 # ASSUMPTION CHECKING:
 ## Checking Residuals
-glm.bin_m_residuals <- residuals(glm.bin_m, type = "pearson")
+glm.bin.m.residuals <- residuals(glm.bin_m, type = "pearson")
 
 # pearson residual check
-plot(glm.bin_m_residuals ~ fitted(glm.bin_m), ylab = "Pearson Residuals", xlab = "Fitted Values")
+plot(glm.bin.m.residuals ~ fitted(glm.bin.m), ylab = "Pearson Residuals", xlab = "Fitted Values")
 abline(h = 0, col = "red")
 
 ## MODEL CHECK for overdispersion
-summary(glm.bin_m) # overdispersion
+summary(glm.bin.m) # overdispersion
 
 
 ## MODEL 2 
 # trying a mixed model, considers other "random" factors
-glmer.mm_m <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+glmm.bin.m <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
-emmeans::emmeans(pa)
+
 ## Assumption checks 
 
 # Performance check of data using "easystats":
-performance::check_model(glmer.mm_m, check = c("qq")) # qq looks pretty good 
-performance::check_model(glmer.mm_m, check = c("homogeneity")) #?? 
+performance::check_model(glmm.bin.m, check = c("qq")) # qq looks pretty good 
+performance::check_model(glmm.bin.m, check = c("homogeneity")) #?? 
 
 ## DHARMa performance checks
-testDispersion(glmer.mm_m) 
+testDispersion(glmm.bin.m) 
 
-# Model is okay to be used? 
+       # Model is okay to be used? 
 
-# Using MODEL 2 for analysis? 
+## AIC Check of models 
+AIC(glm.bin.m, glmm.bin.m)
+
+## Binomial GLMM has a slighty lower AIC
+
+# Using MODEL 2 (Binomial GLMM) for analysis? 
 
 # Looking for significance in "block" 
-summary(glmer.mm_m) 
-drop1(glmer.mm_m, test = "Chisq")
+summary(glmm.bin.m) 
+drop1(glmm.bin.m, test = "Chisq")
 # Block is not significant, so dropping from the model 
 
-# MODEL 2.1
-glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+# MODEL 2.1 
+glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+
+
 
 ## Looking at the results of the model 
-summary(glmer.mm_m_2) # only 4:1 is significant? 
+summary(glmm.bin.m.2) # only 4:1 is significant? 
 
 
 ## Trying to look at the results of the model using emmeans()
-emmeans::emmeans(glmer.mm_m, pairwise ~ ratio , random = ~ (1|plate) + (1|observation))
+emmeans::emmeans(glmm.bin.m.2, pairwise ~ ratio , random = ~ (1|plate) + (1|observation))
 # Really want to look at Conditioned vs Unconditioned?
 ## Need to know how to interpret this model
 
 
-glmer.mm_m_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
 
 
@@ -310,44 +323,49 @@ df2_virgin <- df2_virgin %>% mutate(no_flies = 10 - (Conditioned + Unconditioned
 
 ## MODEL 1 
 ## A binomial model, not considering other "random" factors
-glm.bin_vf <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin)
+glm.bin.vf <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin)
 
 # Assumption checks 
-performance::check_model(glm.bin_vf, check = c("qq")) # Can't do easystats assumption checks?? 
-performance::check_model(glm.bin_vf, check = c("homogeneity")) 
+performance::check_model(glm.bin.vf , check = c("qq")) # Can't do easystats assumption checks?? 
+performance::check_model(glm.bin.vf , check = c("homogeneity")) 
 
 # Assumption checking 
-summary(glm.bin_vf) # Model is overdispersed 
+summary(glm.bin.vf) ## There is overdispersion
 
+
+## MODEL 2 
 # Mixed model, considers other "random" factors
-glmer.mm_vf <- glmer(cbind(Conditioned, Unconditioned) ~ ratio*block + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) + (1|observation), family = binomial, data = df2_virgin)
 
 # Assumption checks 
-performance::check_model(glmer.mm_vf, check = c("qq")) # qq looks pretty great
-performance::check_model(glmer.mm_vf, check = c("homogeneity")) # what is going on? 
+performance::check_model(glmm.bin.vf, check = c("qq")) # qq looks pretty great
+performance::check_model(glmm.bin.vf, check = c("homogeneity")) # what is going on? 
 
 # DHARMa checks 
-testDispersion(glmer.mm_vf) ## hmm - overdispersed?? 
-simulationOutput_glmer.mm_vf <- simulateResiduals(fittedModel = glmer.mm_vf, plot = F)
-plot(simulationOutput_glmer.mm_vf) # all these models look the samen to me 
+testDispersion(glmm.bin.vf) ## overdispersed?? 
+simulationOutput_glmm.bin.vf <- simulateResiduals(fittedModel = glmm.bin.vf, plot = F)
+plot(simulationOutput_glmm.bin.vf) 
+
+## Doing AIC check 
+AIC(glm.bin.vf,glmm.bin.vf) 
+   # The Binomial GLMM has slightly higher AIC, but choosing this anyway as considers random factors 
 
 
-# using this model 
-glmer.mm_vf <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
-# looking for significance in block 
-drop1(glmer.mm_vf, test = "Chisq") # block is not significant, can be dropped from the model
+## Using Binomial GLMM for analysis
+glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
-
-# Model 2 - where block has been removed
-glmer.mm_vf_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+# Looking for significance in block 
+drop1(glmm.bin.vf, test = "Chisq") # No interaction effect between ratio and block
 
 
-summary(glmer.mm_vf_2) 
+# Model 2.1 - where block has been removed...
+glmm.bin.vf.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block +  (1|plate) +(1|observation), family = binomial, data = df2_virgin)
 
-emmeans::emmeans(glmer.mm_vf_2, pairwise ~ ratio, random = ~ 1 | plate + observation)
+# Finding results from the model
+summary(glmm.bin.vf.2) 
 
-
+## Finding response variables for written analysis 
 emmeans::emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation, type = "response")
 
 
@@ -362,64 +380,68 @@ emmeans::emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation, typ
 
 
 ##################--
-## OVOD1 FEMALE ##
+## OVOD1 FEMALE ####
 ##################--
-## creating a data column where flies are not on the plate 
+## Creating a data column where flies are not on the plate 
 df2_ovod1 <- df2_ovod1 %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
 
-## trying a binomial model
-glm.bin_of <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block , family = binomial, data = df2_ovod1)
+## Model 1- Trying a binomial model
+glm.bin.of <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block , family = binomial, data = df2_ovod1)
 
-# assumption checks for binomial model 
-summary(glm.bin_of) # there is overdispersion 
-
-
-# mixed model, considers other "random" factors
-glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
+# Assumption checks for binomial model 
+summary(glm.bin.of) # There is overdispersion 
 
 
-# assumption checking 
+## Model 2 
+# Mixed model, considers other "random" factors
+glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
+
+
+# Assumption checking 
 
 # easystats
-performance::check_model(glmer.mm_of, check = c("qq")) # looks pretty good
-performance::check_model(glmer.mm_of, check = c("homogeneity")) # I think looks okay 
+performance::check_model(glmm.bin.of, check = c("qq")) # looks pretty good
+performance::check_model(glmm.bin.of, check = c("homogeneity")) # I think looks okay 
 
 # DHARMa checks 
-testDispersion(glmer.mm_of) # not like the others? 
+testDispersion(glmm.bin.of) # not like the others? 
 
-simulationOutput_glmer.mm_of <- simulateResiduals(fittedModel = glmer.mm_of, plot = F)
+simulationOutput_glmm.bin.of <- simulateResiduals(fittedModel = glmm.bin.of, plot = F)
 plot(simulationOutput_glmer.mm_of) # all looks the same to me? 
 
+## Doing AIC checks 
+AIC(glm.bin.of, glmm.bin.of)
+  ## Mixed model has lower AIC, and it considers random effects, so stucking with this
+
+# Using this model
+glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
 
 
-# using this model
-glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
-
-summary(glmer.mm_of )
-
-emmeans::emmeans(glmer.mm_of, ~ ratio, type = "response")
-
-# looking at the significance of block
-drop1(glmer.mm_of, test = "Chisq") 
+# Looking at the significance of block
+drop1(glmm.bin.of, test = "Chisq") 
 # block is significant, keep in the model
 
-# checking out the model
-summary(glmer.mm_of) # says block is not significant here? what to use? 
+
+## Analysis of glmm.bin.of
+summary(glmm.bin.of)
 
 
-glmer.mm_of_2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  + block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
-
-summary(glmer.mm_of_2) 
-
-
+## Finding the response variables from emmeans 
+emmeans::emmeans(glmm.bin.of, ~ ratio, type = "response")
 
 
 
 
 
-   glmer.mm_of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate) + (1|observation), family = binomial, data = df2_ovod1)
+## How to analyse when block is significant, can't get rid of interaction effect. 
 
- summary(glmer.mm_of)
+
+
+
+
+
+
+
 
 
 
@@ -433,6 +455,8 @@ summary(glmer.mm_of_2)
 
 
 ## MALE ####
+
+
 #### UPLOADING AND BINDING THE CORRECT DATA
 # 4:1 + 1:4 
 fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b1.xlsx")
@@ -442,7 +466,7 @@ fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t
 fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
 fourone_onefour_male_b2 <- fourone_onefour_male_b2  %>% mutate(block = "two")
 
-# binding the data
+# Binding the data
 fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
 
@@ -451,113 +475,133 @@ combined_m <- fourone_onefour_male %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
+
+
+## Data Analysis 
+
 ## Doing poisson to begin with 
-glm_poisson_m <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_m)
+glm.pois.m.4choice <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_m)
 
-# doing assumption checks before seeing if overdispersion can be checked
-performance::check_model(glm_poisson_m, check = c("qq")) # qq looks ok?
-performance::check_model(glm_poisson_m, check = c("outliers")) # weird 
-performance::check_model(glm_poisson_m, check = c("homogeneity")) # does this look okay maybe? 
+# Doing assumption checks before seeing if overdispersion can be checked
+performance::check_model(glm.pois.m.4choice, check = c("qq")) # qq looks ok?
+performance::check_model(glm.pois.m.4choice, check = c("outliers")) # weird 
+performance::check_model(glm.pois.m.4choice, check = c("homogeneity")) # does this look okay maybe? 
 
 
-# checking for overdispersion
-summary(glm_poisson_m) # A bit overdispersed 
+# Checking for overdispersion
+summary(glm.pois.m.4choice) # A bit overdispersed 
 
 # Look for 0s 
-check_zeroinflation(glm_poisson_m)
+check_zeroinflation(glm.pois.m.4)
 # there is zero inflation 
 
 # There is overdispersion, this could be independent of or because of the zero inflation
-# so trying negative binomial family 
-## trying to look for significance of experiment with a negative binomial model
+# So trying negative binomial family 
+## Trying to look for significance of experiment with a negative binomial model
 
-# negative binomial model
-glm.nb_m <- glm.nb(fly_numbers ~ diet * block, data = combined_m)
+
+
+
+# Negative binomial model
+glm.nb.m.4choice <- glm.nb(fly_numbers ~ diet * block, data = combined_m)
 
 # assumption checks for negative binomial model
 # easystats
-performance::check_model(glm.nb_m, check = c("qq")) # looks the same as glm poisson. 
-performance::check_model(glm.nb_m, check = c("outliers")) # weird 
-performance::check_model(glm.nb_m, check = c("homogeneity")) # looks the same again 
+performance::check_model(glm.nb.m.4choice, check = c("qq")) # looks the same as glm poisson. 
+performance::check_model(glm.nb.m.4choice, check = c("outliers")) # weird 
+performance::check_model(glm.nb.m.4choice, check = c("homogeneity")) # looks the same again 
 
-# checking for overdispersion 
-summary(glm.nb_m)
-
-# no evidence of overdispersion but still highly skewed residuals do random effects help?
-
-# trying a mixed model with GLM and poisson 
-glm_mm_m <- glmmTMB(fly_numbers ~ diet * block +(1|factor(block)/plate) + (1|observation), family = poisson, data = combined_m)
-
-performance::check_model(glm_mm_m, check = c("qq")) # qq looks a lot better
-
-check_zeroinflation(glm_mm_m) # there is still zero inflation 
-
-# usind DHARMa to look at residuals of new model 
-simulateResiduals(fittedModel = glm_mm_m, plot = T)
+# Checking for overdispersion 
+summary(glm.nb.m.4choice)
+   # No evidence of overdispersion but still highly skewed residuals, do random effects help?
 
 
-# trying a zero inflated poisson model with poisson, and mixed model 
-zi.p_m <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_m)
 
 
-# trying a zero inflated negative binomial model 
-zi.nb_m <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_m)
 
-# comparing AIC of the different models 
-AIC(glm_poisson_m, glm.nb_m, glm_mm_m, zi.p_m, zi.nb_m)
-# glm_mm_m has the lowest AIC, but AIC values close to each other are basically the same (like 5 values?)
+    # Trying a mixed model with GLM and poisson 
+glmm.m.4choice <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_m)
 
-# check residuals of zip
+## Assumption checks
+performance::check_model(glmm.m.4, check = c("qq")) # qq looks a lot better
 
-sresid <- residuals(zi.p_m, type = "pearson")
-pred <- fitted(zi.p_m)
+## Looking for inflation of zeros
+check_zeroinflation(glmm.m.4) # There is still zero inflation 
+
+# using DHARMa to look at residuals of new model 
+simulateResiduals(fittedModel = glmm.m.4, plot = T)
+
+# Trying a zero inflated poisson model with poisson
+zi.pois.m.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_m)
+
+## Assumption checks 
+sresid <- residuals(zi.pois.m.4, type = "pearson")
+pred <- fitted(zi.pois.m.4)
 hist(sresid)
 plot(sresid ~  pred)
 
 
+# Trying a zero inflated negative binomial model 
+zi.nb.m.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_m)
 
-# this model to be chosen 
-glm_mm_m <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_m)
+ 
 
-drop1(glm_mm_m, test = "Chi") # 
-summary(glm_mm_m) # 
 
-## says intercation term is sig 
+# Comparing AIC of the different models 
+AIC(glm.pois.m.4choice, glm.nb.mchoice, glmm.m.4choice, zi.pois.m.4choice, zi.nb.m.4choice)
+# glm_mm_m has the lowest AIC, but AIC values close to each other are basically the same (like 5 values?)
 
+
+
+
+
+
+# This model to be chosen:
+glmm.m.4choice <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_m)
+
+## Testing for an interaction effect 
+drop1(glmm.m.4, test = "Chi") # Small interaction, but still exists 
+
+
+
+# With the chosen model, splitting up "diet" into ratio and condition.
+
+## Splitting up diet within the actual data frame
 combined_m <- combined_m %>%
      separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
-# dropping block from the model (mixed model)
-glm_mm_m_2 <- glmmTMB(fly_numbers ~ diet  * block + (1|plate/block) + (1|observation), family = poisson, data = combined_m)
+## Testing for interaction effects with the new model
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m)
 
-glm_mm_m_3 <- glmmTMB(fly_numbers ~ ratio * condition  + block + (1|plate) + (1|observation), family = poisson, data = combined_m)
+## This will show results for the 3-way interaction
+drop1(glmm.m.4choice.2, test = "Chisq")
 
-summary(glm_mm_m_3 )
-drop1(glm_mm_m_3, test = "Chisq" ) ## no interaction effect between ratio and treatment
+## This shows everything
+summary(glmm.m.4choice.2)
 
-# New model
-glm_mm_m_3 <- glmmTMB(fly_numbers ~ ratio + condition  + block + (1|plate) + (1|observation), family = poisson, data = combined_m)
+## Results show there is no 3-way interaction, so this can be removed
+glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m)
 
-summary(glm_mm_m_3 ) ## learn how to read the data again
+drop1(glmm.m.4choice.2, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
 
-## results of model with block 
-summary(glm_mm_m)  
-
-# checking the results of the model without block 
-summary(glm_mm_m_2) 
-## here block is removed, but it seems to remove block two that had an extra 5 plates. 
-# instead of keeping it binded. 
+## Newest model - final model 
+glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m)
 
 
+## Analysis of the results
+summary(glmm.m.4choice.4)
 
-summary(glm_mm_m_3)
-
-emmeans::emmeans(glm_mm_m_3, pairwise ~ diet)
+## Tukey test pairwise 
+emmeans::emmeans(glm_mm_m_3, pairwise ~  ratio + condition)
 
 
 
-# Virgin Female Assay ####
+
+
+
+# VIRGIN FEMALE ####
+
 
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
