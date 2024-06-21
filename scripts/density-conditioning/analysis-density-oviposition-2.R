@@ -1,7 +1,11 @@
 #### OVIPOSITION ANALYSIS 
 
+
+#### Reading the data in 
 ovipositiondensitypath <- "data/density_experiment"
 
+
+## Creating a data file path 
 read_raw_oviposition_density <- function(path = ovipositiondensitypath, pattern_to_exclude = "combined"){
   list_of_files <- list.files(path = ovipositiondensitypath,
                               pattern = "oviposition_2", full.names = T)
