@@ -61,4 +61,24 @@ glmm.density.4choice <- glmmTMB(fly_numbers ~ ratio * treatment * density + rati
 drop1(glmm.density.4choice, test = "Chisq") 
    ## No 3-way interaction effect found
 
-glmm.density.4choice.
+glmm.density.4choice.2 <- glmmTMB(fly_numbers ~  ratio * treatment + ratio * density + treatment * density + (1|plate) + (1|observation), family = poisson, data = combined_assays)
+
+## Testing for 2-way interacation effects
+drop1(glmm.density.4choice.2, test = "Chisq") 
+  ## No interaction effect found between treatment and density
+  ## Interaction effects found between ratio and treatment, and ratio and density
+
+## Final model, contains significant interaction effects
+glmm.density.4choice.3 <- glmmTMB(fly_numbers ~  ratio * treatment + ratio * density  + (1|plate) + (1|observation), family = poisson, data = combined_assays)
+
+## Shows thwe remaining interaction effects.
+drop1(glmm.density.4choice.3, test = "Chisq") 
+
+## Overall analysis
+summary(glmm.density.4choice.3)
+
+## Tukey test pairwise 
+emmeans::emmeans(glmm.density.4choice.3, pairwise ~ ratio + treatment)
+
+
+#### I don't know how to interpret this exactly, but is the point in this model maily just looking for an interaction between density and ratio/  treatment? 
