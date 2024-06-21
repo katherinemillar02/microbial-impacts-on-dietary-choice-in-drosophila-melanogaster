@@ -93,4 +93,6 @@ combinedoviposition <- rbind(fourone_onefour_90mm_long, fourone_onefour_50mm_lon
 
 combined_glm_mm_m_egg <- glmmTMB(egg_numbers ~ diet * density + (1|plate) , family = poisson, data = combinedoviposition)
 
-drop1(combined_glm_
+drop1(combined_glm_mm_m_egg, test = "Chisq")
+
+summary(combined_glm_mm_m_egg)
