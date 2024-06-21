@@ -602,119 +602,127 @@ emmeans::emmeans(glm_mm_m_3, pairwise ~  ratio + condition)
 
 # VIRGIN FEMALE ####
 
-
+#### Reading in the data
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
 fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
 fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
 
 
-# mutating a block variable 
+## Mutating a block variable 
 fourone_onefour_virgin_b1 <- fourone_onefour_virgin_b1  %>% mutate(block = "one")
 fourone_onefour_virgin_b2 <- fourone_onefour_virgin_b2  %>% mutate(block = "two")
 fourone_onefour_virgin_b3 <- fourone_onefour_virgin_b3  %>% mutate(block = "three")
 fourone_onefour_virgin_b4 <- fourone_onefour_virgin_b3  %>% mutate(block = "four")
 
 # Binding the data
-fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4 )
+fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4)
+
+
 # Making the data long
 combined_vf <- fourone_onefour_virgin %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
-# glm with poisson
-glm_poisson_vf <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_vf)
+
+#### DATA ANALYSIS 
 
 
-# assumption checking
-performance::check_model(glm_poisson_vf, check = c("qq")) # almost banana - not great 
-performance::check_model(glm_poisson_vf, check = c("homogeneity")) # looks okay ? 
+# GLM with with poisson
+glm.pois.vf.4choice <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_vf)
+
+
+# Assumption checking
+performance::check_model(glm.poisson.vf.4choice, check = c("qq")) # almost banana - not great 
+performance::check_model(glm.poisson.vf.4choice, check = c("homogeneity")) # looks okay ? 
 
 # looking for overdispersion in the model
-summary(glm_poisson_vf) # shows slight overdispersion 
+summary(glm.poisson.vf.4choice) # shows slight overdispersion 
 
 # overdispersion so checking for zero inflation
-check_zeroinflation(glm_poisson_vf) # no zero inflation?? 
+check_zeroinflation(glm.poisson.vf.4choice) # No zero inflation?? 
+
+
+# Trying quasipoisson
+glm.quasipoisson.vf.4choice <- glm(fly_numbers ~ diet * block, family = quasipoisson, data = combined_vf)
+
+# Assumption checking
+performance::check_model(glm.quasipoisson.vf.4choice, check = c("qq")) # almost banana - not great - looks same 
+performance::check_model(glm.quasipoisson.vf.4choice, check = c("homogeneity")) # looks okay ? 
 
 
 
 
-# trying quasipoisson
-glm_quasipoisson_vf <- glm(fly_numbers ~ diet * block, family = quasipoisson, data = combined_vf)
+# Trying a negative binomial model to compare more models
+glm.nb.vf.4choice <- glm.nb(fly_numbers ~ diet * block + (1|plate) + (1|observation), data = combined_vf)
 
-# assumption checking
-performance::check_model(glm_quasipoisson_vf, check = c("qq")) # almost banana - not great - looks same 
-performance::check_model(glm_quasipoisson_vf, check = c("homogeneity")) # looks okay ? 
+## Assumption checks
+performance::check_model(glm.nb.vf.4choice, check = c("qq")) # qq looks slighty better? still off 
+performance::check_model(glm.nb.vf.4choice, check = c("homogeneity")) # maybe the same 
 
-
-
-# trying a negative binomial model
-glm.nb_vf <- glm.nb(fly_numbers ~ diet * block, data = combined_vf)
+## Checking for overdispersion
+summary(glm.nb.vf.4choice)  # a lot less overdispersion 
 
 
-performance::check_model(glm.nb_vf, check = c("qq")) # qq looks slighty better? still off 
-performance::check_model(glm.nb_vf, check = c("homogeneity")) # maybe the same 
 
-summary(glm.nb_vf)  # a lot less overdispersion 
+# Trying a generalised linear mixed model to compare more models
+glmm.vf.4choice <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_vf)
 
-# trying a mixed model 
-glm_mm_vf <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_vf)
+## Assumption checks
+performance::check_model(glmm.vf.4choice, check = c("qq")) # looks a lot better, slopes off at the end though
 
-performance::check_model(glm_mm_vf, check = c("qq")) # looks a lot better, slopes off at the end though
 
-# performance checking with DHARMa
-simulateResiduals(fittedModel = glm_mm_vf, plot = T)
+# Assumption checking with DHARMa
+simulateResiduals(fittedModel = glmm.vf.4choice , plot = T)
 
 
 
 
+## Checking the AIC of all the tested models 
+AIC(glm.pois.vf.4choice, glm.quasipoisson.vf.4choice, glm.nb.vf.4choice, glmm.vf.4choice) 
+    #### Negative Binomial GLM has lowest AIC (slightly), go with this for now as assumption checks were also ok? 
 
 
-# Trying zero inflated models - don't need as do not have zero inflation? 
-
-# zero inflated poisson 
-zi.p_vf <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_vf)
-
-# assumption checks?? 
+## Chosen model 
+glm.nb.vf.4choice <- glm.nb(fly_numbers ~ diet * block + (1|plate) + (1|observation), data = combined_vf)
 
 
-# zero inflated negative binomia; 
-zi.nb_vf <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_vf)
+# Splitting diet up with chosen model
 
-# assumption checks?? 
-
-AIC(glm_poisson_vf, glm_quasipoisson_vf, glm.nb_vf, glm_mm_vf) # maybe choose glm with negative binomial? 
-
-# choosing glm with nb for now 
-glm.nb_vf <- glm.nb(fly_numbers ~ diet * block, data = combined_vf)
-
-# looking at significance of block 
-drop1(glm.nb_vf, test = "F")
-summary(glm.nb_vf) 
-
-
-
-
-
-
-
-# splitting diet up 
-
-
-combined_vf <- combined_vf %>% 
+##  Using separate to split diet up into ratio and condition
+combined_vf_split <- combined_vf %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
-# new model
-glm.nb_vf_2  <- glm.nb(fly_numbers ~ ratio * condition + block, data = combined_vf)
+## The new model with diet split
 
-drop1(glm.nb_vf_2, test = "Chisq") ## no interaction effect
+## Trying with multiple, 3-way interactions
+glm.nb.vf.4choice.2  <- glm.nb(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
+
+## Testing for interaction
+drop1(glm.nb.vf.4choice.2, test = "Chisq") 
+   ## No interaction effect, 3-way interaction can be dropped from the model. 
+
+## Tests two-way interactions 
+glm.nb.vf.4choice.3  <- glm.nb(fly_numbers ~  ratio * condition + ratio * block + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
+
+## Finds interaction effects 
+drop1(glm.nb.vf.4choice.3, test = "Chisq")  
+     ## An interaction effect of condition and block found 
+
+# Final model
+glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~  ratio + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
+
+## To show interaction effects
+drop1(glm.nb.vf.4choice.4, test = "Chisq")  
 
 
-glm.nb_vf_2  <- glm.nb(fly_numbers ~ ratio + condition + block, data = combined_vf)
+## Using the final model for analysis 
+summary(glm.nb.vf.4choice.4)
 
-summary(glm.nb_vf_2)
-emmeans::emmeans(glm.nb_vf_2, pairwise ~ diet)
+## Two-way tukey test 
+emmeans::emmeans(glm.nb_vf_2, pairwise ~ ratio + condition)
 
+## Finding response variable for written analysis 
 emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
 # conditioning in 1:4 not significant. 
 
@@ -727,134 +735,144 @@ emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
 
 
 
-# OvoD1 Conditioning ####
-# 4:1-1:4 analysis -- 
-# mutating a block variable 
+
+
+# OVOD1 (EGGLESS) FEMALE ####
+ # Absolute Assay Analysis #
+
+
+## Reading the data in
 fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
 fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
 
-
+# Mutating a block variable 
 fourone_onefour_ovod1_b1 <- fourone_onefour_ovod1_b1  %>% mutate(block = "one")
 fourone_onefour_ovod1_b2 <- fourone_onefour_ovod1_b2  %>% mutate(block = "two")
 
-# Binding the data 
+# Binding the separate blocks 
 fourone_onefour_ovod1 <- rbind(fourone_onefour_ovod1_b1, fourone_onefour_ovod1_b2)
 
-# Making the data long
+## Cleaning the data, adding relevant variables
 combined_of <- fourone_onefour_ovod1 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
+
+#### DATA ANALYSIS
+
+
 # GLM with poisson 
-glm_poisson_of <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_of)
+glm.pois.of.4choice <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_of)
 
-# doing model checks 
-performance::check_model(glm_poisson_of, check = c("qq")) # doesn't look great - banana 
-performance::check_model(glm_poisson_of, check = c("homogeneity")) # slopey 
+# Assumption checks of model
+performance::check_model(glm.pois.of.4choice, check = c("qq")) # doesn't look great - banana 
+performance::check_model(glm.pois.of.4choice, check = c("homogeneity")) # slopey 
+
+# Checking for overdispersion
+summary(glm.pois.of.4choice) # There is overdispersion 
+
+# Overdispersion is found
+# Checking for zero inflation
+check_zeroinflation(glm.pois.of.4choice) # There is zero inflation 
 
 
-# checking for overdispersion
-summary(glm_poisson_of) # there is overdispersion 
 
-# overdispersion so checking for zero inflation
-check_zeroinflation(glm_poisson_of) # there is zero inflation 
 
-# Doing a negative binomial as there is zero inflation
-glm.nb_of <- glm.nb(fly_numbers ~ diet * block, data = combined_of)
+# Doing a negative binomial as there is overdispersion
+glm.nb.of.4choice <- glm.nb(fly_numbers ~ diet * block, data = combined_of)
 
-# checking the negative binomial glm 
-performance::check_model(glm.nb_of, check = c("qq")) # still very slopey 
+# Checking the Negative Binomial GLM 
+performance::check_model(glm.nb.of.4choice, check = c("qq")) # still very slopey 
 
 # using DHARMa to check 
-testDispersion(glm.nb_of) # this is fairly dispersed 
+testDispersion(glm.nb.of.4choice) # this is fairly dispersed 
 
-simulationOutput_of  <- simulateResiduals(fittedModel = glm.nb_of, plot = F)
+simulationOutput_of  <- simulateResiduals(fittedModel = glm.nb.of.4choice, plot = F)
 
 residuals(simulationOutput_of)
 plot(simulationOutput_of)
 testZeroInflation(simulationOutput_of)
 
 
-# checking for overdispersion 
-summary(glm.nb_of) # very little overdispersion 
-
-
-
-# trying a mixed GLM 
-glm_mm_of <- glmmTMB(fly_numbers ~ diet + block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_of)
-
-summary(glm_mm_of)
-
-
-emmeans::emmeans(glm_mm_of, pairwise ~ diet)
-emmeans::emmeans(glm_mm_of,  ~ diet, type = "response")
-# performance checks 
-performance::check_model(glm_mm_of, check = c("qq")) # qq looks a lot better, goes off at the end 
-
-# using DHARMa to check 
-testDispersion(glm_mm_of) # this is fairly dispersed 
-
-simulationOutput_ofmm  <- simulateResiduals(fittedModel = glm_mm_of, plot = F)
-
-residuals(simulationOutput_ofmm)
-plot(simulationOutput_ofmm)
-testZeroInflation(simulationOutput_ofmm)
+# Checking for overdispersion 
+summary(glm.nb.of.4choice) # very little overdispersion 
 
 
 
 
-# ZERO INFLATED MODELS 
 
-# trying a zero inflated poisson model 
-zi.p_of <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_of)
+# Trying a mixed GLMM, to consider random effects
+glmm.of.4choice <- glmmTMB(fly_numbers ~ diet + block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_of)
 
-# Using DHARMa to check 
-# cannot run? 
+## Checking for overdispersion 
+check_overdispersion(glmm.of.4choice)
+   ## Overdispersion detected 
 
-
-
-
-# trying a zero inflated negative binomial model 
-zi.nb_of <- zeroinfl(fly_numbers ~ diet + block , dist = "negbin", link = "logit", data = combined_of )
-
-emmeans::emmeans(zi.nb_of, ~ diet, type = "response")
-
-
-# need to do performance checks? 
-
-## signifiance of block
-drop1(zi.nb_of, test = "Chisq") 
-summary(zi.nb_of) ## says block is not sig but can we trust that 
-
-
-# comparing models 
-AIC(glm_poisson_of, glm.nb_of, glm_mm_of, zi.p_of, zi.nb_of)
-
-# choosing negative binomial? 
-
-# looking for significance in block 
-summary(zi.nb_of) # not significant? 
+## More assumption checks 
+performance::check_model(glmm.of.4choice, check = c("qq")) 
+    # Currently won't run, 21/06/24
 
 
 
-# dropping block from the model 
+# using DHARMa for assumption checks
+testDispersion(glmm.of.4choice) # This is fairly overdispersed 
+
+simulationOutput_glmm.of.4choice <- simulateResiduals(fittedModel = glmm.of.4choice, plot = F)
+
+residuals(simulationOutput_glmm.of.4choice)
+plot(simulationOutput_glmm.of.4choice)
+testZeroInflation(simulationOutput_glmm.of.4choice)
 
 
 
-# new model 
 
-combined_of <- combined_of %>% 
+# ZERO INFLATED MODELS - zeroinflation has been found, so trying zeroinflated models.
+
+# Trying a zero inflated poisson model 
+zi.p.of.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_of)
+
+
+# trying a zero inflated - negative binomial model 
+zi.nb.of.4choice <- zeroinfl(fly_numbers ~ diet + block , dist = "negbin", link = "logit", data = combined_of )
+
+
+    #### For the zeroinflated models, I don't know how to do performnance checks. 
+
+
+
+# Comparing all the models together 
+AIC(glm.pois.of.4choice, glm.nb.of.4choice, glmm.of.4choice, zi.p.of.4choice, zi.nb.of.4choice)
+
+  #### Choosing Zero Inflatted Poisson for now 
+
+
+#### Splitting variables in the model up: 
+combined_of_split <- combined_of_split %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
-zi.p_of <- zeroinfl(fly_numbers ~ ratio * condition, dist = "negbin", link = "logit", data = combined_of )
+## New model with all interactions
+zi.p.of.4choice.2 <- zeroinfl(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block, dist = "negbin", link = "logit", data = combined_of )
 
-drop1(zi.p_of, test = "Chisq") ## interaction effect!!
+# Testing for interaction effect
+drop1(zi.p.of.4choice.2, test = "Chisq") ## No 3-way interaction effect 
 
+# New model without a 3-way interaction
+zi.p.of.4choice.3 <- zeroinfl(fly_numbers ~  ratio * condition + ratio * block + condition * block, dist = "negbin", link = "logit", data = combined_of )
 
-# looking at the results 
-summary(zi.p_of)
+## Testing for 2-way interaction effects
+drop1(zi.p.of.4choice.3, test = "Chisq") 
+ ## Interaction effect found between condition and block, and ratio and condition 
 
-## Using emmeans for analysis 
-emmeans::emmeans(zi.p_of, pairwise ~ diet )
+## Final model?
+zi.p.of.4choice.4 <- zeroinfl(fly_numbers ~  ratio * condition  + condition * block , dist = "negbin", link = "logit", data = combined_of )
+
+## Testing for remaining interaction effects 
+drop1(zi.p.of.4choice.4, test = "Chisq") 
+
+## Using model for analysis
+summary(zi.p.of.4choice.4)
+
+## Tukey test pairwise 
+emmeans::emmeans(zi.p.of.4choice.4, pairwise ~ ratio + condition )
 
