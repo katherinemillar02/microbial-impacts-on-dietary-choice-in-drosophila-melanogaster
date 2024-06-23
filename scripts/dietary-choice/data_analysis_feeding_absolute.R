@@ -134,7 +134,7 @@ drop1(glmm.m.4, test = "Chi") # Small interaction, but still exists
 # With the chosen model, splitting up "diet" into ratio and condition.
 
 ## Splitting up diet within the actual data frame
-combined_m <- combined_m %>%
+combined_m_split <- combined_m %>%
      separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
