@@ -235,7 +235,6 @@ vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[c(9,9)
 vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[c(7,7)])
 vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
 
-combined_plot <- grid.arrange(v_1_4, v_4_1, nrow = 1, top = "Model: cbind(Conditioned, Unconditioned) ~ ratio + (1|plate) + (1|observation)")
 
 
 ## Using grid.arrange to put the plots together
