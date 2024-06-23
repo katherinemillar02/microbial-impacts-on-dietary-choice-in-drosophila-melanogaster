@@ -4,78 +4,11 @@ library(ggplot2)
 library(readxl)
 library(viridis)
 
-
-## Choosing colours from viridis to use: 
-viridis_colors <- viridis(10)
-
-################################################ PUPAE ANALYSIS ####
-
-
-## Reading pupae data in
-pupae_fitness <- read_excel("data/fitness_development/puape_data.xlsx")
-
-
-################################################ PUPAE DATA VISUALISATION ####
-
-## Creating a barplot
-## Pupae plot 1 
-# This plot uses the raw data set with time and hours set out normally 
-## This plot shows two counts per day (usually)
-pupae_fitness_plot <- ggplot(pupae_fitness, aes(x = `time (hours)`, y = pupae, fill = treatment)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  #geom_line(aes(col = treatment), position = position_dodge(width = 1)) +
-  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
-  theme_classic() +
-  theme(legend.position = "top",
-        legend.justification = "right")+
-  labs(x = "Time (hours) since eggs laid", 
-       y = "Number of Pupae emerged") +
-  labs(fill = "Treatment")
-
-
-
-
-
-## Reading the second pupae data set in 
-# This is the same data, but only shows one collection per day 
-# The middle hour point has been found, and the counts of both have been summed 
-pupae_fitness_2 <- read_excel("data/fitness_development/pupae_data_2.xlsx")
-
-
-## The second plot - pupae plot 2
-## This plot shows one collection per day, with data merged as described above
-pupae_fitness_plot_2 <- ggplot(pupae_fitness_2, aes(x = `time_hours`, y = pupae, fill = treatment)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  #geom_line(aes(col = treatment), position = position_dodge(width = 1)) +
-  scale_fill_manual(values = viridis_colors[c(1,6)], labels =  c("Conditioned", "Unconditioned")) +
-  theme_classic() +
-  theme(legend.position = "top",
-        legend.justification = "right")+
-  labs(x = "Time (hours) since eggs laid", 
-       y = "Number of Pupae emerged") +
-  labs(fill = "Treatment")
-
-
-## Boxplot ## 
-
-pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
-  geom_boxplot(outliers = FALSE, alpha =.4, position = position_dodge (width = 20)) + #width =10 ) +
-  geom_point(aes(fill = treatment),
-             size = 1.5, shape = 21,
-      position = position_jitterdodge(jitter.width = 6, dodge.width = 20)) +
-  scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
-  scale_x_continuous(breaks = unique(pupae_fitness_2$time_hours), labels = unique(pupae_fitness_2$time_hours)) +
-  theme_classic() +
-  theme(legend.position = "top",
-        legend.justification = "right",
-        legend.direction = "vertical",
-        strip.placement = "outside", 
-        strip.background = element_blank(),  
-        strip.text = element_blank())+
-  labs(x = "Time (hours) since eggs laid", 
-       y = "Number of pupae emerged",
-       fill = "Treatment") +
-  facet_grid(~time_hours, scales = "free_x")
+## Packages
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+library(viridis)
 
 
 
@@ -229,79 +162,6 @@ fly_females_plot_2 /
 
 fly_females_boxplot_2 /
   fly_males_boxplot_2
-
-
-##### PUTTING OVERALL EMERGENCE DATA OF FLIES ACROSS VIALS TOGETHER
-
-#### This code shows each vial, for each sex, and for each treatment 
-fly_emergence_sex <- fly_fitness_tidy %>%
-  filter(sex %in% c("females", "males")) %>%
-  group_by(vial, sex, treatment) %>%
-  summarise(total_count = sum(count, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(sex_treatment = paste(treatment, sex, sep = " ")) %>%
-  mutate(sex_treatment = factor(sex_treatment,
-                                levels = c("conditioned females", "unconditioned females",
-                                           "conditioned males", "unconditioned males")))
-
-
-
-#### CALCULATIONS 
-## Calculating median emergence by vial
-## This code combines sex and shows overall emergence
-fly_emergence_overall <- fly_fitness_tidy %>%
-  filter(sex %in% c("females", "males")) %>%
-  group_by(vial, treatment) %>%
-  summarise(overall_emergence = sum(count, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(sex_treatment = paste(treatment, "overall", sep = " ")) %>%
-  mutate(sex_treatment = factor(sex_treatment,
-                                levels = c("conditioned overall", "unconditioned overall")))
-
-
-## This code shows the median overall emergence (males and females combined) 
-vial_overall_emergence_median <- vial_overall_emergence  %>%
-  group_by(treatment) %>%
-  summarise(median_count = median(overall_emergence, na.rm = TRUE))
-
-
-
-## DATA VISUALISA5ION - Visualising overall emergence across vials 
-overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = total_count, fill = treatment)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) + 
-  geom_point(aes(fill = treatment), 
-             size = 2, shape = 21, 
-             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
-  scale_y_continuous(breaks = seq(0, 80, 10)) +
-  scale_x_discrete(labels = c("Females", "Males")) + 
-  theme_classic() +
-  scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
-  theme(legend.position = "top",
-        legend.justification = "right",
-        legend.direction = "vertical") +
-  labs(x = "Sex", 
-       y = "Number of Flies Emerged", 
-       fill = "Treatment") +
-  ylim(0, 80)
-
-
-
-
-## An overall code of emergence per time 
-emergence_per_time <- fly_fitness %>%
-  group_by(treatment, time_hours) %>%
-  summarize(total_females = sum(females, na.rm = TRUE),
-            total_males = sum(males, na.rm = TRUE)) %>%
-  ungroup()
-
-
-
-
-
-
-
-
-
 
 
 
