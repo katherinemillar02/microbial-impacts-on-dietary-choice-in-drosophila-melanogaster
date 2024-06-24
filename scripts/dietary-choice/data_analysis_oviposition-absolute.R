@@ -59,7 +59,7 @@ summary(combined_od1_glm.p) ## Very overdispersed
 check_zeroinflation(glm.pois.ovi.4choice) ## No zero inflation?? 
 
 # Looking at qq
-## Generating residuals 
+  ## Generating residuals 
 residuals_p <- residuals(glm.pois.ovi.4choice, type = "pearson")
 qnorm(residuals_p)
 ## Will generate a qq 
@@ -295,9 +295,10 @@ drop1(glm.nb_of_comb_egg_2, test = "F") ## not sig
 ## analysing results 
 summary(glm.nb_of_comb_egg_2)
 
-## pairwise test
+## Tukey Pairwise test
 emmeans::emmeans(glm.nb_of_comb_egg_2, ~ diet, type = "response")
 
+## Getting the response values for written analysis
 emmeans(glm_mm_m_3, specs = ~ diet, type = "response" )
 
 
@@ -425,7 +426,7 @@ AIC(comb_v_egg_glm.p , glm.nb_v_comb_egg, glm_mm_v_egg, zif.p_v_egg, zif.nb_v_eg
 
 
 ## Using the negative binomial glm
-glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet + block, data =  combined_ovi_v)
+glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
 
 ## tesing the signifiance of block 
 drop1(glm.nb_v_comb_egg , test = "F") # block is significant 
