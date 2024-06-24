@@ -63,18 +63,26 @@ df_male <- malepath %>%
 # mutating a variable for block from the data id 
 df_male <- df_male %>%
   mutate(block = case_when(
-    str_detect(id, "t2b1") ~ "one",
-    str_detect(id, "t2b2") ~ "two",
+    str_detect(id, "b1") ~ "one",
+    str_detect(id, "b2") ~ "two",
     
   ))
 
-
 # Separate diet column and group by relevant variables
 df2_male <- df_male %>%
-  separate(diet, into = c("ratio", "condition"), sep = " ") %>%
-  group_by(id, observation, plate, ratio, condition, block) %>%
+  separate(diet, into = c("ratio", "treatment"), sep = " ") %>%
+  group_by(id, observation, plate, ratio, treatment, block) %>%
   summarise(count = sum(fly_numbers)) %>%
-  pivot_wider(names_from = "condition", values_from = "count")
+  pivot_wider(names_from = "treatment", values_from = "count") 
+
+## test
+df2_male_test <- df_male %>%
+  separate(diet, into = c("ratio", "treatment"), sep = " ") %>%
+  group_by(id, observation, plate, ratio, treatment, block) %>%
+  summarise(count = sum(fly_numbers), .groups = 'drop') %>%
+  mutate(condition = treatment) %>%
+  pivot_wider(names_from = "treatment", values_from = "count")
+
 
 ## The data set 
 df2_male
@@ -290,6 +298,9 @@ drop1(glmm.bin.m, test = "Chisq")
 # MODEL 2.1 
 glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
 
+## playing around
+glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * condition + block + (1|plate) + (1|observation) , family = binomial, data = df2_male_test)
+  ## don't get the error, was not there before, and plate seems to be in the df. 
 
 
 ## Looking at the results of the model 
