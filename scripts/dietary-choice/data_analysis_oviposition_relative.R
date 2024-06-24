@@ -183,7 +183,7 @@ df_male_oviposition <- df_male_oviposition %>%
 
 
 
-
+ 
 # uses what was generated with "df"
 df2_male_oviposition <- df_male_oviposition %>%
   separate(diet, into = c("ratio", "condition"), sep = " ") %>%#separate will turn a single factor column into multiple columns
