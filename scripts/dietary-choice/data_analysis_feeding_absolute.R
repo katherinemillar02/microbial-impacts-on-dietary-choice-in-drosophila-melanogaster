@@ -16,7 +16,7 @@ library(glmmTMB)
 
 
 
-##### Data Analysis Part 2 (4:1/1:4) ####
+#### (4:1/1:4) ####
 
 ## For the 4:1/1:4 Assay only 
 
