@@ -133,13 +133,77 @@ drop1(glmm.m.4, test = "Chi") # Small interaction, but still exists
 
 # With the chosen model, splitting up "diet" into ratio and condition.
 
+
+
 ## Splitting up diet within the actual data frame
 combined_m_split <- combined_m %>%
      separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
-## Testing for interaction effects with the new model
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m)
+## Testing for interaction effects with the new model 
+# Model 1 - glmm.m.4choice.2
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+
+#### JUST IN CASE I AM REQUIRED TO DO THIS, testing different models, with the new model design 
+
+## Assumption checks for glmm.m.4choice.2
+testDispersion(glmm.m.4choice.2)
+  ## Looks underdispersed 
+
+
+simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice.2, plot = T)
+
+performance::check_model(glmm.m.4choice.2, check = c("qq"))
+   ## Does not show qq results 
+
+performance::check_model(glmm.m.4choice.2)
+  ## Not sure what I am looking for, but I think the assumptions look ok? 
+
+check_overdispersion(glmm.m.4choice.2)
+  # Overdispersion detected
+
+check_zeroinflation(glmm.m.4choice.2)
+  # Probable zero inflation 
+
+### The mixed model shows there is both overdispersion and zero inflation. 
+    
+
+## First, trying a zero-inflation model
+
+## zero inflation with poisson
+zi.pois.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block + ratio * condition + ratio * block + condition * block | ratio * condition * block + ratio * condition + ratio * block + condition * block, dist = "poisson", link = "logit", data = combined_m_split)
+
+## Assumption checks??
+
+## zero inflation with neg bin
+zi.nb.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block + ratio * condition + ratio * block + condition * block | ratio * condition * block + ratio * condition + ratio * block + condition * block, dist = "negbin", link = "logit", data = combined_m_split)
+
+## Assumption checks??
+
+## Negative Binomial GLM
+glm.nb.m.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block, data = combined_m_split)
+
+
+## Assumption checks
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.m.4choice.2, plot = T)
+  ## Not sure what the red represents 
+
+check_zeroinflation(glm.nb.m.4choice.2) ## No zero inflation 
+
+check_overdispersion(glm.nb.m.4choice.2) ## No overdispersion 
+
+AIC(glmm.m.4choice.2, zi.pois.m.4choice.2, zi.nb.m.4choice.2, glm.nb.m.4choice.2)
+  # GLMM has lowest AIC, BUT is overdispersed and has zero infaltion - choosing anyway... 
+
+
+
+
+
+
+
+## Chosen Model... 
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+
 
 ## This will show results for the 3-way interaction
 drop1(glmm.m.4choice.2, test = "Chisq")
@@ -148,19 +212,58 @@ drop1(glmm.m.4choice.2, test = "Chisq")
 summary(glmm.m.4choice.2)
 
 ## Results show there is no 3-way interaction, so this can be removed
-glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m)
+glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 drop1(glmm.m.4choice.2, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
 
 ## Newest model - final model 
-glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m)
+glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+
+
+#### Assumption checks of the chosen model (with diet split)... 
+
+testDispersion(glmm.m.4choice.4)
+ ## Is it underdispersed?
+
+simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice.4, plot = T)
+ ## Not sure how to interpret this? I think it looks ok though?
+
+residuals(simulationOutput)
+
+residuals(simulationOutput, quantileFunction = qnorm, outlierValues = c(-7,7)) 
+
+performance::check_model(glmm.m.4choice.4)
+  ## Does this look ok? 
+
+check_zeroinflation(glmm.m.4choice.4) 
+  # There is zero inflation
+
+check_overdispersion(glmm.m.4choice.4) 
+  # Here it says there is overdispersion, even though I thought DHARMa showed undispersion... 
+
+
+performance::check_model(glmm.m.4choice.4, check = c("qq"))
+  ## It does not show the qq - why?
 
 
 ## Analysis of the results
 summary(glmm.m.4choice.4)
 
 ## Tukey test pairwise 
-emmeans::emmeans(glm_mm_m_3, pairwise ~  ratio + condition)
+emmeans::emmeans(glmm.m.4choice.4, pairwise ~  ratio + condition)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
