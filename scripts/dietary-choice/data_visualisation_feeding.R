@@ -54,9 +54,15 @@ combined_of <- fourone_onefour_ovod1 %>%
 
 
 
+ovod1_df <- function(data, cols, names_to = "diet", values_to = "fly_numbers") {
+  data %>% 
+    pivot_longer(cols = c(cols), names_to = names_to, values_to = values_to)
+}
+  ## Might be able to use this one for all of the "longing the data"
 
-
-
+fourone_of <- ovod1_df(four_to_one_ovod1, cols = c("4:1 Conditioned":"4:1 Unconditioned"))
+onefour_of <- ovod1_df(one_to_four_ovod1, cols = "1:4 Conditioned","1:4 Unconditioned")
+combined_of <- ovod1_df(fourone_onefour_ovod1, cols = "4:1 Conditioned","1:4 Unconditioned")
 
 
 
@@ -172,24 +178,25 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
     #                 fill = diet),
     #             width = 0.1,
     #             shape = 1) +
-    geom_boxplot(outlier.size = 0)+
+    geom_boxplot(outlier.shape = NA)+
      geom_boxplot_pattern(position = position_dodge(preserve = "single"),
                          color = "black",
                          pattern_fill = "white",
                          pattern_angle = 45,
                          pattern_density = 0.1,
                          pattern_spacing = 0.025,
-                         pattern_key_scale_factor = 0.6) +
+                         pattern_key_scale_factor = 0.6,
+                         outlier.shape = NA) +
     geom_point(aes(),
                size = 1,
                shape = 1,
                position = position_jitterdodge()) +
     theme_classic()+
-    labs(x = "Diet Condition",
+    labs(x = "Diet Condition\nConditioned",
          y = "Flies per diet patch", 
          title = "")+
     scale_fill_manual(values = boxplot_fill_colour) + 
-     scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
+     scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
     theme(legend.position = "none") +
     ylim(-0.01, 6) 
   
@@ -205,7 +212,6 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
 # followed by the appropriate colours for the plot depending on the assay 
 
 ## Setting colours 
-viridis_colors <- viridis(10)
 
 viridis_colors <- inferno(10)
 ##################### --
