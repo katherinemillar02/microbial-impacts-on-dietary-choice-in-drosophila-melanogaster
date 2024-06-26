@@ -202,7 +202,7 @@ AIC(glmm.m.4choice.2, zi.pois.m.4choice.2, zi.nb.m.4choice.2, glm.nb.m.4choice.2
 
 
 ## Chosen Model... 
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | factor(block)/observation), family = poisson, data = combined_m_split)
 
 
 ## This will show results for the 3-way interaction
@@ -212,9 +212,10 @@ drop1(glmm.m.4choice.2, test = "Chisq")
 summary(glmm.m.4choice.2)
 
 ## Results show there is no 3-way interaction, so this can be removed
-glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+## Testing 2-way interactions
+glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio + condition + block + ratio : block + condition : block  + ratio:condition + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
-drop1(glmm.m.4choice.2, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
+drop1(glmm.m.4choice.3, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
 
 ## Newest model - final model 
 glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
