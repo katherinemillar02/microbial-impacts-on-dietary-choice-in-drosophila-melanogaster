@@ -41,28 +41,11 @@ fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresult
 fourone_onefour_ovod1 <- rbind(fourone_onefour_ovod1_b1, fourone_onefour_ovod1_b2)
 
 
-## CHANGING THE VARIABLE NAMES OF THE DATA - PIVOTING A DATA FRAME -- 
-# 4:1
-fourone_of <- four_to_one_ovod1  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-# 1:4 
-onefour_of <- one_to_four_ovod1  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-# 4:1 and 1:4 
-combined_of <- fourone_onefour_ovod1 %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 
-ovod1_df <- function(data, cols, names_to = "diet", values_to = "fly_numbers") {
-  data %>% 
-    pivot_longer(cols = c(cols), names_to = names_to, values_to = values_to)
-}
-  ## Might be able to use this one for all of the "longing the data"
 
-fourone_of <- ovod1_df(four_to_one_ovod1, cols = c("4:1 Conditioned":"4:1 Unconditioned"))
-onefour_of <- ovod1_df(one_to_four_ovod1, cols = "1:4 Conditioned","1:4 Unconditioned")
-combined_of <- ovod1_df(fourone_onefour_ovod1, cols = "4:1 Conditioned","1:4 Unconditioned")
+
 
 
 
@@ -100,19 +83,6 @@ fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresu
 fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4)
 
 
-## CHANGING THE VARIABLE NAMEAS OF THE DATA - PIVOTING A DATA FRAME -- 
-#  4:1 
-fourone_v <- four_to_one_virgin  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-# 1:4 
-onefour_v <- one_to_four_virgin  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-# 4:1 and 1:4 
-combined_v<- fourone_onefour_virgin %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
-
-####--
-
 
 
 
@@ -144,29 +114,39 @@ fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
 
 
-## CHANGING THE VARIABLE NAMEAS OF THE DATA - PIVOTING A DATA FRAME -- 
-# 4:1
-fourone_m <- four_to_one_male  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
-# 1:4 
-onefour_m <- one_to_four_male  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-# 4:1 and 1:4 
-combined_m <- fourone_onefour_male %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 
 
+##### FUNCTION FOR ADDING // CHANGING VARIABLE NAMES #####  #####  #####  ##### 
+
+variable_data <- function(data, cols, names_to = "diet", values_to = "fly_numbers") {
+  data %>% 
+    pivot_longer(cols = all_of(cols), names_to = names_to, values_to = values_to)
+}
+
+fourone_of <- ovod1_df(four_to_one_ovod1, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_of <- ovod1_df(one_to_four_ovod1, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_of <- ovod1_df(fourone_onefour_ovod1, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+
+fourone_m <- ovod1_df(four_to_one_male, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_m <- ovod1_df(one_to_four_male, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_m <- ovod1_df(fourone_onefour_male, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+
+fourone_v <- ovod1_df(four_to_one_virgin, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_v <- ovod1_df(one_to_four_virgin, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_v <- ovod1_df(fourone_onefour_virgin, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+
+##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####  #####  #####  ##### 
 
 
 
 ###### ###### ###### ###### DATA VISUALISATION ###### ###### ###### ###### 
-###### 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊📊📊📊
+###### 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊 📊📊📊📊📊📊###### 
 
 
 # Creating a function for a boxplot, 
-# this will allow one to use the feeding data for different data sets 
+# this will allow one to use the feeding data for different data sets... 
 
 
 #################################### Feeding Results Function Plot ####################################
@@ -198,11 +178,59 @@ feeding_results <- function(summary_data,boxplot_fill_colour ) {
     scale_fill_manual(values = boxplot_fill_colour) + 
      scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
     theme(legend.position = "none") +
+    scale_x_discrete(labels = c(
+      "4:1\nConditioned", 
+      "4:1\nUnconditioned", 
+      "1:4\nConditioned", 
+      "1:4\nUnconditioned"))+
     ylim(-0.01, 6) 
+}
   
+  
+########################################################################################################################### --
+
+feeding_results <- function(data, boxplot_fill_colour) {
+  # Ensure the data has the necessary columns for faceting
+  data$nutrient_composition <- ifelse(grepl("4:1", data$diet), "4:1", "1:4")
+  data$condition <- ifelse(grepl("Conditioned", data$diet), "Conditioned", "Unconditioned")
+  data$combined_factor <- paste(data$nutrient_composition, data$condition, sep = " ")
+  ggplot(data, aes(x = condition, y = fly_numbers, fill = combined_factor, pattern = combined_factor)) + 
+    geom_boxplot(outlier.shape = NA) +
+    geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                         color = "black",
+                         pattern_fill = "white",
+                         pattern_angle = 45,
+                         pattern_density = 0.1,
+                         pattern_spacing = 0.025,
+                         pattern_key_scale_factor = 0.6,
+                         outlier.shape = NA) +
+    geom_point(aes(),
+               size = 1,
+               shape = 1,
+               position = position_jitterdodge()) +
+    theme_classic() +
+    labs(x = "",
+         y = "Female flies per diet patch", 
+         title = "") +
+    scale_fill_manual(values = boxplot_fill_colour) + 
+    scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
+    theme(legend.position = "none") +
+    ylim(-0.01, 6) +
+    facet_wrap(~ nutrient_composition, scales = "free_x", nrow = 1, strip.position = "bottom") +
+    theme(
+      strip.placement = "outside",
+      strip.background = element_blank(),
+      strip.text = element_text(size = 12)
+    )
 }
 
-########################################################################################################################### --
+# Example of how to call the function with data
+# feeding_results(my_data, c("#FF5733", "#33FF57"))
+
+
+
+
+
 
 
 ################  CODING FOR EACH OF THE DIFFERENT CONDITIONS #################### 
