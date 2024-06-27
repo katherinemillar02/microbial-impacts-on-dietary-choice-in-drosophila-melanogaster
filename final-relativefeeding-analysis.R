@@ -123,7 +123,6 @@ drop1(glmm.bin.m.01, test = "Chisq")
  # No four way interaction effect 
 
 
-
 glmm.bin.m.02 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned + block + ratio  + Conditioned * Unconditioned * block + ratio  * Conditioned + Unconditioned * block  + block * ratio * Conditioned + Unconditioned + block : ratio : Unconditioned + Conditioned  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
 
