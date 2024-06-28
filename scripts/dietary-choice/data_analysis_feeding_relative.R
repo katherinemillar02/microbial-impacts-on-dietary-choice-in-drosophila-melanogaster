@@ -314,11 +314,16 @@ emmeans::emmeans(glmm.bin.m.2, pairwise ~ ratio , random = ~ (1|plate) + (1|obse
 
 
 
+## TRYING MODELS THAT CONSIDER INTERACTION EFFECTS
+glm.bin.m.01 <- glm(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block , family = binomial, data = df2_male)
+
+glmm.bin.m.01 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
 
+AIC(glm.bin.m.01, glmm.bin.m.01)
+  ## It says Bin GLM is better than Bin GLMM? 
 
-
-
+## Confused about what to pick, going for the mixed model for now? 
 
 
 
@@ -381,6 +386,9 @@ emmeans::emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation, typ
 
 
 
+
+#### TRYING MODELS THAT CONSIDER INTERACTION EFFECTS, AND COMPARING
+glmm.bin.m.01 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
 
 

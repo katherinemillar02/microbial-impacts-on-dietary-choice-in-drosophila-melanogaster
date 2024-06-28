@@ -8,6 +8,8 @@ library(pscl)
 library(DHARMa)
 library(glmmTMB)
 ##################---
+
+
 ## Path for reading Male Data in 
 
 ## Creating a path to the scripts for treatment 2 condtioning
@@ -120,21 +122,52 @@ glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|pla
 glmm.bin.m.01 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
 drop1(glmm.bin.m.01, test = "Chisq")
- # No four way interaction effect 
+ # No four way interaction effect found
 
+## Testing for three-way interaction effects 
+glmm.bin.m.02 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned + block + ratio  + Conditioned * Unconditioned * block + ratio  * Conditioned + Unconditioned * block  + block * ratio * Conditioned + Unconditioned + block : ratio : Unconditioned + Conditioned +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
-glmm.bin.m.02 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned + block + ratio  + Conditioned * Unconditioned * block + ratio  * Conditioned + Unconditioned * block  + block * ratio * Conditioned + Unconditioned + block : ratio : Unconditioned + Conditioned  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
-
-
+## Testing for three-way interaction effects 
 drop1(glmm.bin.m.02, test = "Chisq")
 
-
+## Testing for two-way interaction effects 
 glmm.bin.m.03 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned + Unconditioned + block + ratio  * Unconditioned + block + Conditioned  + Conditioned * Unconditioned + block  +  ratio + Conditioned * block + ratio + Unconditioned + Unconditioned * block + ratio + Conditioned +  ratio * block + Conditioned + Unconditioned + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
+## Testing for two-way interaction effects 
 drop1(glmm.bin.m.03, test = "Chisq")
+  ## There is a two way interaction effect between ratio and Conditioned found 
 
+## Final model? with one two-way interaction effect only
 glmm.bin.m.04 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned + Unconditioned + block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
+# Confirming this model 
 drop1(glmm.bin.m.04, test = "Chisq")
 
-glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+
+## Doing assumption checks with the new model
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glmm.bin.m.04, plot = T)
+ ## Model sort of looks ok, however one point doesn't look great
+
+## Using the easystats package 
+performance::check_model(glmm.bin.m.04)
+  ## Maybe assumptiins look ok? not sure how to tell
+
+check_overdispersion(glmm.bin.m.04)
+ # Underdispersion detected 
+
+#### Not actually sure this is the best model fit?
+
+
+
+
+
+
+
+
+
+
+
+
+
