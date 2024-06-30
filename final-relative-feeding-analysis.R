@@ -336,7 +336,8 @@ glmm.bin.v.0323 <- glmer(cbind(Conditioned, Unconditioned) ~
                         + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
 drop1(glmm.bin.v.0323, test = "Chisq")
-## still doesn't find the 2-way interaction effectrs
+## still doesn't find the 2-way interaction effects 
+  ## anyway to test this, while still including three way interaction effects in the model? 
 
 
 
