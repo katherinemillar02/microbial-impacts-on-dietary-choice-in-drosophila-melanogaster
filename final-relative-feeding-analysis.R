@@ -339,8 +339,20 @@ drop1(glmm.bin.v.0323, test = "Chisq")
 ## still doesn't find the 2-way interaction effects 
   ## anyway to test this, while still including three way interaction effects in the model? 
 
+## the same but without the 3-way interaction effects to see if drop1 works
+glmm.bin.v.03231 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                        
+                          Conditioned  * Unconditioned 
+                         + Conditioned * block 
+                         + Conditioned * ratio 
+                         + Unconditioned * block
+                         + Unconditioned * ratio  
+                         + ratio : block + Conditioned + Unconditioned 
+                         + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
 
+drop1(glmm.bin.v.03231, test = "Chisq")
+## This shows the 2-way interaction effects
 
 
 ## OvoD1 Conditioning 
