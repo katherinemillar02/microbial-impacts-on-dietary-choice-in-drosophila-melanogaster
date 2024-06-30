@@ -225,39 +225,118 @@ df2_virgin <- df_virgin %>%
 ## Analysis 
 
 ## Using Bin GLMM for now 
+
+# First, testing a four-way test
 glmm.bin.v.01 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
-drop1(glmm.bin.v.01, test = "Chisq")
+## Looking for interaction in 4-way
+drop1(glmm.bin.v.011, test = "Chisq")
+# No interaction found
 
 
-glmm.bin.v.02 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned + block + ratio  + Conditioned * Unconditioned * block + ratio  * Conditioned + Unconditioned * block  + block * ratio * Conditioned + Unconditioned + block : ratio : Unconditioned + Conditioned +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+glmm.bin.v.011 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  : Conditioned : Unconditioned : block +  ratio  + Conditioned + Unconditioned + block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+drop1(glmm.bin.v.011, test = "Chisq")
 
 
+
+
+
+#### testing for 3-way interactions
+
+## using : , different 3 way interactions, then + again at the end 
+glmm.bin.v.02 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  : Conditioned : Unconditioned + block   + Conditioned : Unconditioned : block + ratio  + ratio : Conditioned : block  + Unconditioned + ratio : Unconditioned :  block + ratio  +  Conditioned + Unconditioned + ratio + block +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+
+## results of interaction effects
 drop1(glmm.bin.v.02, test = "Chisq")
-## a 3-way interaction between ratio, Unconditioned, and block found 
+  ## a 3-way interaction between ratio, Unconditioned, and block found 
+  ## a 3-way interaction between ratio, Conditioned, and block also found 
+
+## using : , different 3 way interactions
+glmm.bin.v.021 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  : Conditioned : Unconditioned + block   + Conditioned : Unconditioned : block + ratio  + ratio : Conditioned : block  + Unconditioned + ratio : Unconditioned :  block  +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+
+## results of interaction effects
+drop1(glmm.bin.v.021, test = "Chisq")
+  ## no 3-way interaction effects found
+
+## using * , different 3 way interactions
+glmm.bin.v.022 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned + block   + Conditioned * Unconditioned * block + ratio  + ratio * Conditioned * block  + Unconditioned + ratio * Unconditioned *  block + ratio  +(1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+
+## results of interaction effects
+drop1(glmm.bin.v.021, test = "Chisq")
+  ## a 3-way interaction between ratio, Unconditioned, and block found 
+
+
+## I have different results for the different interaction effects, so each following them with the same routine 
 
 
 
 
 
-glmm.bin.v.03 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * Unconditioned * block + ratio  * Conditioned + Unconditioned + block + ratio  * Unconditioned + block + Conditioned  + Conditioned * Unconditioned + block  +  ratio + Conditioned * block + ratio + Unconditioned + Unconditioned * block + ratio + Conditioned +  ratio * block + Conditioned + Unconditioned +   (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+glmm.bin.v.03 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                         ratio : Conditioned : block 
+                       +   ratio :  Unconditioned : block 
+                       + Conditioned  : Unconditioned  + block + ratio 
+                       + Conditioned : block + ratio + Unconditioned 
+                       + Conditioned : ratio + Unconditioned + block 
+                       + Unconditioned : block + Conditioned + ratio
+                       + Unconditioned : ratio + Conditioned + block 
+                       + ratio : block + Conditioned + Unconditioned 
+                       + ratio + block + Conditioned + Unconditioned 
+                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
 
 drop1(glmm.bin.v.03, test = "Chisq")
 ## two way interaction between ratio and Conditioned found 
+ ## why can't it find the 2-way interaction effects?? 
+
+### the same with just plus at the end but the same results?? 
+# glmm.bin.v.031 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+#                          ratio : Conditioned : block 
+#                        +   ratio :  Unconditioned : block 
+#                        + Conditioned  : Unconditioned 
+#                        + Conditioned : block 
+#                        + Conditioned : ratio 
+#                        + Unconditioned : block 
+#                        + Unconditioned : ratio  
+#                        + ratio : block 
+#                        + ratio + block + Conditioned + Unconditioned 
+#                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+# 
+# drop1(glmm.bin.v.031, test = "Chisq")
 
 
+glmm.bin.v.032 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                         ratio : Conditioned : block 
+                       +   ratio :  Unconditioned : block 
+                       + Conditioned  : Unconditioned  + block + ratio 
+                       + Conditioned : block + ratio + Unconditioned 
+                       + Conditioned : ratio + Unconditioned + block 
+                       + Unconditioned : block + Conditioned + ratio
+                       + Unconditioned : ratio + Conditioned + block 
+                       + ratio : block + Conditioned + Unconditioned 
+                       + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
+
+drop1(glmm.bin.v.032, test = "Chisq")
+
+  ## same results again 
 
 glmm.bin.v.04 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio : Unconditioned : block + ratio  : Conditioned + ratio + block + Conditioned + Unconditioned +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
-drop1(glmm.bin.v.04, test = "Chisq")
 
-summary(glmm.bin.v.04)
+glmm.bin.v.0323 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                          ratio * Conditioned * block 
+                        +   ratio *  Unconditioned * block 
+                        + Conditioned  * Unconditioned 
+                        + Conditioned * block 
+                        + Conditioned * ratio 
+                        + Unconditioned * block
+                        + Unconditioned * ratio  
+                        + ratio : block + Conditioned + Unconditioned 
+                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
-
-
-
+drop1(glmm.bin.v.0323, test = "Chisq")
+## still doesn't find the 2-way interaction effectrs
 
 
 
