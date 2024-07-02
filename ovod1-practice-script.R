@@ -1,5 +1,14 @@
 ## OvoD1 Conditioning 
-
+# Packages 📦📦📦📦####
+library(tidyverse)
+library(lmerTest)
+library(readxl)
+library(MASS)
+library(performance)
+library(pscl)
+library(DHARMa)
+library(glmmTMB)
+##################---
 
 ###################################-
 #### OvoD1 FEMALE CONDITIONING ----
@@ -46,19 +55,140 @@ df2_ovod1 <- df_ovod1 %>%
   pivot_wider(names_from = "condition", values_from = "count")
 
 
-## Analysis, choosing Bin GLMM for now 
+## Analysis, choosing Bin GLMM for now: 
 
 
+
+
+
+
+
+## Using : as an interaction effect 
+
+
+## First, testing for a four-way interaction effect. 
+## Unlike *, this will just test for the four-way interaction effect? 
+glmm.bin.o.001 <- glmer(cbind(Conditioned, Unconditioned) ~
+                          ratio  : Conditioned : Unconditioned : block
+                        + ratio  + Conditioned + Unconditioned + block
+                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
+
+# Tests for the four-way interaction effect. 
+drop1(glmm.bin.o.001, test = 'Chisq')
+  # No 4-way interaction effect found. 
+
+
+
+# Testing for 3-way interaction effects
+glmm.bin.o.002 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                          
+                          ratio  : Conditioned : Unconditioned 
+                        + ratio   : Unconditioned : block 
+                        + ratio  : Conditioned : block  
+                        + block : ratio : Conditioned  
+                        + block : ratio : Unconditioned 
+                        + block : Conditioned : Unconditioned
+                        + Conditioned + Unconditioned + ratio + block
+                        
+                        +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
+
+
+## Test should show 3-way interaction effects 
+drop1(glmm.bin.o.002, test = 'Chisq')
+  ## Results only show sig 3-4 out of 6  results 
+  ## Interaction effect between ratio, Unconditioned and block, and ratio Conditioned and block
+
+
+## Testing for 2-way interaction effects, this model includes the previously significant 3-way interaction effects 
+glmm.bin.o.003 <- glmer(cbind(Conditioned, Unconditioned)
+                        ~ Unconditioned : block : ratio + 
+                          + ratio : Conditioned : block +
+                          Conditioned : Unconditioned +   
+                          Conditioned : block + 
+                          Conditioned : ratio +
+                          Unconditioned : block + 
+                          Unconditioned : ratio +
+                          + Conditioned + Unconditioned + ratio + block
+                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
+
+
+
+
+## Testing for the two-way interaction effects
+drop1(glmm.bin.o.003, test = 'Chisq')
+  ## drop1 only shows one 2-way interaction effect 
+  ## Interaction effect between Unconditioned and Conditioned
+
+
+
+
+## Testing for 2-way interaction effects
+# but this model includes DOES NOT INCLUDE the previously significant 3-way interaction effects 
+glmm.bin.o.0031 <- glmer(cbind(Conditioned, Unconditioned)
+                         ~  
+                           Conditioned : Unconditioned +   
+                           Conditioned : block + 
+                           Conditioned : ratio +
+                           Unconditioned : block + 
+                           Unconditioned : ratio +
+                           + Conditioned + Unconditioned + ratio + block
+                         
+                         + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
+
+## Testing for interactions 
+drop1(glmm.bin.o.0031, test = 'Chisq')
+  # No 2- way interactions? I think this tracks with what was in "*" though! 
+
+
+
+
+## Final Model? 
+glmm.bin.o.004 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                          Unconditioned : block : ratio 
+                        + Conditioned : block : ratio 
+                        + Conditioned + Unconditioned + ratio + block
+                        
+                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
+
+
+## Using drop1 to find the appropriate interaction effects 
+drop1(glmm.bin.o.004, test = 'Chisq')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### USING * IN THE MODELS: 
+
+## Looking for a four-way interaction effect.
+## Although this model will interact everything with everything. 
 glmm.bin.o.01 <- glmer(cbind(Conditioned, Unconditioned) ~
                          ratio  * Conditioned * Unconditioned * block 
                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
 
+## Tests for just the four-way interaction effect
 drop1(glmm.bin.o.01, test = 'Chisq')
-# No 4-way interaction effect 
+   # No 4-way interaction effect. 
 
 
 
-# Model 
+# Testing for three-way interaction effects. 
+## Although this model will interact everything with everything, so will also look for two-way interaction effects. 
 glmm.bin.o.02 <- glmer(cbind(Conditioned, Unconditioned) ~ 
                          
                          ratio  * Conditioned * Unconditioned 
@@ -70,11 +200,16 @@ glmm.bin.o.02 <- glmer(cbind(Conditioned, Unconditioned) ~
                        
                        +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
 
+## Looking for 3-way interaction effect, shows those first and only shows 4/6
 drop1(glmm.bin.o.02, test = 'Chisq')
+   ## A 3-way interaction effect between ratio, Unconditioned and block found
 
 
 ## Testing for 2-way interaction effects 
-# but includes the previous sig 3 - one 
+
+
+
+## This model tests for two-way interaction effects, but includes a previously significant 3-way interaction effect 
 glmm.bin.o.03 <- glmer(cbind(Conditioned, Unconditioned)
                        ~ Unconditioned * block * ratio + 
                          Conditioned * Unconditioned +   
@@ -84,11 +219,15 @@ glmm.bin.o.03 <- glmer(cbind(Conditioned, Unconditioned)
                          Unconditioned * ratio +
                          (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
 
-
+# Testing for the two-way interaction effect. 
 drop1(glmm.bin.o.03, test = 'Chisq')
+ ## Still shows 3 - way interaction effect between ratio, Unconditioned and block. 
+ ## Now shows 2-way interaction effect between ratio and Conditioned, but only shows 3/5 possible 2-way combinations. 
 
 
-## withouth the previous sig 3-way one 
+
+## This model is the same as above and tests for two-way interaction effects
+## but DOES NOT include a previously significant 3-way interaction effect 
 glmm.bin.o.031 <- glmer(cbind(Conditioned, Unconditioned)
                        ~  
                          Conditioned * Unconditioned +   
@@ -100,20 +239,28 @@ glmm.bin.o.031 <- glmer(cbind(Conditioned, Unconditioned)
                          (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
 
 
+## Testing for the two-way interaction effects 
 drop1(glmm.bin.o.031, test = 'Chisq')
-# no 2- way interactions? 
+ # No 2- way interactions? but shows all 5 possible 2-way combos written
+
+
+
+
 
 
 ## Final Model? 
 glmm.bin.o.04 <- glmer(cbind(Conditioned, Unconditioned) ~ 
                          Unconditioned * block * ratio + Conditioned
+                   
                          
                          (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
 
 
 ## Using drop1 to find the approprirate interaction effects 
 drop1(glmm.bin.o.04, test = 'Chisq')
-## Confused as to why I am getting different results.
+  ## Confused, I did not put an interaction effect between ratio and conditioned in the model so why is it doing it
+  # Is it because of the *? 
+  
 
 
 
@@ -128,74 +275,4 @@ drop1(glmm.bin.o.04, test = 'Chisq')
 
 
 
-## doing the same, but with : 
-glmm.bin.o.001 <- glmer(cbind(Conditioned, Unconditioned) ~
-                         ratio  : Conditioned : Unconditioned : block
-                        + ratio  + Conditioned + Unconditioned + block
-                       + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
-
-drop1(glmm.bin.o.001, test = 'Chisq')
-# No 4-way interaction effect 
-
-
-
-# Model 
-glmm.bin.o.002 <- glmer(cbind(Conditioned, Unconditioned) ~ 
-                         
-                         ratio  : Conditioned : Unconditioned 
-                       + ratio   : Unconditioned : block 
-                       + ratio  : Conditioned : block  
-                       + block : ratio : Conditioned  
-                       + block : ratio : Unconditioned 
-                       + block : Conditioned : Unconditioned
-                       + Conditioned + Unconditioned + ratio + block
-                       +  (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
-
-drop1(glmm.bin.o.002, test = 'Chisq')
-
-
-## Testing for 2-way interaction effects 
-# but includes the previous sig 3 - one 
-glmm.bin.o.003 <- glmer(cbind(Conditioned, Unconditioned)
-                       ~ Unconditioned : block : ratio + 
-                         Conditioned : Unconditioned +   
-                         Conditioned : block + 
-                         Conditioned : ratio +
-                         Unconditioned : block + 
-                         Unconditioned : ratio +
-                         + Conditioned + Unconditioned + ratio + block
-                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
-
-
-drop1(glmm.bin.o.003, test = 'Chisq')
-
-
-## withouth the previous sig 3-way one 
-glmm.bin.o.0031 <- glmer(cbind(Conditioned, Unconditioned)
-                        ~  
-                          Conditioned : Unconditioned +   
-                          Conditioned : block + 
-                          Conditioned : ratio +
-                          Unconditioned : block + 
-                          Unconditioned : ratio +
-                          + Conditioned + Unconditioned + ratio + block
-                          
-                         + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
-
-
-drop1(glmm.bin.o.0031, test = 'Chisq')
-# no 2- way interactions? 
-
-
-## Final Model? 
-glmm.bin.o.004 <- glmer(cbind(Conditioned, Unconditioned) ~ 
-                         Unconditioned : block : ratio
-                       + Conditioned + Unconditioned + ratio + block
-                       
-                       + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
-
-
-## Using drop1 to find the approprirate interaction effects 
-drop1(glmm.bin.o.004, test = 'Chisq')
-## Confused as to why I am getting different results.
 
