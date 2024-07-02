@@ -85,17 +85,27 @@ summary(glmm.m.4choice.2)
 
 ## Results show there is no 3-way interaction, so this can be removed
 ## Testing 2-way interactions
-glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio + condition + block + ratio : block + condition : block  + ratio:condition + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+glmm.m.4choice.3 <- glmmTMB(fly_numbers ~ 
+                              ratio + condition + block 
+                            + ratio : block 
+                            + condition : block  
+                            + ratio:condition + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 drop1(glmm.m.4choice.3, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
 
 ## Newest model - final model 
-glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+## One version of it
+glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  
+                              ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 
+## Another version of it 
+glmm.m.4choice.4.2 <- glmmTMB(fly_numbers ~  
+                               condition : block +
+                                condition + block + ratio + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 
-
+drop1(glmm.m.4choice.4.2, test = "Chisq")
 #### Assumption checks of the final chosen model (with diet split)... 
 
 testDispersion(glmm.m.4choice.4)
