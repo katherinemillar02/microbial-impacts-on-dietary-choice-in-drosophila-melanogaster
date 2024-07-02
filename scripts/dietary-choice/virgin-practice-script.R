@@ -2,7 +2,14 @@
 
 ## Using Bin GLMM for now 
 
+
+#### Using * to look for interaction effects
+
+
                                           #### FOUR-WAY INTERACTIONS  #### 
+                                          
+                                          
+                                          
 # First, testing for four-way interactions, using *
 glmm.bin.v.01 <- glmer(cbind(Conditioned, Unconditioned) ~ 
                          ratio  * Conditioned * Unconditioned * block 
@@ -32,7 +39,7 @@ glmm.bin.v.02 <- glmer(cbind(Conditioned, Unconditioned) ~
 ## results of interaction effects
 drop1(glmm.bin.v.02, test = "Chisq")
 ## a 3-way interaction between ratio, Unconditioned, and block found 
-# but only shows 4 of the 3- way interaction effects
+# but only shows 4/6 of the 3- way interaction effects
 
 
 
@@ -56,7 +63,8 @@ glmm.bin.v.03 <- glmer(cbind(Conditioned, Unconditioned)  ~
 
 ## results of interaction effects
 drop1(glmm.bin.v.03, test = "Chisq")
-## Only shows results of 3/6 2-way interaction effects 
+ ## Only shows results of 3/6 2-way interaction effects, and includes the 3-way interaction effect
+ ## 2 - way interaction effect between ratio and Conditioned found 
 
 
 ## using * , different 3 way interactions (not including the previous 3-way interaction)
@@ -82,14 +90,16 @@ drop1(glmm.bin.v.030, test = "Chisq")
 #### FINAL MODELS 
 
 ## Using * 
+## Have I even wrriten this "final model" correctly? 
 glmm.bin.v.04 <- glmer(cbind(Conditioned, Unconditioned) ~
-                         + ratio * Unconditioned *  block + Conditioned 
-                         + Conditioned * ratio + Unconditioned + block 
+                         + ratio * Unconditioned *  block  
+                         + Conditioned * ratio 
                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
 
-drop1(glmm.bin.v.04, test = "Chisq")
 
+## Looking for the interaction effects 
+drop1(glmm.bin.v.04, test = "Chisq")
 
 
 
