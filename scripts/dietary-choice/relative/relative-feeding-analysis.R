@@ -442,4 +442,8 @@ glmm.bin.o.04 <- glmer(cbind(Conditioned, Unconditioned) ~ Unconditioned : block
 
 ## Using drop1 to find the approprirate interaction effects 
 drop1(glmm.bin.o.04, test = 'Chisq')
- ## Con
+ ## Confused as to why I am getting different results.
+
+
+
+
