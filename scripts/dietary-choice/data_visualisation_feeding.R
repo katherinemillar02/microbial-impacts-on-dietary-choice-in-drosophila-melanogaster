@@ -711,8 +711,4 @@ ovod1_oviposition <- grid.arrange(
   ncol = 3,
   nrow = 2,
   widths = c(0.5, 0.5, 1),
-  heights = c(1, 1)
-)
-
-
-
+  heights

@@ -455,3 +455,4 @@ emmeans::emmeans(glmm.bin.of, ~ ratio, type = "response")
 
 ## How to analyse when block is significant, can't get rid of interaction effect. 
 
+

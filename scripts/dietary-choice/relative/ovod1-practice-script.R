@@ -276,3 +276,8 @@ drop1(glmm.bin.o.04, test = 'Chisq')
 
 
 
+
+
+
+
+
