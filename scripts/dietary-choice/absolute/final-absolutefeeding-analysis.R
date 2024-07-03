@@ -139,7 +139,6 @@ summary(glmm.m.4choice.4.2)
 emmeans::emmeans(glmm.m.4choice.4, pairwise ~  ratio + condition)
 
 
-summaey()
 
 ## VIRGIN FEMALE 
 
