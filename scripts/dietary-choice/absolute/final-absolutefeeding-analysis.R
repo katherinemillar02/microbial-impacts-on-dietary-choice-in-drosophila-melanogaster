@@ -96,13 +96,13 @@ drop1(glmm.m.4choice.3, test = "Chisq") ## An interaction between condition and 
 ## Newest model - final model 
 ## One version of it
 glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  
-                              ratio + condition * block + (1 | factor(block) / plate) + (1 | observation / plate), family = poisson, data = combined_m_split)
+                              ratio + condition * block + (1 | block / plate) + (1 | observation / plate), family = poisson, data = combined_m_split)
 
 
 ## Another version of it 
 glmm.m.4choice.4.2 <- glmmTMB(fly_numbers ~  
                                condition : block +
-                                condition + block + ratio + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+                                condition + block + ratio + (1 | block / plate) + (1 | block / observation ), family = poisson, data = combined_m_split)
 
 
 drop1(glmm.m.4choice.4.2, test = "Chisq")
@@ -133,13 +133,13 @@ performance::check_model(glmm.m.4choice.4, check = c("qq"))
 
 
 ## Analysis of the results
-summary(glmm.m.4choice.4)
+summary(glmm.m.4choice.4.2)
 
 ## Tukey test pairwise 
 emmeans::emmeans(glmm.m.4choice.4, pairwise ~  ratio + condition)
 
 
-
+summaey()
 
 ## VIRGIN FEMALE 
 
@@ -308,16 +308,4 @@ summary(zi.p.of.4choice.4)
 
 ## Tukey test pairwise 
 emmeans::emmeans(zi.p.of.4choice.4, pairwise ~ ratio + condition )
-
-
-
-
-
-
-
-
-
-
-
-
 
