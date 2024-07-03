@@ -309,3 +309,15 @@ summary(zi.p.of.4choice.4)
 ## Tukey test pairwise 
 emmeans::emmeans(zi.p.of.4choice.4, pairwise ~ ratio + condition )
 
+
+
+
+
+
+
+
+
+
+
+
+
