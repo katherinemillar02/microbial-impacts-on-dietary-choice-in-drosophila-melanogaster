@@ -399,7 +399,7 @@ df_ovod1 <- df_ovod1 %>%
 
 # uses what was generated with "df"
 df2_ovod1 <- df_ovod1 %>%
-  separate(diet, into = c("ratio", "condition"), sep = " ") %>%#separate will turn a single factor column into multiple columns
+  separate(diet, into = c("ratio", "condition"), sep = " ") %>% ## separate will turn a single factor column into multiple columns
   group_by(id,observation, plate, ratio,condition, block) %>% ## group by what is split
   summarise(count = sum(fly_numbers)) %>% 
   pivot_wider(names_from = "condition", values_from = "count")
@@ -438,6 +438,8 @@ glmm.bin.o.04 <- glmer(cbind(Conditioned, Unconditioned) ~ Unconditioned : block
                          Conditioned : ratio +   
                          ratio + block + Conditioned + Unconditioned + 
                          (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
+
+
 
 
 ## Using drop1 to find the approprirate interaction effects 
