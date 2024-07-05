@@ -210,7 +210,9 @@ summary(glm.nb.vf.4choice.3)
 
 
 # Final model - only with a interaction effect of condition and block... 
-glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~  ratio + condition * block + (1|factor(block)/plate) + (1|factor(block)/observation), data = combined_vf_split)
+glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~
+                                 ratio + condition + block 
+                               + ratio : block + (1| factor(block) / plate) + (1| block /observation), data = combined_vf_split)
 
 
 ## Assumption checks with the chosen model
