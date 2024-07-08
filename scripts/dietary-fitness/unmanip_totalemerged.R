@@ -27,6 +27,11 @@ fly_emergence_overall <- fly_fitness_tidy %>%
                                 levels = c("conditioned overall", "unconditioned overall")))
 
 
+
+glm_model <- glm(overall_emergence ~ sex_treatment, family = poisson(link = "log"), data = fly_emergence_overall)
+
+summary(glm_model)
+
 ## This code shows the median overall emergence (males and females combined) 
 vial_overall_emergence_median <- vial_overall_emergence  %>%
   group_by(treatment) %>%
@@ -61,6 +66,8 @@ emergence_per_time <- fly_fitness %>%
   summarize(total_females = sum(females, na.rm = TRUE),
             total_males = sum(males, na.rm = TRUE)) %>%
   ungroup()
+
+
 
 
 
