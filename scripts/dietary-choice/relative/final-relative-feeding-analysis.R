@@ -434,9 +434,13 @@ drop1(glmm.bin.o.03, test = 'Chisq')
 
 
 ## Final Model? 
-glmm.bin.o.04 <- glmer(cbind(Conditioned, Unconditioned) ~ Unconditioned : block : ratio + 
+glmm.bin.o.04 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                         
+                         Unconditioned : block : ratio + 
                          Conditioned : ratio +   
+                         
                          ratio + block + Conditioned + Unconditioned + 
+                         
                          (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
 
 
