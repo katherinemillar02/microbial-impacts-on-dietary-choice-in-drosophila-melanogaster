@@ -168,8 +168,8 @@ emmeans::emmeans(combined_glm_mm_od1_egg, pairwise ~ diet)
 ################################# --
 
 # 4:1 + 1:4 
-fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_1-4_t2b1_oviposition.xlsx")
-fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_1-4_t2b2_oviposition.xlsx")
+fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx")
+fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_1-4_b2_oviposition.xlsx")
 # Mutating a block variable
 fourone_onefour_male_oviposition_b1 <- fourone_onefour_male_oviposition_b1 %>% mutate(block = "one")
 fourone_onefour_male_oviposition_b2 <- fourone_onefour_male_oviposition_b2%>% mutate(block = "two")
@@ -181,8 +181,6 @@ combined_ovi_m <- fourone_onefour_male_oviposition  %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
-combined_ovi_m_split <- combined_ovi_m %>% 
-  separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
 
@@ -277,6 +275,14 @@ glm.nb_of_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_m)
 
 
 
+
+
+
+
+
+
+
+
 ## checking significance of block 
 drop1(glm.nb_of_comb_egg, test = "F") ## says block is not significant!! 
 summary(glm.nb_of_comb_egg)
@@ -304,6 +310,53 @@ emmeans(glm_mm_m_3, specs = ~ diet, type = "response" )
 
 
 
+
+## Splitting "diet" up
+
+combined_ovi_m_split <- combined_ovi_m %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+
+
+## GLMM with poisson 
+comb_m_egg_glm.p <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_m_split)
+
+comb_m_egg_glm.nb <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_m_split)
+
+comb_m_egg_glmm.p <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|block/plate) , family = poisson, data = combined_ovi_m_split)
+
+
+AIC(comb_m_egg_glm.p, comb_m_egg_glm.nb, comb_m_egg_glmm.p)
+
+## GLM NB smallest by "a lot" ? 
+
+
+# three way interaction
+comb_m_egg_glm.nb <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_m_split)
+
+
+drop1(comb_m_egg_glm.nb, test = "F")
+
+comb_m_egg_glm.nb.2 <- glm.nb(egg_numbers ~
+                                + ratio + condition + block
+                               + ratio : condition 
+                              + ratio : block
+                              + condition : block, data =  combined_ovi_m_split)
+
+
+drop1(comb_m_egg_glm.nb.2, test = "F")
+
+## no two way  interactions 
+
+
+comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers ~
+                                ratio + condition + block, data =  combined_ovi_m_split)
+
+
+summary(comb_m_egg_glm.nb.3)
+
+emmeans::emmeans(comb_m_egg_glm.nb.3, pairwise ~ ratio + condition + block )
 ############################## --
 #### Virgin Conditioning ####
 ############################# --
