@@ -1,3 +1,21 @@
+# Packages 📦📦📦📦####
+library(tidyverse)
+library(lmerTest)
+library(readxl)
+library(MASS)
+library(performance)
+library(pscl)
+library(DHARMa)
+library(glmmTMB)
+
+
+## 
+pupae_fitness <- read_excel("data/fitness_development/puape_data.xlsx")
+
+
+
+
+
 ## Pupae 
 
 pupae_model <- glmmTMB(pupae ~ treatment * `time (hours)` + (1| vial), family = poisson, data = pupae_fitness)
@@ -11,9 +29,12 @@ check_zeroinflation(pupae_model) ## There is zero inflation
 check_overdispersion(pupae_model) ## There is over dispersion 
 
 
-glm.nb_pupae <- glm.nb(pupae ~ treatment * `time (hours)` + (1| vial), data = pupae_fitness)
+glm.nb_pupae <- glm.nb(pupae ~ 
+                         treatment + `time (hours)` + 
+                         treatment : `time (hours)`
+                       + (1| vial), data = pupae_fitness)
 
-drop1(glm.nb_pupae, tets = "F")
+drop1(glm.nb_pupae, test = "F")
 
 
 summary(glm.nb_pupae)
