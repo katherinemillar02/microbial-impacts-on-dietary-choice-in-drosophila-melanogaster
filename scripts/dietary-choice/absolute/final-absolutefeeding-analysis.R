@@ -47,7 +47,8 @@ combined_m_split <- combined_m %>%
 
 ## Testing for interaction effects with the new model 
 # Model 1 - glmm.m.4choice.2
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block  + (1 | factor(block) / plate) + (1 |  factor(block) / observation), family = poisson, data = combined_m_split)
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ 
+                              ratio * condition * block  + (1 | factor(block) / plate) + (1 |  factor(block) / observation), family = poisson, data = combined_m_split)
 
 #### JUST IN CASE I AM REQUIRED TO DO THIS, testing different models, with the new model design 
 
@@ -74,16 +75,26 @@ check_zeroinflation(glmm.m.4choice.2)
 
 
 ## Choosing this model 
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | factor(block)/ observation), family = poisson, data = combined_m_split)
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ 
+                              ratio + condition + block 
+                           + ratio : condition : block 
+                            + (1 | factor(block) / plate) + (1 | factor(block)/ observation), family = poisson, data = combined_m_split)
 
+glmm.m.4choice.20 <- glmmTMB(fly_numbers ~ 
+                              ratio * condition * block 
+                
+                            + (1 | factor(block) / plate) + (1 | factor(block)/ observation), family = poisson, data = combined_m_split)
 
 ## This will show results for the 3-way interaction
-drop1(glmm.m.4choice.2, test = "Chisq")
+drop1(glmm.m.4choice.20, test = "Chisq")
 
 ## This shows everything
 summary(glmm.m.4choice.2)
 
 ## Results show there is no 3-way interaction, so this can be removed
+
+## can do models like this as no more way interactions to be found
+
 ## Testing 2-way interactions
 glmm.m.4choice.3 <- glmmTMB(fly_numbers ~ 
                               ratio + condition + block 
@@ -92,6 +103,10 @@ glmm.m.4choice.3 <- glmmTMB(fly_numbers ~
                             + ratio:condition + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 drop1(glmm.m.4choice.3, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
+
+
+
+
 
 ## Newest model - final model 
 ## One version of it
@@ -134,6 +149,9 @@ performance::check_model(glmm.m.4choice.4, check = c("qq"))
 
 ## Analysis of the results
 summary(glmm.m.4choice.4.2)
+
+
+
 
 ## Tukey test pairwise 
 emmeans::emmeans(glmm.m.4choice.4, pairwise ~  ratio + condition)
@@ -239,12 +257,14 @@ drop1(glm.nb.vf.4choice.4, test = "Chisq")
 ## Using the final model for analysis 
 summary(glm.nb.vf.4choice.4)
 
+anova(glm.nb.vf.4choice.4)
+
 ## Two-way tukey test 
 emmeans::emmeans(glm.nb_vf_2, pairwise ~ ratio + condition)
 
 ## Finding response variable for written analysis 
 emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
-# conditioning in 1:4 not significant. 
+ # Conditioning in 1:4 is not significant. 
 
 
 
