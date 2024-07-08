@@ -425,6 +425,16 @@ male_oviposition <- grid.arrange(
   heights = c(1, 1)
 )
 
+male_feeding_absolute <- grid.arrange(
+   m_combined_b1 ,
+  m_combined_b2,
+  ncol = 1,
+  nrow = 2,
+  widths = c(0.5),
+  heights = c(1, 1)
+)
+
+
 
 
 
