@@ -470,6 +470,10 @@ glm.nb.vf.4choice.2  <- glm.nb(fly_numbers ~
                                  ratio * condition * block 
                                + (1| plate) + (1|observation), data = combined_vf_split)
 
+drop1(glm.nb.vf.4choice.2, test = "F")
+
+
+
 
 AIC(glmm.vf.4choice.2, zi.pois.vf.4choice.2, zi.nb.m.4choice.2, glm.nb.vf.4choice.2)
 
@@ -491,14 +495,40 @@ zi.nb..4choice.2 <- zeroinfl(fly_numbers ~
 drop1(zi.nb.m.4choice.2, test = "F")
 
 
-#### STUCK
+#### STUCK - why does this not work?? 
 
 
 
+## Second lowest AIC
+glm.nb.vf.4choice.2  <- glm.nb(fly_numbers ~ 
+                                 ratio * condition * block 
+                               + (1| plate) + (1|observation), data = combined_vf_split)
+
+drop1(glm.nb.vf.4choice.2, test = "F")
 
 
+glm.nb.vf.4choice.3  <- glm.nb(fly_numbers ~ 
+                                 ratio + condition + block 
+                               + ratio : condition 
+                               + ratio : block 
+                               + condition : block
+                               + (1| plate) + (1|observation), data = combined_vf_split)
+
+drop1(glm.nb.vf.4choice.3, test = "F")
+ #  condition and block
 
 
+## Final model
+glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~ 
+                                  condition * block  + ratio
+                               
+                              
+                               
+                               + (1| plate) + (1|observation), data = combined_vf_split)
+
+drop1(glm.nb.vf.4choice.4, test = "F")
+
+summary(glm.nb.vf.4choice.4)
 
 
 # OVOD1 (EGGLESS) FEMALE ####
