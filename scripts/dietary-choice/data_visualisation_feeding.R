@@ -80,7 +80,7 @@ fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresu
 fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
 
 # Binding the 4:1/1:4 data blocks 
-fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4)
+combined_vf <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4)
 
 
 
@@ -268,7 +268,7 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
 ############################## --
 vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[c(9,9)])
 vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[c(7,7)])
-vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+vf_combined <- feeding_results(combined_vf, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
 
 
 
