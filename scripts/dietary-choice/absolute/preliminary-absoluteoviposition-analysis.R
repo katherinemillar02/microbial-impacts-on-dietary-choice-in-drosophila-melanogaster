@@ -495,8 +495,10 @@ glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
 ## without block
 glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
 
-combined_ovi_v <- combined_ovi_v %>% 
-  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+
+
 
 glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ ratio * condition + block, data =  combined_ovi_v)
 
@@ -505,9 +507,63 @@ drop1(glm.nb_v_comb_egg_2, test = "F") ## not sig
 summary(glm.nb_v_comb_egg_2)
 
 
+
+
 ## viewing the data results 
 summary(glm.nb_v_comb_egg_2) 
 
 emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet)
 
+
+
+
+#### DATA SPLIT 
+
+combined_ovi_v_split <- combined_ovi_v %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+comb_v_egg_glm.p.2 <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
+
+
+glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
+
+glm_mm_v_egg.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_v_split)
+
+zif.p_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "poisson", link = "logit", data = combined_ovi_v_split)
+
+
+zif.nb_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "negbin", link = "logit", data = combined_ovi_v_split)
+
+
+AIC(comb_v_egg_glm.p , glm.nb_v_comb_egg, glm_mm_v_egg, zif.p_v_egg, zif.nb_v_egg)
+
+
+## GLM NB has lowest AIC
+
+
+glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
+
+drop1(glm.nb_v_comb_egg.2, test = "F")
+
+
+glm.nb_v_comb_egg.3 <- glm.nb(egg_numbers ~
+                                ratio + condition + block +
+                                ratio : condition +
+                                block : condition + 
+                                ratio : block , data =  combined_ovi_v_split)
+
+drop1(glm.nb_v_comb_egg.3, test = "F")
+
+## interaction effect between condition and block 
+
+
+
+glm.nb_v_comb_egg.4 <- glm.nb(egg_numbers ~
+                                condition * block + ratio , data =  combined_ovi_v_split)
+
+
+drop1(glm.nb_v_comb_egg.4, test = "F")
+
+summary(glm.nb_v_comb_egg.4)
 
