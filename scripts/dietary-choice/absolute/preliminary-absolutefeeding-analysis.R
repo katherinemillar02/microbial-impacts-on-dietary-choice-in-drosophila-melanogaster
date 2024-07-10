@@ -641,7 +641,7 @@ AIC(glm.pois.of.4choice, glm.nb.of.4choice, glmm.of.4choice, zi.p.of.4choice, zi
 
 
 #### Splitting variables in the model up: 
-combined_of_split <- combined_of_split %>% 
+combined_of_split <- combined_of %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
@@ -669,4 +669,65 @@ summary(zi.p.of.4choice.4)
 
 ## Tukey test pairwise 
 emmeans::emmeans(zi.p.of.4choice.4, pairwise ~ ratio + condition )
+
+
+
+##### Testing the different models wirh diet split 
+
+#### Splitting variables in the model up: 
+combined_of_split <- combined_of %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+glmm.of.4choice.2 <- glmmTMB(fly_numbers ~ 
+                              ratio * condition * block 
+                            + (1 | block / plate) + (1 | block / observation), family = poisson, data = combined_of_split)
+
+#glm.nb.of.4choice.2 <- glm.nb(fly_numbers ~  ratio * condition * block , data = combined_m)
+
+glmm.of.4choice.2 <- glmmTMB(fly_numbers ~  ratio * condition * block  + (1|factor(block)/plate) + (1|block/observation), family = poisson, data = combined_of_split)
+
+
+zi.pois.of.4choice.2 <- zeroinfl(fly_numbers ~  ratio * condition * block |  ratio * condition * block , dist = "poisson", link = "logit", data = combined_of_split)
+
+zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~  ratio * condition * block  |  ratio * condition * block , dist = "negbin", link = "logit", data = combined_of_split)
+
+
+
+AIC(glmm.of.4choice.2, zi.pois.of.4choice.2, zi.nb.of.4choice.2)
+
+
+## They all look bad, going with GLMM 
+glmm.of.4choice.2 <- glmmTMB(fly_numbers ~ 
+                               ratio * condition * block 
+                             + (1 | block / plate) + (1 | block / observation), family = poisson, data = combined_of_split)
+
+drop1(glmm.of.4choice.2, test = "Chisq")
+
+
+
+glmm.of.4choice.3 <- glmmTMB(fly_numbers ~ 
+                               ratio + condition + block + 
+                               ratio : condition + 
+                               block : condition + 
+                               ratio : block 
+                             + (1 | block / plate) + (1 | block / observation), family = poisson, data = combined_of_split)
+
+drop1(glmm.of.4choice.3, test = "Chisq")
+
+
+
+
+glmm.of.4choice.4 <- glmmTMB(fly_numbers ~ 
+                               ratio + condition + block + 
+                               ratio : condition + 
+                               block : condition + 
+                                
+                             + (1 | block / plate) + (1 | block / observation), family = poisson, data = combined_of_split)
+
+
+drop1(glmm.of.4choice.4, test = "Chisq")
+
+summary(glmm.of.4choice.4)
+
 
