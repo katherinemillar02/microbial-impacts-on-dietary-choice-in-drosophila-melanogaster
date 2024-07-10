@@ -24,10 +24,11 @@ library(glmmTMB)
 ## MALE ####
 
 
-#### UPLOADING AND BINDING THE CORRECT DATA
+#### UPLOADING AND BINDING THE CORRECT DATA 
+
 # 4:1 + 1:4 
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b1.xlsx")
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b2.xlsx")
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx")
 
 # mutating a variable for block 
 fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
@@ -59,7 +60,7 @@ performance::check_model(glm.pois.m.4choice, check = c("homogeneity")) # does th
 summary(glm.pois.m.4choice) # A bit overdispersed 
 
 # Look for 0s 
-check_zeroinflation(glm.pois.m.4)
+check_zeroinflation(glm.pois.m.4choice)
 # there is zero inflation 
 
 # There is overdispersion, this could be independent of or because of the zero inflation
@@ -90,20 +91,20 @@ summary(glm.nb.m.4choice)
 glmm.m.4choice <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|block/observation), family = poisson, data = combined_m)
 
 ## Assumption checks
-performance::check_model(glmm.m.4, check = c("qq")) # qq looks a lot better
+performance::check_model(glmm.m.4choice, check = c("qq")) # qq looks a lot better
 
 ## Looking for inflation of zeros
-check_zeroinflation(glmm.m.4) # There is still zero inflation 
+check_zeroinflation(glmm.m.4choice) # There is still zero inflation 
 
 # using DHARMa to look at residuals of new model 
-simulateResiduals(fittedModel = glmm.m.4, plot = T)
+simulateResiduals(fittedModel = glmm.m.4choice, plot = T)
 
 # Trying a zero inflated poisson model with poisson
 zi.pois.m.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_m)
 
 ## Assumption checks 
-sresid <- residuals(zi.pois.m.4, type = "pearson")
-pred <- fitted(zi.pois.m.4)
+sresid <- residuals(zi.pois.m.4choice, type = "pearson")
+pred <- fitted(zi.pois.m.4choice)
 hist(sresid)
 plot(sresid ~  pred)
 
@@ -115,7 +116,7 @@ zi.nb.m.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "n
 
 
 # Comparing AIC of the different models 
-AIC(glm.pois.m.4choice, glm.nb.mchoice, glmm.m.4choice, zi.pois.m.4choice, zi.nb.m.4choice)
+AIC(glm.pois.m.4choice, glm.nb.m.4choice, glmm.m.4choice, zi.pois.m.4choice, zi.nb.m.4choice)
 # glm_mm_m has the lowest AIC, but AIC values close to each other are basically the same (like 5 values?)
 
 
@@ -135,6 +136,7 @@ drop1(glmm.m.4, test = "Chi") # Small interaction, but still exists
 
 
 
+
 ## Splitting up diet within the actual data frame
 combined_m_split <- combined_m %>%
      separate(diet, into = c("ratio", "condition"), sep = " ")
@@ -142,7 +144,7 @@ combined_m_split <- combined_m %>%
 
 ## Testing for interaction effects with the new model 
 # Model 1 - glmm.m.4choice.2
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 #### JUST IN CASE I AM REQUIRED TO DO THIS, testing different models, with the new model design 
 
@@ -171,17 +173,17 @@ check_zeroinflation(glmm.m.4choice.2)
 ## First, trying a zero-inflation model
 
 ## zero inflation with poisson
-zi.pois.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block + ratio * condition + ratio * block + condition * block | ratio * condition * block + ratio * condition + ratio * block + condition * block, dist = "poisson", link = "logit", data = combined_m_split)
+zi.pois.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block , dist = "poisson", link = "logit", data = combined_m_split)
 
 ## Assumption checks??
 
 ## zero inflation with neg bin
-zi.nb.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block + ratio * condition + ratio * block + condition * block | ratio * condition * block + ratio * condition + ratio * block + condition * block, dist = "negbin", link = "logit", data = combined_m_split)
+zi.nb.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block, dist = "negbin", link = "logit", data = combined_m_split)
 
 ## Assumption checks??
 
 ## Negative Binomial GLM
-glm.nb.m.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block, data = combined_m_split)
+glm.nb.m.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block, data = combined_m_split)
 
 
 ## Assumption checks
@@ -507,7 +509,7 @@ zi.p.of.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "p
 zi.nb.of.4choice <- zeroinfl(fly_numbers ~ diet + block , dist = "negbin", link = "logit", data = combined_of )
 
 
-    #### For the zeroinflated models, I don't know how to do performnance checks. 
+    #### For the zeroinflated models, I don't know how to do performance checks. 
 
 
 
@@ -518,7 +520,7 @@ AIC(glm.pois.of.4choice, glm.nb.of.4choice, glmm.of.4choice, zi.p.of.4choice, zi
 
 
 #### Splitting variables in the model up: 
-combined_of_split <- combined_of_split %>% 
+combined_of_split <- combined_of %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 

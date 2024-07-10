@@ -130,8 +130,7 @@ glmm.pois.ovi.4choice <- glmmTMB(egg_numbers ~ diet  + block + (1|plate/block) ,
 
 #### Splitting up diet in the data 
 
-combined_of_egg_split <- combined_of_egg %>% 
-  separate(diet, into = c("ratio", "condition"), sep = " ")
+
 
 
 
@@ -162,6 +161,64 @@ emmeans::emmeans(combined_glm_mm_od1_egg, pairwise ~ diet)
 
 
 
+
+
+
+glm.pois.ovi.4choice.2 <- glm(egg_numbers ~ ratio * condition * block, family = poisson, combined_of_egg_split)
+glm.quasipois.ovi.4choice.2 <- glm(egg_numbers ~ ratio * condition * block, family = quasipoisson, combined_of_egg_split)
+glmm.pois.ovi.4choice.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|factor(block)/plate) , family = poisson, data = combined_of_egg_split)
+
+
+AIC(glm.pois.ovi.4choice.2, glm.quasipois.ovi.4choice.2, glmm.pois.ovi.4choice.2)
+
+
+
+combined_of_egg_split <- combined_of_egg %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+
+
+
+
+glmm.pois.ovi.4choice.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|factor(block)/plate) , family = poisson, data = combined_of_egg_split)
+
+
+drop1(glmm.pois.ovi.4choice.2, test = "Chisq")
+
+
+
+
+
+
+glmm.pois.ovi.4choice.3 <- glmmTMB(egg_numbers ~ 
+                                     ratio + condition + block 
+                                   + ratio : condition 
+                                   + ratio : block 
+                                   + condition : block +  (1|factor(block)/plate) , family = poisson, data = combined_of_egg_split)
+
+
+drop1(glmm.pois.ovi.4choice.3, test = "Chisq")
+
+
+  #### interactiomn r block and b block 
+
+
+
+
+glmm.pois.ovi.4choice.4 <- glmmTMB(egg_numbers ~ 
+                                     ratio + condition + block 
+                             
+                                   + ratio : block 
+                                   + condition : block +
+                                     
+                                     (1|factor(block)/plate) , family = poisson, data = combined_of_egg_split)
+
+
+drop1(glmm.pois.ovi.4choice.4, test = "Chisq")
+
+
+summary(glmm.pois.ovi.4choice.4)
 
 ################################# --
 ####### Male Conditioning #######

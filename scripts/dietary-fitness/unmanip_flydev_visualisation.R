@@ -88,7 +88,7 @@ females_data_2 <- subset(fly_fitness_2, select = c(time_hours, females, treatmen
 
 
 ## Visualising the data for the second dataset 
-fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fill = treatment)) +
+fly_females_plot_2 <- ggplot(females_data, aes(x = time_hours, y = females, fill = treatment)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = viridis_colors[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
   theme_classic() +
@@ -99,7 +99,7 @@ fly_females_plot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fi
        y = "Number of Females Emerged") +
   labs(fill = "Treatment")
 
-fly_females_boxplot_2 <- ggplot(females_data_2, aes(x = time_hours, y = females, fill = treatment)) +
+fly_females_boxplot_2 <- ggplot(females_data, aes(x = time_hours, y = females, fill = treatment)) +
   geom_boxplot(outliers = FALSE, alpha =.4, position = position_dodge (width = 20)) + #width =10 ) +
   geom_point(aes(fill = treatment),
              size = 1, shape = 21,
