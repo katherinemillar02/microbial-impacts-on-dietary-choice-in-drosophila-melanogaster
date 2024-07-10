@@ -172,3 +172,44 @@ drop1(zi.p_fly.2, test = "F")
 zi.p_fly_2 <- zeroinfl(count ~ treatment + time_hours + sex | treatment + time_hours + sex, dist = "poisson", link = "logit", data = fly_fitness_tidy)
 
 summary(zi.p_fly_2)
+
+
+
+glm.nb_fly <- glm.nb(count ~ 
+                         
+                       treatment * time_hours * sex
+                         
+                       + (1| vial), data = fly_fitness_tidy)
+
+drop1(glm.nb_fly, test = "F")
+
+
+glm.nb_fly.2 <- glm.nb(count ~ 
+                         
+                       treatment + time_hours + sex +
+                         
+                       treatment : time_hours +
+                       sex : time_hours + 
+                       treatment : sex + 
+                     
+                     + (1| vial), data = fly_fitness_tidy)
+
+drop1(glm.nb_fly.2, test = "F")
+
+
+
+
+glm.nb_fly.3 <- glm.nb(count ~ 
+                         
+                         treatment + time_hours + sex +
+                         
+                         treatment : time_hours +
+                         sex : time_hours + 
+                       
+                         
+                         + (1| vial), data = fly_fitness_tidy)
+
+drop1(glm.nb_fly.3, test = "F")
+
+
+summary(glm.nb_fly.3)
