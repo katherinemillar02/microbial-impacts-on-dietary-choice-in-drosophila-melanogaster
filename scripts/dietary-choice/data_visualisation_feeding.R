@@ -80,7 +80,7 @@ fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresu
 fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
 
 # Binding the 4:1/1:4 data blocks 
-combined_vf <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4)
+fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4)
 
 
 
@@ -121,21 +121,21 @@ fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 ##### FUNCTION FOR ADDING // CHANGING VARIABLE NAMES #####  #####  #####  ##### 
 
 variable_data <- function(data, cols, names_to = "diet", values_to = "fly_numbers") {
-  data %>% 
+  data %>%
     pivot_longer(cols = all_of(cols), names_to = names_to, values_to = values_to)
 }
 
-fourone_of <- ovod1_df(four_to_one_ovod1, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
-onefour_of <- ovod1_df(one_to_four_ovod1, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
-combined_of <- ovod1_df(fourone_onefour_ovod1, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+fourone_of <- variable_data(four_to_one_ovod1, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_of <- variable_data(one_to_four_ovod1, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_of <- variable_data(fourone_onefour_ovod1, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
 
-fourone_m <- ovod1_df(four_to_one_male, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
-onefour_m <- ovod1_df(one_to_four_male, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
-combined_m <- ovod1_df(fourone_onefour_male, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+fourone_m <- variable_data(four_to_one_male, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_m <- variable_data(one_to_four_male, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_m <- variable_data(fourone_onefour_male, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
 
-fourone_v <- ovod1_df(four_to_one_virgin, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
-onefour_v <- ovod1_df(one_to_four_virgin, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
-combined_v <- ovod1_df(fourone_onefour_virgin, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+fourone_v <- variable_data(four_to_one_virgin, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_v <- variable_data(one_to_four_virgin, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_v <- variable_data(fourone_onefour_virgin, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####  #####  #####  ##### 
 
@@ -148,44 +148,44 @@ combined_v <- ovod1_df(fourone_onefour_virgin, cols = c("4:1 Conditioned", "1:4 
 # Creating a function for a boxplot, 
 # this will allow one to use the feeding data for different data sets... 
 
-
-#################################### Feeding Results Function Plot ####################################
-
-feeding_results <- function(summary_data,boxplot_fill_colour ) {
-  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
-    # geom_jitter(aes(x = diet,
-    #                 y = fly_numbers,
-    #                 fill = diet),
-    #             width = 0.1,
-    #             shape = 1) +
-    geom_boxplot(outlier.shape = NA)+
-     geom_boxplot_pattern(position = position_dodge(preserve = "single"),
-                         color = "black",
-                         pattern_fill = "white",
-                         pattern_angle = 45,
-                         pattern_density = 0.1,
-                         pattern_spacing = 0.025,
-                         pattern_key_scale_factor = 0.6,
-                         outlier.shape = NA) +
-    geom_point(aes(),
-               size = 1,
-               shape = 1,
-               position = position_jitterdodge()) +
-    theme_classic()+
-    labs(x = "Diet Condition\nConditioned",
-         y = "Flies per diet patch", 
-         title = "")+
-    scale_fill_manual(values = boxplot_fill_colour) + 
-     scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
-    theme(legend.position = "none") +
-    scale_x_discrete(labels = c(
-      "4:1\nConditioned", 
-      "4:1\nUnconditioned", 
-      "1:4\nConditioned", 
-      "1:4\nUnconditioned"))+
-    ylim(-0.01, 6) 
-}
-  
+# 
+# #################################### Feeding Results Function Plot ####################################
+# 
+# feeding_results <- function(summary_data,boxplot_fill_colour ) {
+#   ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
+#     # geom_jitter(aes(x = diet,
+#     #                 y = fly_numbers,
+#     #                 fill = diet),
+#     #             width = 0.1,
+#     #             shape = 1) +
+#     geom_boxplot(outlier.shape = NA)+
+#      geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+#                          color = "black",
+#                          pattern_fill = "white",
+#                          pattern_angle = 45,
+#                          pattern_density = 0.1,
+#                          pattern_spacing = 0.025,
+#                          pattern_key_scale_factor = 0.6,
+#                          outlier.shape = NA) +
+#     geom_point(aes(),
+#                size = 1,
+#                shape = 1,
+#                position = position_jitterdodge()) +
+#     theme_classic()+
+#     labs(x = "Diet Condition\nConditioned",
+#          y = "Flies per diet patch", 
+#          title = "")+
+#     scale_fill_manual(values = boxplot_fill_colour) + 
+#      scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
+#     theme(legend.position = "none") +
+#     scale_x_discrete(labels = c(
+#       "4:1\nConditioned", 
+#       "4:1\nUnconditioned", 
+#       "1:4\nConditioned", 
+#       "1:4\nUnconditioned"))+
+#     ylim(-0.01, 6) 
+# }
+#   
   
 ########################################################################################################################### --
 
@@ -224,8 +224,6 @@ feeding_results <- function(data, boxplot_fill_colour) {
     )
 }
 
-# Example of how to call the function with data
-# feeding_results(my_data, c("#FF5733", "#33FF57"))
 
 
 
@@ -268,7 +266,7 @@ ovod1_female_feeding <- grid.arrange(of_1_4, of_4_1, of_combined,
 ############################## --
 vf_1_4 <- feeding_results(onefour_v, boxplot_fill_colour = viridis_colors[c(9,9)])
 vf_4_1 <- feeding_results(fourone_v, boxplot_fill_colour  = viridis_colors[c(7,7)])
-vf_combined <- feeding_results(combined_vf, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+vf_combined <- feeding_results(combined_v, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
 
 
 
@@ -624,6 +622,17 @@ virgin_oviposition <- grid.arrange(
   ncol = 3,
   nrow = 4,
   widths = c(0.5, 0.5, 1),
+  heights = c(1, 1, 1,1)
+)
+
+virgin_oviposition_absolute <- grid.arrange(
+  v_combined_b1 ,
+   v_combined_b2,
+   v_combined_b3 ,
+   v_combined_b4,
+  ncol = 1,
+  nrow = 4,
+  widths = c( 1),
   heights = c(1, 1, 1,1)
 )
 
