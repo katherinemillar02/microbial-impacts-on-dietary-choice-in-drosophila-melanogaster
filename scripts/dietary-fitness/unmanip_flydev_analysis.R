@@ -21,6 +21,8 @@ fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
                                         names_to = "sex",
                                         values_to = "count") 
 
+fly_fitness_tidy <- as.data.frame(fly_fitness_tidy)
+
 
 ## Starting with a basic model 
 
@@ -122,7 +124,7 @@ glm.nb_fly.3 <- glm.nb(count ~
                        
                        + time_hours : sex 
                        + treatment + time_hours + sex 
-                       + (1| vial), data = fly_fitness_tidy)
+                      , data = fly_fitness_tidy)
 
 drop1(glm.nb_fly.3, test = "F")
 
@@ -131,7 +133,7 @@ drop1(glm.nb_fly.3, test = "F")
 summary(glm.nb_fly.3)
 
 
-# DHARMa checks 
+  # DHARMa checks 
 plot(simulateResiduals(glm.nb_fly)) ## looks quite okay
 
 # easystats checks 
