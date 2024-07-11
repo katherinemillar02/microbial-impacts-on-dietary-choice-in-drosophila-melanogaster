@@ -59,8 +59,11 @@ pupae_boxplot_2 <- ggplot(pupae_fitness, aes(x = factor(time_hours), y = pupae, 
 pupae_boxplot_2
 
 
+pupae_fitness <- as.data.frame(pupae_fitness)
+
+total_pupae <- pupae_fitness %>% 
+  group_by(treatment) %>% 
+  summarise(total_pupae = sum(pupae, na.rm = TRUE))
 
 
-
-
-
+total_pupae <- as.data.frame(total_pupae)

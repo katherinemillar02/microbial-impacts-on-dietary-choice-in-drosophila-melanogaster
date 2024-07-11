@@ -136,7 +136,7 @@ combined_of_egg_split <- combined_of_egg %>%
 
 
 #### Trying the model 
-glmm.pois.ovi.4choice.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block  + (1|plate/block) , family = poisson, data = combined_of_egg_split )
+glmm.pois.ovi.4choice.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|block/ plate) , family = poisson, data = combined_of_egg_split )
 
 drop1(glmm.pois.ovi.4choice.2, test = "Chisq") ## No 3-way interaction effect
 
@@ -149,9 +149,18 @@ drop1(glmm.pois.ovi.4choice.3, test = "Chisq")
   ## Interaction effect between condition and block 
 
 
-glmm.pois.ovi.4choice.4 <- glmmTMB(egg_numbers ~ ratio * block + condition * block  + (1|plate/block) , family = poisson, data = combined_of_egg_split )
+glmm.pois.ovi.4choice.4 <- glmmTMB(egg_numbers ~ 
+                                     ratio : block 
+                                   + condition : block  +
+                                     condition + ratio + block + (1| block / plate) , family = poisson, data = combined_of_egg_split )
 
 drop1(glmm.pois.ovi.4choice.4, test = "Chisq") 
+
+combined_of_egg_split$ratio <- as.factor(combined_of_egg_split$ratio)
+combined_of_egg_split$ratio <- relevel(combined_of_egg_split$ratio, ref = "4:1")
+
+combined_of_egg_split$block <- as.factor(combined_of_egg_split$block)
+combined_of_egg_split$block <- relevel(combined_of_egg_split$block, ref = "one")
 
 summary(glmm.pois.ovi.4choice.4)
 
@@ -349,6 +358,8 @@ drop1(comb_m_egg_glm.nb.2, test = "F")
 
 ## no two way  interactions 
 
+combined_ovi_m_split$ratio <- as.factor(combined_ovi_m_split$ratio)
+combined_ovi_m_split$ratio <- relevel(combined_ovi_m_split$ratio, ref = "4:1")
 
 comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers ~
                                 ratio + condition + block, data =  combined_ovi_m_split)
@@ -557,7 +568,11 @@ drop1(glm.nb_v_comb_egg.3, test = "F")
 
 ## interaction effect between condition and block 
 
+combined_ovi_v_split$ratio <- as.factor(combined_ovi_v_split$ratio)
+combined_ovi_v_split$ratio <- relevel(combined_ovi_v_split$ratio, ref = "4:1")
 
+combined_ovi_v_split$block <- as.factor(combined_ovi_v_split$block)
+combined_ovi_v_split$block <- relevel(combined_ovi_v_split$block, ref = "two")
 
 glm.nb_v_comb_egg.4 <- glm.nb(egg_numbers ~
                                 condition * block + ratio , data =  combined_ovi_v_split)

@@ -1,8 +1,14 @@
 
-#### This script will read the data in for the appropriate conditioning, it then shows the chosen model
-### doesn't show how it got to that point, 
 
-# Packages 📦📦📦📦####
+
+
+#### This script will read the data in for the appropriate conditioning, it then shows the chosen model
+### BUT it doesn't show how it got to that point, like the other models tested... 
+
+
+
+
+##### Packages 📦📦📦📦 ####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -11,45 +17,40 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
-##################---
+  ################## 
 
 
 
 
-## MALE ####
+################## CONDITIONING TREATMENT: MALE ##################
  
-## MALE FEEDING 
+################## DIETARY TREATMENT: ABSOLUTE ##################
 
-#### UPLOADING AND BINDING THE CORRECT DATA for male 
-# 4:1 + 1:4 
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b1.xlsx")
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b2.xlsx")
+## Using read excel to upload the data (block one and block two)
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx")
 
-# mutating a variable for block 
+# Mutating an additional variable for "block" 
 fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
 fourone_onefour_male_b2 <- fourone_onefour_male_b2  %>% mutate(block = "two")
 
-# Binding the data
+# Using rbind() to bind the block 1 and block 2 data frames into one data frame.
 fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
-
-# 4:1 and 1:4 - making the data long 
-combined_m <- fourone_onefour_male %>% 
+## Using pivot longer to add additional variables to the dataframe, and change variable names 
+fourone_onefour_male_long <- fourone_onefour_male %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") %>% 
   mutate(fly_numbers = as.integer(fly_numbers))  
 
 
-
-## Splitting diet into ratio and condition
-combined_m_split <- combined_m %>% 
+## Splitting "diet" into "ratio" and "condition"
+fourone_onefour_male_long_split <- fourone_onefour_male_long %>% 
   separate(diet, into = c ("ratio", "condition"), sep = " ")
 
+#### I now show the chosen model, and test for interaction effects with the chosen model. 
+#### For a previous demonstration on how I got to choosing this model, please see preliminary script. 
 
-## Testing for interaction effects with the new model 
-# Model 1 - glmm.m.4choice.2
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block  + (1 | factor(block) / plate) + (1 |  factor(block) / observation), family = poisson, data = combined_m_split)
-
-#### JUST IN CASE I AM REQUIRED TO DO THIS, testing different models, with the new model design 
+        #### The chosen model is a: Poisson GLMM   #### 
 
 ## Assumption checks for glmm.m.4choice.2
 testDispersion(glmm.m.4choice.2)
@@ -70,20 +71,40 @@ check_overdispersion(glmm.m.4choice.2)
 check_zeroinflation(glmm.m.4choice.2)
 # Probable zero inflation 
 
-### The mixed model shows there is both overdispersion and zero inflation. 
+#### The mixed model shows there is both overdispersion and zero inflation
+#### But the AIC showed it to be a good model compared to the other models. 
 
 
-## Choosing this model 
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | factor(block)/ observation), family = poisson, data = combined_m_split)
+
+#### Changing what is in the intercept 
+
+combined_m_split$ratio <- as.factor(combined_m_split$ratio)
+combined_m_split$ratio <- relevel(combined_m_split$ratio, ref = "4:1")
+
+combined_m_split$block <- as.factor(combined_m_split$block)
+combined_m_split$block <- relevel(combined_m_split$block, ref = "one")
+
+#### The chosen model (for reference): 
+
+
+#### Testing for interaction effects with the new model 
+#### Testing for 3-way interaction effects, 
+#### As I have used "*", this will also test for two-way interaction effects.
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ 
+                              
+                              ratio * condition * block 
+                            
+                            + (1 | block / plate) + (1 |  block / observation), 
+                            
+                            family = poisson, data = combined_m_split)
 
 
 ## This will show results for the 3-way interaction
 drop1(glmm.m.4choice.2, test = "Chisq")
+   ## No 3-way interaction found, dropping from the model. 
 
-## This shows everything
-summary(glmm.m.4choice.2)
 
-## Results show there is no 3-way interaction, so this can be removed
+
 ## Testing 2-way interactions
 glmm.m.4choice.3 <- glmmTMB(fly_numbers ~ 
                               ratio + condition + block 
@@ -91,23 +112,31 @@ glmm.m.4choice.3 <- glmmTMB(fly_numbers ~
                             + condition : block  
                             + ratio:condition + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
-drop1(glmm.m.4choice.3, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
 
-## Newest model - final model 
-## One version of it
+
+
+## Will display the 3 2-way interactions tested: 
+drop1(glmm.m.4choice.3, test = "Chisq") 
+    ## An interaction between condition and block found? the others can be dropped
+
+
+
+
+## The final model 
 glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  
                               ratio + condition * block + (1 | block / plate) + (1 | observation / plate), family = poisson, data = combined_m_split)
 
 
-## Another version of it 
-glmm.m.4choice.4.2 <- glmmTMB(fly_numbers ~  
-                               condition : block +
-                                condition + block + ratio + (1 | block / plate) + (1 | block / observation ), family = poisson, data = combined_m_split)
-
-
+## Using drop1, just to show the interaction effect again. 
 drop1(glmm.m.4choice.4.2, test = "Chisq")
-#### Assumption checks of the final chosen model (with diet split)... 
 
+
+
+
+#### ASSUMPTION CHECKS WITH THE FINAL MODEL - to confirm it is still a "good" fit.
+
+
+#### Using the DHARMa package for assumption checking. 
 testDispersion(glmm.m.4choice.4)
 ## Is it underdispersed?
 
@@ -128,19 +157,30 @@ check_overdispersion(glmm.m.4choice.4)
 # Here it says there is overdispersion, even though I thought DHARMa showed undispersion... 
 
 
-performance::check_model(glmm.m.4choice.4, check = c("qq"))
-## It does not show the qq - why?
-
-
-## Analysis of the results
+######## ANALYSIS OF RESULTS ######## 
 summary(glmm.m.4choice.4.2)
 
-## Tukey test pairwise 
-emmeans::emmeans(glmm.m.4choice.4, pairwise ~  ratio + condition)
 
 
 
-## VIRGIN FEMALE 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## VIRGIN FEMALE ####
 
 #### Reading in the data
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
@@ -208,9 +248,15 @@ drop1(glm.nb.vf.4choice.3, test = "Chisq")
 # here, when I do ":" it finds an interaction effect 
 summary(glm.nb.vf.4choice.3)
 
+combined_vf_split$ratio <- as.factor(combined_vf_split$ratio)
+combined_vf_split$ratio <- relevel(combined_vf_split$ratio, ref = "4:1")
+
+
+combined_vf_split$block <- as.factor(combined_vf_split$block)
+combined_vf_split$block <- relevel(combined_vf_split$block, ref = "one")
 
 # Final model - only with a interaction effect of condition and block... 
-glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~  ratio + condition * block + (1|factor(block)/plate) + (1|factor(block)/observation), data = combined_vf_split)
+glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~  ratio + condition * block  , data = combined_vf_split)
 
 
 ## Assumption checks with the chosen model
@@ -240,9 +286,6 @@ summary(glm.nb.vf.4choice.4)
 ## Two-way tukey test 
 emmeans::emmeans(glm.nb_vf_2, pairwise ~ ratio + condition)
 
-## Finding response variable for written analysis 
-emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
-# conditioning in 1:4 not significant. 
 
 
 
@@ -291,8 +334,20 @@ zi.p.of.4choice.3 <- zeroinfl(fly_numbers ~  ratio * condition + ratio * block +
 drop1(zi.p.of.4choice.3, test = "Chisq") 
 ## Interaction effect found between condition and block, and ratio and condition 
 
+combined_of_split$ratio <- as.factor(combined_of_split$ratio)
+combined_of_split$ratio <- relevel(combined_of_split$ratio, ref = "4:1")
+
+combined_of_split$block <- as.factor(combined_of_split$block)
+combined_of_split$block <- relevel(combined_of_split$block, ref = "one")
+
+
 ## Final model?
-zi.p.of.4choice.4 <- zeroinfl(fly_numbers ~  ratio * condition  + condition * block , dist = "negbin", link = "logit", data = combined_of_split)
+zi.p.of.4choice.4 <- zeroinfl(fly_numbers ~  
+                                
+                                ratio : condition  
+                              + condition : block
+
+                              + ratio + condition + block , dist = "negbin", link = "logit", data = combined_of_split)
 
 
 ## Assumption checks for this model 

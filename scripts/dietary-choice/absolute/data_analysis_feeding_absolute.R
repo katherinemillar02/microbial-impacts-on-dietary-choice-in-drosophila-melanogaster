@@ -215,11 +215,15 @@ summary(glmm.m.4choice.2)
 
 ## Results show there is no 3-way interaction, so this can be removed
 ## Testing 2-way interactions
-glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio + condition + block + ratio : block + condition : block  + ratio:condition + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
+glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio + condition + block
+                            + ratio : block 
+                            + condition : block  
+                            + ratio:condition 
+                            + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 drop1(glmm.m.4choice.3, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
 
-## Newest model - final model 
+## Newest model - final model  
 glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 
@@ -248,6 +252,10 @@ check_overdispersion(glmm.m.4choice.4)
 performance::check_model(glmm.m.4choice.4, check = c("qq"))
   ## It does not show the qq - why?
 
+
+combined_m_split$ratio <- as.factor(combined_m_split$ratio)
+
+combined_m_split$ratio <- relevel(combined_m_split$ratio, ref = "4:1")
 
 ## Analysis of the results
 summary(glmm.m.4choice.4)
@@ -524,8 +532,56 @@ combined_of_split <- combined_of %>%
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
+#### Testing different models with diet split 
+
+
+
+
+glmm.of.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_of_split)
+zi.pois.of.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block , dist = "poisson", link = "logit", data = combined_of_split)
+zi.nb.of.choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block, dist = "negbin", link = "logit", data = combined_of_split)
+glm.nb.of.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block, data = combined_of_split)
+
+AIC(glmm.of.4choice.2, zi.pois.of.4choice.2, zi.nb.of.choice.2, glm.nb.of.4choice.2)
+
+
+
+
 ## New model with all interactions
-zi.p.of.4choice.2 <- zeroinfl(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block, dist = "negbin", link = "logit", data = combined_of )
+zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~ ratio * condition * block, dist = "negbin", link = "logit", data = combined_of_split )
+
+drop1(zi.nb.of.4choice.2, test = "Chisq")
+
+
+
+zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~ 
+                                 ratio + condition + block
+                               + ratio : condition  
+                               + ratio : block 
+                               + block : condition, dist = "negbin", link = "logit", data = combined_of_split )
+
+drop1(zi.nb.of.4choice.2, test = "Chisq")
+
+
+
+## changing what the intercept is
+# Convert ratio to a factor
+combined_of_split$ratio <- as.factor(combined_of_split$ratio)
+
+combined_of_split$ratio <- relevel(combined_of_split$ratio, ref = "4:1")
+
+zi.nb.of.4choice.3 <- zeroinfl(fly_numbers ~ 
+                                 ratio + condition + block
+                               
+                               + ratio : condition  
+                               + block : condition, 
+                               
+                               dist = "negbin", link = "logit", data = combined_of_split )
+
+drop1(zi.nb.of.4choice.3, test = "Chisq")
+
+
+summary(zi.nb.of.4choice.3)
 
 # Testing for interaction effect
 drop1(zi.p.of.4choice.2, test = "Chisq") ## No 3-way interaction effect 
