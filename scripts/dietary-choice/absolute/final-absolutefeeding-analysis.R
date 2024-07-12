@@ -376,28 +376,56 @@ zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~
 
 ## Assumption checks for this model - note: struggling to find zero-inflation assumption checks. 
 
-## 
+
+
+#### ASSUMPTION CHECKS WOULD BE INSERTED HERE: 
 
 
 
-simulationOutput <- simulateResiduals(fittedModel = zi.nb.of.4choice.2, plot = T)
 
 
-# Testing for interaction effect
-drop1(zi.nb.of.4choice.2, test = "Chisq") ## No 3-way interaction effect 
 
-# New model without a 3-way interaction
-zi.nb.of.4choice.3 <- zeroinfl(fly_numbers ~  ratio * condition + ratio * block + condition * block, dist = "negbin", link = "logit", data = combined_of_split)
+
+
+####
+
+## Changing what the intercept is - making ratio 4:1, instead of 1:4.
+combined_of_split$ratio <- as.factor(combined_of_split$ratio)
+combined_of_split$ratio <- relevel(combined_of_split$ratio, ref = "4:1")
+
+
+
+
+
+#### Testing for a 3-way interaction effect: 
+
+zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~
+                                 
+                                 ratio * condition * block 
+                               
+                               , dist = "negbin", link = "logit", data = combined_of_split)
+
+
+
+# Testing for the 3-way interaction effects
+drop1(zi.nb.of.4choice.2, test = "Chisq") 
+   ## No 3-way interaction effect 
+
+
+
+# New model with 2-way interaction effects only 
+zi.nb.of.4choice.3 <- zeroinfl(fly_numbers ~  
+                                 ratio * condition 
+                               + ratio * block 
+                               + condition * block, 
+                               dist = "negbin", link = "logit", data = combined_of_split)
+
+
 
 ## Testing for 2-way interaction effects
 drop1(zi.nb.of.4choice.3, test = "Chisq") 
 ## Interaction effect found between condition and block, and ratio and condition 
 
-combined_of_split$ratio <- as.factor(combined_of_split$ratio)
-combined_of_split$ratio <- relevel(combined_of_split$ratio, ref = "4:1")
-
-combined_of_split$block <- as.factor(combined_of_split$block)
-combined_of_split$block <- relevel(combined_of_split$block, ref = "one")
 
 
 ## Final model?
@@ -410,7 +438,9 @@ zi.nb.of.4choice.4 <- zeroinfl(fly_numbers ~
 
 
 ## Assumption checks for this model 
-## Can't do assumption checks?? 
+
+
+     ## Can't do assumption checks?? 
 
 
 ## Testing for remaining interaction effects 
@@ -419,8 +449,7 @@ drop1(zi.nb.of.4choice.4, test = "Chisq")
 ## Using model for analysis
 summary(zi.nb.of.4choice.4)
 
-## Tukey test pairwise 
-emmeans::emmeans(zi.nb.of.4choice.4, pairwise ~ ratio + condition )
+
 
 
 

@@ -35,9 +35,13 @@ pupae_boxplot_2 <- ggplot(pupae_fitness, aes(x = factor(time_hours), y = pupae, 
        y = "Number of pupae emerged",
        fill = "Treatment")
 
+
+## Display the plot 
 pupae_boxplot_2
 
 
+
+#### Pupae data check. 
 pupae_fitness <- as.data.frame(pupae_fitness)
 
 total_pupae <- pupae_fitness %>% 
