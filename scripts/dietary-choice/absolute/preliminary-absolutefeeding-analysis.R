@@ -501,17 +501,25 @@ AIC(glmm.vf.4choice.2, zi.pois.vf.4choice.2, zi.nb.vf.4choice.2, glm.nb.vf.4choi
 
 
 
+<<<<<<< HEAD
 
 #### Testing for interaction effects 
 ## Trying with multiple, 3-way interactions (has *, so will also include 2-way interactions)
 
+=======
+## Trying with multiple, 3-way interactions
+>>>>>>> origin/main
 glm.nb.vf.4choice.2  <- glm.nb(fly_numbers ~ 
                                  
                                  ratio * condition * block 
                                
+<<<<<<< HEAD
                                + (1|plate) + (1|observation),
                                
                                data = combined_vf_split)
+=======
+                               + (1|plate) + (1|observation), data = combined_vf_split)
+>>>>>>> origin/main
 
 
 
@@ -540,20 +548,36 @@ drop1(glm.nb.vf.4choice.3, test = "Chisq")
 
 
 # Final Chosen model
+<<<<<<< HEAD
 glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~ 
                                  
                                  ratio + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
+=======
+glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~  ratio + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
+>>>>>>> origin/main
 
 ## To show interaction effects
 drop1(glm.nb.vf.4choice.4, test = "Chisq")  
 
 
+<<<<<<< HEAD
 #### DATA ANALYSIS ####
 
 
 ## Using the final model for analysis 
 summary(glm.nb.vf.4choice.4)
 
+=======
+## Using the final model for analysis 
+summary(glm.nb.vf.4choice.4)
+
+## Two-way tukey test 
+emmeans::emmeans(glm.nb_vf_2, pairwise ~ ratio + condition)
+
+## Finding response variable for written analysis 
+emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
+# conditioning in 1:4 not significant. 
+>>>>>>> origin/main
 
 
 
@@ -566,6 +590,7 @@ summary(glm.nb.vf.4choice.4)
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -576,6 +601,12 @@ summary(glm.nb.vf.4choice.4)
 
 
 #### Data uploading, binding and cleaning 
+=======
+# OVOD1 (EGGLESS) FEMALE ####
+ # Absolute Assay Analysis #
+
+
+>>>>>>> origin/main
 ## Reading the data in
 fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
 fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
@@ -593,6 +624,7 @@ combined_of <- fourone_onefour_ovod1 %>%
 
 
 
+<<<<<<< HEAD
 
 #### TESTING MODELS ####
 
@@ -601,6 +633,14 @@ combined_of <- fourone_onefour_ovod1 %>%
 glm.pois.of.4choice <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_of)
 
 
+=======
+#### DATA ANALYSIS
+
+
+# GLM with poisson 
+glm.pois.of.4choice <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_of)
+
+>>>>>>> origin/main
 # Assumption checks of model
 performance::check_model(glm.pois.of.4choice, check = c("qq")) # doesn't look great - banana 
 performance::check_model(glm.pois.of.4choice, check = c("homogeneity")) # slopey 
@@ -615,8 +655,11 @@ check_zeroinflation(glm.pois.of.4choice) # There is zero inflation
 
 
 
+<<<<<<< HEAD
 # Model 2 
 #### Negative Binomial GLM ####
+=======
+>>>>>>> origin/main
 # Doing a negative binomial as there is overdispersion
 glm.nb.of.4choice <- glm.nb(fly_numbers ~ diet * block, data = combined_of)
 
@@ -633,14 +676,21 @@ plot(simulationOutput_of)
 testZeroInflation(simulationOutput_of)
 
 
+<<<<<<< HEAD
 
 # Checking for overdispersion 
 check_overdispersion(glm.nb.of.4choice)
   #### No overdispersion detected 
+=======
+# Checking for overdispersion 
+summary(glm.nb.of.4choice) # very little overdispersion 
+
+>>>>>>> origin/main
 
 
 
 
+<<<<<<< HEAD
 # Model 3
 # Poisson GLMM
 # Trying a mixed GLMM, to consider random effects
@@ -648,16 +698,28 @@ glmm.of.4choice <- glmmTMB(fly_numbers ~ diet + block + (1|factor(block)/plate) 
 
 
 
+=======
+# Trying a mixed GLMM, to consider random effects
+glmm.of.4choice <- glmmTMB(fly_numbers ~ diet + block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_of)
+
+>>>>>>> origin/main
 ## Checking for overdispersion 
 check_overdispersion(glmm.of.4choice)
    ## Overdispersion detected 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 ## More assumption checks 
 performance::check_model(glmm.of.4choice, check = c("qq")) 
     # Currently won't run, 21/06/24
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 # using DHARMa for assumption checks
 testDispersion(glmm.of.4choice) # This is fairly overdispersed 
 
@@ -670,6 +732,7 @@ testZeroInflation(simulationOutput_glmm.of.4choice)
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -684,20 +747,33 @@ zi.p.of.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "p
 
 # Model 5 
 #### Zero Inflated Negative Binomial ####
+=======
+# ZERO INFLATED MODELS - zeroinflation has been found, so trying zeroinflated models.
+
+# Trying a zero inflated poisson model 
+zi.p.of.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_of)
+
+
+>>>>>>> origin/main
 # trying a zero inflated - negative binomial model 
 zi.nb.of.4choice <- zeroinfl(fly_numbers ~ diet + block , dist = "negbin", link = "logit", data = combined_of )
 
 
+<<<<<<< HEAD
   #### Assumption checks?? 
 
 
 
+=======
+    #### For the zeroinflated models, I don't know how to do performance checks. 
+>>>>>>> origin/main
 
 
 
 # Comparing all the models together 
 AIC(glm.pois.of.4choice, glm.nb.of.4choice, glmm.of.4choice, zi.p.of.4choice, zi.nb.of.4choice)
 
+<<<<<<< HEAD
   #### Choosing Zero-Inflated Poisson Model for now 
 
 #### DATA ANALYSIS #### 
@@ -709,6 +785,9 @@ summary(zi.p.of.4choice)
 
 #### DIET = DIET AND RATIO
 
+=======
+  #### Choosing Zero Inflatted Poisson for now 
+>>>>>>> origin/main
 
 
 #### Splitting variables in the model up: 
@@ -718,6 +797,7 @@ combined_of_split <- combined_of %>%
 
 #### Testing different models with diet split 
 
+<<<<<<< HEAD
 #### Poisson GLMM ####
 glmm.of.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_of_split)
 
@@ -733,10 +813,21 @@ glm.nb.of.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block, data = co
 
 
 #### Testing different models. 
+=======
+
+
+
+glmm.of.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_of_split)
+zi.pois.of.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block , dist = "poisson", link = "logit", data = combined_of_split)
+zi.nb.of.choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block, dist = "negbin", link = "logit", data = combined_of_split)
+glm.nb.of.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block, data = combined_of_split)
+
+>>>>>>> origin/main
 AIC(glmm.of.4choice.2, zi.pois.of.4choice.2, zi.nb.of.choice.2, glm.nb.of.4choice.2)
 
 
 
+<<<<<<< HEAD
 #### Chosen model: zi.nb.of.choice.2
 
 ## Changing what the intercept is, from ratio being 1:4 to 4:1. 
@@ -786,3 +877,64 @@ drop1(zi.nb.of.4choice.32, test = "Chisq")
 
 #### DATA ANALYSIS ####
 summary(zi.nb.of.4choice.3)
+=======
+
+## New model with all interactions
+zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~ ratio * condition * block, dist = "negbin", link = "logit", data = combined_of_split )
+
+drop1(zi.nb.of.4choice.2, test = "Chisq")
+
+
+
+zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~ 
+                                 ratio + condition + block
+                               + ratio : condition  
+                               + ratio : block 
+                               + block : condition, dist = "negbin", link = "logit", data = combined_of_split )
+
+drop1(zi.nb.of.4choice.2, test = "Chisq")
+
+
+
+## changing what the intercept is
+# Convert ratio to a factor
+combined_of_split$ratio <- as.factor(combined_of_split$ratio)
+
+combined_of_split$ratio <- relevel(combined_of_split$ratio, ref = "4:1")
+
+zi.nb.of.4choice.3 <- zeroinfl(fly_numbers ~ 
+                                 ratio + condition + block
+                               
+                               + ratio : condition  
+                               + block : condition, 
+                               
+                               dist = "negbin", link = "logit", data = combined_of_split )
+
+drop1(zi.nb.of.4choice.3, test = "Chisq")
+
+
+summary(zi.nb.of.4choice.3)
+
+# Testing for interaction effect
+drop1(zi.p.of.4choice.2, test = "Chisq") ## No 3-way interaction effect 
+
+# New model without a 3-way interaction
+zi.p.of.4choice.3 <- zeroinfl(fly_numbers ~  ratio * condition + ratio * block + condition * block, dist = "negbin", link = "logit", data = combined_of )
+
+## Testing for 2-way interaction effects
+drop1(zi.p.of.4choice.3, test = "Chisq") 
+ ## Interaction effect found between condition and block, and ratio and condition 
+
+## Final model?
+zi.p.of.4choice.4 <- zeroinfl(fly_numbers ~  ratio * condition  + condition * block , dist = "negbin", link = "logit", data = combined_of )
+
+## Testing for remaining interaction effects 
+drop1(zi.p.of.4choice.4, test = "Chisq") 
+
+## Using model for analysis
+summary(zi.p.of.4choice.4)
+
+## Tukey test pairwise 
+emmeans::emmeans(zi.p.of.4choice.4, pairwise ~ ratio + condition )
+
+>>>>>>> origin/main
