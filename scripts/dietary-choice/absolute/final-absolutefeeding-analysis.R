@@ -376,6 +376,11 @@ zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~
 
 ## Assumption checks for this model - note: struggling to find zero-inflation assumption checks. 
 
+## 
+
+
+
+simulationOutput <- simulateResiduals(fittedModel = zi.nb.of.4choice.2, plot = T)
 
 
 # Testing for interaction effect
