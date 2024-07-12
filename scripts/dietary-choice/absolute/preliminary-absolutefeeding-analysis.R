@@ -355,14 +355,15 @@ summary(glmm.m.4choice.4)
 
 
 
-# VIRGIN FEMALE ####
+#### TREATMENT: VIRGIN FEMALE ####
+
+#### Data uploading, binding and checking ####
 
 #### Reading in the data
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
 fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
 fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
-
 
 ## Mutating a block variable 
 fourone_onefour_virgin_b1 <- fourone_onefour_virgin_b1  %>% mutate(block = "one")
@@ -373,16 +374,18 @@ fourone_onefour_virgin_b4 <- fourone_onefour_virgin_b3  %>% mutate(block = "four
 # Binding the data
 fourone_onefour_virgin <- rbind (fourone_onefour_virgin_b1, fourone_onefour_virgin_b2, fourone_onefour_virgin_b3, fourone_onefour_virgin_b4)
 
-
 # Making the data long
 combined_vf <- fourone_onefour_virgin %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
-#### DATA ANALYSIS 
 
+#### DIET = DIET ####
 
-# GLM with with poisson
+#### TESTING MODELS ####
+
+# Model 1 
+#### Poisson GLM ####
 glm.pois.vf.4choice <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_vf)
 
 
@@ -397,7 +400,10 @@ summary(glm.poisson.vf.4choice) # shows slight overdispersion
 check_zeroinflation(glm.poisson.vf.4choice) # No zero inflation?? 
 
 
-# Trying quasipoisson
+
+
+# Model 2 
+#### Quasipoisson GLM ####
 glm.quasipoisson.vf.4choice <- glm(fly_numbers ~ diet * block, family = quasipoisson, data = combined_vf)
 
 # Assumption checking
@@ -407,8 +413,13 @@ performance::check_model(glm.quasipoisson.vf.4choice, check = c("homogeneity")) 
 
 
 
-# Trying a negative binomial model to compare more models
+
+# Model 3 
+#### Negative Binomial GLM ####
 glm.nb.vf.4choice <- glm.nb(fly_numbers ~ diet * block + (1|plate) + (1|observation), data = combined_vf)
+
+
+
 
 ## Assumption checks
 performance::check_model(glm.nb.vf.4choice, check = c("qq")) # qq looks slighty better? still off 
@@ -418,16 +429,17 @@ performance::check_model(glm.nb.vf.4choice, check = c("homogeneity")) # maybe th
 summary(glm.nb.vf.4choice)  # a lot less overdispersion 
 
 
-
-# Trying a generalised linear mixed model to compare more models
+# Model 4 
+#### Poisson GLMM ####
 glmm.vf.4choice <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_vf)
 
 ## Assumption checks
 performance::check_model(glmm.vf.4choice, check = c("qq")) # looks a lot better, slopes off at the end though
 
-
 # Assumption checking with DHARMa
 simulateResiduals(fittedModel = glmm.vf.4choice , plot = T)
+
+
 
 
 
@@ -437,34 +449,92 @@ AIC(glm.pois.vf.4choice, glm.quasipoisson.vf.4choice, glm.nb.vf.4choice, glmm.vf
     #### Negative Binomial GLM has lowest AIC (slightly), go with this for now as assumption checks were also ok? 
 
 
+
+
 ## Chosen model 
 glm.nb.vf.4choice <- glm.nb(fly_numbers ~ diet * block + (1|plate) + (1|observation), data = combined_vf)
 
 
-# Splitting diet up with chosen model
+#### DATA ANALYSIS ####
+summary(glm.nb.vf.4choice)
+
+
+
+
+
+#### DIET = RATIO AND CONDITION ####
+
+
+
 
 ##  Using separate to split diet up into ratio and condition
 combined_vf_split <- combined_vf %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
-## The new model with diet split
+#### TESTING MODELS ####
+
+#### Poisson GLMM ####
+glmm.vf.4choice.2 <- glmmTMB(fly_numbers 
+                            
+                            ~ ratio * condition * block 
+                            
+                            + (1 | block / plate) + (1 | observation), 
+                            
+                            family = poisson, data = combined_vf_split)
+
+
+#### Zero Inflated Poisson ####
+zi.pois.vf.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block , dist = "poisson", link = "logit", data = combined_vf_split)
+
+
+#### Zero Inflated Negative Binomial ####
+zi.nb.vf.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block, dist = "negbin", link = "logit", data = combined_vf_split)
+
+#### Negative Binomial GLM ####
+glm.nb.vf.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block, data = combined_vf_split)
+
+
+
+## AIC Checks 
+AIC(glmm.vf.4choice.2, zi.pois.vf.4choice.2, zi.nb.vf.4choice.2, glm.nb.vf.4choice.2)
+
+
 
 ## Trying with multiple, 3-way interactions
-glm.nb.vf.4choice.2  <- glm.nb(fly_numbers ~ ratio * condition * block + ratio * condition + ratio * block + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
+glm.nb.vf.4choice.2  <- glm.nb(fly_numbers ~ 
+                                 
+                                 ratio * condition * block 
+                               
+                               + (1|plate) + (1|observation), data = combined_vf_split)
+
+
+
 
 ## Testing for interaction
 drop1(glm.nb.vf.4choice.2, test = "Chisq") 
    ## No interaction effect, 3-way interaction can be dropped from the model. 
 
-## Tests two-way interactions 
-glm.nb.vf.4choice.3  <- glm.nb(fly_numbers ~  ratio * condition + ratio * block + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
 
-## Finds interaction effects 
+
+
+## Tests two-way interactions 
+glm.nb.vf.4choice.3  <- glm.nb(fly_numbers ~  
+                                 
+                                 ratio * condition
+                               + ratio * block 
+                               + condition * block
+                               
+                               + (1|plate) + (1|observation), data = combined_vf_split)
+
+## Will find any two-wauy interaction effects in the given model. 
 drop1(glm.nb.vf.4choice.3, test = "Chisq")  
      ## An interaction effect of condition and block found 
 
-# Final model
+
+
+
+# Final Chosen model
 glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~  ratio + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
 
 ## To show interaction effects
