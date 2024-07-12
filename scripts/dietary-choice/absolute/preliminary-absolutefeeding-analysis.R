@@ -16,37 +16,37 @@ library(glmmTMB)
 
 
 
-#### (4:1/1:4) ####
-
-## For the 4:1/1:4 Assay only 
+#### (4:1/1:4) #### ABSOLUTE 
 
 
-## MALE ####
+#### This script shows where I have tried out different models, trying to get to 
 
+#### TREATMENT: MALE ####
 
-#### UPLOADING AND BINDING THE CORRECT DATA 
-
-# 4:1 + 1:4 
+#### Data uploading, binding, and cleaning ####
+#### Using read_excel to upload the data, block one and block two data files.
 fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx")
 fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx")
 
-# mutating a variable for block 
+# Mutating a variable for block to block one and block two.
 fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
 fourone_onefour_male_b2 <- fourone_onefour_male_b2  %>% mutate(block = "two")
 
-# Binding the data
+# Using rbind() to bind the two data files (block one and two). 
 fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
 
 
-# 4:1 and 1:4 - making the data long 
+## Using pivot_longer() to change names to diet and make data longer. 
 combined_m <- fourone_onefour_male %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
+#### DIET = DIET ####
 
+#### TESTING MODELS ####
 
-## Data Analysis 
-
+# Model 1
+#### Poisson GLM ####
 ## Doing poisson to begin with 
 glm.pois.m.4choice <- glm(fly_numbers ~ diet * block, family = poisson, data = combined_m)
 
@@ -70,8 +70,11 @@ check_zeroinflation(glm.pois.m.4choice)
 
 
 
-# Negative binomial model
+
+# Model 2
+#### Negative Binomial GLM ####
 glm.nb.m.4choice <- glm.nb(fly_numbers ~ diet * block, data = combined_m)
+
 
 # assumption checks for negative binomial model
 # easystats
@@ -82,10 +85,6 @@ performance::check_model(glm.nb.m.4choice, check = c("homogeneity")) # looks the
 # Checking for overdispersion 
 summary(glm.nb.m.4choice)
    # No evidence of overdispersion but still highly skewed residuals, do random effects help?
-
-
-
-
 
     # Trying a mixed model with GLM and poisson 
 glmm.m.4choice <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|block/observation), family = poisson, data = combined_m)
@@ -109,30 +108,54 @@ hist(sresid)
 plot(sresid ~  pred)
 
 
-# Trying a zero inflated negative binomial model 
+
+
+
+
+
+
+# Model 3 
+#### Zero-Inflated Negative Binomial ####
 zi.nb.m.4choice <- zeroinfl(fly_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_m)
 
- 
+ #### ASSUMPTION CHECKS: 
+## Assumption checks for the zeroinflated model to be added, as I cannot seem to find packages that provide them
 
 
-# Comparing AIC of the different models 
+
+
+
+
+##### Comparing AIC of the different models 
 AIC(glm.pois.m.4choice, glm.nb.m.4choice, glmm.m.4choice, zi.pois.m.4choice, zi.nb.m.4choice)
 # glm_mm_m has the lowest AIC, but AIC values close to each other are basically the same (like 5 values?)
 
 
 
+#### DATA ANALYSIS ####
 
 
+#### This model to be chosen:
+glmm.m.4choice <- glmmTMB(fly_numbers ~ diet * block + (1| block /plate) + (1| block / observation), family = poisson, data = combined_m)
+#### 
 
-# This model to be chosen:
-glmm.m.4choice <- glmmTMB(fly_numbers ~ diet * block + (1|factor(block)/plate) + (1|observation), family = poisson, data = combined_m)
+
 
 ## Testing for an interaction effect 
-drop1(glmm.m.4, test = "Chi") # Small interaction, but still exists 
+drop1(glmm.m.4choice, test = "Chi") 
+  # An interaction is present, keeping model how it is. 
+
+# Analysis 
+summary(glmm.m.4choice)
 
 
 
 # With the chosen model, splitting up "diet" into ratio and condition.
+
+
+#### The above may not actually be relevant for analysis in my write-up.
+#### but keeping it as an example, of what the data looks like with "diet" as a whole.
+
 
 
 
