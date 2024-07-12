@@ -157,6 +157,7 @@ summary(glmm.m.4choice)
 #### but keeping it as an example, of what the data looks like with "diet" as a whole.
 
 
+#### DIET = RATIO AND CONDITION ####
 
 
 
@@ -165,24 +166,35 @@ combined_m_split <- combined_m %>%
      separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
-## Testing for interaction effects with the new model 
-# Model 1 - glmm.m.4choice.2
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
-#### JUST IN CASE I AM REQUIRED TO DO THIS, testing different models, with the new model design 
+#### TESTING MODELS ####
+
+
+# Model 1 - glmm.m.4choice.2
+#### Poisson GLMM ####
+glmm.m.4choice.2 <- glmmTMB(fly_numbers 
+                            
+                            ~ ratio * condition * block 
+                            
+                            + (1 | block / plate) + (1 | observation), 
+                            
+                            family = poisson, data = combined_m_split)
+
+
+
 
 ## Assumption checks for glmm.m.4choice.2
 testDispersion(glmm.m.4choice.2)
   ## Looks underdispersed 
 
-
 simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice.2, plot = T)
+ ## Assumptions of the model look pretty good
 
-performance::check_model(glmm.m.4choice.2, check = c("qq"))
-   ## Does not show qq results 
 
 performance::check_model(glmm.m.4choice.2)
   ## Not sure what I am looking for, but I think the assumptions look ok? 
+  ## Interesting assumptions, would like to look into reading about this and interpreting these at some point. 
+
 
 check_overdispersion(glmm.m.4choice.2)
   # Overdispersion detected
@@ -193,19 +205,39 @@ check_zeroinflation(glmm.m.4choice.2)
 ### The mixed model shows there is both overdispersion and zero inflation. 
     
 
-## First, trying a zero-inflation model
 
-## zero inflation with poisson
+
+
+
+## As there is both overdispersion and zeroinlfation, trying a zero-inflation model
+
+
+#### Model 2 
+#### Zero Inflated Poisson ####
 zi.pois.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block , dist = "poisson", link = "logit", data = combined_m_split)
 
 ## Assumption checks??
+  #### Need to find somewhere that allows for assumption checks.
 
-## zero inflation with neg bin
+
+
+
+
+
+##### Model 3 
+#### Zero Inflated Negative Binomoial ####
 zi.nb.m.4choice.2 <- zeroinfl(fly_numbers ~ratio * condition * block, dist = "negbin", link = "logit", data = combined_m_split)
 
-## Assumption checks??
 
-## Negative Binomial GLM
+
+## Assumption checks??
+  #### Need to find somewhere that allows for assumption checks.
+
+
+
+
+#### Model 4
+#### Negative Binomial GLM ####
 glm.nb.m.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block, data = combined_m_split)
 
 
@@ -213,40 +245,56 @@ glm.nb.m.4choice.2 <- glm.nb(fly_numbers ~ ratio * condition * block, data = com
 simulationOutput <- simulateResiduals(fittedModel = glm.nb.m.4choice.2, plot = T)
   ## Not sure what the red represents 
 
-check_zeroinflation(glm.nb.m.4choice.2) ## No zero inflation 
+check_zeroinflation(glm.nb.m.4choice.2) 
+  ## No zero inflation 
 
-check_overdispersion(glm.nb.m.4choice.2) ## No overdispersion 
+check_overdispersion(glm.nb.m.4choice.2) 
+  ## No overdispersion 
+
+
 
 AIC(glmm.m.4choice.2, zi.pois.m.4choice.2, zi.nb.m.4choice.2, glm.nb.m.4choice.2)
-  # GLMM has lowest AIC, BUT is overdispersed and has zero infaltion - choosing anyway... 
+  # Poisson GLMM has lowest AIC, BUT is overdispersed and has zero infaltion - choosing anyway... 
 
 
 
 
+## Chosen Model...
+
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ 
+                              
+                              ratio * condition * block 
+                            
+                            + (1 | block / plate) + (1 | block /observation)
+                            
+                            , family = poisson, data = combined_m_split)
 
 
-
-## Chosen Model... 
-glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ ratio * condition * block + (1 | factor(block) / plate) + (1 | factor(block)/observation), family = poisson, data = combined_m_split)
 
 
 ## This will show results for the 3-way interaction
 drop1(glmm.m.4choice.2, test = "Chisq")
+  ## No 3- way interaction found. 
 
-## This shows everything
-summary(glmm.m.4choice.2)
 
 ## Results show there is no 3-way interaction, so this can be removed
 ## Testing 2-way interactions
-glmm.m.4choice.3 <- glmmTMB(fly_numbers ~  ratio + condition + block
-                            + ratio : block 
-                            + condition : block  
-                            + ratio:condition 
+glmm.m.4choice.3 <- glmmTMB(fly_numbers ~
+                             
+                              ratio * condition 
+                            + condition * block + 
+                              ratio * block 
+                            
+                            
                             + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
-drop1(glmm.m.4choice.3, test = "Chisq") ## An interaction between condition and block found? the others can be dropped
+## Testing for the two-way interactions using drop1 
+drop1(glmm.m.4choice.3, test = "Chisq")
+  ## An interaction between condition and block found? the others can be dropped
 
-## Newest model - final model  
+
+
+## The final chosen model
 glmm.m.4choice.4 <- glmmTMB(fly_numbers ~  ratio + condition * block + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_m_split)
 
 
@@ -276,15 +324,18 @@ performance::check_model(glmm.m.4choice.4, check = c("qq"))
   ## It does not show the qq - why?
 
 
-combined_m_split$ratio <- as.factor(combined_m_split$ratio)
 
+#### Changing the intercept, making the ratio intercept 4:1, instead of 1:4. 
+combined_m_split$ratio <- as.factor(combined_m_split$ratio)
 combined_m_split$ratio <- relevel(combined_m_split$ratio, ref = "4:1")
 
-## Analysis of the results
+
+
+
+
+#### DATA ANALYSIS ####
 summary(glmm.m.4choice.4)
 
-## Tukey test pairwise 
-emmeans::emmeans(glmm.m.4choice.4, pairwise ~  ratio + condition)
 
 
 
