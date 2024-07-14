@@ -77,11 +77,11 @@ female_boxplot_2 /
 
 
 #### Pupae data check. 
-pupae_fitness <- as.data.frame(pupae_fitness)
+fly_fitness <- as.data.frame(fly_fitness)
 
-total_pupae <- pupae_fitness %>% 
-  group_by(treatment, vial) %>% 
-  summarise(total_pupae = sum(pupae, na.rm = TRUE))
+total_flies <- fly_fitness %>% 
+  group_by(treatment) %>% 
+  summarise(total_flies = sum(males, females, na.rm = TRUE))
 
 
 total_pupae <- as.data.frame(total_pupae)
