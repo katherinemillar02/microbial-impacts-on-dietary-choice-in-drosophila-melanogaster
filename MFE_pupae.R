@@ -45,7 +45,7 @@ pupae_boxplot_2
 pupae_fitness <- as.data.frame(pupae_fitness)
 
 total_pupae <- pupae_fitness %>% 
-  group_by(treatment) %>% 
+  group_by(treatment, vial) %>% 
   summarise(total_pupae = sum(pupae, na.rm = TRUE))
 
 
