@@ -501,25 +501,24 @@ AIC(glmm.vf.4choice.2, zi.pois.vf.4choice.2, zi.nb.vf.4choice.2, glm.nb.vf.4choi
 
 
 
-<<<<<<< HEAD
+
 
 #### Testing for interaction effects 
 ## Trying with multiple, 3-way interactions (has *, so will also include 2-way interactions)
 
-=======
+
 ## Trying with multiple, 3-way interactions
->>>>>>> origin/main
+
 glm.nb.vf.4choice.2  <- glm.nb(fly_numbers ~ 
                                  
                                  ratio * condition * block 
                                
-<<<<<<< HEAD
                                + (1|plate) + (1|observation),
                                
                                data = combined_vf_split)
-=======
+
                                + (1|plate) + (1|observation), data = combined_vf_split)
->>>>>>> origin/main
+
 
 
 
@@ -548,26 +547,23 @@ drop1(glm.nb.vf.4choice.3, test = "Chisq")
 
 
 # Final Chosen model
-<<<<<<< HEAD
 glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~ 
                                  
                                  ratio + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
-=======
+
 glm.nb.vf.4choice.4  <- glm.nb(fly_numbers ~  ratio + condition * block + (1|plate) + (1|observation), data = combined_vf_split)
->>>>>>> origin/main
 
 ## To show interaction effects
 drop1(glm.nb.vf.4choice.4, test = "Chisq")  
 
 
-<<<<<<< HEAD
 #### DATA ANALYSIS ####
 
 
 ## Using the final model for analysis 
 summary(glm.nb.vf.4choice.4)
 
-=======
+
 ## Using the final model for analysis 
 summary(glm.nb.vf.4choice.4)
 
@@ -577,7 +573,6 @@ emmeans::emmeans(glm.nb_vf_2, pairwise ~ ratio + condition)
 ## Finding response variable for written analysis 
 emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
 # conditioning in 1:4 not significant. 
->>>>>>> origin/main
 
 
 
@@ -590,7 +585,6 @@ emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
 
 
 
-<<<<<<< HEAD
 
 
 
@@ -601,12 +595,12 @@ emmeans::emmeans(glm.nb_vf_2, ~ diet, type = "response")
 
 
 #### Data uploading, binding and cleaning 
-=======
+
 # OVOD1 (EGGLESS) FEMALE ####
  # Absolute Assay Analysis #
 
 
->>>>>>> origin/main
+
 ## Reading the data in
 fourone_onefour_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx")
 fourone_onefour_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx")
@@ -937,4 +931,4 @@ summary(zi.p.of.4choice.4)
 ## Tukey test pairwise 
 emmeans::emmeans(zi.p.of.4choice.4, pairwise ~ ratio + condition )
 
->>>>>>> origin/main
+
