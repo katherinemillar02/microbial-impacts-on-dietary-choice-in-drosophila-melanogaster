@@ -16,10 +16,10 @@ library(MASS)
 
 
 ################################# --
-####### TREATMENT: MALE CONDITIONING #######
+####### TREATMENT: MALE CONDITIONING ♂️ #######
 ################################# --
 
-#### Reading, binding, cleaning data ####
+#### Reading, binding, cleaning data 📖 ####
 
 # 4:1 + 1:4 
 fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx")
@@ -38,7 +38,9 @@ combined_ovi_m <- fourone_onefour_male_oviposition  %>%
 
 
 
+#### DIET = DIET 🍲 #### 
 
+#### TESTING MODELS ####
 
 ## Model 1 
 #### Poisson GLM ####
@@ -50,7 +52,6 @@ comb_m_egg_glm.p <- glm(egg_numbers ~ diet * block, family = poisson,  combined_
 testDispersion(comb_m_egg_glm.p) ## Really really overdispersed 
 
 simulationOutput <- simulateResiduals(fittedModel = comb_m_egg_glm.p, plot = T) ## not great
-
 
 ## Looking at a qq plot 
 ## Generating residuals 
@@ -101,7 +102,6 @@ qqnorm(residuals_glm_nb_m) ## points go down compared to previous model
 combined_glm_mm_m_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_m)
 
 
-
 ## DHARMa checks 
 testDispersion(combined_glm_mm_m_egg) ## overdispersed 
 
@@ -138,19 +138,22 @@ zi.nb_m_comb_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "
 
     # Comparing different models # 
 AIC(comb_m_egg_glm.p, combined_glm_mm_m_egg, glm.nb_of_comb_egg, zi.p_m_comb_egg, zi.nb_m_comb_egg)
-## the negative binomial glm has the lowest AIC by a while so is probably the best 
+## the negative binomial glm has the lowest AIC by a lot so is probably the best 
 
 
+#### The chosen model: Negative Binomial GLM ####
+
+#### DATA ANALYSIS 📊 ####
+summary(glm.nb_of_comb_egg)
 
 
-
-#### DIET = CONDITION + RATIO ####
+#### DIET = CONDITION + RATIO 🍟💊 ####
 
 ## Splitting "diet" up
 combined_ovi_m_split <- combined_ovi_m %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
-
+#### TESTING MODELS ####
 
 #### Poisson GLMM ####
 comb_m_egg_glm.p <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_m_split)
@@ -169,7 +172,7 @@ AIC(comb_m_egg_glm.p, comb_m_egg_glm.nb, comb_m_egg_glmm.p)
 
 
 
-#### Using the chosen model: Negative Binomial GLM
+#### The chosen model: Negative Binomial GLM ####
 
 ####  Changing what the intercept is. 
 combined_ovi_m_split$ratio <- as.factor(combined_ovi_m_split$ratio)
@@ -198,27 +201,28 @@ comb_m_egg_glm.nb.2 <- glm.nb(egg_numbers ~
 drop1(comb_m_egg_glm.nb.2, test = "F")
    ## no two way  interactions 
 
-#### New chosen model
+
 comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers ~
                                 ratio + condition + block, data =  combined_ovi_m_split)
 
-#### DATA ANALYSIS ####
+#### DATA ANALYSIS 📊 ####
 summary(comb_m_egg_glm.nb.3)
 
 
 
 
 
+#####  ////   ####
 
 
 
 
 
-
-#######################aa####### --
-#### Virgin Conditioning ####
+############################## --
+#### TREATMENT: VIRGIN CONDITIONING 👰 ####
 ############################# --
 
+#### Reading, binding, cleaning data 📖 ####
 
 ## Reading in the different data-sets
 fourone_onefour_oviposition_virgin_b2 <- read_excel("data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx")
@@ -240,19 +244,20 @@ combined_ovi_v <- fourone_onefour_oviposition_virgin  %>%
 
 
 
-##### Data Analysis
+##### DIET = DIET 🍲 ####
+
+#### TESTING MODELS ####
 
 # Model 1
-# glm with poisson
+#### Poisson GLM ####
 comb_v_egg_glm.p <- glm(egg_numbers ~ diet * block, family = poisson,  combined_ovi_v)
 
-## assumption checking 
+## Assumption checking 
 
 ## easystats
 performance::check_model(comb_v_egg_glm.p, check = c("qq")) ## bit weird 
 performance::check_model(comb_v_egg_glm.p, check = c("homogeneity")) ## slopey 
 ## Doesn't work for some reason - was "insight" 
-
 
 ## DHARMa
 testDispersion(comb_v_egg_glm.p) # really overdispersed data
@@ -261,14 +266,12 @@ simulation_Output <- simulateResiduals(fittedModel = comb_v_egg_glm.p, plot = T)
 ## qq plot doesn't really work
 ## need to understand residuals vs predicted plot a bit better 
 
-
 ## generating a qqplot 
 ## Generating residuals 
 residuals_glm_v_egg <- residuals(comb_v_egg_glm.p , type = "pearson")
 qnorm(residuals_glm_v_egg)
 ## Will generate a qq 
 qqnorm(residuals_glm_v_egg) ## looks okay? 
-
 
 ## Now checking for overdispersion values
 summary(comb_v_egg_glm.p) ## very overdispersed 
@@ -279,8 +282,13 @@ check_zeroinflation(comb_v_egg_glm.p)
 
 
 
+
+
+
+
+
 # Model 2 
-## Doing a negative binomial model 
+#### Negative Binomial GLM ####
 glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
 
 ## Assumption checks for this 
@@ -295,13 +303,17 @@ testDispersion(glm.nb_v_comb_egg) ## nor overdispersed or underdispersed now
 simulation_Output <- simulateResiduals(fittedModel = glm.nb_v_comb_egg, plot = T) ## this looks a lot better
 
 
-# Model 3
 
-## Trying a mixed glm 
+
+
+
+
+
+# Model 3
+#### Poisson GLMM ####
 glm_mm_v_egg <- glmmTMB(egg_numbers ~ diet * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_v)
 
 ## Assumption checks 
-
 
 ## easystats
 ## glmmTMB not supported 
@@ -320,13 +332,28 @@ qnorm(residuals_glm_mm_v_egg)
 qqnorm(residuals_glm_mm_v_egg) ## doesn't look that different to previous 
 
 
-## trying zero inflation models:: 
 
-# poisson
+
+
+
+
+
+## trying zero-inflated models:: 
+
+# Model 4
+#### Zero-Inflated Poisson ####
 zif.p_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "poisson", link = "logit", data = combined_ovi_v)
 
-# negative binomial 
+
+
+
+
+
+# Model 5 
+#### Zero-Inflated Negative Binomial ####
 zif.nb_v_egg <- zeroinfl(egg_numbers ~ diet * block | diet * block, dist = "negbin", link = "logit", data = combined_ovi_v)
+
+
 
 
 ## Comparing the models 
@@ -336,103 +363,117 @@ AIC(comb_v_egg_glm.p , glm.nb_v_comb_egg, glm_mm_v_egg, zif.p_v_egg, zif.nb_v_eg
 ## go with negative binomial glm
 
 
-## Using the negative binomial glm
+
+
+
+#### The chosen model: Negative Binomial GLM #### 
 glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
 
 ## tesing the signifiance of block 
-drop1(glm.nb_v_comb_egg , test = "F") # block is significant 
+drop1(glm.nb_v_comb_egg , test = "F") 
+  # block is significant, stays in the model
+
 
 ## using the model 
+
+#### DATA ANALYSIS 📊 ####
 summary(glm.nb_v_comb_egg)
 
 emmeans::emmeans(glm.nb_v_comb_egg, ~ diet, type = "response")
 
-## with block
-glm.nb_v_comb_egg <- glm.nb(egg_numbers ~ diet * block, data =  combined_ovi_v)
-
-## without block
-glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ diet, data =  combined_ovi_v)
 
 
 
 
 
 
-glm.nb_v_comb_egg_2 <- glm.nb(egg_numbers ~ ratio * condition + block, data =  combined_ovi_v)
-
-drop1(glm.nb_v_comb_egg_2, test = "F") ## not sig
-
-summary(glm.nb_v_comb_egg_2)
 
 
+#### DIET = CONDITION + RATIO 🍟💊####
 
 
-## viewing the data results 
-summary(glm.nb_v_comb_egg_2) 
-
-emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet)
-
-
-
-
-#### DATA SPLIT 
-
+## Using separate to split the diet into rartio and condition 
 combined_ovi_v_split <- combined_ovi_v %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
+#### TESTING MODELS ####
+
+#### Poisson GLM ####
 comb_v_egg_glm.p.2 <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
 
 
+#### Negative Binomial GLM ####
 glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
 
+#### Poisson GLMM ####
 glm_mm_v_egg.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_v_split)
 
+#### Zero-Inflated Poisson ####
 zif.p_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "poisson", link = "logit", data = combined_ovi_v_split)
 
-
+#### Zero-Inflated Negative Binomial ####
 zif.nb_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "negbin", link = "logit", data = combined_ovi_v_split)
 
 
+
+## Comparing the models. 
 AIC(comb_v_egg_glm.p , glm.nb_v_comb_egg, glm_mm_v_egg, zif.p_v_egg, zif.nb_v_egg)
+   ## GLM NB has lowest AIC
 
 
-## GLM NB has lowest AIC
 
 
-glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
+#### The chosen model: Negative Binomial GLM ####
 
-drop1(glm.nb_v_comb_egg.2, test = "F")
+#### Changing the intercept value 
 
-
-glm.nb_v_comb_egg.3 <- glm.nb(egg_numbers ~
-                                ratio + condition + block +
-                                ratio : condition +
-                                block : condition + 
-                                ratio : block , data =  combined_ovi_v_split)
-
-drop1(glm.nb_v_comb_egg.3, test = "F")
-
-## interaction effect between condition and block 
-
+## Changing the ratio intercept to 4:1. 
 combined_ovi_v_split$ratio <- as.factor(combined_ovi_v_split$ratio)
 combined_ovi_v_split$ratio <- relevel(combined_ovi_v_split$ratio, ref = "4:1")
 
+## Changing the block intercept to two. 
 combined_ovi_v_split$block <- as.factor(combined_ovi_v_split$block)
 combined_ovi_v_split$block <- relevel(combined_ovi_v_split$block, ref = "two")
 
+
+## Testing for a 3-way interaction effect 
+glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
+
+
+## Will show any significance in the 3-way interaction effect
+drop1(glm.nb_v_comb_egg.2, test = "F")
+
+
+## Testing for 2-way interaction effects 
+glm.nb_v_comb_egg.3 <- glm.nb(egg_numbers ~
+                              
+                                ratio * condition +
+                                block * condition + 
+                                ratio * block , 
+                              
+                              data =  combined_ovi_v_split)
+
+
+## Will show any significance in the 2-way interaction effects
+drop1(glm.nb_v_comb_egg.3, test = "F")
+  ## Interaction effect between condition and block 
+
+
+# The final model
 glm.nb_v_comb_egg.4 <- glm.nb(egg_numbers ~
                                 condition * block + ratio , data =  combined_ovi_v_split)
 
-
+# Using drop1 to confirm the appropriate interaction effects 
 drop1(glm.nb_v_comb_egg.4, test = "F")
 
+
+#### DATA ANALYSIS 📊 ####
 summary(glm.nb_v_comb_egg.4)
 
+#####  //////// ####
 
-################################################ Data Analysis ###################################
-########################################  4:1 and 1:4 Four-Choice Assays ###################################
-################################################################################################### ---
+#### TREATMENT = OVO0D1 FEMALE ####
 
 
 
@@ -944,58 +985,82 @@ emmeans::emmeans(glm.nb_v_comb_egg, pairwise ~ diet)
 
 
 
-#### DATA SPLIT 
-
+#### DIET = RATIO + CONDITION ####
 combined_ovi_v_split <- combined_ovi_v %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
+#### Poisson GLM ####
 comb_v_egg_glm.p.2 <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
 
-
+#### Negative Binomial GLM ####
 glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
 
+#### Poisson GLMM ####
 glm_mm_v_egg.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_v_split)
 
+#### Zero-Inflated Poisson ####
 zif.p_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "poisson", link = "logit", data = combined_ovi_v_split)
 
 
+#### Zero-Inflated Negative Binomial ####
 zif.nb_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "negbin", link = "logit", data = combined_ovi_v_split)
 
 
+
+## Comparing the model 
 AIC(comb_v_egg_glm.p , glm.nb_v_comb_egg, glm_mm_v_egg, zif.p_v_egg, zif.nb_v_egg)
 
 
 ## GLM NB has lowest AIC
 
-
-glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
-
-drop1(glm.nb_v_comb_egg.2, test = "F")
+## Using this model - 
 
 
-glm.nb_v_comb_egg.3 <- glm.nb(egg_numbers ~
-                                ratio + condition + block +
-                                ratio : condition +
-                                block : condition + 
-                                ratio : block , data =  combined_ovi_v_split)
 
-drop1(glm.nb_v_comb_egg.3, test = "F")
+#### Changing what the intercept is... 
 
-## interaction effect between condition and block 
-
+## Changing "ratio" to 4:1 
 combined_ovi_v_split$ratio <- as.factor(combined_ovi_v_split$ratio)
 combined_ovi_v_split$ratio <- relevel(combined_ovi_v_split$ratio, ref = "4:1")
 
+## Changing block to "two" (as one will not be used for oviposition data)
 combined_ovi_v_split$block <- as.factor(combined_ovi_v_split$block)
 combined_ovi_v_split$block <- relevel(combined_ovi_v_split$block, ref = "two")
 
+
+## Testing for a 3-way interaction effect, along with two way interaction effects still in the model. 
+glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
+
+
+#### Using drop1 to look for the sig interaction effects. 
+drop1(glm.nb_v_comb_egg.2, test = "F")
+   ## No 3-way interaction effect found. 
+
+
+## looking for two-way interaction effects.
+glm.nb_v_comb_egg.3 <- glm.nb(egg_numbers ~
+                                
+                                ratio * condition +
+                                block * condition + 
+                                ratio * block ,
+                                
+                                data =  combined_ovi_v_split)
+
+## Will directly show significant 2-way interactions
+drop1(glm.nb_v_comb_egg.3, test = "F")
+ ## Iteraction effect between condition and block 
+
+
+## The final model
 glm.nb_v_comb_egg.4 <- glm.nb(egg_numbers ~
                                 condition * block + ratio , data =  combined_ovi_v_split)
 
-
+## Using drop1 to confirm the appropriate interaction effects. 
 drop1(glm.nb_v_comb_egg.4, test = "F")
 
+
+#### DATA ANALYSIS ####
 summary(glm.nb_v_comb_egg.4)
 
 
