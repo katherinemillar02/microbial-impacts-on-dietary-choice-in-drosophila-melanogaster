@@ -125,17 +125,17 @@ variable_data <- function(data, cols, names_to = "diet", values_to = "fly_number
     pivot_longer(cols = all_of(cols), names_to = names_to, values_to = values_to)
 }
 
-fourone_of <- ovod1_df(four_to_one_ovod1, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
-onefour_of <- ovod1_df(one_to_four_ovod1, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
-combined_of <- ovod1_df(fourone_onefour_ovod1, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+fourone_of <- variable_data(four_to_one_ovod1, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_of <- variable_data(one_to_four_ovod1, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_of <- variable_data(fourone_onefour_ovod1, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
 
-fourone_m <- ovod1_df(four_to_one_male, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
-onefour_m <- ovod1_df(one_to_four_male, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
-combined_m <- ovod1_df(fourone_onefour_male, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+fourone_m <- variable_data(four_to_one_male, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_m <- variable_data(one_to_four_male, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_m <- variable_data(fourone_onefour_male, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
 
-fourone_v <- ovod1_df(four_to_one_virgin, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
-onefour_v <- ovod1_df(one_to_four_virgin, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
-combined_v <- ovod1_df(fourone_onefour_virgin, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
+fourone_v <- variable_data(four_to_one_virgin, cols = c("4:1 Conditioned", "4:1 Unconditioned"))
+onefour_v <- variable_data(one_to_four_virgin, cols = c("1:4 Conditioned", "1:4 Unconditioned"))
+combined_v <- variable_data(fourone_onefour_virgin, cols = c("4:1 Conditioned", "1:4 Conditioned", "4:1 Unconditioned", "1:4 Unconditioned"))
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### ##### #####  #####  #####  ##### 
 
@@ -278,6 +278,32 @@ virgin_female_feeding <- grid.arrange(vf_1_4, vf_4_1, vf_combined,
                                        widths = c(0.5,0.5,1),
                                        heights = c(1))
 
+
+hi + vf_combined
+
+virgin_female_feeding <- grid.arrange(hi, vf_combined,
+                                      nrow = 1,
+                                      widths = c(0.5,0.5,1),
+                                      heights = c(1))
+
+
+library(webshot)
+library(htmltools)
+
+# Save the table as an HTML file
+save_html(hi, file = "table.html")
+
+# Convert HTML to an image
+webshot("table.html", "table.png")
+img <- readPNG("table.png")
+table_grob <- rasterGrob(img, interpolate = TRUE)
+
+hey <- grid.arrange(
+  hi, vf_combined,
+  nrow = 1,
+  widths = c(0.5, 0.5),
+  heights = c(1)
+)
 
 ###################### --
 ## WILD TYPE MALES ####
