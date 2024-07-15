@@ -371,38 +371,41 @@ combined_ovi_m <- fourone_onefour_male_oviposition  %>%
 
 #################################### Feeding Results Function Plot ####################################
 
-oviposition_results <- function(summary_data2,boxplot_fill_colour ) {
-  ggplot(summary_data2, aes(x = diet, y = egg_numbers, fill = diet, pattern = diet))+ 
-    # geom_jitter(aes(x = diet,
-    #                 y = fly_numbers,
-    #                 fill = diet),
-    #             width = 0.1,
-    #             shape = 1) +
-    geom_boxplot()+
-   geom_boxplot_pattern(position = position_dodge(preserve = "single"),
-                        color = "black",
-                        pattern_fill = "white",
-                        pattern_angle = 45,
-                        pattern_density = 0.1,
-                        pattern_spacing = 0.025,
-                        pattern_key_scale_factor = 0.6) +
+
+oviposition_results <- function(data, boxplot_fill_colour) {
+  # Ensure the data has the necessary columns for faceting
+  data$nutrient_composition <- ifelse(grepl("4:1", data$diet), "4:1", "1:4")
+  data$condition <- ifelse(grepl("Conditioned", data$diet), "Conditioned", "Unconditioned")
+  data$combined_factor <- paste(data$nutrient_composition, data$condition, sep = " ")
+  ggplot(data, aes(x = condition, y = egg_numbers, fill = combined_factor, pattern = combined_factor)) + 
+    geom_boxplot(outlier.shape = NA) +
+    geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                         color = "black",
+                         pattern_fill = "white",
+                         pattern_angle = 45,
+                         pattern_density = 0.1,
+                         pattern_spacing = 0.025,
+                         pattern_key_scale_factor = 0.6,
+                         outlier.shape = NA) +
     geom_point(aes(),
                size = 1,
                shape = 1,
-               position = position_dodge(width=0.75)) +
-    
-    
-    theme_classic()+
-    labs(x = "Diet Condition",
-         y = "Number of eggs per diet patch", 
-         title = "")+
-    scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
-    scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
+               position = position_jitterdodge()) +
+    theme_classic() +
+    labs(x = "",
+         y = "Eggs laid per diet patch", 
+         title = "") +
+    scale_fill_manual(values = boxplot_fill_colour) + 
+    scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
     theme(legend.position = "none") +
-    ylim(-0.01, 150) 
-  
+    ylim(0, 150) +
+    facet_wrap(~ nutrient_composition, scales = "free_x", nrow = 1, strip.position = "bottom") +
+    theme(
+      strip.placement = "outside",
+      strip.background = element_blank(),
+      strip.text = element_text(size = 12)
+    )
 }
-
 
 
 
