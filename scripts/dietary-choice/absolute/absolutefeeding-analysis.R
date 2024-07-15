@@ -131,7 +131,7 @@ glmm.m.4choice.4 <- glmmTMB(fly_numbers ~
 
 
 ## Using drop1, just to show the interaction effect again. 
-drop1(glmm.m.4choice.4.2, test = "Chisq")
+drop1(glmm.m.4choice.4, test = "Chisq")
 
 
 
@@ -162,7 +162,7 @@ check_overdispersion(glmm.m.4choice.4)
 
 
 ######## ANALYSIS OF RESULTS ######## 
-summary(glmm.m.4choice.4.2)
+summary(glmm.m.4choice.4)
 
 
 
@@ -320,10 +320,6 @@ performance::check_model(glm.nb.vf.4choice.4)
 ####  ANALYSIS OF RESULTS ####
 ## Using the final model for analysis 
 summary(glm.nb.vf.4choice.4)
-
-
-
-
 
 
 
