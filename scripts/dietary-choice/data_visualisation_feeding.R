@@ -149,44 +149,7 @@ combined_v <- variable_data(fourone_onefour_virgin, cols = c("4:1 Conditioned", 
 # this will allow one to use the feeding data for different data sets... 
 
 
-#################################### Feeding Results Function Plot ####################################
 
-feeding_results <- function(summary_data,boxplot_fill_colour ) {
-  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
-    # geom_jitter(aes(x = diet,
-    #                 y = fly_numbers,
-    #                 fill = diet),
-    #             width = 0.1,
-    #             shape = 1) +
-    geom_boxplot(outlier.shape = NA)+
-     geom_boxplot_pattern(position = position_dodge(preserve = "single"),
-                         color = "black",
-                         pattern_fill = "white",
-                         pattern_angle = 45,
-                         pattern_density = 0.1,
-                         pattern_spacing = 0.025,
-                         pattern_key_scale_factor = 0.6,
-                         outlier.shape = NA) +
-    geom_point(aes(),
-               size = 1,
-               shape = 1,
-               position = position_jitterdodge()) +
-    theme_classic()+
-    labs(x = "Diet Condition\nConditioned",
-         y = "Flies per diet patch", 
-         title = "")+
-    scale_fill_manual(values = boxplot_fill_colour) + 
-     scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
-    theme(legend.position = "none") +
-    scale_x_discrete(labels = c(
-      "4:1\nConditioned", 
-      "4:1\nUnconditioned", 
-      "1:4\nConditioned", 
-      "1:4\nUnconditioned"))+
-    ylim(-0.01, 6) 
-}
-  
-  
 ########################################################################################################################### --
 
 feeding_results <- function(data, boxplot_fill_colour) {
