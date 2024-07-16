@@ -3,6 +3,7 @@ library(tidyverse)
 library(ggplot2)
 library(readxl)
 library(viridis)
+library(patchwork)
 
 
 ## Choosing colours from viridis to use: 
@@ -80,8 +81,8 @@ female_boxplot_2 /
 fly_fitness <- as.data.frame(fly_fitness)
 
 total_flies <- fly_fitness %>% 
-  group_by(treatment) %>% 
+  group_by(treatment, vial) %>% 
   summarise(total_flies = sum(males, females, na.rm = TRUE))
 
 
-total_pupae <- as.data.frame(total_pupae)
+total_flies <- as.data.frame(total_flies)
