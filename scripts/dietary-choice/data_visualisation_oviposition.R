@@ -687,4 +687,25 @@ male_b1_fourone <- male_b1_fourone + ggtitle("Male Block 1")
 male_b2_fourone <- male_b2_fourone + ggtitle("Male Block 2")
 male_b1_onefour <- male_b1_onefour + ggtitle("Male Block 1")
 male_b2_onefour <- male_b2_onefour + ggtitle("Male Block 2")
-male_b1_fouro
+male_b1_fourone_onefour <- male_b1_fourone_onefour + ggtitle("Male Block 1")
+male_b2_fourone_onefour <- male_b2_fourone_onefour + ggtitle("Male Block 2")
+
+
+
+# male 
+male_oviposition <- grid.arrange(
+  male_b1_fourone, male_b1_onefour, male_b1_fourone_onefour,
+  male_b2_fourone, male_b2_onefour, male_b2_fourone_onefour,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1)
+)
+
+
+
+
+
+
+
+

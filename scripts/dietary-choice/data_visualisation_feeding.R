@@ -728,4 +728,28 @@ of_4_1_b2 <- feeding_results(fourone_of_2, boxplot_fill_colour = viridis_colors[
 
 ## 4:1 and 1:4 
 of_combined_b1 <- feeding_results(combined_of_1, boxplot_fill_colour = viridis_colors[5:8])
-of_combined_b2 <- feeding_results(combined_of_2, boxplot_fill_
+of_combined_b2 <- feeding_results(combined_of_2, boxplot_fill_colour = viridis_colors[5:8])
+
+
+
+## Adding titles to OvoD1 plots 
+of_4_1_b1 <- of_4_1_b1 + ggtitle("OvoD1 Female Block 1")
+of_4_1_b2 <- of_4_1_b2 + ggtitle("OvoD1 Female  Block 2")
+of_1_4_b1 <- of_1_4_b1 + ggtitle("OvoD1 Female Block 1")
+of_1_4_b2 <- of_1_4_b2 + ggtitle("OvoD1 Female Block 2")
+of_combined_b1  <- of_combined_b1  + ggtitle("OvoD1 Female Block 1")
+of_combined_b2 <- of_combined_b2 + ggtitle("OvoD1 Female Block 2")
+
+
+ovod1_oviposition <- grid.arrange(
+  of_4_1_b1, of_1_4_b1, of_combined_b1 ,
+  of_4_1_b2, of_1_4_b2, of_combined_b2,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1)
+)
+
+
+
+
