@@ -48,5 +48,7 @@ total_pupae <- pupae_fitness %>%
   group_by(treatment, vial) %>% 
   summarise(total_pupae = sum(pupae, na.rm = TRUE))
 
+524  / 14 
+555 / 15
 
 total_pupae <- as.data.frame(total_pupae)
