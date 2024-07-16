@@ -9,48 +9,32 @@ library(gridExtra)
 library(viridis)
 
 
+#### Reading the data in ####
+
+# 90 mm 
 fourone_90mm <- read_excel("data/density_experiment/90mm_4-1_oviposition_2.xlsx")
-
 onefour_90mm <- read_excel("data/density_experiment/90mm_1-4_oviposition_2.xlsx")
-
 fourone_onefour_90mm <- read_excel("data/density_experiment/90mm_combined_oviposition_2.xlsx")
-
-
+# Adding variables to the data
 fourone_90mm_long <- fourone_90mm   %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-
-# 1:4 
-
-
-
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 onefour_90mm_long <- onefour_90mm  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-
-# 4:1 and 1:4 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 fourone_onefour_90mm_long <- fourone_onefour_90mm  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
-
-
-fourone_50mm <- read_excel("data/density_experiment/50mm_4-1_oviposition_2.xlsx")
-
-onefour_50mm <- read_excel("data/density_experiment/50mm_1-4_oviposition_2.xlsx")
-
-fourone_onefour_50mm <- read_excel("data/density_experiment/50mm_combined_oviposition_2.xlsx")
-
-
-
-fourone_50mm_long <- fourone_50mm   %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-
-# 1:4 
-onefour_50mm_long <- onefour_50mm  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
-
-# 4:1 and 1:4 
-fourone_onefour_50mm_long <- fourone_onefour_50mm  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+# 50 mm 
+fourone_35mm <- read_excel("data/density_experiment/50mm_4-1_oviposition_2.xlsx")
+onefour_35mm <- read_excel("data/density_experiment/50mm_1-4_oviposition_2.xlsx")
+fourone_onefour_35mm <- read_excel("data/density_experiment/50mm_combined_oviposition_2.xlsx")
+# Adding variables to the data
+fourone_35mm_long <- fourone_35mm   %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+onefour_35mm_long <- onefour_35mm  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+fourone_onefour_35mm_long <- fourone_onefour_35mm  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
 
@@ -58,92 +42,91 @@ fourone_onefour_50mm_long <- fourone_onefour_50mm  %>%
 
 #################################### Feeding Results Function Plot ####################################
 
-oviposition_results <- function(summary_data,boxplot_fill_colour ) {
-  ggplot(summary_data, aes(x = diet, y = fly_numbers, fill = diet, pattern = diet))+ 
-    # geom_jitter(aes(x = diet,
-    #                 y = fly_numbers,
-    #                 fill = diet),
-    #             width = 0.1,
-    #             shape = 1) +
-    geom_boxplot()+
+oviposition_results <- function(data, boxplot_fill_colour) {
+  # Ensure the data has the necessary columns for faceting
+  data$nutrient_composition <- ifelse(grepl("4:1", data$diet), "4:1", "1:4")
+  data$condition <- ifelse(grepl("Conditioned", data$diet), "Conditioned", "Unconditioned")
+  data$combined_factor <- paste(data$nutrient_composition, data$condition, sep = " ")
+  ggplot(data, aes(x = condition, y = egg_numbers, fill = combined_factor, pattern = combined_factor)) + 
+    geom_boxplot(outlier.shape = NA) +
     geom_boxplot_pattern(position = position_dodge(preserve = "single"),
-                        color = "black",
-                        pattern_fill = "white",
-                        pattern_angle = 45,
-                        pattern_density = 0.1,
-                        pattern_spacing = 0.025,
-                        pattern_key_scale_factor = 0.6) +
+                         color = "black",
+                         pattern_fill = "white",
+                         pattern_angle = 45,
+                         pattern_density = 0.1,
+                         pattern_spacing = 0.025,
+                         pattern_key_scale_factor = 0.6,
+                         outlier.shape = NA) +
     geom_point(aes(),
                size = 1,
                shape = 1,
                position = position_jitterdodge()) +
-    theme_classic()+
-    labs(x = "Diet Condition",
-         y = "Eggs per diet patch", 
-         title = "")+
-    scale_fill_manual(values = boxplot_fill_colour) +  # Set fill colors for the boxplot
-    scale_pattern_manual(values = c("stripe", "none", "stripe", "none")) +
-    theme(legend.position = "none",
-          axis.text.x = element_text(size = 6)) + 
-    ylim(-0.01, 200) 
-  
+    theme_classic() +
+    labs(x = "",
+         y = "Eggs laid per diet patch", 
+         title = "") +
+    scale_fill_manual(values = boxplot_fill_colour) + 
+    scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
+    theme(legend.position = "none") +
+    ylim(0, 150) +
+    facet_wrap(~ nutrient_composition, scales = "free_x", nrow = 1, strip.position = "bottom") +
+    theme(
+      strip.placement = "outside",
+      strip.background = element_blank(),
+      strip.text = element_text(size = 12)
+    )
 }
 
 
+
+#####################################################################################
+
+
+
+## Choosing a colour palette:
 viridis_colours <- inferno(10)
 
 
-
-
-
-ninety_1_4 <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(9,9)])
-ninety_4_1 <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
+## Relative assays - 90 mm
+ninety_1_4_egg <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(9,9)])
+ninety_4_1_egg <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
  
-nine <- ninety_1_4 + ninety_4_1
+## Relative assays - 35 mm
+fifty_1_4_egg <- oviposition_results(onefour_35mm_long , boxplot_fill_colour = viridis_colors[c(9,9)])
+fifty_4_1_egg <- oviposition_results(fourone_35mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
+
+## Adding titles 
+fifty_1_4_egg <- fifty_1_4 + ggtitle("35 mm")
+ninety_1_4_egg <- ninety_1_4 + ggtitle("90 mm")
 
 
-ninety_combined <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+# Relative assays combined
+nine_egg <- ninety_1_4_egg + ninety_4_1_egg
+three_egg <- fifty_1_4_egg + fifty_4_1_egg
 
-ninety_1_4 <- ninety_1_4 + ggtitle("90 mm")
-
-ninety_1_4 + ninety_4_1 + fifty_1_4 +  fifty_4_1
-
-
-##################################################################
-fifty_combined <- fifty_combined + ggtitle("35 mm")
-ninety_combined <- ninety_combined + ggtitle("90 mm")
-
-
-fifty_combined + ninety_combined
-##################################################################
-
-
-
-ggarrange(fifty_1_4 + ggtitle("35 mm"), fifty_4_1, ninety_1_4 + ggtitle("90 mm"), ninety_4_1, ncol = 4, nrow = 1)
-
-
-fifty_1_4 <- oviposition_results(onefour_50mm_long , boxplot_fill_colour = viridis_colors[c(9,9)])
-fifty_4_1 <- oviposition_results(fourone_50mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
+## Relative assays 
+nine_egg / 
+  three_egg
 
 
 
-fifty_combined <- oviposition_results(fourone_onefour_50mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
-
-fifty_1_4 <- fifty_1_4 + ggtitle("35 mm")
-
-nine <- nine + ggtitle("90 mm")
-three <- three + ggtitle("35 mm")
-
-
-three <- fifty_1_4 +  fifty_4_1
-
-nine + three
 
 
 
-ninety + fifty
+## Absolute assays - 90 mm
+ninety_combined_egg <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
 
-fifty <- fifty_1_4 +  fifty_4_1 + fifty_combined 
+## Absolute assays - 35 mm 
+fifty_combined_egg <- oviposition_results(fourone_onefour_35mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+
+## Adding titles 
+ninety_combined_egg <- ninety_combined_egg + ggtitle("90 mm")
+fifty_combined_egg <- fifty_combined_egg + ggtitle("35 mm")
+
+
+# Absolute assays
+ninety_combined_egg /
+  fifty_combined_egg
 
 
   
