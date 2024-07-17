@@ -1,12 +1,14 @@
-## Packages
+#### Packages
 library(tidyverse)
 library(ggplot2)
 library(readxl)
 library(viridis)
 
+#### Reading data in: 
 fly_fitness_UMFE <- read_excel("data//fitness_development/fly_data.xlsx")
 
 
+## Making a tidy version of the data.
 fly_fitness_tidy_UMFE <- tidyr::pivot_longer(data = fly_fitness_UMFE ,
                                         cols = c( females, males),
                                         names_to = "sex",
