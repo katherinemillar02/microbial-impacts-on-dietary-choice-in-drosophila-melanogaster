@@ -5,6 +5,7 @@ library(patchwork)
 library(colorBlindness)
 library(ggplot2)
 library(ggpattern)
+library(ggpubr)
 library(gridExtra)
 library(viridis)
 
@@ -13,7 +14,7 @@ library(viridis)
                                     #### Reading the data in ####
 
 
-                                        #### 90 mm ####
+                                           #### 90 mm ####
 # 4:1 
 fourone_90mm <- read_excel("data/density_experiment/densityexperiment_90mm_4-1.xlsx")
 # 1:4 
@@ -35,7 +36,7 @@ fourone_onefour_90mm_long <- fourone_onefour_90mm  %>%
 
 
  
-                                    #### 35 mm ####
+                                          #### 35 mm ####
 # 4:1 
 fourone_35mm <- read_excel("data/density_experiment/densityexperiment_50mm_4-1.xlsx")
 # 1:4 
@@ -118,15 +119,17 @@ fifty_4_1_feed <- feeding_results(fourone_35mm_long , boxplot_fill_colour = viri
 fifty_combined_feed <- feeding_results(fourone_onefour_35mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
 
 ## Adding titles to the boxplots.
-ninety_feed <- ninety_1_4_feed + ggtitle("90 mm") + ninety_4_1_feed 
-fifty_feed <- fifty_1_4_feed + ggtitle("35 mm") + fifty_4_1_feed
+ninety_feed <- ninety_1_4_feed  + ninety_4_1_feed 
+fifty_feed <- fifty_1_4_feed  + fifty_4_1_feed
 ## patchwork design
-ninety_feed /
-  fifty_feed
+
+ggarrange(fifty_feed, ninety_feed,
+          labels = c("35mm", "90mm"),
+           nrow = 1,
+          align = "v")
 
 ## Adding titles to the boxplots.
 fifty_combined_feed <- fifty_combined_feed + ggtitle("35 mm")
 ninety_combined_feed <- ninety_combined_feed + ggtitle("90 mm")
 ## patchwork design
-ninety_combined_feed /
-  fifty_combined_feed
+ninety_combined_feed + fifty_combined_feed
