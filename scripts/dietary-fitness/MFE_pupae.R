@@ -13,8 +13,7 @@ viridis_colors <- viridis(10)
 
 ## Reading pupae data in
 pupae_fitness <- read_excel("data/fitness_development/MFE_pupae.xlsx")
-
-
+pupae_fitness <- as.data.frame(pupae_fitness)
 
 ## Boxplot ##
 pupae_boxplot_2 <- ggplot(pupae_fitness, aes(x = factor(time_hours), y = pupae, fill = treatment)) +

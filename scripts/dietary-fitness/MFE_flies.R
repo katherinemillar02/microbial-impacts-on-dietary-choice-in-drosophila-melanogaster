@@ -71,7 +71,6 @@ male_boxplot_2 <- ggplot(males_data, aes(x = factor(time_hours), y = males, fill
 
 
 
-
 female_boxplot_2 / 
   male_boxplot_2
 
