@@ -5,7 +5,7 @@ library(readxl)
 library(viridis)
 
 
-## COLOUR PALETTE 
+## COLOUR PALETTE ##
 viridis_colors <- viridis(10)
 
 #### Reading data in: ####
@@ -15,12 +15,12 @@ fly_fitness_UMFE <- read_excel("data//fitness_development/fly_data.xlsx")
 
 
 
-## Subsetting the data into female and male plots
+## Subsetting the data into female and male plots:
 
-## Just Female data
+## Female data
 females_data_UMFE <- subset(fly_fitness_UMFE, select = c(time_hours, females, treatment))
 
-## Just Male data
+## Male data
 males_data_UMFE <- subset(fly_fitness_UMFE, select = c(time_hours, males, treatment))
 
 

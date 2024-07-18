@@ -12,6 +12,11 @@ library(glmmTMB)
 #### Reading the data in: ####
 pupae_fitness_UMFE <- read_excel("data/fitness_development/puape_data.xlsx")
 
+## Total: 
+total_pupae <- pupae_fitness_UMFE %>% 
+  group_by(treatment) %>% 
+  summarise(total_pupae = sum(pupae, na.rm = TRUE))
+
 
 # Model 1 
 #### Poisson GLMM ####
@@ -76,7 +81,7 @@ zi.p.UMFE.pupae <- zeroinfl(pupae ~
 drop1(zi.p.UMFE.pupae, test = "Chisq")
 
 
-# Final model 
+# Final model #
 
 #### DATA ANALYSIS ####
 summary(zi.p.UMFE.pupae)

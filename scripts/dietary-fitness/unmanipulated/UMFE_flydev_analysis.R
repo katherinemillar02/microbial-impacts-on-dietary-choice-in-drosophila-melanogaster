@@ -126,6 +126,10 @@ zi.p.UMFE.fly <- zeroinfl(count ~
 
 
 
+
+
+
+
 # Comparing models
 AIC(glm.p.UMFE.fly,glm.nb.UMFE.fly, glmm.p.UMFE.fly, zi.p.UMFE.fly)
 
@@ -144,9 +148,13 @@ glmm.p.UMFE.fly <- glmmTMB(count ~
                            family = poisson, data = fly_fitness_tidy)
 
 
+
+
+
 # Using drop1 to look for significance in a 3-way interaction
 drop1(glmm.p.UMFE.fly, test = "Chisq")
  # 3-way interaction effect
+
 
 
 

@@ -1,22 +1,33 @@
 #### Packages
+# Packages 📦📦📦📦####
 library(tidyverse)
-library(ggplot2)
+library(lmerTest)
 library(readxl)
-library(viridis)
+library(MASS)
+library(performance)
+library(pscl)
+library(DHARMa)
+library(glmmTMB)
+
 
 #### Reading data in: 
 fly_fitness_UMFE <- read_excel("data//fitness_development/fly_data.xlsx")
 
 
-## Making a tidy version of the data.
+## Making a tidy version of the data,
+#### Puts males and females together into a "sex" column.
 fly_fitness_tidy_UMFE <- tidyr::pivot_longer(data = fly_fitness_UMFE ,
                                         cols = c( females, males),
                                         names_to = "sex",
                                         values_to = "count") 
 
 
-#### This code shows each vial, for each sex, and for each treatment 
-overallflies_UMFE <- fly_fitness_tidy_UMFE %>%
+
+#### This code shows each vial, for each sex, and for each treatment
+### this shows a TOTAL count for each vial, males and females in each vial over all the counts
+### adds a column that looks at treatment and sex 
+### EMERGENCE BY SEX
+overallflies_UMFE <- fly_fitness_UMFE %>%
   filter(sex %in% c("females", "males")) %>%
   group_by(vial, sex, treatment) %>%
   summarise(total_count = sum(count, na.rm = TRUE)) %>%
@@ -28,10 +39,9 @@ overallflies_UMFE <- fly_fitness_tidy_UMFE %>%
 
 
 
-#### CALCULATIONS 
-## Calculating median emergence by vial
-## This code combines sex and shows overall emergence
-fly_emergence_overall <- fly_fitness_tidy %>%
+#### fly emergence overall 
+#### EMERGENCE NOT BY SEX
+fly_emergence_overall <- fly_fitness_tidy_UMFE %>%
   filter(sex %in% c("females", "males")) %>%
   group_by(vial, treatment) %>%
   summarise(overall_emergence = sum(count, na.rm = TRUE)) %>%
@@ -42,39 +52,9 @@ fly_emergence_overall <- fly_fitness_tidy %>%
 
 
 
-glm_model <- glm(overall_emergence ~ sex_treatment, family = poisson(link = "log"), data = fly_emergence_overall)
 
-summary(glm_model)
-
-## This code shows the median overall emergence (males and females combined) 
-vial_overall_emergence_median <- vial_overall_emergence  %>%
-  group_by(treatment) %>%
-  summarise(median_count = median(overall_emergence, na.rm = TRUE))
-
-
-
-## DATA VISUALISA5ION - Visualising overall emergence across vials 
-overall_emergence_sex_treatment <- ggplot(fly_emergence_sex, aes(x = sex, y = total_count, fill = treatment)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) + 
-  geom_point(aes(fill = treatment), 
-             size = 2, shape = 21, 
-             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75)) +
-  scale_y_continuous(breaks = seq(0, 80, 10)) +
-  scale_x_discrete(labels = c("Females", "Males")) + 
-  theme_classic() +
-  scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
-  theme(legend.position = "top",
-        legend.justification = "right",
-        legend.direction = "vertical") +
-  labs(x = "Sex", 
-       y = "Number of Flies Emerged", 
-       fill = "Treatment") +
-  ylim(0, 80)
-
-
-
-
-## An overall code of emergence per time 
+## An overall code of emergence per time
+## THIS COMBINES THE VIALS
 emergence_per_time <- fly_fitness %>%
   group_by(treatment, time_hours) %>%
   summarize(total_females = sum(females, na.rm = TRUE),
@@ -83,10 +63,41 @@ emergence_per_time <- fly_fitness %>%
 
 
 
+## data analysis ##
+# using fly emergence overall 
+glmm.p.total.UMFE <- glmmTMB(total_count ~ 
+                               
+                               sex * treatment, 
+                             
+                             
+                             
+                             family = poisson, data = overallflies_UMFE)
+
+
+## assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.total.UMFE, plot = T)
+
+## assumptions could be better 
+drop1(glmm.p.total.UMFE, test = "Chisq")
 
 
 
 
+
+
+## model without interaction effect: 
+glmm.p.total.UMFE.2 <- glmmTMB(total_count ~ 
+                               
+                               sex + treatment, 
+                             
+                             
+                             
+                             family = poisson, data = overallflies_UMFE)
+
+
+
+#### DATA ANALYSIS ####
+summary(glmm.p.total.UMFE.2)
 
 
 
