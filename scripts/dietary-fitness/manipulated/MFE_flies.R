@@ -84,4 +84,4 @@ total_flies <- fly_fitness %>%
   summarise(total_flies = sum(males, females, na.rm = TRUE))
 
 
-total_flies <- as.data.fra
+total_flies <- as.data.frame(total_flies)

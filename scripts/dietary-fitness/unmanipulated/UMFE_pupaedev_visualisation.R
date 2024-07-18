@@ -45,3 +45,6 @@ pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill =
 
 
 
+
+
+

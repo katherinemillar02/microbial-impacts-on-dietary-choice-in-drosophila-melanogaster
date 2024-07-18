@@ -107,4 +107,13 @@ fly_emergence_overall <- fly_fitness_tidy_UMFE %>%
 ## THIS COMBINES THE VIALS
 emergence_per_time <- fly_fitness %>%
   group_by(treatment, time_hours) %>%
-  summarize(total_females = sum(females, na.rm = 
+  summarize(total_females = sum(females, na.rm = TRUE),
+            total_males = sum(males, na.rm = TRUE)) %>%
+  ungroup()
+
+
+
+
+
+
+

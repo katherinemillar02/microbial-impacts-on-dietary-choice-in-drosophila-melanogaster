@@ -70,4 +70,38 @@ drop1(glm.nb_pupae, test = "F")
 
 glm.nb_pupae.2 <- glm.nb(pupae ~ 
                          treatment + time_hours  
-    
+                       
+                       , data = pupae_fitness_MFE)
+
+summary(glm.nb_pupae.2)
+
+#  No interaction effect... 
+
+
+#### Nothing seems to be significant? 
+
+
+
+
+
+# zero inflation 
+# Model 3 
+#### Zero-Inflated Poisson ####
+zi.p.MFE.pupae <- zeroinfl(pupae ~ 
+                              
+                              treatment * time_hours  
+                            
+                            , data = pupae_fitness_MFE)
+
+
+drop1(zi.p.MFE.pupae, test = "Chisq")
+summary(zi.p.MFE.pupae)
+
+
+
+AIC(glmm.p.pupae,glm.nb_pupae,zi.p.MFE.pupae)
+
+
+
+
+
