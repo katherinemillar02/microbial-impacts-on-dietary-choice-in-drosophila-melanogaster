@@ -1,4 +1,3 @@
-#### Packages
 # Packages 📦📦📦📦####
 library(tidyverse)
 library(lmerTest)
@@ -10,7 +9,7 @@ library(DHARMa)
 library(glmmTMB)
 
 
-#### Reading data in: 
+#### Reading data in: ####
 fly_fitness_UMFE <- read_excel("data//fitness_development/fly_data.xlsx")
 
 
@@ -39,6 +38,57 @@ overallflies_UMFE <- fly_fitness_UMFE %>%
 
 
 
+#### TESTING MODELS ####
+
+
+# Model 1
+#### Poisson GLMM ####
+glmm.p.total.UMFE <- glmmTMB(total_count ~ 
+                               
+                               sex * treatment, 
+                             
+                             
+                             
+                             family = poisson, data = overallflies_UMFE)
+
+
+## assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.total.UMFE, plot = T)
+
+
+#### Chosen model: Poisson GLMM ####
+
+## assumptions could be better 
+drop1(glmm.p.total.UMFE, test = "Chisq")
+
+
+
+
+
+
+## model without interaction effect: 
+glmm.p.total.UMFE.2 <- glmmTMB(total_count ~ 
+                               
+                               sex + treatment, 
+                             
+                             
+                             
+                             family = poisson, data = overallflies_UMFE)
+
+
+
+#### DATA ANALYSIS ####
+summary(glmm.p.total.UMFE.2)
+
+
+
+
+
+#### other versions 
+
+## just incase the data wanted to be looked at in other ways. 
+
+
 #### fly emergence overall 
 #### EMERGENCE NOT BY SEX
 fly_emergence_overall <- fly_fitness_tidy_UMFE %>%
@@ -62,42 +112,6 @@ emergence_per_time <- fly_fitness %>%
   ungroup()
 
 
-
-## data analysis ##
-# using fly emergence overall 
-glmm.p.total.UMFE <- glmmTMB(total_count ~ 
-                               
-                               sex * treatment, 
-                             
-                             
-                             
-                             family = poisson, data = overallflies_UMFE)
-
-
-## assumption checking:
-simulationOutput <- simulateResiduals(fittedModel = glmm.p.total.UMFE, plot = T)
-
-## assumptions could be better 
-drop1(glmm.p.total.UMFE, test = "Chisq")
-
-
-
-
-
-
-## model without interaction effect: 
-glmm.p.total.UMFE.2 <- glmmTMB(total_count ~ 
-                               
-                               sex + treatment, 
-                             
-                             
-                             
-                             family = poisson, data = overallflies_UMFE)
-
-
-
-#### DATA ANALYSIS ####
-summary(glmm.p.total.UMFE.2)
 
 
 
