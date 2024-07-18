@@ -13,19 +13,19 @@ viridis_colors <- viridis(10)
 
 
 ## Reading pupae data in
-fly_fitness <- read_excel("data/fitness_development/MFE_flies.xlsx")
+fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
 
 #### better arranging data
 
 ## Separating the data into female and male columns 
-fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
+fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness_MFE ,
                                         cols = c( females, males),
                                         names_to = "sex",
                                         values_to = "count") 
 
 
 
-females_data <- subset(fly_fitness, select = c(time_hours, females, treatment))
+females_data <- subset(fly_fitness_MFE, select = c(time_hours, females, treatment))
 
 
 ## Boxplot ##
@@ -48,7 +48,7 @@ female_boxplot_2 <- ggplot(females_data, aes(x = factor(time_hours), y = females
        fill = "Treatment")
 
 
-males_data <- subset(fly_fitness, select = c(time_hours, males, treatment))
+males_data <- subset(fly_fitness_MFE, select = c(time_hours, males, treatment))
 
 ## Boxplot ##
 male_boxplot_2 <- ggplot(males_data, aes(x = factor(time_hours), y = males, fill = treatment)) +
