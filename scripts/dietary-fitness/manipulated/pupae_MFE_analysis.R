@@ -94,11 +94,15 @@ zi.p.MFE.pupae <- zeroinfl(pupae ~
                             , data = pupae_fitness_MFE)
 
 
+## Interaction effects: 
 drop1(zi.p.MFE.pupae, test = "Chisq")
-summary(zi.p.MFE.pupae)
+
+#### DATA ANALYSIS ####
+summary(zi.p.MFE.pupae) 
 
 
 
+## Comparing models:
 AIC(glmm.p.pupae,glm.nb_pupae,zi.p.MFE.pupae)
 
 
