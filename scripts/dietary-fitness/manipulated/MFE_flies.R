@@ -79,9 +79,10 @@ female_boxplot_2 /
 #### Pupae data check. 
 fly_fitness <- as.data.frame(fly_fitness)
 
-total_flies <- fly_fitness %>% 
-  group_by(treatment, vial) %>% 
+total_flies <- fly_fitness_MFE %>% 
+  group_by(treatment, id) %>% 
   summarise(total_flies = sum(males, females, na.rm = TRUE))
 
 
 total_flies <- as.data.frame(total_flies)
+## more conditioned than unconditioned have come out now? 
