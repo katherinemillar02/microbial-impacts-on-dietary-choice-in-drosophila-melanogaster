@@ -68,6 +68,8 @@ glm.nb_pupae <- glm.nb(pupae ~
 
 drop1(glm.nb_pupae, test = "F")
 
+summary(glm.nb_pupae)
+
 glm.nb_pupae.2 <- glm.nb(pupae ~ 
                          treatment + time_hours  
                        
@@ -77,6 +79,7 @@ summary(glm.nb_pupae.2)
 
 #  No interaction effect... 
 
+tab_model(glm.nb_pupae.2)
 
 #### Nothing seems to be significant? 
 
