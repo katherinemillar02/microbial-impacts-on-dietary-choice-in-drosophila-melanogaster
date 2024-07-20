@@ -12,17 +12,17 @@ viridis_colors <- viridis(10)
 
 
 ## Reading pupae data in
-pupae_fitness <- read_excel("data/fitness_development/MFE_pupae.xlsx")
-pupae_fitness <- as.data.frame(pupae_fitness)
+pupae_fitness_MFE <- read_excel("data/fitness_development/MFE_pupae.xlsx")
+pupae_fitness_MFE <- as.data.frame(pupae_fitness_MFE)
 
 ## Boxplot ##
-pupae_boxplot_2 <- ggplot(pupae_fitness, aes(x = factor(time_hours), y = pupae, fill = treatment)) +
+pupae_boxplot_MFE <- ggplot(pupae_fitness_MFE, aes(x = factor(time_hours), y = pupae, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
   geom_point(aes(fill = treatment),
              size = 1.5, shape = 21,
              position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.9)) +
   scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
-  scale_x_discrete(labels = unique(pupae_fitness$time_hours)) +
+  scale_x_discrete(labels = unique(pupae_fitness_MFE$time_hours)) +
   theme_classic() +
   theme(legend.position = "top",
         legend.justification = "right",
