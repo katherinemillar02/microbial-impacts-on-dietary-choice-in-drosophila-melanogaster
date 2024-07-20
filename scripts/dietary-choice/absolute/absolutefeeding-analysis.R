@@ -43,14 +43,23 @@ fourone_onefour_male_long <- fourone_onefour_male %>%
   mutate(fly_numbers = as.integer(fly_numbers))  
 
 
-## Splitting "diet" into "ratio" and "condition"
-fourone_onefour_male_long_split <- fourone_onefour_male_long %>% 
-  separate(diet, into = c ("ratio", "condition"), sep = " ")
+
+## Splitting up diet within the actual data frame
+combined_m_split <- fourone_onefour_male_long %>%
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
 
 #### I now show the chosen model, and test for interaction effects with the chosen model. 
 #### For a previous demonstration on how I got to choosing this model, please see preliminary script. 
 
         #### The chosen model is a: Poisson GLMM   ####-- 
+glmm.m.4choice.2 <- glmmTMB(fly_numbers ~ 
+                              
+                              ratio * condition * block 
+                            
+                            + (1 | block / plate) + (1 |  block / observation), 
+                            
+                            family = poisson, data = combined_m_split)
 
 ## Assumption checks for glmm.m.4choice.2
 testDispersion(glmm.m.4choice.2)
@@ -165,18 +174,7 @@ check_overdispersion(glmm.m.4choice.4)
 summary(glmm.m.4choice.4)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+confint(glmm.m.4choice.4, level = 0.95)
 
 
 
