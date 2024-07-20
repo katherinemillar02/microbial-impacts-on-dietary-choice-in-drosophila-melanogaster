@@ -65,6 +65,7 @@ comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers ~
 summary(comb_m_egg_glm.nb.3)
 
 
+confint(comb_m_egg_glm.nb.3, level = 0.95)
 
 
 
