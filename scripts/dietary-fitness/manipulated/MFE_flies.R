@@ -43,8 +43,8 @@ female_boxplot_2 <- ggplot(females_data, aes(x = factor(time_hours), y = females
         strip.placement = "outside", 
         strip.background = element_blank(),  
         strip.text = element_blank()) +
-  labs(x = "Time (hours) since eggs laid", 
-       y = "Number of pupae emerged",
+  labs(x = "Time (hours) since L1 on diets", 
+       y = "Number of Females Emerged",
        fill = "Treatment")
 
 
@@ -65,8 +65,8 @@ male_boxplot_2 <- ggplot(males_data, aes(x = factor(time_hours), y = males, fill
         strip.placement = "outside", 
         strip.background = element_blank(),  
         strip.text = element_blank()) +
-  labs(x = "Time (hours) since eggs laid", 
-       y = "Number of flies emerged",
+  labs(x = "Time (hours) since L1 on diets", 
+       y = "Number of Males Emerged",
        fill = "Treatment")
 
 
@@ -76,7 +76,7 @@ female_boxplot_2 /
 
 
 
-#### Pupae data check. 
+#### Pupae data check... 
 fly_fitness <- as.data.frame(fly_fitness)
 
 total_flies <- fly_fitness_MFE %>% 
