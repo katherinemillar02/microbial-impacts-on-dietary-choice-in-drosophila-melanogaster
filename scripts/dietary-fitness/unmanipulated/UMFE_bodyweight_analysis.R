@@ -11,6 +11,7 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
+library(sjPlot)
 ##################
 
 # Model 1 
@@ -38,8 +39,14 @@ drop1(glmm.p.UMFE.weight, test = "Chisq")
 # Final model: 
 glmm.p.UMFE.weight.2 <- glmmTMB(weight_mg ~ treatment + sex, family = poisson, data = bodyweight_2)
 
+bodyweight_2$sex <- as.factor(bodyweight_2$sex)
+bodyweight_2$sex <- relevel(bodyweight_2$sex, ref = "male")
 
 #### DATA ANALYSIS ####
 summary(glmm.p.UMFE.weight.2)
  # Significant difference between Conditioned and Unconditioned!! 
  
+tab_model(glmm.p.UMFE.weight.2)
+bodyweight_2$sex <- as.factor(bodyweight_2$sex)
+bodyweight_2$sex <- relevel(bodyweight_2$sex, ref = "male")
+
