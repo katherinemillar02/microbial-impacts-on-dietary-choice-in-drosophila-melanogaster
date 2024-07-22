@@ -8,6 +8,7 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
+library(sjPlot)
 
 
 #### DATA ANALYSIS
@@ -160,5 +161,7 @@ drop1(glmm.p.UMFE.fly, test = "Chisq")
 
 #### DATA ANALYSIS ####
 summary(glmm.p.UMFE.fly)
+
+tab_model(glmm.p.UMFE.fly)
 
 

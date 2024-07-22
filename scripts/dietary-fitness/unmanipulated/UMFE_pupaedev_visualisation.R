@@ -45,6 +45,13 @@ pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill =
 
 
 
+## Saving a plot
+ggsave(filename = "pupae_boxplot_2.png", 
+       plot = pupae_boxplot_2, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
 
 
 

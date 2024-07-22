@@ -7,6 +7,7 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
+library(sjPlot)
 
 
 #### Reading the data in: ####
@@ -85,3 +86,9 @@ drop1(zi.p.UMFE.pupae, test = "Chisq")
 
 #### DATA ANALYSIS ####
 summary(zi.p.UMFE.pupae)
+
+
+## Table 
+tab_model(zi.p.UMFE.pupae)
+
+

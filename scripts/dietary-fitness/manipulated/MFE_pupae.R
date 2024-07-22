@@ -36,7 +36,7 @@ pupae_boxplot_MFE <- ggplot(pupae_fitness_MFE, aes(x = factor(time_hours), y = p
 
 
 ## Display the plot 
-pupae_boxplot_2
+pupae_boxplot_MFE
 
 
 
