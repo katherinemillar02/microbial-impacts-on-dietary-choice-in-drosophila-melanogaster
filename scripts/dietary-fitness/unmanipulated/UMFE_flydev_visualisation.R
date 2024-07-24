@@ -81,6 +81,9 @@ females_data_UMFE_boxplot /
 
 
 
+
+
+
                               #### THE CLEANED DATA ####
 
 
@@ -147,12 +150,20 @@ males_data_UMFE_2_boxplot <- ggplot(males_data_UMFE_2, aes(x = time_hours, y = m
 
 ## The Male and Female Plots with the newly arranged datasets
 
-females_data_UMFE_2_boxplot /
+UMFE_fly_plot <- 
+  females_data_UMFE_2_boxplot /
   males_data_UMFE_2_boxplot
 
 
 
 
+
+## Saving a plot
+ggsave(filename = "UMFE_fly_plot.png", 
+       plot = UMFE_fly_plot, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
 
 
 
