@@ -14,6 +14,10 @@ library(glmmTMB)
 library(sjPlot)
 ##################
 
+## Reading data in 
+bodyweight_2 <- read_excel("data/fitness_development/bodyweight_flies2.xlsx")
+
+
 # Model 1 
 glmm.p.UMFE.weight <- glmmTMB(weight_mg ~ treatment * sex, family = poisson, data = bodyweight_2)
 
