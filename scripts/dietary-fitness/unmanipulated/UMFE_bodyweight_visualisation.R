@@ -46,6 +46,7 @@ bodyweight_plot <- ggplot(bodyweight, aes(x = sex, y = weight_mg, fill = treatme
 ## Multiplying the data by * 1000 so it can be visualised 
 bodyweight_2$weight_mg <- bodyweight_2$weight_mg * 1000
 
+ viridis_colours <- viridis(10)
 
 ## Visualising the data
 bodyweight_plot_2 <- ggplot(bodyweight_2, aes(x = sex, y = weight_mg, fill = treatment)) +
@@ -64,6 +65,15 @@ bodyweight_plot_2 <- ggplot(bodyweight_2, aes(x = sex, y = weight_mg, fill = tre
        y = "Body Weight (μg) of fly") +
   labs(fill = "Treatment")+
   ylim(0,700)
+
+
+## Saving a plot
+ggsave(filename = "bodyweight_plot_2.png", 
+       plot = bodyweight_plot_2, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
 
 
 
