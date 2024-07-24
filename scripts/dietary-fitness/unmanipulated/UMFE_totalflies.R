@@ -10,7 +10,7 @@ library(glmmTMB)
 
 
 #### Reading data in: ####
-fly_fitness_UMFE <- read_excel("data//fitness_development/fly_data.xlsx")
+fly_fitness_UMFE <- read_excel("data/fitness_development/fly_data.xlsx")
 
 
 ## Making a tidy version of the data,
@@ -26,7 +26,7 @@ fly_fitness_tidy_UMFE <- tidyr::pivot_longer(data = fly_fitness_UMFE ,
 ### this shows a TOTAL count for each vial, males and females in each vial over all the counts
 ### adds a column that looks at treatment and sex 
 ### EMERGENCE BY SEX
-overallflies_UMFE <- fly_fitness_UMFE %>%
+overallflies_UMFE <- fly_fitness_tidy_UMFE %>%
   filter(sex %in% c("females", "males")) %>%
   group_by(vial, sex, treatment) %>%
   summarise(total_count = sum(count, na.rm = TRUE)) %>%
@@ -80,7 +80,7 @@ glmm.p.total.UMFE.2 <- glmmTMB(total_count ~
 #### DATA ANALYSIS ####
 summary(glmm.p.total.UMFE.2)
 
-
+tab_model(glmm.p.total.UMFE.2)
 
 
 
