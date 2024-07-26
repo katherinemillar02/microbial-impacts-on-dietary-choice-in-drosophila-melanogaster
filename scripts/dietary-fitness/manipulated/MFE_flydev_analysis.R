@@ -228,3 +228,18 @@ tab_model(glmm.p.MFE.fly.3)
 summary(glmm.p.MFE.fly.3)
 
 
+####
+fly_fitness_tidy_MFE$sex <- as.factor(fly_fitness_tidy_MFE$sex)
+fly_fitness_tidy_MFE$sex <- relevel(fly_fitness_tidy_MFE$sex, ref = "females")
+
+glmm.p.MFE.fly.31 <- glmmTMB(count ~ 
+                              
+                              sex * time_hours +
+                              treatment * time_hours +
+                              
+                              
+                              + (1|vial/sex) + (1|time_hours),
+                            
+                            family = poisson, data = fly_fitness_tidy_MFE)
+
+summary(glmm.p.MFE.fly.31)

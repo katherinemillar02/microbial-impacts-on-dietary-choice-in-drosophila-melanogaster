@@ -124,13 +124,16 @@ glmm.p.total.MFE.2 <- glmmTMB(total_count ~
 summary(glmm.p.total.MFE.2)
 
 # Table
-tab_model(glmm.p.total.UMFE.2)
+tab_model(glmm.p.total.MFE.2)
 
 
 
 
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+
+viridis_colors <- viridis(10)
+
 
 overall_emergence_treatment <- ggplot(overallflies_MFE, aes(x = sex, y = total_count, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.8)) + 
@@ -148,3 +151,11 @@ overall_emergence_treatment <- ggplot(overallflies_MFE, aes(x = sex, y = total_c
        y = "Number of Flies Emerged", 
        fill = "Treatment") +
   ylim(0, 30)
+
+
+## Saving a plot
+ggsave(filename = "overall_emergence_treatment.png", 
+       plot = overall_emergence_treatment, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
