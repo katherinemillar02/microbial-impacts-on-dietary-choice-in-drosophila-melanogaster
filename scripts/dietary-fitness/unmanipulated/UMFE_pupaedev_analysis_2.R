@@ -87,6 +87,7 @@ glmm.p.UMFE.pupae <- glmmTMB( time_hours
 #### DATA ANALYSIS ####
 summary(glmm.p.UMFE.pupae)
 
+tab_model(glmm.p.UMFE.pupae)
 
 
 
