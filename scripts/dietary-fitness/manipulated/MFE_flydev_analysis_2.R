@@ -168,14 +168,16 @@ drop1(glm.nb.MFE.fly, test = "Chisq")
 
 
 #### Chosen model: Poisson GLMM ####
-glmm.p.MFE.fly.2 <- glmmTMB(time_hours ~ 
-                              
-                              treatment + sex ,
-                            
-                            family = poisson, data = fly_fitness_tidy_MFE_2)
+glm.nb.MFE.fly.2 <- glm.nb(time_hours ~
+                           
+                           treatment + sex ,
+                         
+                         data = fly_fitness_tidy_MFE_2)
 
 
 
 
 ## Data analysis of the chosen model
-summary(glmm.p.MFE.fly.2)
+summary(glm.nb.MFE.fly.2)
+
+tab_model(glm.nb.MFE.fly.2)
