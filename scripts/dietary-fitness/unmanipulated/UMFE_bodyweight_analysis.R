@@ -33,6 +33,26 @@ check_zeroinflation(glmm.p.UMFE.weight)
  # No zero-inflation 
 
 
+# Model 2 
+glm.nb.UMFE.weight <- glm.nb(weight_mg ~ treatment * sex  
+                            
+                            , data = bodyweight_2)
+
+
+## qq plot from the model
+residuals <- residuals(glm.nb.UMFE.weight)
+qqnorm(residuals)
+qqline(residuals, col = 2) # qq looks pretty goos
+
+  ## not good 
+
+
+
+
+
+
+
+
 #### Chosen model: Poisson GLMM ####
 
 drop1(glmm.p.UMFE.weight, test = "Chisq")
@@ -40,7 +60,7 @@ drop1(glmm.p.UMFE.weight, test = "Chisq")
 
 # If you want to change the intercept...
 bodyweight_2$sex <- as.factor(bodyweight_2$sex)
-bodyweight_2$sex <- relevel(bodyweight_2$sex, ref = "male")
+bodyweight_2$sex <- relevel(bodyweight_2$sex, ref = "female")
 
 # Final model: 
 glmm.p.UMFE.weight.2 <- glmmTMB(weight_mg ~ treatment + sex, family = poisson, data = bodyweight_2)
