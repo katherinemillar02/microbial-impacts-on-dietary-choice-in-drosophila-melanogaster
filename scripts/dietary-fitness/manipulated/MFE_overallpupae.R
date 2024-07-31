@@ -12,12 +12,16 @@ pupae_fitness_MFE <- as.data.frame(pupae_fitness_MFE)
 
 #### Pupae data check. 
 total_pupae <- pupae_fitness_MFE %>% 
-  group_by(treatment, id, vial) %>% 
+  group_by(id, vial, treatment) %>% 
   summarise(total_pupae = sum(pupae, na.rm = TRUE))
+
 
 ## Changing it to a dataframe
 total_pupae <- as.data.frame(total_pupae)
 
+survivability <- total_pupae %>%
+  mutate(fixed_total = 63,  # Add a fixed total of 63
+         survivability = (total_pupae / fixed_total) * 100)
 
 
 # Model 1 - Poisson GLMM
