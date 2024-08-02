@@ -313,17 +313,17 @@ overall_feeding <- grid.arrange(m_1_4 + ggtitle("Male Conditioning"), m_4_1 + gg
 ## 4:1 
 
 # Block 1
-four_to_one_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_t2b1.xlsx")
+four_to_one_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_b1.xlsx")
 
 ## Changing the variable names of Block 1 
-fourone_of_b1 <- four_to_one_male_b1  %>% 
+fourone_m_b1 <- four_to_one_male_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 # Block 2 
-four_to_one_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_t2b2.xlsx")
+four_to_one_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_b2.xlsx")
 
 ## Changing the variable names of Block 2
-fourone_of_b2 <- four_to_one_male_b2  %>% 
+fourone_m_b2 <- four_to_one_male_b2  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
@@ -334,18 +334,18 @@ fourone_of_b2 <- four_to_one_male_b2  %>%
 ## 1:4 
 
 # Block 1
-one_to_four_male_b1 <- read_excel("data/male_conditioning/rawdata_m1-4_t2b1.xlsx")
+one_to_four_male_b1 <- read_excel("data/male_conditioning/rawdata_m1-4_b1.xlsx")
 
 # Changing the variable names of Block 1
-onefour_of_b1 <- one_to_four_male_b1  %>% 
+onefour_m_b1 <- one_to_four_male_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
 # Block 2
-one_to_four_male_b2 <- read_excel("data/male_conditioning/rawdata_m1-4_t2b2.xlsx")
+one_to_four_male_b2 <- read_excel("data/male_conditioning/rawdata_m1-4_b2.xlsx")
 
 # Changing the variable names of Block 2 
-onefour_of_b2 <- one_to_four_male_b2  %>% 
+onefour_m_b2 <- one_to_four_male_b2  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 
@@ -355,14 +355,14 @@ onefour_of_b2 <- one_to_four_male_b2  %>%
 # 4:1 + 1:4 
 
 # Block 1 
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b1.xlsx")
+fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx")
 
 # Changing the variable names of Block 1 
 fouroneonefour_male_b1 <- fourone_onefour_male_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") 
 
 # Block 2
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_t2b2.xlsx")
+fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx")
 
 # Changing the variable names of Block 2
 fouroneonefour_male_b2 <- fourone_onefour_male_b2  %>% 
@@ -375,15 +375,15 @@ fouroneonefour_male_b2 <- fourone_onefour_male_b2  %>%
 ## MALE CONDITIONED DIETS
 
 ## 1:4 
-m_1_4_b1  <- feeding_results(onefour_of_b1 , boxplot_fill_colour = viridis_colors[5:6])
-m_1_4_b2  <- feeding_results(onefour_of_b2, boxplot_fill_colour = viridis_colors[5:6])
+m_1_4_b1  <- feeding_results(onefour_m_b1 , boxplot_fill_colour = viridis_colors[5:6])
+m_1_4_b2  <- feeding_results(onefour_m_b2, boxplot_fill_colour = viridis_colors[5:6])
 
 
 
 
 ## 4:1 
-m_4_1_b1 <- feeding_results(fourone_of_b1 , boxplot_fill_colour = viridis_colors[7:8])
-m_4_1_b2 <- feeding_results(fourone_of_b2, boxplot_fill_colour = viridis_colors[7:8])
+m_4_1_b1 <- feeding_results(fourone_m_b1 , boxplot_fill_colour = viridis_colors[7:8])
+m_4_1_b2 <- feeding_results(fourone_m_b2, boxplot_fill_colour = viridis_colors[7:8])
 
 
 
