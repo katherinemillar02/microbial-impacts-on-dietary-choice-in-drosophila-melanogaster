@@ -605,7 +605,7 @@ v_combined_b4 <- v_combined_b4 + ggtitle("Virgin Female Block 4")
 
 
 ## Creating a combined plots for virgin separate blocks 
-virgin_oviposition <- grid.arrange(
+virgin_feeding <- grid.arrange(
   v_4_1_b1, v_1_4_b1, v_combined_b1 ,
   v_4_1_b2, v_1_4_b2, v_combined_b2,
   v_4_1_b3, v_1_4_b3, v_combined_b3 ,
