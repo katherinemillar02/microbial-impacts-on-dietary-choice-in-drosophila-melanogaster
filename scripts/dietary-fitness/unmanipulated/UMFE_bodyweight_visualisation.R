@@ -86,4 +86,5 @@ ggsave(filename = "bodyweight_plot_2.png",
 #   labs(x = "Sex", 
 #        y = "Body Weight (μg) of fly") +
 #   labs(fill = "Treatment")+
-#   ylim(0,70
+#   ylim(0,700)
+

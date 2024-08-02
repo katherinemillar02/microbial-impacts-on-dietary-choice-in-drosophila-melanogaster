@@ -55,4 +55,27 @@ glm.nb.MFE.weight.2 <- glm.nb(weight_mg ~ treatment + sex
                             
                             , data = bodyweight_MFE)
 
-summary(glm.nb.MFE.wei
+summary(glm.nb.MFE.weight.2)
+
+#### Chosen model: Poisson GLMM ####
+
+drop1(glmm.p.MFE.weight, test = "Chisq")
+# No interaction effect between treatment and sex
+
+# If you want to change the intercept...
+bodyweight_2$sex <- as.factor(bodyweight_2$sex)
+bodyweight_2$sex <- relevel(bodyweight_2$sex, ref = "male")
+
+# Final model: 
+glmm.p.MFE.weight.2 <- glmmTMB(weight_mg ~ treatment + sex + (1|vial), family = poisson, data = bodyweight_MFE)
+
+
+
+#### DATA ANALYSIS ####
+summary(glmm.p.MFE.weight.2)
+# Significant difference between Conditioned and Unconditioned!! 
+
+## Table for model. 
+tab_model(glmm.p.MFE.weight.2)
+
+
