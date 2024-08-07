@@ -456,26 +456,38 @@ AIC(glm.bin.of.ovi.2choice, glmm.bin.of.ovi.2choice)
 
 ## Using "Model 2" for now as I do not really know what else to do 
 
+
+df2_ovod1_oviposition$ratio <- as.factor(df2_ovod1_oviposition$ratio)
+df2_ovod1_oviposition$ratio <- relevel(df2_ovod1_oviposition$ratio, ref = "4:1")
 ## Model choice: 
-glmm.bin.of.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
+glmm.bin.of.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
+
+
+
+
+drop1(glmm.bin.of.ovi.2choice, test = "Chisq")
+
 
 emmeans::emmeans(glmm.bin.of.ovi.2choice, ~ ratio, type = "response")
 
+
+
+
 summary(glmm.bin.of.ovi.2choice)
+exp(confint(glmm.bin.of.ovi.2choice))
 
 ## Looking for significance in block
-drop1(glmm.bin.of.ovi.2choice, test = "Chisq") ## block is  significant with ratio
+ ## block is  significant with ratio
 
 ## Looking at results, keeping block in 
 
 ## Basic summary
 summary(glmm.bin.of.ovi.2choice) 
-
 ## What I am confused about here: 
 # If I am interpreting the results right, why is there no 1:4 conditioned/unconditioned block 2 results?? 
 
 
-
+tab_model(glmm.bin.of.ovi.2choice)
 
 
 

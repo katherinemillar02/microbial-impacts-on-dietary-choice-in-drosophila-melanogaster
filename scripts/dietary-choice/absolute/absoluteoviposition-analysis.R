@@ -209,7 +209,7 @@ combined_of_egg_split$ratio <- relevel(combined_of_egg_split$ratio, ref = "4:1")
 
 ## Changing block to "two" (as one will not be used for oviposition data)
 combined_of_egg_split$block <- as.factor(combined_of_egg_split$block)
-combined_of_egg_split$block <- relevel(combined_of_egg_split$block, ref = "two")
+combined_of_egg_split$block <- relevel(combined_of_egg_split$block, ref = "one")
 
 
 ## Testing for a 3-way interaction effect, along with two way interaction effects still in the model. 
@@ -253,6 +253,11 @@ summary(glm.nb_of_comb_egg.4)
 exp(confint(glm.nb_of_comb_egg.4))
 
 emmeans::emmeans(glm.nb_of_comb_egg.4, pairwise ~ condition + ratio)
+
+emmeans::emmeans(glm.nb_of_comb_egg.4, ~ condition + ratio, type = "respomse")
+
+emmeans::emmeans(glm.nb_of_comb_egg.4, ~ condition + ratio, type = "response")
+
 
 tab_model(glm.nb_of_comb_egg.4)
 

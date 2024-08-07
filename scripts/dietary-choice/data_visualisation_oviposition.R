@@ -433,10 +433,24 @@ viridis_colors <- inferno(10)
 
 
 ## Using grid.arrange to put the plots together
-ovod1_female_oviposition <- grid.arrange(ov1_egg_1_4, ov1_egg_4_1, ov1_egg_combined,
+ovod1_female_oviposition <- grid.arrange(ov1_egg_1_4, ov1_egg_4_1,
                                          nrow = 1,
-                                         widths = c(0.5,0.5,1),
+                                         widths = c(0.5,0.5),
                                          heights = c(1))
+
+
+ggsave(filename = "ovod1_female_oviposition.png", 
+       plot = ovod1_female_oviposition, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
+ggsave(filename = "ov1_egg_combined.png", 
+       plot = ov1_egg_combined, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
 
 
 
@@ -459,13 +473,25 @@ v1_egg_combined <- oviposition_results(combined_ovi_vf, boxplot_fill_colour = vi
 
 
 ## Using grid arrange to put the plots together
-virgin_female_oviposition <- grid.arrange(v1_egg_1_4, v1_egg_4_1, v1_egg_combined ,
+virgin_female_oviposition <- grid.arrange(v1_egg_1_4, v1_egg_4_1 ,
                                           nrow = 1,
-                                          widths = c(0.5,0.5,1),
+                                          widths = c(0.5,0.5),
                                           heights = c(1))
 
 
 
+
+ggsave(filename = "v1_egg_combined.png", 
+       plot = v1_egg_combined, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
+ggsave(filename = "virgin_female_oviposition.png", 
+       plot = virgin_female_oviposition, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
 
 
 
@@ -485,14 +511,28 @@ m_egg_combined <- oviposition_results(combined_ovi_m, boxplot_fill_colour  = vir
 
 
 
+
 ## Using grid arrange to put the plots together
-male_oviposition <- grid.arrange(m_egg_1_4, m_egg_4_1, m_egg_combined,
+male_oviposition <- grid.arrange(m_egg_1_4, m_egg_4_1,
                                  nrow = 1,
-                                 widths = c(0.5,0.5,1),
+                                 widths = c(0.5,0.5),
                                  heights = c(1))
 
 
 
+ggsave(filename = "male_oviposition.png", 
+       plot = male_oviposition, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
+
+
+ggsave(filename = "m_egg_combined.png", 
+       plot = m_egg_combined, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
 
 
 
