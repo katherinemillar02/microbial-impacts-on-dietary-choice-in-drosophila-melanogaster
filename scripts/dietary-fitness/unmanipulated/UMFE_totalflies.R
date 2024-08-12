@@ -101,6 +101,15 @@ drop1(glm.nb.UMFE.flies, test = "Chisq")
   ## No 2-way interaction effect found.
 
 
+## for lols 
+summary(glm.nb.UMFE.flies)
+
+
+## seeing if changing intercept does anything:
+#overallflies_UMFE$sex <- as.factor(overallflies_UMFE$sex)
+#overallflies_UMFE$sex <- relevel(overallflies_UMFE$sex, ref = "males")
+
+
 
 
 ## Model without interaction effect: 

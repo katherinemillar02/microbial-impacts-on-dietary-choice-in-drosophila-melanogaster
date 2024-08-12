@@ -160,7 +160,7 @@ drop1(glmm.p.UMFE.fly, test = "Chisq")
 summary(glmm.p.UMFE.fly)
 
 
-
+exp(confint(glmm.p.UMFE.fly))
 
 ## Table to display data
 tab_model(glmm.p.UMFE.fly)
