@@ -45,8 +45,9 @@ overallflies_UMFE <- fly_fitness_tidy_UMFE %>%
 #### Poisson GLMM ####
 glmm.p.total.UMFE <- glmmTMB(total_count ~ 
                                
-                               sex * treatment, 
+                               sex * treatment
                              
+                             + (1|vial ),
                              
                              
                              family = poisson, data = overallflies_UMFE)
@@ -96,9 +97,16 @@ glm.nb.UMFE.flies <- glm.nb(total_count ~
                             data = overallflies_UMFE)
 
 
+zeroinfl(total_count ~
+           
+           sex * treatment, dist = "negbin",
+         
+         data = overallflies_UMFE)
+
+
 ## Looking for interaction effect 
 drop1(glm.nb.UMFE.flies, test = "Chisq")
-  ## No 2-way interaction effect found.
+  ## No 2-way interaction effect found - but should I change it?
 
 
 ## for lols 
@@ -128,19 +136,66 @@ summary(glm.nb.UMFE.flies.2)
 
 exp(confint(glm.nb.UMFE.flies.2))
 
-
+emmeans::emmeans(glm.nb.UMFE.flies.2, specs = ~ sex + treatment, type = "response")
 # Table
 tab_model(glm.nb.UMFE.flies.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
+## trying a zero inflation model 
+
+
+# Fit a zero-inflated Poisson GLMM
+model <- glmmTMB(
+  total_count ~ sex * treatment + (1 | vial), 
+  ziformula = ~ sex * treatment,               
+  family = poisson(),                         
+  data = overallflies_UMFE  )                  
+
+
+simulationOutput <- simulateResiduals(fittedModel = model, plot = T)
+
+
+# Fit a zero-inflated negative binomial GLMM
+glm.zi.nb.UMFE.flies <- glmmTMB(
+  total_count ~ sex * treatment + (1 | vial),  
+  ziformula = ~ sex * treatment,               
+  family = nbinom2(),                          
+  data = overallflies_UMFE
+)
 
 
 
+drop1(glm.zi.nb.UMFE.flies, test = "Chisq")
+## no sig 
+
+
+glm.zi.nb.UMFE.flies.2 <- glmmTMB(
+  total_count ~ sex + treatment + (1 | vial),  
+  ziformula = ~ sex + treatment,               
+  family = nbinom2(),                          
+  data = overallflies_UMFE
+)
+
+
+summary(glm.zi.nb.UMFE.flies.2)
+
+exp(confint(glm.zi.nb.UMFE.flies.2))
+
+emmeans::emmeans(glm.zi.nb.UMFE.flies.2, specs = ~ sex + treatment, type = "response")
+# Table
+tab_model(glm.zi.nb.UMFE.flies.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
+simulationOutput <- simulateResiduals(fittedModel = model2, plot = T)
 
+
+
+AIC(glmm.p.total.UMFE, glm.nb.UMFE.flies, model, model2)
+
+
+check_zeroinflation(model2)
 
 #### other versions 
 

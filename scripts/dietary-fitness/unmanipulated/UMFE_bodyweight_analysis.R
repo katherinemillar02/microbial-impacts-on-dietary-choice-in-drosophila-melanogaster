@@ -49,12 +49,16 @@ glm.nb.UMFE.weight <- glm.nb(weight_mg ~ treatment * sex
                             , data = bodyweight_2)
 
 
+
+
+
+
 ## qq plot from the model
-residuals <- residuals(glm.nb.UMFE.weight)
+residuals <- residuals(glm.zi.nb.UMFE.bodyweight)
 qqnorm(residuals)
 qqline(residuals, col = 2) # qq looks pretty goos
 
-simulationOutput <- simulateResiduals(fittedModel = glm.nb.UMFE.weight, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.UMFE.bodyweight, plot = T)
 
 
 
