@@ -136,7 +136,8 @@ summary(glmm.p.total.MFE.2)
 exp(confint(glmm.p.total.MFE.2))
 
 # Table
-tab_model(glmm.p.total.MFE.2)
+tab_model(glmm.p.total.MFE.2, CSS = list(css.table = '+font-family: Arial;'))
+
 
 
 

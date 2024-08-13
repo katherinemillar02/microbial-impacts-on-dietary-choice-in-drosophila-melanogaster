@@ -40,7 +40,8 @@ summary(glmm.p.MFE.totalpupae)
 exp(confint(glmm.p.MFE.totalpupae))
 
 # Using a table to view the data
-tab_model(glmm.p.MFE.totalpupae)
+tab_model(glmm.p.MFE.totalpupae, CSS = list(css.table = '+font-family: Arial;'))
+
 
 simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.totalpupae, plot = T)
 

@@ -108,6 +108,7 @@ tab_model(glm.nb_pupae)
 
 
 
+tab_model(glm.nb_pupae, CSS = list(css.table = '+font-family: Arial;'))
 
 
 

@@ -111,7 +111,7 @@ summary(zi.p.UMFE.totalpupae)
 exp(confint(zi.p.UMFE.totalpupae))
 
 # Table
-tab_model(zi.p.UMFE.totalpupae)
+tab_model(zi.p.UMFE.totalpupae, CSS = list(css.table = '+font-family: Arial;'))
 
 
 

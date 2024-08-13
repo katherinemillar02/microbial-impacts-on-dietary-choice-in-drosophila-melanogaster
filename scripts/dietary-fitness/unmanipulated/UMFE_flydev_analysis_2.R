@@ -163,7 +163,7 @@ summary(glmm.p.UMFE.fly)
 exp(confint(glmm.p.UMFE.fly))
 
 ## Table to display data
-tab_model(glmm.p.UMFE.fly)
+tab_model(glmm.p.UMFE.fly, CSS = list(css.table = '+font-family: Arial;'))
 
 
 exp(confint(glmm.p.UMFE.fly))

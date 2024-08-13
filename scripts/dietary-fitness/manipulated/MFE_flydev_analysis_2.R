@@ -182,4 +182,4 @@ summary(glm.nb.MFE.fly.2)
 
 exp(confint(glm.nb.MFE.fly.2))
 
-tab_model(glm.nb.MFE.fly.2)
+tab_model(glm.nb.MFE.fly.2, CSS = list(css.table = '+font-family: Arial;'))

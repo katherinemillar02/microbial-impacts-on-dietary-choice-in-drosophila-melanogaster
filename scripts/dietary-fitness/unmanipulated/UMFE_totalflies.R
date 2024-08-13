@@ -130,7 +130,8 @@ exp(confint(glm.nb.UMFE.flies.2))
 
 
 # Table
-tab_model(glm.nb.UMFE.flies.2)
+tab_model(glm.nb.UMFE.flies.2, CSS = list(css.table = '+font-family: Arial;'))
+
 
 
 

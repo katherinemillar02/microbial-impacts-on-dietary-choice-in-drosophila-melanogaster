@@ -78,6 +78,5 @@ summary(glmm.p.MFE.weight.2)
 exp(confint(glmm.p.MFE.weight.2))
 
 ## Table for model. 
-tab_model(glmm.p.MFE.weight.2)
-
+tab_model(glmm.p.MFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
 

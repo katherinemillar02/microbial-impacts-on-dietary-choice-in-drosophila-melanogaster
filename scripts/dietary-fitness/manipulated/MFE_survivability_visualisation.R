@@ -280,7 +280,8 @@ exp(confint(glmm.p.flysurvive.MFE))
 
 
 ## table: 
-tab_model(glmm.p.flysurvive.MFE)
+
+tab_model(glmm.p.flysurvive.MFE, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
@@ -362,7 +363,10 @@ exp(confint(glm.nb.MFE.pupae))
 
 
 
-tab_model(glm.nb.MFE.pupae)
+tab_model(glm.nb.MFE.pupae, CSS = list(css.table = '+font-family: Arial;'))
+
+
+
 
 
 both <- overallflies_MFE %>%
@@ -433,4 +437,6 @@ glmm.p.bothsurvive.MFE <- glmmTMB(survivability ~
 summary(glmm.p.bothsurvive.MFE)
 
 exp(confint(glmm.p.bothsurvive.MFE))
+
+tab_model(glmm.p.bothsurvive.MFE, CSS = list(css.table = '+font-family: Arial;'))
 
