@@ -1,10 +1,12 @@
-
-#### DENSITY CONDITIONING PART 2 (FIRST ONE WAS PILOT) ####
-
-#### RELATIVE ANALYSIS ####
+## Chapter 4 - Appendix
 
 
-## Packages 
+#### Experiment - Density of Conditioning 
+
+#### Assay: Absolute 
+
+
+#### Packages ####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -18,48 +20,79 @@ library(sjPlot)
 
 
 
+#### 📖 Reading, cleaning, editing the data: ####
 
 
-## Reading the data in:
+#### Low density - 90 mm ####
 
-## 90 mm 
+
+             ## 4:1 ##
+# Reading data in with read_excel()
 fourone_90mm_ovi <- read_excel("data/density_experiment/90mm_4-1_oviposition_2.xlsx")
-onefour_90mm_ovi <- read_excel("data/density_experiment/90mm_1-4_oviposition_2.xlsx")
 
-## Adding the appropriate data variables
+
+## Adding the appropriate data variables - 4:1 
 fourone_90mm_long_ovi <- fourone_90mm_ovi   %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
-onefour_90mm_long_ovi <- onefour_90mm_ovi  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
 
 ## Mutating an id variable to better read the data in 
 fourone_90mm_long_ovi <- fourone_90mm_long_ovi %>%  
   mutate(id = "4-1_90")
 
+
+
+
+              ## 1:4 ##
+# Reading data in with read_excel()
+onefour_90mm_ovi <- read_excel("data/density_experiment/90mm_1-4_oviposition_2.xlsx")
+
+## Adding the appropriate data variables - 1:4 
+onefour_90mm_long_ovi <- onefour_90mm_ovi  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+
+## Mutating an id variable to better read the data in 
 onefour_90mm_long_ovi <- onefour_90mm_long_ovi  %>%  
   mutate(id = "1-4_90")
 
 
 
-## 35 mm 
+
+
+
+#### High density - 35 mm ####
+
+               ## 4:1 ##
+# Reading data in with read_excel()
 fourone_35mm_ovi <- read_excel("data/density_experiment/50mm_4-1_oviposition_2.xlsx")
-onefour_35mm_ovi <- read_excel("data/density_experiment/50mm_1-4_oviposition_2.xlsx")
 
 ## Adding the appropriate data variables
 fourone_35mm_long_ovi <- fourone_35mm_ovi   %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
-
-onefour_35mm_long_ovi <- onefour_35mm_ovi  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
 ## Mutating an id variable to mutate a variable 
 fourone_35mm_long_ovi <- fourone_35mm_long_ovi %>%  
   mutate(id = "4-1_50")
 
+
+
+              ## 1:4 ##
+# Reading data in with read_excel()
+onefour_35mm_ovi <- read_excel("data/density_experiment/50mm_1-4_oviposition_2.xlsx")
+
+## Adding the appropriate data variables
+onefour_35mm_long_ovi <- onefour_35mm_ovi  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers") 
+
+## Mutating an id variable to mutate a variable 
 onefour_35mm_long_ovi <- onefour_35mm_long_ovi  %>%  
   mutate(id = "1-4_50")
+
+
+
+
+
 
 
 
