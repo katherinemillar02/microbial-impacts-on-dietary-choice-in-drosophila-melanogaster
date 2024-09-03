@@ -13,6 +13,7 @@
                         library(pscl)
                         library(DHARMa)
                         library(glmmTMB)
+                        library(sjPlot)
                         ##################---
                         
                         
@@ -104,14 +105,25 @@ abline(h = 0, col = "red")
 glmm.bin.density.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * density  + (1|plate) + (1|observation) , family = binomial, data = two_choice_density_df)
 
 ## Testing for the interaction effect 
-drop1(glmm.density.2choice, test = "Chisq") 
+drop1(glmm.bin.density.2choice, test = "Chisq") 
     ## Interaction effect found, keep model as it s 
 
+two_choice_density_df$ratio <- as.factor(two_choice_density_df$ratio)
+two_choice_density_df$ratio <- relevel(two_choice_density_df$ratio, ref = "4:1")
+
+glmm.bin.density.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * density  + (1|plate) + (1|observation) , family = binomial, data = two_choice_density_df)
+
+
 ## Using the model for analysis
-summary(glmm.density.2choice)
+summary(glmm.bin.density.2choice)
+
+tab_model(glmm.bin.density.2choice, CSS = list(css.table = '+font-family: Arial;'))
 
 
+emmeans::emmeans(glmm.bin.density.2choice, specs = ~ ratio  * density, type = "response")
 
 
+## Model assumption testing
+simulationOutput <- simulateResiduals(fittedModel = glmm.bin.density.2choice, plot = T)
 
 

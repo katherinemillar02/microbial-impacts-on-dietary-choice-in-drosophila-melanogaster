@@ -157,8 +157,10 @@ glmm.p.UMFE.fly <- glmmTMB( time_hours ~
 drop1(glmm.p.UMFE.fly, test = "Chisq")
 
 #### DATA ANALYSIS ####
-summary(glmm.p.UMFE.fly)
+summary(glmm.p.UMFE.fly) 
 
+
+emmeans::emmeans(glmm.p.UMFE.fly, specs = ~ sex + treatment, type = "response")
 
 exp(confint(glmm.p.UMFE.fly))
 

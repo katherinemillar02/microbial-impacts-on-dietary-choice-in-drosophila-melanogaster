@@ -65,6 +65,10 @@ comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers ~
 summary(comb_m_egg_glm.nb.3)
 
 
+comb_m_egg_glm.nb.31 <- glm.nb(egg_numbers ~
+                                ratio * condition, data =  combined_ovi_m_split)
+emmeans(comb_m_egg_glm.nb.31, pairwise ~ ratio * condition)
+
 
 
 exp(confint(comb_m_egg_glm.nb.3))
@@ -154,8 +158,24 @@ glm.nb_v_comb_egg.4 <- glm.nb(egg_numbers ~
 drop1(glm.nb_v_comb_egg.4, test = "F")
 
 
+glm.nb_v_comb_egg.41 <- zeroinfl(egg_numbers ~  
+                                  
+                                  ratio * condition
+                                , dist = "negbin", link = "logit", data = combined_ovi_v_split)
+
+emmeans(glm.nb_v_comb_egg.41, pairwise ~ ratio * condition)
+
+
+
 #### DATA ANALYSIS 📊 ####
 summary(glm.nb_v_comb_egg.4)
+
+combined_ovi_v_split$ratio <- as.factor(combined_ovi_v_split$ratio)
+# Reorder the levels of the factor `block` in df2_virgin
+combined_ovi_v_split$ratio <- factor(combined_ovi_v_split$ratio, levels = c("1:4", "4:1"))
+
+
+
 
 exp(confint(glm.nb_v_comb_egg.4))
 
@@ -205,7 +225,7 @@ combined_of_egg_split <- combined_of_egg %>%
 
 ## Changing "ratio" to 4:1 
 combined_of_egg_split$ratio <- as.factor(combined_of_egg_split$ratio)
-combined_of_egg_split$ratio <- relevel(combined_of_egg_split$ratio, ref = "4:1")
+combined_of_egg_split$ratio <- relevel(combined_of_egg_split$ratio, ref = "1:4")
 
 ## Changing block to "two" (as one will not be used for oviposition data)
 combined_of_egg_split$block <- as.factor(combined_of_egg_split$block)
@@ -260,4 +280,15 @@ emmeans::emmeans(glm.nb_of_comb_egg.4, ~ condition + ratio, type = "response")
 
 
 tab_model(glm.nb_of_comb_egg.4)
+
+
+
+glm.nb_of_comb_egg.41 <- glm.nb(egg_numbers ~
+                                 
+                                ratio * condition
+                               , data =  combined_of_egg_split)
+
+
+emmeans(glm.nb_of_comb_egg.41, pairwise ~ ratio * condition)
+
 

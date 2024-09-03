@@ -114,6 +114,28 @@ drop1(glmm.p.total.MFE, test = "Chisq")
  # No interaction effect found 
  
 
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.total.MFE, plot = T)
+
+glm.zi.nb.MFE.flies <- glmmTMB(
+  total_count ~ sex * treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ sex * treatment,               
+  family = nbinom2(),                          
+  data = overallflies_MFE
+)
+
+glm.zi.p.MFE.flies <- glmmTMB(
+  total_count ~ sex * treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ sex * treatment,               
+  family = poisson(),                          
+  data = overallflies_MFE
+)
+
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.flies, plot = T)
+
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.MFE.flies, plot = T)
+
+
+AIC(glmm.p.total.MFE.2, glm.zi.nb.MFE.flies, glm.zi.p.MFE.flies)
 
 
 ## FINAL MODEL 
@@ -130,13 +152,24 @@ glmm.p.total.MFE.2 <- glmmTMB(total_count ~
 
 
 
+glm.zi.p.MFE.flies.2 <- glmmTMB(
+  total_count ~ sex + treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ sex + treatment,               
+  family = poisson(),                          
+  data = overallflies_MFE
+)
+
 #### DATA ANALYSIS ####
-summary(glmm.p.total.MFE.2)
+summary(glm.zi.p.MFE.flies.2)
 
 exp(confint(glmm.p.total.MFE.2))
 
-# Table
-tab_model(glmm.p.total.MFE.2, CSS = list(css.table = '+font-family: Arial;'))
+
+emmeans::emmeans(glm.zi.p.MFE.flies.2, specs = ~ sex + treatment, type = "response")
+
+
+
+tab_model(glmm.p.total.MFE.2, CSS = list(css.table = '+font-family: Arial;'))tab_model(glm.zi.p.MFE.flies.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 

@@ -80,3 +80,26 @@ exp(confint(glmm.p.MFE.weight.2))
 ## Table for model. 
 tab_model(glmm.p.MFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
 
+
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.weight.2, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.weight.2, plot = T)
+
+glm.nb.MFE.weight.2 <- glm.nb(weight_mg ~ treatment * sex  
+                              
+                              , data = bodyweight_MFE)
+
+drop1(glm.nb.MFE.weight.2, test = "Chisq")
+
+
+glm.nb.MFE.weight.2 <- glm.nb(weight_mg ~ treatment + sex  
+                              
+                              , data = bodyweight_MFE)
+
+
+
+
+summary(glm.nb.MFE.weight.2)
+tab_model(glm.nb.MFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
+emmeans::emmeans(glm.nb.MFE.weight.2, specs = ~ sex + treatment, type = "response")
+
+

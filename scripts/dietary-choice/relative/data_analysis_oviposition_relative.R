@@ -308,13 +308,7 @@ AIC(glm.bin.m.ovi.2choice, glmm.bin.m.ovi.2choice)
 ## It says the mixed model has a much lower AIC,
 ## even though I think the assumptions look a bit worse? 
 
-## Changing "ratio" to 4:1 
-df2_male_oviposition$ratio <- as.factor(df2_male_oviposition$ratio)
-df2_male_oviposition$ratio <- relevel(df2_male_oviposition$ratio, ref = "4:1")
 
-## Changing block to "two" (as one will not be used for oviposition data)
-df2_male_oviposition$block <- as.factor(df2_male_oviposition$block)
-df2_male_oviposition$block <- relevel(df2_male_oviposition$block, ref = "one")
 
 
 ## Choosing the mixed model for now: 
@@ -324,8 +318,21 @@ glmm.bin.m.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * bloc
 drop1(glmm.bin.m.ovi.2choice, test = "Chisq") ## says block is quite significant, keeping it in the model
 
 
+
 ## Using model for now, looking at results: 
 summary(glmm.bin.m.ovi.2choice) ## says block is significant 
+
+
+## Changing "ratio" to 4:1 
+df2_male_oviposition$ratio <- as.factor(df2_male_oviposition$ratio)
+df2_male_oviposition$ratio <- relevel(df2_male_oviposition$ratio, ref = "4:1")
+
+
+
+glmm.bin.m.ovi.2choice.1 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|block/plate)  , family = binomial, data = df2_male_oviposition)
+
+summary(glmm.bin.m.ovi.2choice.1)
+
 
 exp(confint(glmm.bin.m.ovi.2choice, method = "Wald"))
 
@@ -457,8 +464,6 @@ AIC(glm.bin.of.ovi.2choice, glmm.bin.of.ovi.2choice)
 ## Using "Model 2" for now as I do not really know what else to do 
 
 
-df2_ovod1_oviposition$ratio <- as.factor(df2_ovod1_oviposition$ratio)
-df2_ovod1_oviposition$ratio <- relevel(df2_ovod1_oviposition$ratio, ref = "4:1")
 ## Model choice: 
 glmm.bin.of.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
 
@@ -485,6 +490,17 @@ exp(confint(glmm.bin.of.ovi.2choice))
 summary(glmm.bin.of.ovi.2choice) 
 ## What I am confused about here: 
 # If I am interpreting the results right, why is there no 1:4 conditioned/unconditioned block 2 results?? 
+
+## Changing "ratio" to 4:1 
+df2_ovod1_oviposition$ratio <- as.factor(df2_ovod1_oviposition$ratio)
+df2_ovod1_oviposition$ratio <- relevel(df2_ovod1_oviposition$ratio, ref = "1:4")
+
+
+
+glmm.bin.of.ovi.2choice.1.1 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|block/plate)  , family = binomial, data = df2_ovod1_oviposition)
+
+summary(glmm.bin.of.ovi.2choice.1.1)
+
 
 
 tab_model(glmm.bin.of.ovi.2choice)
@@ -598,16 +614,14 @@ AIC(glm.bin.vf.ovi.4choice, glmm.bin.vf.ovi.2choice)
 
 
 ## Using the mixed model for now 
-glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|block/plate)  , family = binomial, data = df2_virgin_oviposition)
+glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~
+                                   ratio * block + (1|block/plate)  , family = binomial, data = df2_virgin_oviposition)
 
 
 ## Looking for significance in block
 drop1(glmm.bin.vf.ovi.2choice, test = "Chisq") ## block is significant
 
-
-## Changing "ratio" to 4:1 
-df2_virgin_oviposition$ratio <- as.factor(df2_virgin_oviposition$ratio)
-df2_virgin_oviposition$ratio <- relevel(df2_virgin_oviposition$ratio, ref = "4:1")
+summary(glmm.bin.vf.ovi.2choice)
 
 ## Changing block to "two" (as one will not be used for oviposition data)
 df2_virgin_oviposition$block <- as.factor(df2_virgin_oviposition$block)
@@ -626,13 +640,25 @@ drop1()
 
 glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
 
+## Using model for now, looking at results: 
+summary(glmm.bin.m.ovi.2choice) ## says block is significant 
 
+
+## Changing "ratio" to 4:1 
+df2_virgin_oviposition$ratio <- as.factor(df2_virgin_oviposition$ratio)
+df2_virgin_oviposition$ratio <- relevel(df2_virgin_oviposition$ratio, ref = "4:1")
+
+
+
+glmm.bin.v.ovi.2choice.1.1 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|block/plate)  , family = binomial, data = df2_virgin_oviposition)
+
+summary(glmm.bin.v.ovi.2choice.1.1)
 
 
 
 emmeans::emmeans(glmm.bin.vf.ovi.2choice, pairwise ~ ratio, type = "response")
 
-summary(glmer.virgin_f_egg )
+summary(glmm.bin.vf.ovi.2choice )
 
 emmeans::emmeans(glmer.virgin_f_egg, ~ ratio, type = "response")
 

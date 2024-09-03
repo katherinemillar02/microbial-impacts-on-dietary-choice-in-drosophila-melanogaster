@@ -138,7 +138,9 @@ drop1(glmm.bin.m.03, test = "Chisq")
 ## There is a two way interaction effect between ratio and Conditioned found 
 
 ## Final model? with one two-way interaction effect only
-glmm.bin.m.04 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned + Unconditioned + block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
+glmm.bin.m.04 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned 
+                       
+                       + Unconditioned + block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
 # Confirming this model 
 drop1(glmm.bin.m.04, test = "Chisq")

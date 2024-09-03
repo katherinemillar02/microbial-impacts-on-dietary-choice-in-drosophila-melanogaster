@@ -67,12 +67,23 @@ AIC(glmm.p.UMFE.weight, glm.nb.UMFE.weight)
 # if bodyweight is * 1000, assumptions are a lot better? 
 
 # Model 2 chosen
-glm.nb.UMFE.weight.2 <- glm.nb(weight_mg ~ treatment + sex  
+glm.nb.UMFE.weight <- glm.nb(weight_mg ~ treatment * sex  
                              
                              , data = bodyweight_2)
 
 
 
+
+drop1(glm.nb.UMFE.weight, test = "Chisq")
+
+
+glm.nb.UMFE.weight.2  <- glm.nb(weight_mg ~ treatment + sex  
+                             
+                             , data = bodyweight_2)
+
+
+
+emmeans::emmeans(glm.nb.UMFE.weight, specs = ~ sex + treatment, type = "response")
 
 summary(glm.nb.UMFE.weight.2)
 
@@ -80,7 +91,8 @@ summary(glm.nb.UMFE.weight.2)
 
 
 
-
+## Table for model. 
+tab_model(glm.nb.UMFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 

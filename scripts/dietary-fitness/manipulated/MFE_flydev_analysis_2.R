@@ -175,6 +175,7 @@ glm.nb.MFE.fly.2 <- glm.nb(time_hours ~
                          data = fly_fitness_tidy_MFE_2)
 
 
+emmeans::emmeans(glm.nb.MFE.fly.2, specs = ~ sex + treatment, type = "response")
 
 
 ## Data analysis of the chosen model

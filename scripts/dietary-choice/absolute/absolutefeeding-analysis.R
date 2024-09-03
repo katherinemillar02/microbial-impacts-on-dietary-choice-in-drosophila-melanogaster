@@ -175,6 +175,29 @@ check_overdispersion(glmm.m.4choice.4)
 summary(glmm.m.4choice.4)
 
 
+## Changing the intercept to ratio: 4:1 
+combined_m_split$ratio <- as.factor(combined_m_split$ratio)
+combined_m_split$ratio <- relevel(combined_m_split$ratio, ref = "4:1")
+
+
+## The final model 
+glmm.m.4choice.4.1 <- glmmTMB(fly_numbers ~  
+                              ratio + condition * block + (1 | block / plate) + (1 | observation / plate), family = poisson, data = combined_m_split)
+
+
+
+
+glmm.m.4choice.4.11 <- glmmTMB(fly_numbers ~  
+                                ratio * condition + (1 | block / plate) + (1 | observation / plate), family = poisson, data = combined_m_split)
+
+
+summary(glmm.m.4choice.4.1)
+
+
+
+emmeans(glmm.m.4choice.4.11, pairwise ~ ratio * condition)
+
+
 exp(confint(glmm.m.4choice.4))
 
 
@@ -183,6 +206,7 @@ emmeans(glmm.m.4choice.4, ~ ratio + block, type = "response")
 
 # table 
 tab_model(glmm.m.4choice.4)
+
 
 
 
@@ -328,6 +352,15 @@ performance::check_model(glm.nb.vf.4choice.4)
 ## Using the final model for analysis 
 summary(glm.nb.vf.4choice.4)
 
+
+
+glm.nb.vf.4choice.41  <- glm.nb(fly_numbers ~ 
+                                 
+                                 condition * ratio   
+                               
+                               , data = combined_vf_split)
+emmeans(glm.nb.vf.4choice.41, pairwise ~ ratio * condition)
+
 coef <- coef(glm.nb.vf.4choice.4)
 exp(coef)
 
@@ -459,6 +492,16 @@ drop1(zi.nb.of.4choice.4, test = "Chisq")
 
 ## Using model for analysis
 summary(zi.nb.of.4choice.4)
+
+
+
+zi.nb.of.4choice.41 <- zeroinfl(fly_numbers ~  
+                                 
+                                 ratio * condition
+                                + condition * block , dist = "negbin", link = "logit", data = combined_of_split)
+
+emmeans(zi.nb.of.4choice.41, pairwise ~ ratio * condition)
+
 
  
 exp(confint(zi.nb.of.4choice.4))
