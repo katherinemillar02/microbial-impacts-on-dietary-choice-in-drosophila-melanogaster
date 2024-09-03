@@ -1,8 +1,13 @@
-#### 4-1 AND 1-4 ANALYSIS oviposition 
+## Chapter 4 - Appendix
 
 
+#### Experiment - Density of Conditioning 
 
-## Packages 
+#### Assay: Relative
+
+
+ 
+#### Packages ####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -14,14 +19,33 @@ library(glmmTMB)
 ##################---
 
 
+#### 📖 Reading, cleaning, editing the data: ####
 
-## Reading the data in
+
+#### Low density - 90 mm ####
+
+# Reading data in with read_excel()
+fourone_onefour_90mm_ovi <- read_excel("data/density_experiment/90mm_combined_oviposition_2.xlsx")
+
+## Adding the appropriate data variables
+fourone_onefour_90mm_long_ovi <- fourone_onefour_90mm_ovi  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+## Mutating a density variable 
+fourone_onefour_90mm_long_ovi <- fourone_onefour_90mm_long_ovi %>%
+  mutate(density = "90mm")
 
 
-## 35 mm
+
+
+
+
+#### High density - 35 mm ####
+
+# Reading data in with read_excel()
 fourone_onefour_35mm_ovi <- read_excel("data/density_experiment/50mm_combined_oviposition_2.xlsx")
 
-## Making the data long 
+## Adding the appropriate data variables
 fourone_onefour_35mm_long_ovi <- fourone_onefour_35mm_ovi  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
@@ -30,23 +54,16 @@ fourone_onefour_35mm_long_ovi <- fourone_onefour_35mm_long_ovi %>%
   mutate(density = "35mm")
 
 
-## 90 mm
-fourone_onefour_90mm_ovi <- read_excel("data/density_experiment/90mm_combined_oviposition_2.xlsx")
 
-## Making the data long 
-fourone_onefour_90mm_long_ovi <- fourone_onefour_90mm_ovi  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
-## Mutating a density variable 
-fourone_onefour_90mm_long_ovi <- fourone_onefour_90mm_long_ovi %>%
-  mutate(density = "90mm")
-
-## Binding the two densities 
+## Binding the two data-frames for data analysis 
 combined_assays_ovi <- rbind(fourone_onefour_35mm_long_ovi, fourone_onefour_90mm_long_ovi)
 
 
 
-#### DATA ANALYSIS 
+
+
+#### Data Analysis 📊 ####
 
 #### Splitting "diet" up into ratio and treatment. 
 combined_assays_ovi <- combined_assays_ovi %>% 
