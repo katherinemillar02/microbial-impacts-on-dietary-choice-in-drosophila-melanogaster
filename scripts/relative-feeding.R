@@ -88,10 +88,22 @@ glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~
                         ratio + block + (1|plate) + (1|observation) ,
                       family = binomial, data = df2_male)
 
+#### data analysis ####
+summary(glmm.bin.m.2)
+
+
+df2_male$ratio <- as.factor(df2_male$ratio)
+# Reorder the levels of the factor `block` in df2_virgin
+df2_male$ratio <- factor(df2_male$ratio, levels = c("4:1", "1:4"))
+
+glmm.bin.m.2.1 <- glmer(cbind(Conditioned, Unconditioned) ~
+                        ratio + block + (1|plate) + (1|observation) ,
+                      family = binomial, data = df2_male)
 
 
 #### data analysis ####
-summary(glmm.bin.m.2)
+summary(glmm.bin.m.2.1)
+
 
 # CI
 exp(confint(glmm.bin.m.2))
@@ -163,15 +175,6 @@ df2_virgin <- df_virgin %>%
   mutate(Conditioned = as.integer(Conditioned), Unconditioned = as.integer(Unconditioned))
 
 
-df2_virgin$ratio <- as.factor(df2_virgin$ratio)
-df2_virgin$ratio <- relevel(df2_virgin$ratio, ref = "4:1")
-
-## Changing the block to: one. 
-df2_virgin$block <- as.factor(df2_virgin$block)
-# Reorder the levels of the factor `block` in df2_virgin
-df2_virgin$block <- factor(df2_virgin$block, levels = c("one", "two", "three", "four"))
-
-
 
 
 ## Intercept as Conditioned  
@@ -193,9 +196,28 @@ glmm.bin.v.2 <- glmer(cbind(Conditioned, Unconditioned) ~
                       
                       + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
 
+summary(glmm.bin.v.2)
+
+df2_virgin$ratio <- as.factor(df2_virgin$ratio)
+# Reorder the levels of the factor `block` in df2_virgin
+df2_virgin$ratio <- factor(df2_virgin$ratio, levels = c("4:1", "1:4"))
+
+
+
+glmm.bin.v.2.1 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                        
+                        ratio  + block
+                      
+                      + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_virgin)
+
+
+
+
+
+
 
 #### data analysis ####
-summary(glmm.bin.v.2)
+summary(glmm.bin.v.2.1)
 
 # CI
 exp(confint(glmm.bin.v.2, method = "Wald"))
@@ -260,13 +282,7 @@ df2_ovod1 <- df_ovod1 %>%
 
 
 
-df2_ovod1$ratio <- as.factor(df2_ovod1$ratio)
-df2_ovod1$ratio <- relevel(df2_ovod1$ratio, ref = "4:1")
 
-## Changing the block to: one. 
-df2_ovod1$block <- as.factor(df2_ovod1$block)
-# Reorder the levels of the factor `block` in df2_virgin
-df2_ovod1$block <- factor(df2_ovod1$block, levels = c("one", "two"))
 
 
 
@@ -282,12 +298,28 @@ glmm.bin.o.1 <- glmer(cbind(Conditioned, Unconditioned) ~
 
 drop1(glmm.bin.o.1, test = "Chisq")
 
+summary(glmm.bin.o.1)
+
+
+
+
+df2_ovod1$ratio <- as.factor(df2_ovod1$ratio)
+# Reorder the levels of the factor `block` in df2_virgin
+df2_ovod1$ratio <- factor(df2_ovod1$ratio, levels = c("4:1", "1:4"))
+
+
+
+glmm.bin.o.1.2 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                          
+                          ratio  * block
+                        
+                        + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_ovod1)
 
 
 
 
 #### data analysis ####
-summary(glmm.bin.o.1)
+summary(glmm.bin.o.1.2)
 
 # CI
 exp(confint(glmm.bin.o.1))
