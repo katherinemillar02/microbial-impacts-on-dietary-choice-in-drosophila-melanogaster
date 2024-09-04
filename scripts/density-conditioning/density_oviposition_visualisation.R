@@ -84,20 +84,24 @@ oviposition_results <- function(data, boxplot_fill_colour) {
 
 
 ## Choosing a colour palette:
-viridis_colours <- inferno(10)
+inferno_colours <- inferno(10)
 
 
 ## Relative assays - 90 mm
-ninety_1_4_egg <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(9,9)])
-ninety_4_1_egg <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
+ninety_1_4_egg <- oviposition_results(onefour_90mm_long , boxplot_fill_colour = inferno_colours[c(9,9)])
+ninety_4_1_egg <- oviposition_results(fourone_90mm_long , boxplot_fill_colour = inferno_colours[c(7,7)])
  
 ## Relative assays - 35 mm
-fifty_1_4_egg <- oviposition_results(onefour_35mm_long , boxplot_fill_colour = viridis_colors[c(9,9)])
-fifty_4_1_egg <- oviposition_results(fourone_35mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
+fifty_1_4_egg <- oviposition_results(onefour_35mm_long , boxplot_fill_colour = inferno_colours[c(9,9)])
+fifty_4_1_egg <- oviposition_results(fourone_35mm_long , boxplot_fill_colour = inferno_colours[c(7,7)])
 
 ## Adding titles 
-fifty_1_4_egg <- fifty_1_4 + ggtitle("35 mm")
-ninety_1_4_egg <- ninety_1_4 + ggtitle("90 mm")
+fifty_1_4_egg <- fifty_1_4_egg + ggtitle("35 mm")
+ninety_1_4_egg <- ninety_1_4_egg + ggtitle("90 mm")
+
+
+fifty_4_1_egg <- fifty_4_1_egg + ggtitle("35 mm")
+ninety_4_1_egg <- ninety_4_1_egg + ggtitle("90 mm")
 
 
 # Relative assays combined
@@ -105,8 +109,7 @@ nine_egg <- ninety_1_4_egg + ninety_4_1_egg
 three_egg <- fifty_1_4_egg + fifty_4_1_egg
 
 ## Relative assays 
-nine_egg / 
-  three_egg
+nine_egg +  three_egg
 
 
 
@@ -114,10 +117,10 @@ nine_egg /
 
 
 ## Absolute assays - 90 mm
-ninety_combined_egg <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+ninety_combined_egg <- oviposition_results(fourone_onefour_90mm_long, boxplot_fill_colour = inferno_colours[c(9,9,7,7)])
 
 ## Absolute assays - 35 mm 
-fifty_combined_egg <- oviposition_results(fourone_onefour_35mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+fifty_combined_egg <- oviposition_results(fourone_onefour_35mm_long, boxplot_fill_colour = inferno_colours[c(9,9,7,7)])
 
 ## Adding titles 
 ninety_combined_egg <- ninety_combined_egg + ggtitle("90 mm")
