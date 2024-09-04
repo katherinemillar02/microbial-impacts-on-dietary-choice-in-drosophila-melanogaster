@@ -113,6 +113,17 @@ glmm.bin.feeding.4choice.dose.2 <- glmmTMB(fly_numbers ~
                                            + (1|plate) + (1|observation), family = poisson, data = density_feeding_4choice)
 
 
-summary()
+
+# Basic model results:
+summary(glmm.bin.feeding.4choice.dose.2)
+
+
+## Getting numbers for the write-up
+emmeans::emmeans(glmm.bin.feeding.4choice.dose.2, specs =  ~ ratio *  density , type = "response")
+
+
+
+# Table for write-up
+tab_model(glmm.bin.feeding.4choice.dose.2, CSS = list(css.table = '+font-family: Arial;'))
 
 

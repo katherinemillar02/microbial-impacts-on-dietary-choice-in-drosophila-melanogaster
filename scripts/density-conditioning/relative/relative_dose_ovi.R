@@ -97,33 +97,56 @@ check_zeroinflation(glmm.bin.ovi.4choice.dose)
 
 
 
-
-## new model
-glm.nb.density.4choice.ovi <- glm.nb(egg_numbers ~ 
+# Model 2
+ # Negative Binomial GLM #
+glm.nb.ovi.4choice.dose <- glm.nb(egg_numbers ~ 
                                        ratio * treatment * density, 
-                                     data = combined_assays_ovi)
+                                     data = density_ovi_4choice)
 
 
-## assumption checks
-simulationOutput <- simulateResiduals(fittedModel = glm.nb.density.4choice.ovi, plot = T)
+## Assumption checks
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.ovi.4choice.dose, plot = T)
  # a lot better
 
-check_overdispersion(glm.nb.density.4choice.ovi)
- # no overdispersion 
 
+# easystats 
 
-AIC(glmm.density.4choice.ovi, glm.nb.density.4choice.ovi)
-# AIC for nb a lot lower 
-
-
-
-## Testing for a 3-way interaction effect
-drop1(glm.nb.density.4choice.ovi, test = "Chisq") 
-## A 3-way interaction effect is found
+check_overdispersion(glm.nb.ovi.4choice.dose)
+ # No overdispersion 
 
 
 
-summary(glm.nb.density.4choice.ovi)
+ ## Comparing the models
+AIC(glmm.bin.ovi.4choice.dose, glm.nb.ovi.4choice.dose)
+  # AIC for Negative Binomial Generalised Linear Model is a lot lower 
 
-tab_model(glm.nb.density.4choice.ovi, CSS = list(css.table = '+font-family: Arial;'))
+
+# Using Negative Binomial Generalised Linear Model as the final model:
+
+# Testing for a 3-way interaction effect
+glm.nb.ovi.4choice.dose <- glm.nb(egg_numbers ~ 
+                                    ratio * treatment * density, 
+                                  data = density_ovi_4choice)
+
+
+
+# drop1 to test 3-way interaction: 
+drop1(glm.nb.ovi.4choice.dose, test = "Chisq") 
+   ## A 3-way interaction effect is found
+
+
+#### Final Data Analysis ####
+
+# Basic model results:
+summary(glm.nb.ovi.4choice.dose)
+
+
+## Getting numbers for the write-up
+emmeans::emmeans(glm.nb.ovi.4choice.dose, specs =  ~ ratio *  density , type = "response")
+
+
+# Table for write-up
+tab_model(glm.nb.ovi.4choice.dose, CSS = list(css.table = '+font-family: Arial;'))
 
