@@ -56,40 +56,48 @@ fourone_onefour_35mm_long_ovi <- fourone_onefour_35mm_long_ovi %>%
 
 
 
+
 ## Binding the two data-frames for data analysis 
-combined_assays_ovi <- rbind(fourone_onefour_35mm_long_ovi, fourone_onefour_90mm_long_ovi)
+density_ovi_4choice <- rbind(fourone_onefour_35mm_long_ovi, fourone_onefour_90mm_long_ovi)
 
 
 
+#### Splitting "diet" up into ratio and treatment. 
+density_ovi_4choice <- density_ovi_4choice %>% 
+  separate(diet, into = c("ratio", "treatment"), sep = " ")
+
+# Changing the intercept to 4:1 
+density_ovi_4choice$ratio <- as.factor(density_ovi_4choice$ratio)
+density_ovi_4choice$ratio <- relevel(density_ovi_4choice$ratio, ref = "4:1")
 
 
 #### Data Analysis 📊 ####
 
-#### Splitting "diet" up into ratio and treatment. 
-combined_assays_ovi <- combined_assays_ovi %>% 
-  separate(diet, into = c("ratio", "treatment"), sep = " ")
 
-
-## Binomial GLMM
-## Testing for a 3-way interaction
-glmm.density.4choice.ovi <- glmmTMB(egg_numbers ~ 
+# Model 1
+ # Binomial GLMM # 
+glmm.bin.ovi.4choice.dose <- glmmTMB(egg_numbers ~ 
                                   ratio * treatment * density 
-                                + (1|plate), family = poisson, data = combined_assays_ovi)
+                                + (1|plate), family = poisson, data = density_ovi_4choice)
 
 
-## assumption checks
-simulationOutput <- simulateResiduals(fittedModel = glmm.density.4choice.ovi, plot = T)
+## Assumption checks: 
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glmm.bin.ovi.4choice.dose, plot = T)
    ## not a great model 
 
+# easystats 
 
-check_overdispersion(glmm.density.4choice.ovi)
- # OD
+check_overdispersion(glmm.bin.ovi.4choice.dose)
+ # overdispersion
 
-check_zeroinflation(glmm.density.4choice.ovi)
+check_zeroinflation(glmm.bin.ovi.4choice.dose)
  # no zero inflation 
 
-combined_assays_ovi$ratio <- as.factor(combined_assays_ovi$ratio)
-combined_assays_ovi$ratio <- relevel(combined_assays_ovi$ratio, ref = "4:1")
+
+
+
 ## new model
 glm.nb.density.4choice.ovi <- glm.nb(egg_numbers ~ 
                                        ratio * treatment * density, 

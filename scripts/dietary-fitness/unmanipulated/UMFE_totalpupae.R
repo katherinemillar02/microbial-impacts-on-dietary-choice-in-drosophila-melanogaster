@@ -110,6 +110,11 @@ summary(zi.p.UMFE.totalpupae)
 
 exp(confint(zi.p.UMFE.totalpupae))
 
+## Getting numbers for the write-up
+emmeans::emmeans(zi.p.UMFE.totalpupae, specs =   ~
+                   
+                   treatment , type = "response")
+
 # Table
 tab_model(zi.p.UMFE.totalpupae, CSS = list(css.table = '+font-family: Arial;'))
 
