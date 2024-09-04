@@ -119,6 +119,11 @@ density_feeding_2choice_df <- density_feeding_2choice %>%
   pivot_wider(names_from = "condition", values_from = "count")
 
 
+# Changing the intercept to 4:1 
+density_feeding_2choice_df$ratio <- as.factor(density_feeding_2choice_df$ratio)
+density_feeding_2choice_df$ratio <- relevel(density_feeding_2choice_df$ratio, ref = "4:1")
+
+
 
 #### Data Analysis 📊 #### 
 
@@ -154,33 +159,35 @@ glmm.bin.feeding.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * d
                                   family = binomial, data = density_feeding_2choice_df)
 
 
+## Assumption checks 
 
-
+# DHARma
 simulationOutput <- simulateResiduals(fittedModel = glmm.bin.feeding.2choice, plot = T)
 
+
+## Good model, using it for now 
+
+glmm.bin.feeding.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * density  
+                                  + (1|plate) + (1|observation) , 
+                                  family = binomial, data = density_feeding_2choice_df)
 
 
 
 ## Testing for the interaction effect 
-drop1(glmm.bin.density.2choice, test = "Chisq") 
+drop1(glmm.bin.feeding.2choice, test = "Chisq") 
     ## Interaction effect found, keep model as it s 
-
-two_choice_density_df$ratio <- as.factor(two_choice_density_df$ratio)
-two_choice_density_df$ratio <- relevel(two_choice_density_df$ratio, ref = "4:1")
-
-glmm.bin.density.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * density  + (1|plate) + (1|observation) , family = binomial, data = two_choice_density_df)
 
 
 ## Using the model for analysis
-summary(glmm.bin.density.2choice)
+summary(glmm.bin.feeding.2choice)
 
-tab_model(glmm.bin.density.2choice, CSS = list(css.table = '+font-family: Arial;'))
-
-
-emmeans::emmeans(glmm.bin.density.2choice, specs = ~ ratio  * density, type = "response")
+## Getting numbers for the write-up
+emmeans::emmeans(glmm.bin.feeding.2choice, specs = ~ ratio  * density, type = "response")
 
 
-## Model assumption testing
-simulationOutput <- simulateResiduals(fittedModel = glmm.bin.density.2choice, plot = T)
+## Generating a table for the write-up
+tab_model(glmm.bin.feeding.2choice, CSS = list(css.table = '+font-family: Arial;'))
+
+
 
 
