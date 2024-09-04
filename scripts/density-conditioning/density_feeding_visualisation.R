@@ -101,35 +101,41 @@ feeding_results <- function(data, boxplot_fill_colour) {
 ##############################################################################################
 
 #### Colour pallette 
-viridis_colors <- inferno(10)
+inferno_colors <- inferno(10)
 
 
 ## Running the boxplots.
 
 ## 90 mm
-ninety_1_4_feed <- feeding_results(onefour_90mm_long , boxplot_fill_colour = viridis_colors[c(9,9)])
-ninety_4_1_feed <- feeding_results(fourone_90mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
-ninety_combined_feed <- feeding_results(fourone_onefour_90mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+ninety_1_4_feed <- feeding_results(onefour_90mm_long , boxplot_fill_colour = inferno_colors[c(9,9)])
+ninety_4_1_feed <- feeding_results(fourone_90mm_long , boxplot_fill_colour = inferno_colors[c(7,7)])
+ninety_combined_feed <- feeding_results(fourone_onefour_90mm_long, boxplot_fill_colour = inferno_colors[c(9,9,7,7)])
 
 
 
 # 35 mm 
-fifty_1_4_feed <- feeding_results(onefour_35mm_long , boxplot_fill_colour  = viridis_colors[c(9,9)])
-fifty_4_1_feed <- feeding_results(fourone_35mm_long , boxplot_fill_colour = viridis_colors[c(7,7)])
-fifty_combined_feed <- feeding_results(fourone_onefour_35mm_long, boxplot_fill_colour = viridis_colors[c(9,9,7,7)])
+fifty_1_4_feed <- feeding_results(onefour_35mm_long , boxplot_fill_colour  = inferno_colors[c(9,9)])
+fifty_4_1_feed <- feeding_results(fourone_35mm_long , boxplot_fill_colour = inferno_colors[c(7,7)])
+fifty_combined_feed <- feeding_results(fourone_onefour_35mm_long, boxplot_fill_colour = inferno_colors[c(9,9,7,7)])
 
-## Adding titles to the boxplots.
+## patchwork design for 2-choice 
 ninety_feed <- ninety_1_4_feed  + ninety_4_1_feed 
 fifty_feed <- fifty_1_4_feed  + fifty_4_1_feed
-## patchwork design
 
+
+# Running plots together using ggarrange:
 ggarrange(fifty_feed, ninety_feed,
           labels = c("35mm", "90mm"),
            nrow = 1,
           align = "v")
 
-## Adding titles to the boxplots.
+
+
+
+## Adding titles to the boxplots
 fifty_combined_feed <- fifty_combined_feed + ggtitle("35 mm")
 ninety_combined_feed <- ninety_combined_feed + ggtitle("90 mm")
-## patchwork design
+
+
+## Patchwork design
 ninety_combined_feed + fifty_combined_feed
