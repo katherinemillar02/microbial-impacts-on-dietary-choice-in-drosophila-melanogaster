@@ -167,32 +167,4 @@ simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.surviveboth, p
 
 
 # Comparing models: 
-AIC(glmm.p.bothsurvive.MFE, glm.nb.MFE.both, glm.zi.p.MFE.surviveboth, glm.zi.nb.MFE.surviveboth)
- ## zeroinflation models are way better,  Poisson Negative Binomial is the best 
-
-
-
-
-
-## Final chosen model:  Poisson Negative Binomial
-glm.zi.nb.MFE.surviveboth <- glmmTMB(
-  survivability ~  treatment + (1 | vial),
-  ziformula =  ~ treatment,
-  family = nbinom2(),
-  data = survivability_between
-)
-
-
-#### Data Analysis ####
-
-# Basic analysis
-summary(glm.zi.nb.MFE.surviveboth)
-
-# condidence intervals 
-exp(confint(glm.zi.nb.MFE.surviveboth))
-
-# getting values for the write-up
-emmeans::emmeans(glm.zi.nb.MFE.surviveboth, specs = ~ treatment, type = "response")
-
-# getting a table for the write up
-tab_model(glm.zi.nb.MFE.surviveboth, CSS = list(css.table = '+font-family: Arial;'))
+AIC(glmm.p.bothsurvive.MFE, glm.nb.MFE.both, glm.zi.p.MFE.survi
