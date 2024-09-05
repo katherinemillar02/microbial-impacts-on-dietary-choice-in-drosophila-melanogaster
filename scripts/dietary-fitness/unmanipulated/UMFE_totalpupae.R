@@ -111,32 +111,32 @@ tab_model(glm.nb.UMFE.totalpupae, CSS = list(css.table = '+font-family: Arial;')
 
 
 
-#### other versions 
-
-## just incase the data wanted to be looked at in other ways. 
-
-
-#### fly emergence overall 
-#### EMERGENCE NOT BY SEX
-fly_emergence_overall <- fly_fitness_tidy_UMFE %>%
-  filter(sex %in% c("females", "males")) %>%
-  group_by(vial, treatment) %>%
-  summarise(overall_emergence = sum(count, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(sex_treatment = paste(treatment, "overall", sep = " ")) %>%
-  mutate(sex_treatment = factor(sex_treatment,
-                                levels = c("conditioned overall", "unconditioned overall")))
-
-
-
-
-## An overall code of emergence per time
-## THIS COMBINES THE VIALS
-emergence_per_time <- fly_fitness %>%
-  group_by(treatment, time_hours) %>%
-  summarize(total_females = sum(females, na.rm = TRUE),
-            total_males = sum(males, na.rm = TRUE)) %>%
-  ungroup()
+# #### other versions 
+# 
+# ## just incase the data wanted to be looked at in other ways. 
+# 
+# 
+# #### fly emergence overall 
+# #### EMERGENCE NOT BY SEX
+# fly_emergence_overall <- fly_fitness_tidy_UMFE %>%
+#   filter(sex %in% c("females", "males")) %>%
+#   group_by(vial, treatment) %>%
+#   summarise(overall_emergence = sum(count, na.rm = FALSE)) %>%
+#   ungroup() %>%
+#   mutate(sex_treatment = paste(treatment, "overall", sep = " ")) %>%
+#   mutate(sex_treatment = factor(sex_treatment,
+#                                 levels = c("conditioned overall", "unconditioned overall")))
+# 
+# 
+# 
+# 
+# ## An overall code of emergence per time
+# ## THIS COMBINES THE VIALS
+# emergence_per_time <- fly_fitness %>%
+#   group_by(treatment, time_hours) %>%
+#   summarize(total_females = sum(females, na.rm = TRUE),
+#             total_males = sum(males, na.rm = TRUE)) %>%
+#   ungroup()
 
 
 

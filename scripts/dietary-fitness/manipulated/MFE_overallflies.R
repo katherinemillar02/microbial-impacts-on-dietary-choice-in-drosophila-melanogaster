@@ -30,7 +30,7 @@ fly_fitness_tidy_MFE <- tidyr::pivot_longer(data = fly_fitness_MFE ,
 overallflies_MFE <- fly_fitness_tidy_MFE %>%
   filter(sex %in% c("females", "males")) %>%
   group_by(vial, sex, treatment, id) %>%
-  summarise(total_count = sum(count, na.rm = TRUE)) %>%
+  summarise(total_count = sum(count, na.rm = FALSE)) %>%
   ungroup() %>%
   mutate(sex_treatment = paste(treatment, sex, sep = " ")) %>%
   mutate(sex_treatment = factor(sex_treatment,
@@ -55,11 +55,12 @@ glmm.p.total.MFE <- glmmTMB(total_count ~
 
 ## Assumption checking:
 simulationOutput <- simulateResiduals(fittedModel = glmm.p.total.MFE , plot = T)
-## Assumptions aren't great, new model maybe? 
+ ## Assumptions aren't great, new model maybe? 
+
 
 
 check_overdispersion(glmm.p.total.MFE)
-# Overdispersion detected 
+# overdispersion detected 
 
 check_zeroinflation(glmm.p.total.MFE)
 ## zero inflation 
@@ -90,31 +91,11 @@ check_zeroinflation(glm.nb.MFE.flies)
 
 
 
-
-## Comparing the models: 
-AIC(glmm.p.total.MFE, glm.nb.MFE.flies)
+## The issue seems to be zeroinflation 
 
 
 
-
-
-#### Chosen model; Poisson GLMM ####
-glmm.p.total.MFE <- glmmTMB(total_count ~ 
-                              
-                              sex * treatment +
-                              
-                              (1|id) + (1|vial) ,
-                            
-                            family = poisson, data = overallflies_MFE)
-
-
-
-# Interaction effect test 
-drop1(glmm.p.total.MFE, test = "Chisq")
- # No interaction effect found 
- 
-
-simulationOutput <- simulateResiduals(fittedModel = glmm.p.total.MFE, plot = T)
+# Trying zeroinflation models 
 
 glm.zi.nb.MFE.flies <- glmmTMB(
   total_count ~ sex * treatment + (1 | vial) + (1 | id),  
@@ -123,6 +104,12 @@ glm.zi.nb.MFE.flies <- glmmTMB(
   data = overallflies_MFE
 )
 
+
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.flies, plot = T)
+
+check_overdispersion(glm.zi.nb.MFE.flies)
+ # No overdispersion 
+
 glm.zi.p.MFE.flies <- glmmTMB(
   total_count ~ sex * treatment + (1 | vial) + (1 | id),  
   ziformula = ~ sex * treatment,               
@@ -130,26 +117,31 @@ glm.zi.p.MFE.flies <- glmmTMB(
   data = overallflies_MFE
 )
 
-simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.flies, plot = T)
 
 simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.MFE.flies, plot = T)
+ 
 
+check_overdispersion(glm.zi.p.MFE.flies)
 
-AIC(glmm.p.total.MFE.2, glm.zi.nb.MFE.flies, glm.zi.p.MFE.flies)
-
-
-## FINAL MODEL 
-glmm.p.total.MFE.2 <- glmmTMB(total_count ~ 
-                              
-                              sex + treatment +
-                              
-                              (1|id) + (1|vial) ,
-                            
-                            family = poisson, data = overallflies_MFE)
+# No overdispersion even with poisson models
 
 
 
 
+AIC(glmm.p.total.MFE, glm.zi.nb.MFE.flies, glm.zi.p.MFE.flies)
+ # Poisson slightly better 
+
+
+glm.zi.p.MFE.flies <- glmmTMB(
+  total_count ~ sex * treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ sex * treatment,               
+  family = poisson(),                          
+  data = overallflies_MFE
+)
+
+
+drop1(glm.zi.p.MFE.flies, test = "Chisq")
+ ## interaction effect not needed
 
 
 glm.zi.p.MFE.flies.2 <- glmmTMB(
@@ -159,8 +151,12 @@ glm.zi.p.MFE.flies.2 <- glmmTMB(
   data = overallflies_MFE
 )
 
+
 #### DATA ANALYSIS ####
 summary(glm.zi.p.MFE.flies.2)
+
+
+
 
 exp(confint(glmm.p.total.MFE.2))
 
@@ -169,7 +165,7 @@ emmeans::emmeans(glm.zi.p.MFE.flies.2, specs = ~ sex + treatment, type = "respon
 
 
 
-tab_model(glmm.p.total.MFE.2, CSS = list(css.table = '+font-family: Arial;'))tab_model(glm.zi.p.MFE.flies.2, CSS = list(css.table = '+font-family: Arial;'))
+tab_model(glm.zi.p.MFE.flies.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
