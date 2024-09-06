@@ -207,16 +207,4 @@ overall_emergence_treatment <- ggplot(overallflies_MFE, aes(x = sex, y = total_c
   scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   theme(legend.position = "top",
         legend.justification = "right",
-        legend.direction = "vertical") +
-  labs(x = "Treatment", 
-       y = "Number of Flies Emerged", 
-       fill = "Treatment") +
-  ylim(0, 30)
-
-
-## Saving a plot
-ggsave(filename = "overall_emergence_treatment.png", 
-       plot = overall_emergence_treatment, 
-       width = 10, 
-       height = 6, 
-       dpi = 300)
+        legend.direc
