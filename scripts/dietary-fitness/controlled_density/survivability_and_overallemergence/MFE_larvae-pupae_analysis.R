@@ -13,13 +13,11 @@ library(glmmTMB)
 library(sjPlot)
 
 
-
-
 ## Reading pupae data in
 pupae_fitness_MFE <- read_excel("data/fitness_development/MFE_pupae.xlsx")
 pupae_fitness_MFE <- as.data.frame(pupae_fitness_MFE)
 
-#### Pupae data check. 
+#### Pupae data check 
 total_pupae <- pupae_fitness_MFE %>% 
   group_by(id, vial, treatment) %>% 
   summarise(total_pupae = sum(pupae, na.rm = TRUE))
@@ -29,8 +27,7 @@ total_pupae <- pupae_fitness_MFE %>%
 total_pupae <- as.data.frame(total_pupae)
 
 
-
-## working out survivability code 
+## Working out survivability code 
 survivability_pupae <- total_pupae %>%
   mutate(fixed_total = 63, 
          survivability = (total_pupae / fixed_total) * 100)
@@ -99,3 +96,45 @@ check_zeroinflation(glm.nb.MFE.pupae)
 
 
 ## There is still zeroinflation, so trying zero inflation models... 
+
+## Trying poisson zero inflated 
+# Model 3 
+glmm.zi.p.MFE.pupae <- glmmTMB(
+  survivability ~ treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ treatment,               
+  family = poisson(),                          
+  data = survivability_pupae)
+
+
+## Assumption checking:
+
+# DHARMa: 
+simulationOutput <- simulateResiduals(fittedModel = glmm.zi.p.MFE.pupae, plot = T)
+## Assumptions are looking sort of ok 
+
+
+# easystats:
+check_zeroinflation(glmm.zi.p.MFE.pupae)
+## Zero inflation 
+
+
+# Testing AIC 
+AIC(glmm.p.pupaesurvive.MFE, glm.nb.MFE.pupae, glmm.zi.p.MFE.pupae)
+ # NegBin GLM the best? Go with this 
+
+
+#### Final Data Analysis ####
+
+# Simple model test 
+summary(glmm.p.pupaesurvive.MFE)
+
+
+## Getting numbers for the write-up
+emmeans::emmeans(glmm.p.pupaesurvive.MFE, specs =  ~ treatment, type = "response")
+
+
+# Table for write-up
+tab_model(glmm.p.pupaesurvive.MFE, CSS = list(css.table = '+font-family: Arial;'))
+
+
+
