@@ -13,21 +13,21 @@ library(glmmTMB)
 library(sjPlot)
 
 
-## Reading pupae data in
+## Reading pupae data in:
 pupae_fitness_MFE <- read_excel("data/fitness_development/MFE_pupae.xlsx")
 pupae_fitness_MFE <- as.data.frame(pupae_fitness_MFE)
 
-#### Pupae data check 
+#### Pupae data check:
 total_pupae <- pupae_fitness_MFE %>% 
   group_by(id, vial, treatment) %>% 
-  summarise(total_pupae = sum(pupae, na.rm = TRUE))
+  summarise(total_pupae = sum(pupae, na.rm = FALSE))
 
 
-## Changing it to a dataframe
+## Changing it to a dataframe:
 total_pupae <- as.data.frame(total_pupae)
 
 
-## Working out survivability code 
+## Working out survivability code:
 survivability_pupae <- total_pupae %>%
   mutate(fixed_total = 63, 
          survivability = (total_pupae / fixed_total) * 100)
