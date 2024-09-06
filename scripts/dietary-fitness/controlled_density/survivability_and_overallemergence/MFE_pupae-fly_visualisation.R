@@ -10,6 +10,8 @@ library(glmmTMB)
 library(sjPlot)
 
 
+
+
 pupae_flies <- overallflies_MFE %>%
   left_join(total_pupae, by = c("id", "vial", "treatment"))
 

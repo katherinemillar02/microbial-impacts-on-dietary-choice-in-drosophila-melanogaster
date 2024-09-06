@@ -18,6 +18,7 @@ library(pscl)
 library(DHARMa)
 library(glmmTMB)
 library(emmeans)
+library(sjPlot)
   ################## --
 
 
@@ -421,6 +422,8 @@ zi.nb.of.4choice.2 <- zeroinfl(fly_numbers ~
 ## Assumption checks for this model - note: struggling to find zero-inflation assumption checks. 
 
 
+tab_model(zi.nb.of.4choice.2)
+
 
 #### ASSUMPTION CHECKS WOULD BE INSERTED HERE: 
 
@@ -468,7 +471,7 @@ zi.nb.of.4choice.3 <- zeroinfl(fly_numbers ~
 
 ## Testing for 2-way interaction effects
 drop1(zi.nb.of.4choice.3, test = "Chisq") 
-## Interaction effect found between condition and block, and ratio and condition 
+ ## Interaction effect found between condition and block, and ratio and condition 
 
 
 
@@ -500,6 +503,33 @@ zi.nb.of.4choice.41 <- zeroinfl(fly_numbers ~
                                  ratio * condition
                                 + condition * block , dist = "negbin", link = "logit", data = combined_of_split)
 
+
+
+
+
+glm.zi.nb.of.4choice <- glmmTMB(
+  fly_numbers ~  ratio * condition
+  + condition * block    + (1|  block / plate) + (1|  block / observation),  
+  ziformula = ~  ratio * condition
+  + condition * block,               
+  family = poisson(),                          
+  data = combined_of_split
+)
+
+tab_model(glmm.bin.feeding.4choice.dose.2, CSS = list(css.table = '+font-family: Arial;'))
+
+
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.of.4choice, plot = T)
+ ## very good model? 
+
+check_zeroinflation(glm.zi.nb.of.4choice)
+check_overdispersion(glm.zi.nb.of.4choice)
+
+
+
+
+
+
 emmeans(zi.nb.of.4choice.41, pairwise ~ ratio * condition)
 
 
@@ -516,10 +546,64 @@ tab_model(zi.nb.of.4choice.4)
 
 
 
+glmm.of.4choice.2 <- glmmTMB(fly_numbers ~ 
+                              
+                              ratio * condition * block 
+                            
+                            + (1 | block / plate) + (1 |  block / observation), 
+                            
+                            family = poisson, data = combined_of_split)
 
 
 
 
+simulationOutput <- simulateResiduals(fittedModel = glmm.of.4choice.2, plot = T)
+
+check_overdispersion(glmm.of.4choice.2)
+
+
+glm.nb.of.4choice.2  <- glm.nb(fly_numbers ~
+                                 ratio * condition * block 
+                               , data = combined_of_split)
+
+
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.of.4choice.2, plot = T)
+
+check_overdispersion(glm.nb.of.4choice.2)
+
+
+glm.nb.of.4choice.2  <- glm.nb(fly_numbers ~
+                                 ratio * condition * block 
+                               , data = combined_of_split)
+
+
+drop1(glm.nb.of.4choice.2, test = "Chisq")
+
+
+glm.nb.of.4choice.3  <- glm.nb(fly_numbers ~
+                                 ratio * condition +
+                                 block * condition +
+                                 ratio * block 
+                               , data = combined_of_split)
+
+
+glm.nb.of.4choice.3  <- glm.nb(fly_numbers ~
+                                 ratio * condition +
+                                 block * condition 
+                         
+                               , data = combined_of_split)
+
+summary(glm.nb.of.4choice.3)
 
 
 
+
+drop1(glm.nb.of.4choice.3, test = "Chisq")
+
+tab_model(glm.nb.of.4choice.3, CSS = list(css.table = '+font-family: Arial;'))
+
+
+summary(glm.nb.of.4choice.3)
+
+## Getting numbers for the write-up
+emmeans::emmeans(glm.nb.of.4choice.3, specs =  ~ ratio *  condition , type = "response")
