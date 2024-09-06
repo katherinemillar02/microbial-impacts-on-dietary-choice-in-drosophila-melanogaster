@@ -97,6 +97,10 @@ check_zeroinflation(glm.nb.MFE.flies)
 
 # Trying zeroinflation models 
 
+
+
+# Model 3
+ # Negative Binomial GLM # 
 glm.zi.nb.MFE.flies <- glmmTMB(
   total_count ~ sex * treatment + (1 | vial) + (1 | id),  
   ziformula = ~ sex * treatment,               
@@ -105,11 +109,20 @@ glm.zi.nb.MFE.flies <- glmmTMB(
 )
 
 
+## Assumption checking 
+# DHARMa 
 simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.flies, plot = T)
+ # Model seems ok
+
 
 check_overdispersion(glm.zi.nb.MFE.flies)
  # No overdispersion 
 
+
+
+
+# Model 4 
+ # Poisson Zero Inflated
 glm.zi.p.MFE.flies <- glmmTMB(
   total_count ~ sex * treatment + (1 | vial) + (1 | id),  
   ziformula = ~ sex * treatment,               
@@ -118,20 +131,24 @@ glm.zi.p.MFE.flies <- glmmTMB(
 )
 
 
+## Assumption checks
+
+# DHARMa
 simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.MFE.flies, plot = T)
  
-
+# easystats 
 check_overdispersion(glm.zi.p.MFE.flies)
-
-# No overdispersion even with poisson models
-
+ # No overdispersion even with poisson models
 
 
-
+# Comparing models
 AIC(glmm.p.total.MFE, glm.zi.nb.MFE.flies, glm.zi.p.MFE.flies)
  # Poisson slightly better 
 
 
+
+
+#### Final model: Zero Inflated Poisson ####
 glm.zi.p.MFE.flies <- glmmTMB(
   total_count ~ sex * treatment + (1 | vial) + (1 | id),  
   ziformula = ~ sex * treatment,               
@@ -139,17 +156,19 @@ glm.zi.p.MFE.flies <- glmmTMB(
   data = overallflies_MFE
 )
 
-
+# Testing interaction effect
 drop1(glm.zi.p.MFE.flies, test = "Chisq")
  ## interaction effect not needed
 
 
+# Model without interaction effect
 glm.zi.p.MFE.flies.2 <- glmmTMB(
   total_count ~ sex + treatment + (1 | vial) + (1 | id),  
   ziformula = ~ sex + treatment,               
   family = poisson(),                          
   data = overallflies_MFE
 )
+
 
 
 #### DATA ANALYSIS ####
