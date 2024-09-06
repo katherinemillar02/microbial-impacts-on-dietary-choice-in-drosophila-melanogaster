@@ -1,4 +1,4 @@
-## Packages
+#### Packages ####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -7,20 +7,23 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
+####################
 
 
 
-
-## Reading pupae data in
+#### Reading data in ####
 pupae_fitness_MFE <- read_excel("data/fitness_development/MFE_pupae.xlsx")
 pupae_fitness_MFE <- as.data.frame(pupae_fitness_MFE)
 
-#### Pupae data check. 
+#### Making a dataframe of total pupae, not over time 
 total_pupae <- pupae_fitness_MFE %>% 
   group_by(id, vial, treatment) %>% 
-  summarise(total_pupae = sum(pupae, na.rm = TRUE))
+  summarise(total_pupae = sum(pupae, na.rm = FALSE))
 
 
+
+
+#### Data Analysis ####
 
 
 # Model 1 - Poisson GLMM
@@ -32,6 +35,28 @@ glmm.p.MFE.totalpupae <- glmmTMB(total_pupae ~
                               + (1|vial) + (1|id),
                             
                             family = poisson, data = total_pupae)
+
+
+# Assumption checks 
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.totalpupae, plot = T)
+ # Model looks sort of okay
+
+
+
+# easyststas checks
+check_overdispersion(glmm.p.MFE.totalpupae)
+ # There is overdispersion 
+
+check_zeroinflation(glmm.p.MFE.totalpupae)
+ # No zeroinflation 
+
+
+
+
+
+
 
 
 # Data analysis
