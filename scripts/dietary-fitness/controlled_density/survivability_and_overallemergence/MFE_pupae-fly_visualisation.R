@@ -70,6 +70,7 @@ survivability_between <- flies_and_pupae %>%
 viridis_colors <- viridis(10)
 
 
+## The plot code 
 pupae_flies <- ggplot(survivability_between, aes(x = treatment, y = survivability, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) + 
   geom_point(aes(fill = treatment), 
