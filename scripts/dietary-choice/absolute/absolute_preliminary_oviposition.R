@@ -22,7 +22,7 @@ library(MASS)
 #### VIRGIN FEMALE ####
 ####################### --
 
-## Creating a path to Virgin Conditioning Oviposition data
+## Creating a path to virgin conditioning oviposition data: 
 pathvirginoviposition <- "data/female_conditioning/virgin"
 
 # Reading in Oviposition data for Virgin Conditioning 
