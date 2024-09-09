@@ -1,4 +1,4 @@
-# Packages 📦📦📦📦####
+##### Packages 📦📦📦📦 ####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -7,14 +7,12 @@ library(performance)
 library(pscl)
 library(DHARMa)
 library(glmmTMB)
+library(sjPlot)
 ##################---
 
 
 
-#### Uploading the data sets
-#### Part 1 
-#### Uploading the data this way works for 4:1 and 1:4 assays being combined ####-
-
+#### Reading the data in: 
 ####################################-
 #### WILD TYPE MALE CONDITIONING ####
 ####################################-
@@ -75,39 +73,13 @@ df2_male <- df_male %>%
   summarise(count = sum(fly_numbers)) %>%
   pivot_wider(names_from = "treatment", values_from = "count") 
 
-## test
-df2_male_test <- df_male %>%
-  separate(diet, into = c("ratio", "treatment"), sep = " ") %>%
-  group_by(id, observation, plate, ratio, treatment, block) %>%
-  summarise(count = sum(fly_numbers), .groups = 'drop') %>%
-  mutate(condition = treatment) %>%
-  pivot_wider(names_from = "treatment", values_from = "count")
-
-
 ## The data set 
 df2_male
 
 
-###########################################################################---
-###  using the 4:1 and 1:4 dataset and making a dataset without 1:4 
 
 
-# Use grepl to identify rows with "1-4" pattern in any column
-one_four <- "1-4"
-exclude_onefour <- grepl(one_four, df2_male$id)
 
-# Subset the dataframe to exclude rows with the "1-4" pattern
-df2_male_exclude_onefour <- df2_male[!exclude_onefour, ]
-
-
-# Use grepl to identify rows with "1-4" pattern in any column
-fourone <- "4-1"
-exclude_fourone <- grepl(fourone, df2_male$id)
-
-# Subset the dataframe to exclude rows with the "1-4" pattern
-df2_male_exclude_fourone <- df2_male[!exclude_fourone, ]
-
-###########################################################################---
 
 
 
@@ -245,19 +217,18 @@ df2_ovod1 <- df_ovod1 %>%
 ## MALE ####
 ##########--
 
-## Creating a data column where flies are not on the plate - possibly analysis to consider at some point?
-df2_male <- df2_male %>% mutate(no_flies = 10 - (Conditioned + Unconditioned)) ## This is currently not used in any of the models
 
 ## MODELS 
 
-## MODEL 1
+# MODEL 1
+# Binomial GLM
 ## A binomial model, not considering other "random" factors
 ## cbind() is used - the response variables are Conditioned and Unconditioned
 glm.bin.m <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_male)
 
 # ASSUMPTION CHECKING:
 ## Checking Residuals
-glm.bin.m.residuals <- residuals(glm.bin_m, type = "pearson")
+glm.bin.m.residuals <- residuals(glm.bin.m, type = "pearson")
 
 # pearson residual check
 plot(glm.bin.m.residuals ~ fitted(glm.bin.m), ylab = "Pearson Residuals", xlab = "Fitted Values")
@@ -267,65 +238,65 @@ abline(h = 0, col = "red")
 summary(glm.bin.m) # overdispersion
 
 
+
+
 ## MODEL 2 
+# Binomial GLMM
 # trying a mixed model, considers other "random" factors
-glmm.bin.m <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
+glmm.bin.m <- glmer(cbind(Conditioned, Unconditioned) 
+                    ~ ratio * block
+                    + (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
 
 
 ## Assumption checks 
 
 # Performance check of data using "easystats":
-performance::check_model(glmm.bin.m, check = c("qq")) # qq looks pretty good 
 performance::check_model(glmm.bin.m, check = c("homogeneity")) #?? 
 
 ## DHARMa performance checks
 testDispersion(glmm.bin.m) 
 
-# Model is okay to be used? 
+
+# easystats checks 
+check_overdispersion(glmm.bin.m)
+  # No overdispersion
+
+
+check_zeroinflation(glmm.bin.m)
+ # cannot check zero inflation 
+
+
+# DHARMa checks 
+simulationOutput <- simulateResiduals(fittedModel = glmm.bin.m, plot = T)
+   # Model looks pretty good
+ 
 
 ## AIC Check of models 
 AIC(glm.bin.m, glmm.bin.m)
-
-## Binomial GLMM has a slighty lower AIC
+    ## Binomial GLMM has a slighty lower AIC
 
 # Using MODEL 2 (Binomial GLMM) for analysis? 
+glmm.bin.m <- glmer(cbind(Conditioned, Unconditioned) 
+                    ~ ratio * block
+                    + (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
 
-# Looking for significance in "block" 
-summary(glmm.bin.m) 
+
+# two-way interaction test
 drop1(glmm.bin.m, test = "Chisq")
-# Block is not significant, so dropping from the model 
+   # No two-way interaction
 
 # MODEL 2.1 
-glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block + (1|plate) + (1|observation) , family = binomial, data = df2_male)
-
-## playing around
-glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * condition + block + (1|plate) + (1|observation) , family = binomial, data = df2_male_test)
-  ## don't get the error, was not there before, and plate seems to be in the df. 
+glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                        ratio + block +
+                         (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
 
 
 ## Looking at the results of the model 
-summary(glmm.bin.m.2) # only 4:1 is significant? 
-
-
-## Trying to look at the results of the model using emmeans()
-emmeans::emmeans(glmm.bin.m.2, pairwise ~ ratio , random = ~ (1|plate) + (1|observation))
-# Really want to look at Conditioned vs Unconditioned?
-## Need to know how to interpret this model
+summary(glmm.bin.m.2) 
 
 
 
-## TRYING MODELS THAT CONSIDER INTERACTION EFFECTS
-glm.bin.m.01 <- glm(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block , family = binomial, data = df2_male)
 
-glmm.bin.m.01 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
-
-
-AIC(glm.bin.m.01, glmm.bin.m.01)
-  ## It says Bin GLM is better than Bin GLMM? 
-
-
-
-## Confused about what to pick, going for the mixed model for now? 
 
 
 
@@ -334,63 +305,68 @@ AIC(glm.bin.m.01, glmm.bin.m.01)
 ## VIRGIN FEMALE ####
 ###################--
 
-## Creating a data column where flies are not on the plate 
-df2_virgin <- df2_virgin %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
-## This has not been used yet, maybe need to include it in a model somehow?
-# Is it relevant?
-
 ## MODEL 1 
 ## A binomial model, not considering other "random" factors
 glm.bin.vf <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin)
 
 # Assumption checks 
-performance::check_model(glm.bin.vf , check = c("qq")) # Can't do easystats assumption checks?? 
 performance::check_model(glm.bin.vf , check = c("homogeneity")) 
 
 # Assumption checking 
 summary(glm.bin.vf) ## There is overdispersion
 
 
+
+
+
 ## MODEL 2 
 # Mixed model, considers other "random" factors
-glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) + (1|observation), family = binomial, data = df2_virgin)
+glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned)
+                      ~ ratio * block + (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
 
 # Assumption checks 
-performance::check_model(glmm.bin.vf, check = c("qq")) # qq looks pretty great
-performance::check_model(glmm.bin.vf, check = c("homogeneity")) # what is going on? 
+performance::check_model(glmm.bin.vf, check = c("homogeneity")) # what is going on? looks ok 
 
 # DHARMa checks 
-testDispersion(glmm.bin.vf) ## overdispersed?? 
-simulationOutput_glmm.bin.vf <- simulateResiduals(fittedModel = glmm.bin.vf, plot = F)
-plot(simulationOutput_glmm.bin.vf) 
+simulationOutput_glmm.bin.vf <- simulateResiduals(fittedModel = glmm.bin.vf, plot = T)
+  # Model looks pretty good
+
+# easystats checks
+check_overdispersion(glmm.bin.vf)
+  # No overdispersion detected 
+
+
+check_zeroinflation(glmm.bin.vf)
+ # cannot check... 
+
 
 ## Doing AIC check 
 AIC(glm.bin.vf,glmm.bin.vf) 
-# The Binomial GLMM has slightly higher AIC, but choosing this anyway as considers random factors 
+# The Binomial GLMM has slightly higher AIC, choosing this  
 
 
 
 ## Using Binomial GLMM for analysis
-glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                        ratio * block +
+                        (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
 
-# Looking for significance in block 
+# Looking for two-way interaction
 drop1(glmm.bin.vf, test = "Chisq") # No interaction effect between ratio and block
-
+ # No two way interaction
 
 # Model 2.1 - where block has been removed...
-glmm.bin.vf.2 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio + block +  (1|plate) +(1|observation), family = binomial, data = df2_virgin)
+glmm.bin.vf.2 <- glmer(cbind(Conditioned, Unconditioned) 
+                       ~ ratio + block +  (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
+
 
 # Finding results from the model
 summary(glmm.bin.vf.2) 
 
-## Finding response variables for written analysis 
-emmeans::emmeans(glmer.mm_vf_2, ~ ratio, random = ~ 1 | plate + observation, type = "response")
 
 
 
 
-#### TRYING MODELS THAT CONSIDER INTERACTION EFFECTS, AND COMPARING
-glmm.bin.m.01 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned * Unconditioned * block + (1|block/plate) + (1|block/observation) , family = binomial, data = df2_male)
 
 
 
@@ -403,58 +379,51 @@ glmm.bin.m.01 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio  * Conditioned 
 ##################--
 ## OVOD1 FEMALE ####
 ##################--
-## Creating a data column where flies are not on the plate 
-df2_ovod1 <- df2_ovod1 %>% mutate(no_flies = 10 - (Conditioned + Unconditioned))
 
 ## Model 1- Trying a binomial model
-glm.bin.of <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block , family = binomial, data = df2_ovod1)
+glm.bin.of <- glm(cbind(Conditioned, Unconditioned) ~
+                    ratio * block , family = binomial, data = df2_ovod1)
 
 # Assumption checks for binomial model 
-summary(glm.bin.of) # There is overdispersion 
+summary(glm.bin.of) # There is overdispersion? 
+
+
+
+
+
 
 
 ## Model 2 
 # Mixed model, considers other "random" factors
-glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
+glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) 
+                     ~ ratio * block  + (1|block/plate) + (1|block/observation), family = binomial, data = df2_ovod1)
 
 
 # Assumption checking 
 
 # easystats
-performance::check_model(glmm.bin.of, check = c("qq")) # looks pretty good
-performance::check_model(glmm.bin.of, check = c("homogeneity")) # I think looks okay 
+performance::check_model(glmm.bin.of, check = c("homogeneity")) # I think looks okay, bit slopey down 
 
 # DHARMa checks 
-testDispersion(glmm.bin.of) # not like the others? 
-
-simulationOutput_glmm.bin.of <- simulateResiduals(fittedModel = glmm.bin.of, plot = F)
-plot(simulationOutput_glmer.mm_of) # all looks the same to me? 
+simulationOutput_glmm.bin.of <- simulateResiduals(fittedModel = glmm.bin.of, plot = T)
+  # Assumptions look pretty good
 
 ## Doing AIC checks 
 AIC(glm.bin.of, glmm.bin.of)
-## Mixed model has lower AIC, and it considers random effects, so stucking with this
+ ## Mixed model has lower AIC, and it considers random effects, so stucking with this
 
 # Using this model
-glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block  + (1|plate/block) + (1|observation), family = binomial, data = df2_ovod1)
+glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) ~
+                       ratio * block  + (1|block/plate) + (1|block/observation), family = binomial, data = df2_ovod1)
 
 
 # Looking at the significance of block
 drop1(glmm.bin.of, test = "Chisq") 
-# block is significant, keep in the model
+ # block is significant, keep in the model
 
 
 ## Analysis of glmm.bin.of
 summary(glmm.bin.of)
 
-
-## Finding the response variables from emmeans 
-emmeans::emmeans(glmm.bin.of, ~ ratio, type = "response")
-
-
-
-
-
-
-## How to analyse when block is significant, can't get rid of interaction effect. 
 
 
