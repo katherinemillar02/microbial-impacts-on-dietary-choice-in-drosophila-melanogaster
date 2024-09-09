@@ -13,8 +13,10 @@ library(pscl)
 library(MASS)
 ############### 📦📦📦📦
 
+
+
+
 #### READING THE DATA IN: 
-## Reading the data in using paths. 
 
 ####################### --
 #### VIRGIN FEMALE ####
@@ -76,6 +78,9 @@ df2_virgin_oviposition # does it recognise condition from the long data
 
 
 
+
+
+
 ############### ---
 #### OVOD1 FEMALE ----
 ################# ---
@@ -132,6 +137,7 @@ df2_ovod1_oviposition <- df_ovod1_oviposition %>%
 
 ## new data 
 df2_ovod1_oviposition # does it recognise condition from the long data? 
+
 
 
 
@@ -203,6 +209,9 @@ df2_male_oviposition # does it recognise condition from the long data?
 
 
 
+
+
+
 ######################################################################################################################## --
 #### Data Analysis ####
 # 4:1 and 1:4 Two-Choice Assays ####
@@ -223,6 +232,7 @@ glm.bin.m.ovi.2choice <- glm(cbind(Conditioned, Unconditioned)
 
 # DHARMa
 simulationOutput <- simulateResiduals(fittedModel = glm.bin.m.ovi.2choice, plot = T)
+ # Model could be better 
 
 ## easystats
 check_overdispersion(glm.bin.m.ovi.2choice)
@@ -289,33 +299,17 @@ drop1(glmm.bin.m.ovi.2choice, test = "Chisq")
 ################################## --
 
 
-## Model 1 
-
-# Binomial model 
+## Model 1
+# GLM Binomial #
 glm.bin.of.ovi.2choice <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_ovod1_oviposition)
 
 # Assumption checking 
 
-# easystats does not work at the moment 
-performance::check_model(glm.bin.of.ovi.2choice , check = c("qq")) ## looks okay
-
-## comparing this with a different qqplot to understand qq plots 
-## Generating residuals 
-residuals <- residuals(glm.bin.of.ovi.2choice, type = "pearson")
-qnorm(residuals)
-## Will generate a qq 
-qqnorm(residuals) ## qq looks bad 
-qqline(residuals, col = "green") ## putting a line there to understand it better
-
-## Understanding the qqplot:  
-## There are points in the data below where the data should fall?
-## should be straight across if in ascending order? 
-
 ## Homogeneity
 # easystats plot
 performance::check_model(glm.bin.of.ovi.2choice , check = c("homogeneity")) ## the dots are not really lines up 
-# first one should be homogeneity
-plot(glm.bin.of.ovi.2choice) ## lines look sort of lined up but not the best
+ # first one should be homogeneity, not sure it looks great 
+
 
 ## Understanding homogeneity: 
 # Assumptions: the level of variance for a particular variable is constant across the sample 
@@ -323,28 +317,11 @@ plot(glm.bin.of.ovi.2choice) ## lines look sort of lined up but not the best
 # So, I think the dots should sort of be in line with eachother? 
 # This doesn't really happen, so there isn't a great assumption of homogeneity? 
 
-
-
-#### MORE ASSUMPTION CHECKS
 # DHARMa 
-testDispersion(glm.bin.of.ovi.2choice) # looks pretty poor
-## easystats overdispersion check
-check_overdispersion(glm.bin.of.ovi.2choice) ## overdispersion 
-
-## Understanding overdispersion 
-## There is quite a lot of overdispersion
-## This means that the variance of the response variable (fly numbers) is greater than what is
-## expected by the model
-
-## Another qqplot 
 simulationOutput <- simulateResiduals(fittedModel = glm.bin.of.ovi.2choice, plot = T)
-## is predicted the same as fitted? 
-## is the second plot homogeneity assumptions? 
+  ## This model is worse, all tests are significant 
 
-## understanding the qqplot shows the points are off the usual data and the second plot shows there is not 
-## really homogeneity of variance 
 
-## Overall, this model is really not the best...
 
 
 
@@ -352,22 +329,12 @@ simulationOutput <- simulateResiduals(fittedModel = glm.bin.of.ovi.2choice, plot
 ## Model 2 ##
 
 ## Binomial GLMM - to consider random effects 
-glmm.bin.of.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_ovod1_oviposition)
+glmm.bin.of.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) 
+                                 ~ ratio * block + (1|block/plate)
+                                 , family = binomial, data = df2_ovod1_oviposition)
 
 
 # Assumption checking 
-# easystats 
-performance::check_model(glmm.bin.of.ovi.2choice, check = c("qq"))
-## this qqplot looks pretty good, this means the data falls through quite a nice distribution
-## data is expected to fall the way the data falls 
-
-## different way of doing a qqplot
-## Generating residuals 
-residuals <- residuals(glmm.bin.of.ovi.2choice, type = "pearson")
-qnorm(residuals)
-## Will generate a qq 
-qqnorm(residuals) ## qq looks a lot better 
-qqline(residuals, col = "green") ## again, points seem to fall along the line 
 
 
 ## Homogeneity check 
@@ -379,67 +346,40 @@ performance::check_model(glmm.bin.of.ovi.2choice, check = c("homogeneity"))
 
 ## MORE ASSUMPTIONS CHECKS 
 # DHARMa 
-
-## Looking for overdispersion
-testDispersion(glmm.bin.of.ovi.2choice) # looks a lot better I think 
-
-# easystats check for overdispersion 
-check_overdispersion(glmm.bin.of.ovi.2choice) ## there is still overdispersion detected 
-
-
 ## More DHARMa assumption checks 
 simulationOutput <- simulateResiduals(fittedModel = glmm.bin.of.ovi.2choice, plot = T)
 ## DHARMa assumption checks show the model to look a lot better 
 
+
+
+# easystats check for overdispersion 
+check_overdispersion(glmm.bin.of.ovi.2choice)
+ ## No overdispersion detected 
+
+
+
 ## Doing an AIC check
 AIC(glm.bin.of.ovi.2choice, glmm.bin.of.ovi.2choice)
-## The model with random effects (Model 2) is a lot better, as expected from the other assumptions... 
+ ## The model with random effects (Model 2) is a lot better, as expected from the other assumptions... 
 
 ## Using "Model 2" for now as I do not really know what else to do 
 
 
 ## Model choice: 
-glmm.bin.of.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_ovod1_oviposition)
+glmm.bin.of.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ 
+                                   ratio * block + (1|block/plate)  , family = binomial, data = df2_ovod1_oviposition)
 
 
 
 
+# Testing for a 2-way interaction effect
 drop1(glmm.bin.of.ovi.2choice, test = "Chisq")
-
-
-emmeans::emmeans(glmm.bin.of.ovi.2choice, ~ ratio, type = "response")
-
+ # There is a significant 2-way interaction effect
 
 
 
+# The final chosen model... 
 summary(glmm.bin.of.ovi.2choice)
-exp(confint(glmm.bin.of.ovi.2choice))
-
-## Looking for significance in block
- ## block is  significant with ratio
-
-## Looking at results, keeping block in 
-
-## Basic summary
-summary(glmm.bin.of.ovi.2choice) 
-## What I am confused about here: 
-# If I am interpreting the results right, why is there no 1:4 conditioned/unconditioned block 2 results?? 
-
-## Changing "ratio" to 4:1 
-df2_ovod1_oviposition$ratio <- as.factor(df2_ovod1_oviposition$ratio)
-df2_ovod1_oviposition$ratio <- relevel(df2_ovod1_oviposition$ratio, ref = "1:4")
-
-
-
-glmm.bin.of.ovi.2choice.1.1 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|block/plate)  , family = binomial, data = df2_ovod1_oviposition)
-
-summary(glmm.bin.of.ovi.2choice.1.1)
-
-
-
-tab_model(glmm.bin.of.ovi.2choice)
-
-
 
 
 
@@ -451,102 +391,64 @@ tab_model(glmm.bin.of.ovi.2choice)
 ## Model 1 
 
 # Binomial model 
-glm.bin.vf.ovi.2choice <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin_oviposition)
+glm.bin.vf.ovi.2choice <- glm(cbind(Conditioned, Unconditioned) ~ 
+                                ratio * block, family = binomial, data = df2_virgin_oviposition)
 
-summary(glm.bin.vf.ovi.2choice)
+
 
 
 # Assumption checking 
-
-## qq checks 
-performance::check_model(glm.bin.vf.ovi.2choice, check = c("qq"))
-## the points do not line up greatly, but it is not the worst 
-## dispersion at the beginning and the end 
-
-## another qq
-residuals_v_binom <- residuals(glm.bin.vf.ovi.2choice, type = "pearson")
-qnorm(residuals_v_binom)
-## Will generate a qq 
-qqnorm(residuals_v_binom) 
-qqline(residuals_v_binom, col = "green") 
-## points sort of fall along the line, but again - not at the beginning and end 
 
 
 ## Testing homogeneity assumptions 
 performance::check_model(glm.bin.vf.ovi.2choice, check = c("homogeneity"))
 ## there seems to be quite a lot of variation 
 
-## more ways to test assumptions
-plot(glm.bin.vf.ovi.2choice)
-## the way that things line up isn't actually awful 
-
 
 # DHARMa assumption checks 
+## Doing more DHARMa checks 
+simulationOutput <- simulateResiduals(fittedModel = glm.bin.vf.ovi.2choice, plot = T)
+ ## Things do not line up too great, model is pretty bad 
 
-## Looking for overdispersion 
-testDispersion(glm.bin.vf.ovi.2choice) 
-## I think this shows to be quite a lot of overdsispersion 
 
 ## easystats overdispersion checker 
 check_overdispersion(glm.bin.vf.ovi.2choice)
-## there is some overdispersion, quite a bit? 
+## There is overdispersion
 
-
-## Doing more DHARMa checks 
-simulationOutput <- simulateResiduals(fittedModel = glm.bin.vf.ovi.2choice, plot = T)
-## Things do not line up too great
 
 
 
 
 ## Model 2
 ## a glm mixed model
-glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate)  , family = binomial, data = df2_virgin_oviposition)
+glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned)
+                                 ~ ratio * block + (1|block/plate)  , family = binomial, data = df2_virgin_oviposition)
 
 # Assumption checking 
-
-# easystats
-performance::check_model(glmm.bin.vf.ovi.2choice, check = c("qq"))
-## this seems to line up better than the binomial model 
-## but there are still some dispersed points at the beginning and the end
-
-## another qq
-residuals_v_mixed <- residuals(glmm.bin.vf.ovi.2choice, type = "pearson")
-qnorm(residuals_v_mixed)
-## Will generate a qq 
-qqnorm(residuals_v_mixed) 
-qqline(residuals_v_mixed , col = "green") 
-## again, points sort of fall along the line but there is some dispersion at the beginning and end 
 
 
 ## Homogeneity assumption checks 
 performance::check_model(glmm.bin.vf.ovi.2choice, check = c("homogeneity"))
 ## there seems to be lots of variation in the points 
 
-# Trying more assumption checks
-plot(glmm.bin.vf.ovi.2choice)
-## Just shows lots of dispersion really
 
+##  DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glmm.bin.vf.ovi.2choice, plot = T)
+# The model checks look pretty good 
 
-# DHARMa assumption checks
-testDispersion(glmm.bin.vf.ovi.2choice) # quite overdispersed
 
 ## easystats dispersion check
 check_overdispersion(glmm.bin.vf.ovi.2choice) 
-## There is overdispersion check 
-
-## More general assumption checks using DHARMa
-simulationOutput <- simulateResiduals(fittedModel = glmm.bin.vf.ovi.2choice, plot = T)
-# Some points fall together, but some points are still quite dispersed 
+## No overdispersion detected 
 
 
 ## Comparing models
-AIC(glm.bin.vf.ovi.4choice, glmm.bin.vf.ovi.2choice)
-## the mixed model has a slightly lower AIC 
+AIC(glm.bin.vf.ovi.2choice, glmm.bin.vf.ovi.2choice)
+   ## The mixed model has lower AIC 
 
 
 
-
+# Final chosen model: Binomial GLMM
 ## Using the mixed model for now 
 glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~
                                    ratio * block + (1|block/plate)  , family = binomial, data = df2_virgin_oviposition)
@@ -554,56 +456,11 @@ glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~
 
 ## Looking for significance in block
 drop1(glmm.bin.vf.ovi.2choice, test = "Chisq") ## block is significant
+ # Block is significant, keeping block in 
 
+
+
+# Final chosen model:
 summary(glmm.bin.vf.ovi.2choice)
-
-## Changing block to "two" (as one will not be used for oviposition data)
-df2_virgin_oviposition$block <- as.factor(df2_virgin_oviposition$block)
-df2_virgin_oviposition$block <- relevel(df2_virgin_oviposition$block, ref = "two")
-
-## Looking at results, keeping block in 
-summary(glmm.bin.vf.ovi.2choice)
-## block 3 sig with block 1
-## block 2 not sig with block 1 
-
-
-exp(confint(glmm.bin.vf.ovi.2choice, method = "Wald"))
-
-drop1()
-
-
-glmm.bin.vf.ovi.2choice <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|plate/block)  , family = binomial, data = df2_virgin_oviposition)
-
-## Using model for now, looking at results: 
-summary(glmm.bin.m.ovi.2choice) ## says block is significant 
-
-
-## Changing "ratio" to 4:1 
-df2_virgin_oviposition$ratio <- as.factor(df2_virgin_oviposition$ratio)
-df2_virgin_oviposition$ratio <- relevel(df2_virgin_oviposition$ratio, ref = "4:1")
-
-
-
-glmm.bin.v.ovi.2choice.1.1 <- glmer(cbind(Conditioned, Unconditioned) ~ ratio * block + (1|block/plate)  , family = binomial, data = df2_virgin_oviposition)
-
-summary(glmm.bin.v.ovi.2choice.1.1)
-
-
-
-emmeans::emmeans(glmm.bin.vf.ovi.2choice, pairwise ~ ratio, type = "response")
-
-summary(glmm.bin.vf.ovi.2choice )
-
-emmeans::emmeans(glmer.virgin_f_egg, ~ ratio, type = "response")
-
-tab_model(glmm.bin.vf.ovi.2choice)
-
-
-
-
-
-
-
-
 
 
