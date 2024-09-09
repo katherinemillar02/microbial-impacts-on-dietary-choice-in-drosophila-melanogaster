@@ -408,6 +408,10 @@ performance::check_model(glmm.bin.of, check = c("homogeneity")) # I think looks 
 simulationOutput_glmm.bin.of <- simulateResiduals(fittedModel = glmm.bin.of, plot = T)
   # Assumptions look pretty good
 
+
+check_overdispersion(glmm.bin.of)
+  # No overdispersion detected
+
 ## Doing AIC checks 
 AIC(glm.bin.of, glmm.bin.of)
  ## Mixed model has lower AIC, and it considers random effects, so stucking with this
