@@ -11,11 +11,12 @@ library(sjPlot)
 ##################---
 
 
+#### Script for analysis 
+ # This script contains the actual analysis, with the final chosen models
 
-#### Reading the data in: 
-####################################-
-#### WILD TYPE MALE CONDITIONING ####
-####################################-
+
+#### Male #### 
+#### Reading data in #####
 
 ## Creating a path to the scripts for treatment 2 condtioning
 malepath <- "data/male_conditioning"
@@ -78,15 +79,52 @@ df2_male
 
 
 
+##### Data Analysis ####
+## Model with two-way interaction
+glmm.bin.m <- glmer(cbind(Conditioned, Unconditioned) 
+                    ~ ratio * block
+                    + (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
+
+
+# Testing for the significance of the two-way interaction 
+drop1(glmm.bin.m, test = "Chisq")
+ # No significant 2-way interaction 
+
+
+# New model with two-way interaction dropped
+glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) 
+                    ~ ratio + block
+                    + (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
+
+
+
+#### Data analysis for write-up ####
+
+# Basic analysis 
+summary(glmm.bin.m.2)
+
+# Values for analysis write-up
+emmeans::emmeans(glmm.bin.m.2, specs = ~ ratio, type = "response")
+# assume that condition is conditioned (not unconditioned)
+
+# Table for write-up
+tab_model(glmm.bin.m.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
 
 
 
-####################################-
-#### VIRGIN FEMALE CONDITIONING  ----
-####################################-
+
+
+
+
+
+
+
+
+#### Virgin Female ####
+#### Reading data in ####
 
 ## Creating a path to get to the Virgin Conditioning data files 
 pathvirgin <- "data/female_conditioning/virgin"
@@ -144,14 +182,49 @@ df2_virgin
 
 
 
+#### Data Analysis ####
+
+# Testing model with a two-way interaction effect 
+glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned)
+                      ~ ratio * block + (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
+
+
+# Using drop1 to look for significance in a two-way interaction effect 
+drop1(glmm.bin.vf, test = "Chisq")
+  # No two-way interaction effect found 
+
+# New model - without a two-way interaction effect 
+glmm.bin.vf.2  <- glmer(cbind(Conditioned, Unconditioned)
+                      ~ ratio + block + (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
+
+
+
+
+#### Data analysis for write-up ####
+# Basic analysis
+summary(glmm.bin.vf.2)
+
+# Confidence intervals
+exp(confint(glmm.bin.vf.2))
+
+# Values for analysis write-up
+emmeans::emmeans(glmm.bin.vf.2, specs = ~ ratio, type = "response")
+ # assume that condition is conditioned (not unconditioned)
+
+# Table for write-up
+tab_model(glmm.bin.vf.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
 
 
-###################################-
-#### OvoD1 FEMALE CONDITIONING ----
-####################################-
+
+
+
+
+#### OvoD1 Female ####
+
+#### Reading data in ####
 
 pathovod1 <- "data/female_conditioning/ovod1"
 
@@ -196,267 +269,33 @@ df2_ovod1 <- df_ovod1 %>%
 
 
 
+#### Data Analysis ####
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-########################## Data Analysis Part 1 (4:1 + 1:4) !!!! ############################
-
-##########--
-## MALE ####
-##########--
-
-
-## MODELS 
-
-# MODEL 1
-# Binomial GLM
-## A binomial model, not considering other "random" factors
-## cbind() is used - the response variables are Conditioned and Unconditioned
-glm.bin.m <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_male)
-
-# ASSUMPTION CHECKING:
-## Checking Residuals
-glm.bin.m.residuals <- residuals(glm.bin.m, type = "pearson")
-
-# pearson residual check
-plot(glm.bin.m.residuals ~ fitted(glm.bin.m), ylab = "Pearson Residuals", xlab = "Fitted Values")
-abline(h = 0, col = "red")
-
-## MODEL CHECK for overdispersion
-summary(glm.bin.m) # overdispersion
-
-
-
-
-## MODEL 2 
-# Binomial GLMM
-# trying a mixed model, considers other "random" factors
-glmm.bin.m <- glmer(cbind(Conditioned, Unconditioned) 
-                    ~ ratio * block
-                    + (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
-
-
-## Assumption checks 
-
-# Performance check of data using "easystats":
-performance::check_model(glmm.bin.m, check = c("homogeneity")) #?? 
-
-## DHARMa performance checks
-testDispersion(glmm.bin.m) 
-
-
-# easystats checks 
-check_overdispersion(glmm.bin.m)
-  # No overdispersion
-
-
-check_zeroinflation(glmm.bin.m)
- # cannot check zero inflation 
-
-
-## zero inflation test 
-fittedModel <- glmmTMB(cbind(Conditioned, Unconditioned)   ~ ratio * block + (1|block/plate) + (1|block/observation), ziformula = ~1 , family = "binomial", data = df2_virgin)
-summary(fittedModel)
-countOnes <- function(x) sum(x == 1)  # testing for number of 1s
-testGeneric(simulationOutput, summary = countOnes, alternative = "greater") 
-# No zero inflation? 
-
-
-## zero inflation test 
-fittedModel <- glmmTMB(cbind(Conditioned, Unconditioned)   ~ ratio * block + (1|block/plate) + (1|block/observation), ziformula = ~1 , family = "binomial", data = df2_male)
-summary(fittedModel)
-countOnes <- function(x) sum(x == 1)  # testing for number of 1s
-testGeneric(simulationOutput, summary = countOnes, alternative = "greater") 
-# No zero inflation? 
-
-
-
-# DHARMa checks 
-simulationOutput <- simulateResiduals(fittedModel = glmm.bin.m, plot = T)
-   # Model looks pretty good
-
-
-
- 
-
-## AIC Check of models 
-AIC(glm.bin.m, glmm.bin.m)
-    ## Binomial GLMM has a slighty lower AIC
-
-# Using MODEL 2 (Binomial GLMM) for analysis? 
-glmm.bin.m <- glmer(cbind(Conditioned, Unconditioned) 
-                    ~ ratio * block
-                    + (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
-
-
-# two-way interaction test
-drop1(glmm.bin.m, test = "Chisq")
-   # No two-way interaction
-
-# MODEL 2.1 
-glmm.bin.m.2 <- glmer(cbind(Conditioned, Unconditioned) ~ 
-                        ratio + block +
-                         (1|block/plate) + (1|block/ observation) , family = binomial, data = df2_male)
-
-
-## Looking at the results of the model 
-summary(glmm.bin.m.2) 
-
-
-
-
-
-
-
-
-###################--
-## VIRGIN FEMALE ####
-###################--
-
-## MODEL 1 
-## A binomial model, not considering other "random" factors
-glm.bin.vf <- glm(cbind(Conditioned, Unconditioned) ~ ratio * block, family = binomial, data = df2_virgin)
-
-# Assumption checks 
-performance::check_model(glm.bin.vf , check = c("homogeneity")) 
-
-# Assumption checking 
-summary(glm.bin.vf) ## There is overdispersion
-
-
-
-
-
-## MODEL 2 
-# Mixed model, considers other "random" factors
-glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned)
-                      ~ ratio * block + (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
-
-# Assumption checks 
-performance::check_model(glmm.bin.vf, check = c("homogeneity")) # what is going on? looks ok 
-
-# DHARMa checks 
-simulationOutput_glmm.bin.vf <- simulateResiduals(fittedModel = glmm.bin.vf, plot = T)
-  # Model looks pretty good
-
-# easystats checks
-check_overdispersion(glmm.bin.vf)
-  # No overdispersion detected 
-
-
-check_zeroinflation(glmm.bin.vf)
- # cannot check... 
-
-
-## Doing AIC check 
-AIC(glm.bin.vf,glmm.bin.vf) 
-# The Binomial GLMM has slightly higher AIC, choosing this  
-
-
-
-## Using Binomial GLMM for analysis
-glmm.bin.vf  <- glmer(cbind(Conditioned, Unconditioned) ~ 
-                        ratio * block +
-                        (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
-
-# Looking for two-way interaction
-drop1(glmm.bin.vf, test = "Chisq") # No interaction effect between ratio and block
- # No two way interaction
-
-# Model 2.1 - where block has been removed...
-glmm.bin.vf.2 <- glmer(cbind(Conditioned, Unconditioned) 
-                       ~ ratio + block +  (1|block/plate) + (1|block/observation), family = binomial, data = df2_virgin)
-
-
-# Finding results from the model
-summary(glmm.bin.vf.2) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##################--
-## OVOD1 FEMALE ####
-##################--
-
-## Model 1- Trying a binomial model
-glm.bin.of <- glm(cbind(Conditioned, Unconditioned) ~
-                    ratio * block , family = binomial, data = df2_ovod1)
-
-# Assumption checks for binomial model 
-summary(glm.bin.of) # There is overdispersion? 
-
-
-
-
-
-
-
-## Model 2 
-# Mixed model, considers other "random" factors
+# Model with two-way interaction effect
 glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) 
                      ~ ratio * block  + (1|block/plate) + (1|block/observation), family = binomial, data = df2_ovod1)
 
-
-# Assumption checking 
-
-# easystats
-performance::check_model(glmm.bin.of, check = c("homogeneity")) # I think looks okay, bit slopey down 
-
-# DHARMa checks 
-simulationOutput_glmm.bin.of <- simulateResiduals(fittedModel = glmm.bin.of, plot = T)
-  # Assumptions look pretty good
-
-
-## zero inflation test 
-fittedModel <- glmmTMB(cbind(Conditioned, Unconditioned)   ~ ratio * block + (1|block/plate) + (1|block/observation), ziformula = ~1 , family = "binomial", data = df2_ovod1)
-summary(fittedModel)
-countOnes <- function(x) sum(x == 1)  # testing for number of 1s
-testGeneric(simulationOutput, summary = countOnes, alternative = "greater") 
- # No zero inflation? 
+## Testing for significance of the two-way interaction effect 
+drop1(glmm.bin.of, test = "Chisq")
+ # A significant 2-way interaction effect
 
 
 
-check_overdispersion(glmm.bin.of)
-  # No overdispersion detected
+#### Data analysis for write-up #### 
 
-## Doing AIC checks 
-AIC(glm.bin.of, glmm.bin.of)
- ## Mixed model has lower AIC, and it considers random effects, so stucking with this
-
-# Using this model
-glmm.bin.of <- glmer(cbind(Conditioned, Unconditioned) ~
-                       ratio * block  + (1|block/plate) + (1|block/observation), family = binomial, data = df2_ovod1)
-
-
-# Looking at the significance of block
-drop1(glmm.bin.of, test = "Chisq") 
- # block is significant, keep in the model
-
-
-## Analysis of glmm.bin.of
+# Basic analysis
 summary(glmm.bin.of)
+
+# Confidence intervals
+exp(confint(glmm.bin.of))
+
+# Values for analysis write-up
+emmeans::emmeans(glmm.bin.of, specs = ~ ratio, type = "response")
+ # Assume condition is conditioned (not unconditioned)
+
+# Table for write-up
+tab_model(glmm.bin.of, CSS = list(css.table = '+font-family: Arial;'))
+
 
 
 
