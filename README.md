@@ -44,13 +44,13 @@ In this analysis `glmer()` and `glmmTB()` models were used.
 ### 🗂 controlled_density
 
 
-  ### 🗂 overall_emergence 
+  #### 🗂 overall_emergence 
 
-  ### 🗂 development_time
+  #### 🗂 development_time
 
-  ### 🗂 data_visualisation
+  #### 🗂 data_visualisation
 
-  ### 🗂 body_weight 
+  #### 🗂 body_weight 
 
 
 
