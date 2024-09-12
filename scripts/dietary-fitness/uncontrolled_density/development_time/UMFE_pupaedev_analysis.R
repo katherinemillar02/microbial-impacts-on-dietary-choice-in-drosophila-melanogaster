@@ -1,4 +1,9 @@
-# Packages 📦📦📦📦####
+
+#### Chapter 4 ####
+
+ # Uncontrolled Density
+
+#### Packages 📦📦📦📦 ####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -10,13 +15,17 @@ library(glmmTMB)
 library(sjPlot)
 
 
-#### Reading the data in: ####
+#### Reading the data in, making total data set: ####
+
+# Reading excel file in 
 pupae_fitness_UMFE <- read_excel("data/fitness_development/puape_data.xlsx")
 
-## Total: 
+## Working out the total sum of pupae: 
 total_pupae <- pupae_fitness_UMFE %>% 
   group_by(treatment) %>% 
   summarise(total_pupae = sum(pupae, na.rm = TRUE))
+
+
 
 
 # Model 1 
@@ -29,7 +38,8 @@ glmm.p.UMFE.pupae <- glmmTMB(pupae
 ## Assumption Checking
 # DHARMa checks 
 plot(simulateResiduals(glmm.p.UMFE.pupae)) 
- ## This looks quite bad, qq doesn't line up, residuals are everywhere.
+  ## This looks quite bad, qq doesn't line up, residuals are everywhere.
+  # Significant tests
 
 # Performance checks
 check_zeroinflation(glmm.p.UMFE.pupae)
@@ -64,13 +74,16 @@ check_overdispersion(glm.nb.UMFE.pupae)
 
 
 
-# There is still zero inflation, so testing zero-inflation models 
+# There is no longer overdispersion, 
+# but there is still zero inflation, so testing zero-inflation models 
 
 
 
 
 # Model 3 
 #### Zero-Inflated Poisson ####
+
+
 zi.p.UMFE.pupae <- zeroinfl(pupae ~ 
                               
                               treatment * `time (hours)`  
