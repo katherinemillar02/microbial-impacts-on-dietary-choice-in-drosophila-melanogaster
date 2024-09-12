@@ -14,92 +14,93 @@ library(glmmTMB)
 library(sjPlot)
 ##################
 
-#### Reading data in: ####
+#### Reading and cleaning data ####
+
+## Reading data in using read excel 
 bodyweight_MFE <- read_excel("data/fitness_development/weighing_body.xlsx")
 
+## Multiplying the values by 1000, for better analysis and to get the plots to work... for consistency too 
 bodyweight_MFE$weight_mg <- bodyweight_MFE$weight_mg * 1000
+
+
+
+#### 1. Preliminary Data Analysis #### 
+
 
 # Model 1 
 #### Poisson GLMM ###
 glmm.p.MFE.weight <- glmmTMB(weight_mg ~ treatment * sex + (1|vial), family = poisson, data = bodyweight_MFE)
 
-## qq plot from the model
-residuals <- residuals(glmm.p.MFE.weight)
-qqnorm(residuals)
-qqline(residuals, col = 2) # qq looks pretty goos
+## DHARMa residuals check 
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.weight, plot = T)s
+ # The model is not great with either qq or homogeneity tests 
 
-# performance checks 
+
+# performance checks - easystats 
+
+# Checking for overdispersion 
 check_overdispersion(glmm.p.MFE.weight)
-# overdispersion
+# There is overdispersion
+
+# Checking for zeroinflation
 check_zeroinflation(glmm.p.MFE.weight) 
-# No zero-inflation 
-
-simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.weight, plot = T)
+# There is no zero-inflation 
 
 
 
+## As there is overdispersion, trying a Negative Binomial GLM 
 
-
+# Model 2
+#### Negative Binomial GLM #### 
 glm.nb.MFE.weight <- glm.nb(weight_mg ~ treatment * sex  
                                
                                , data = bodyweight_MFE)
 
 
-
+## DHARMa checks 
 simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.weight, plot = T)
+ # Model is better, but still get significant result for homogeneity
 
+
+## Using this model for now 
+
+#### 2. Data analysis with chosen model ####
+
+## Testing for a two-way interaction effect 
+glm.nb.MFE.weight <- glm.nb(weight_mg ~ treatment * sex  
+                            
+                            , data = bodyweight_MFE)
+
+## Looking for significance in the two-way interaction effect using drop1()
 drop1(glm.nb.MFE.weight, test = "Chisq")
+ # No significance 
 
-
+## Using the model without the two-way interaction effect 
 glm.nb.MFE.weight.2 <- glm.nb(weight_mg ~ treatment + sex  
                             
                             , data = bodyweight_MFE)
 
+
+##### Data analysis for write-up ####
+
+# Basic analysis 
 summary(glm.nb.MFE.weight.2)
 
-#### Chosen model: Poisson GLMM ####
-
-drop1(glmm.p.MFE.weight, test = "Chisq")
-# No interaction effect between treatment and sex
-
-# If you want to change the intercept...
-bodyweight_2$sex <- as.factor(bodyweight_2$sex)
-bodyweight_2$sex <- relevel(bodyweight_2$sex, ref = "male")
-
-# Final model: 
-glmm.p.MFE.weight.2 <- glmmTMB(weight_mg ~ treatment + sex + (1|vial), family = poisson, data = bodyweight_MFE)
+## Looking for confidence intervals 
+exp(confint(glm.nb.MFE.weight.2))
 
 
-
-#### DATA ANALYSIS ####
-summary(glmm.p.MFE.weight.2)
-
-
-exp(confint(glmm.p.MFE.weight.2))
-
-## Table for model. 
-tab_model(glmm.p.MFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
+## Real values for write-up
+emmeans::emmeans(glm.nb.MFE.weight.2, specs =  ~ treatment + sex , type = "response")
 
 
-simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.weight.2, plot = T)
-simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.weight.2, plot = T)
-
-glm.nb.MFE.weight.2 <- glm.nb(weight_mg ~ treatment * sex  
-                              
-                              , data = bodyweight_MFE)
-
-drop1(glm.nb.MFE.weight.2, test = "Chisq")
-
-
-glm.nb.MFE.weight.2 <- glm.nb(weight_mg ~ treatment + sex  
-                              
-                              , data = bodyweight_MFE)
-
-
-
-
-summary(glm.nb.MFE.weight.2)
+## Table of model for write-up
 tab_model(glm.nb.MFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
+
+
+
+
+
 emmeans::emmeans(glm.nb.MFE.weight.2, specs = ~ sex + treatment, type = "response")
 
 
