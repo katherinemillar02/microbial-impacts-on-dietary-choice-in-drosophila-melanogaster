@@ -76,7 +76,6 @@ males_data_UMFE_2_boxplot <- ggplot(males_data_UMFE_2, aes(x = time_hours, y = m
 
 
 ## The Male and Female Plots with the newly arranged datasets
-
 UMFE_fly_plot <- 
   females_data_UMFE_2_boxplot /
   males_data_UMFE_2_boxplot
