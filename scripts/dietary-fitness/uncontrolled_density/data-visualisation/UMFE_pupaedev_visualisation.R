@@ -5,25 +5,24 @@ library(readxl)
 library(viridis)
 
 
-## Choosing colours from viridis to use: 
-viridis_colors <- viridis(10)
+
 
 ################################################ PUPAE ANALYSIS ####
-
-
-## Reading pupae data in
-pupae_fitness <- read_excel("data/fitness_development/puape_data.xlsx")
-
-
 ################################################ PUPAE DATA VISUALISATION ####
 
 ## Reading the second pupae data set in: 
 
 # This is the same data, but only shows one collection per day 
 # The middle hour point has been found, and the counts of both have been summed 
+## This plot is used for neater visualisation
 pupae_fitness_2 <- read_excel("data/fitness_development/pupae_data_2.xlsx")
 
-## Boxplot ##
+
+## Choosing colours from viridis to use: 
+viridis_colors <- viridis(10)
+
+                                                   ## Boxplot ##
+
 pupae_boxplot_2 <- ggplot(pupae_fitness_2, aes(x = time_hours, y = pupae, fill = treatment)) +
   geom_boxplot(outliers = FALSE, alpha =.4, position = position_dodge (width = 20)) + #width =10 ) +
   geom_point(aes(fill = treatment),
