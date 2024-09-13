@@ -100,7 +100,3 @@ tab_model(glm.nb.MFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
-
-emmeans::emmeans(glm.nb.MFE.weight.2, specs = ~ sex + treatment, type = "response")
-
-
