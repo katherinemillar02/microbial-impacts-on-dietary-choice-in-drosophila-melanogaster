@@ -58,8 +58,11 @@ This script includes visualisation for the preferred oviposition diet for a mate
 
  #### 🗂 relative 
  
- ##### relative_dose_ovi.R
+ ##### relative_dose_ovi.R            
+This script contains data analysis for oviposition behaviour, from the assays which were in a relative     (four-choice) environment at both 35 mm and 90 mm. 
+ 
  ##### relative_dose_feeding.R
+This script contains data analysis for feeding behaviour, from the assays which were in a relative (four-choice) environment at both 35 mm and 90 mm. 
  
  
  #### 🗂 absolute
