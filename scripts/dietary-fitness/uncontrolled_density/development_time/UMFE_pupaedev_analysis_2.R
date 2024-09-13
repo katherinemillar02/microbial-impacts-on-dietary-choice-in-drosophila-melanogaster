@@ -45,6 +45,9 @@ check_zeroinflation(glmm.p.UMFE.pupae)
 ## No zero inflation
 check_overdispersion(glmm.p.UMFE.pupae) 
 ## There no overdispersion 
+
+
+
  
 # Model might be ok, but assumptions do not look great... 
 
