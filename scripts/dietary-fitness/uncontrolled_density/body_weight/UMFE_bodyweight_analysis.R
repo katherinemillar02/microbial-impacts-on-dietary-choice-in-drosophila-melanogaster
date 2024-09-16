@@ -17,111 +17,103 @@ library(sjPlot)
 #### Reading data in: ####
 bodyweight_2 <- read_excel("data/fitness_development/bodyweight_flies2.xlsx")
 
-
-
-
+ # Multiplying by 1000 to get consistent with visualisation
 bodyweight_2$weight_mg <- bodyweight_2$weight_mg * 1000
+
+
+
+
+
 
 
 # Model 1 
 #### Poisson GLMM ###
 glmm.p.UMFE.weight <- glmmTMB(weight_mg ~ treatment * sex + (1| sample_number), family = poisson, data = bodyweight_2)
 
-## qq plot from the model
-residuals <- residuals(glmm.p.UMFE.weight)
-qqnorm(residuals)
-qqline(residuals, col = 2) # qq looks pretty good
+## Assumptions checks 
 
-# Model
+# DHARMa
 simulationOutput <- simulateResiduals(fittedModel = glmm.p.UMFE.weight, plot = T)
-# pretty bad 
+ # Pretty bad, most of the tests are significant 
 
-# performance checks 
+
+# performance checks - easystats 
+
+## Overdispersion test 
 check_overdispersion(glmm.p.UMFE.weight)
- # No overdispersion
+ # Overdispersion detected
+
+# Zeroinflation test
 check_zeroinflation(glmm.p.UMFE.weight) 
  # No zero-inflation 
 
 
+
+
+
+
+
 # Model 2 
+#### Negative Binomial GLM ####
 glm.nb.UMFE.weight <- glm.nb(weight_mg ~ treatment * sex  
                             
                             , data = bodyweight_2)
 
 
+# Assumption checks 
 
-
-
-
-## qq plot from the model
-residuals <- residuals(glm.zi.nb.UMFE.bodyweight)
-qqnorm(residuals)
-qqline(residuals, col = 2) # qq looks pretty goos
-
+# DHARMa checks
 simulationOutput <- simulateResiduals(fittedModel = glm.nb.UMFE.weight, plot = T)
+ # The tests seem good, assumptions seem good 
+ # This seems like the better model 
 
 
-
+# Doing an AIC test for comparison 
 AIC(glmm.p.UMFE.weight, glm.nb.UMFE.weight)
+ # Negative Binomial GLM is a lot better
 
-# if bodyweight is * 1000, assumptions are a lot better? 
+
+
+
 
 # Model 2 chosen
+
+# Using the chosen model with a two-way interaction
 glm.nb.UMFE.weight <- glm.nb(weight_mg ~ treatment * sex  
                              
                              , data = bodyweight_2)
 
 
 
-
+# Checking for significance in the two-way interaction
 drop1(glm.nb.UMFE.weight, test = "Chisq")
+  # No significant interaction
 
 
+# Dropping the two-way interaction from the model
 glm.nb.UMFE.weight.2  <- glm.nb(weight_mg ~ treatment + sex  
                              
                              , data = bodyweight_2)
 
 
 
-emmeans::emmeans(glm.nb.UMFE.weight, specs = ~ sex + treatment, type = "response")
 
+
+#### Data analysis for write-up #### 
+
+# Basic analysis 
 summary(glm.nb.UMFE.weight.2)
 
 
+# Confidence intervals 
+exp(confint(glm.nb.UMFE.weight.2))
 
 
-
-## Table for model. 
-tab_model(glm.nb.UMFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
-
-
-
-
-
-#### Chosen model: Poisson GLMM ####
-
-drop1(glmm.p.UMFE.weight, test = "Chisq")
- # No interaction effect
-
-
-
-# Final model: 
-glmm.p.UMFE.weight.2 <- glmmTMB(weight_mg ~ treatment + sex, family = poisson, data = bodyweight_2)
-
-
-
-
-
-
-
-#### DATA ANALYSIS ####
-summary(glmm.p.UMFE.weight.2)
-
-exp(confint(glmm.p.UMFE.weight.2))
-
+# Real values for write-up
+emmeans::emmeans(glm.nb.UMFE.weight, specs = ~ sex + treatment, type = "response")
 
  
-## Table for model. 
+## Table of model for write-up
 tab_model(glmm.p.UMFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
