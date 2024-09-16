@@ -41,9 +41,10 @@ overallflies_MFE <- fly_fitness_tidy_MFE %>%
 ## DATA VISUALISATION
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 
+ # Choosing nice colours
 viridis_colors <- viridis(10)
 
-
+ # Coding for data visualisation
 overall_emergence_treatment <- ggplot(overallflies_MFE, aes(x = sex, y = total_count, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.8)) + 
   geom_point(aes(fill = treatment), 
