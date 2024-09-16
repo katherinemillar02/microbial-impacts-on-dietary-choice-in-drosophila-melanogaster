@@ -6,14 +6,16 @@ library(viridis)
 library(patchwork)
 
 
-## Choosing colours from viridis to use: 
-viridis_colors <- viridis(10)
 
-################################################ FLYA ANALYSIS ####
+
 
 
 ## Reading pupae data in
 fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
+
+
+## Choosing colours from viridis to use: 
+viridis_colors <- viridis(10)
 
 
 # Subsetting a female dataset
