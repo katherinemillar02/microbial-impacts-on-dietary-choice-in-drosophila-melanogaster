@@ -81,7 +81,8 @@ UMFE_fly_plot <-
   males_data_UMFE_2_boxplot
 
 
-
+## Run plot 
+UMFE_fly_plot
 
 
 ## Saving a plot

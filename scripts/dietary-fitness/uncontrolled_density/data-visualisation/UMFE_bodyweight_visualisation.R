@@ -13,7 +13,7 @@ library(DHARMa)
 library(glmmTMB)
 
 
-
+## MAKE SURE TO RUN WHOLE SCRIPT 
 
 
 # Reading data in 
