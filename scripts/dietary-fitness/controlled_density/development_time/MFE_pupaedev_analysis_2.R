@@ -18,7 +18,7 @@ library(glmmTMB)
 pupae_fitness_MFE <- read_excel("data/fitness_development/MFE_pupae.xlsx")
 
 ## This code does something with 0s - not sure if it needed... 
-pupae_fitness_MFE_filled <- pupae_fitness_MFE %>%
+pupae_fitness_MFE <- pupae_fitness_MFE %>%
   mutate(pupae = ifelse(is.na(pupae), 0, pupae))
 
 ## The uncount code will simply clean the data

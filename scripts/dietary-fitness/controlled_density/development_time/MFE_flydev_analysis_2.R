@@ -1,6 +1,10 @@
+
+# Chapter 3 - Development 
+
+
 # Overall Fly Emergence 
 
-# Packages 📦📦📦📦####
+#### Packages 📦📦📦📦 ####
 library(tidyverse)
 library(lmerTest)
 library(readxl)
@@ -11,7 +15,9 @@ library(DHARMa)
 library(glmmTMB)
 
 
-#### Reading data in ####
+#### Reading data in, sorting data ####
+
+# Using readexcel to get the dataframe 
 fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
 
 
@@ -22,26 +28,24 @@ fly_fitness_tidy_MFE <- tidyr::pivot_longer(data = fly_fitness_MFE ,
                                             values_to = "count") 
 
 
-# as df
+# As DF
 fly_fitness_tidy_MFE <- as.data.frame(fly_fitness_tidy_MFE)
 
 
+## Cleaning the data into a tidier format, for correct data analysis
 
-
-
-
+# Making NAs 0, so this code works 
 fly_fitness_tidy_MFE_filled <- fly_fitness_tidy_MFE %>%
   mutate(count = ifelse(is.na(count), 0, count))
 
-
+# Changing count to uncount, so the format is better 
 fly_fitness_tidy_MFE_2 <- uncount(fly_fitness_tidy_MFE_filled, count)
 
 
 
 
-
-
-#### Testing Models ####
+#### 1. Preliminary Data Analysis ####
+ ## Testing Models
 
 # Model 1 
 #### Poisson GLM ####
@@ -51,24 +55,21 @@ glm.p.MFE.fly <- glm(time_hours ~
                      family = poisson, data = fly_fitness_tidy_MFE_2)
 
 
-#### ASSUMPTION CHECKS 
-performance::check_model(glm.p.MFE.fly, check = c("qq")) 
-# doesn't show 
+## Assumption checks 
+
+# DHARMa assumption checks 
+plot(simulateResiduals(glm.p.MFE.fly)) 
+ # Significant tests and assumptions are really quite bad 
+
+# easystats assumption checks
 performance::check_model(glm.p.MFE.fly, check = c("outliers")) 
-# weird? 
+# No outliers?
 performance::check_model(glm.p.MFE.fly, check = c("homogeneity")) 
-# really quite bad 
+# The line is somewhat straight?
 
 ## Checking for overdispersion 
 check_overdispersion(glm.p.MFE.fly) 
-## overdispersion detected
-
-## Checking for zeroinflation
-check_zeroinflation(glm.p.MFE.fly) 
-## there is no zero inflation 
-
-
-
+## Overdispersion detected
 
 
 
@@ -84,26 +85,25 @@ glm.nb.MFE.fly <- glm.nb(time_hours ~
                          data = fly_fitness_tidy_MFE_2)
 
 
-#### ASSUMPTION CHECKS 
-performance::check_model(glm.nb.MFE.fly, check = c("qq")) 
-# does not show. 
+## Assumption checks 
+
+# DHARMa assumption checks 
+plot(simulateResiduals(glm.nb.MFE.fly)) 
+# Less significant tests, assumptions are looking a lot better 
+
+
+# performance - easystats 
 performance::check_model(glm.nb.MFE.fly, check = c("outliers")) 
+# No outliers?
+
 
 performance::check_model(glm.nb.MFE.fly, check = c("homogeneity"))
-# looks a bit weird
+# looks a bit weird, but line is somewhat straight
 
 
 ## Checking for overdispersion 
 check_overdispersion(glm.nb.MFE.fly)
 ## No overdispersion detected 
-
-## qq plot from the model
-residuals <- residuals(glm.nb.MFE.fly)
-qqnorm(residuals)
-qqline(residuals, col = 2)
-## qq residuals look pretty good
-
-
 
 
 
@@ -120,38 +120,24 @@ glmm.p.MFE.fly <- glmmTMB(time_hours ~
                           family = poisson, data = fly_fitness_tidy_MFE_2)
 
 
-## qq plot from the model
-residuals <- residuals(glmm.p.MFE.fly)
-qqnorm(residuals)
-qqline(residuals, col = 2)
-## qq residuals look pretty good. 
 
-## Performance
-check_zeroinflation(glmm.p.MFE.fly)
-# there is no zero inflation
+# DHARMa assumption checks 
+plot(simulateResiduals(glmm.p.MFE.fly)) 
+# Assumptions are pretty bad 
+
 check_overdispersion(glmm.p.MFE.fly)
 # overdispersion detected
 
 
 
 
-
-
-
-
-
-
-
 # Comparing models
 AIC(glm.p.MFE.fly,glm.nb.MFE.fly, glmm.p.MFE.fly)
+ # NegBin the lowest by a little bit
 
 
 
 
-
-
-#### Chosen model: Poisson GLMM ####
-# Model 2 
 #### Negative Binomial GLM ####
 glm.nb.MFE.fly <- glm.nb(time_hours ~
                            
@@ -168,7 +154,7 @@ drop1(glm.nb.MFE.fly, test = "Chisq")
 # No 2-way interaction effect
 
 
-#### Chosen model: Poisson GLMM ####
+#### Chosen model: NegBin ####
 glm.nb.MFE.fly.2 <- glm.nb(time_hours ~
                            
                            treatment + sex ,
@@ -176,12 +162,18 @@ glm.nb.MFE.fly.2 <- glm.nb(time_hours ~
                          data = fly_fitness_tidy_MFE_2)
 
 
-emmeans::emmeans(glm.nb.MFE.fly.2, specs = ~ sex + treatment, type = "response")
 
 
-## Data analysis of the chosen model
+#### Data Analysis for write-up #### 
+
+# Basic analysis 
 summary(glm.nb.MFE.fly.2)
 
+# Real values for write-up
+emmeans::emmeans(glm.nb.MFE.fly.2, specs = ~ sex + treatment, type = "response")
+
+# Confidence intervals
 exp(confint(glm.nb.MFE.fly.2))
 
+# Table for write-up 
 tab_model(glm.nb.MFE.fly.2, CSS = list(css.table = '+font-family: Arial;'))
