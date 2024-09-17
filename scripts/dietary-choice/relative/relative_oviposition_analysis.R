@@ -375,5 +375,41 @@ tab_model(glm.zi.nb.MFE.flies, CSS = list(css.table = '+font-family: Arial;'))
 #### OvoD1 Female #### 
 
 
+#### Reading, binding, cleaning data 📖 ####
+## Reading the data in 
+combined_ovod1_b1 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx")
+combined_ovod1_b2 <- read_excel("data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx")
+
+# Mutating a block variable 
+combined_ovod1_b1 <- combined_ovod1_b1  %>% mutate(block = "one")
+combined_ovod1_b2 <- combined_ovod1_b2  %>% mutate(block = "two")
+
+# Binding the data 
+combined_ovod1 <- rbind(combined_ovod1_b1, combined_ovod1_b2)
+
+# Making the data long
+combined_of_egg  <- combined_ovod1 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+# Splitting up diet variable 
+combined_ovi_v_split <- combined_ovi_v %>% 
+  separate(diet, into = c("ratio", "condition"), sep = " ")
+
+
+
+#### 1. Preliminary Data Analysis ####
+
+#### Poisson GLM ####
+comb_v_egg_glm.p.2 <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
+
+#### Negative Binomial GLM ####
+glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
+
+#### Poisson GLMM ####
+glm_mm_v_egg.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_v_split)
+
+#### Zero-Inflated Poisson ####
+zif.p_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "poisson", link = "logit", data = combined_ovi_v_split)
+
 
 
