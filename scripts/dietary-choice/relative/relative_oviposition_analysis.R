@@ -337,8 +337,9 @@ AIC(comb_v_egg_glm.p.2, glm_mm_v_egg.2, glm.nb_v_comb_egg.2, glm.zi.p.MFE.flies,
 #### Chosen model: Zero-Inflated Negative Binomial... 
 
 # Testing for a 3-way interaction effect
+ # Note: this model only seems to work with the random effect how it is and not with block
 glm.zi.nb.MFE.flies <- glmmTMB(
-  egg_numbers   ~ ratio * condition * block + (1| block / plate),  
+  egg_numbers   ~ ratio * condition * block   + (1|  plate),  
   ziformula =  ~ ratio * condition * block,               
   family = nbinom2(),                          
   data = combined_ovi_v_split
@@ -346,12 +347,33 @@ glm.zi.nb.MFE.flies <- glmmTMB(
 
 # Testing for significance in the 3-way interaction effect
 drop1(glm.zi.nb.MFE.flies, test = "Chisq")
-   # !ERROR! - will not allow for a drop 1 test... 
+ # Significant 3-way interaction
 
-# Trying summary to look for significant interactions temporarily 
+
+#### 2. Data analysis for write-up ####
+
+# Basic analysis 
 summary(glm.zi.nb.MFE.flies)
 
- # Model does not work 
+
+# Confidence intervals 
+exp(confint(glm.zi.nb.MFE.flies))
+
+
+# Real values for write-up
+emmeans::emmeans(glm.zi.nb.MFE.flies, specs = ~ ratio + condition + block, type = "response")
+
+
+## Table of model for write-up
+tab_model(glm.zi.nb.MFE.flies, CSS = list(css.table = '+font-family: Arial;'))
+
+
+
+
+
+
+#### OvoD1 Female #### 
+
 
 
 
