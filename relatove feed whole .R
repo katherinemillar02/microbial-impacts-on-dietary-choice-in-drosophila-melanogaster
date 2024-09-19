@@ -329,6 +329,8 @@ tab_model(glm.nb.m.4choice.3, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
+
+
 #### OvoD1 Female ####
 
 #### Reading, binding and cleaning the data ####
@@ -354,10 +356,61 @@ combined_of_split <- combined_of %>%
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
+#### 1. Preliminary Data Analysis 
+
+# Model 1
+#### Poisson GLMM ####
+glmm.of.4choice <- glmmTMB(fly_numbers ~ 
+                               ratio * condition * block 
+                             + (1 | factor(block) / plate) + (1 | observation), family = poisson, data = combined_of_split)
+
+
+
+## Assumption checks: 
+
+# DHARMa 
+simulationOutput <- simulateResiduals(fittedModel = glmm.of.4choice, plot = T)
+## Assumptions of the model look pretty good, but there is a significant test for homogeneity
+
+
+# easystats checks 
+check_overdispersion(glmm.of.4choice)
+# Overdispersion is detected
+
+check_zeroinflation(glmm.of.4choice)
+# Zeroinflation IS detected 
 
 
 
 
+# As there is overdispersion AND zeroinflation, trying a Negative Binomial GLM
+
+# Model 2
+
+#### Negative Binomial GLM #### 
+glm.nb.of.4choice <- glm.nb(fly_numbers ~ 
+                             ratio * condition * block,
+                           data = combined_of_split)
+
+
+
+
+## Assumption checks: 
+
+# DHARMa 
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.of.4choice, plot = T)
+## Assumptions of the model look pretty good
+
+
+# easystats checks 
+check_overdispersion(glm.nb.of.4choice)
+# Overdispersion is NO LONGER detected
+
+check_zeroinflation(glm.nb.of.4choice)
+# Zeroinflation IS NO LONGER detected 
+
+# Comparing models 
+AIC(glm.nb.of.4choice, glmm.of.4choice)
 
 
 
