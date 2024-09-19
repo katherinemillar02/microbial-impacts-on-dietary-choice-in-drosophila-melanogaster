@@ -1,13 +1,6 @@
 
 
 
-
-#### This script will read the data in for the appropriate conditioning, it then shows the chosen model
-### BUT it doesn't show how it got to that point, like the other models tested... 
-
-
-
-
 ##### Packages 📦📦📦📦 ####
 library(tidyverse)
 library(lmerTest)
