@@ -204,43 +204,43 @@ combined_ovi_v_split <- combined_ovi_v %>%
 #### TESTING MODELS ####
 
 #### Poisson GLM ####
-comb_v_egg_glm.p.2 <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
+comb_v_egg_glm.p <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
 
 # DHARMa checks
-simulationOutput <- simulateResiduals(fittedModel = comb_v_egg_glm.p.2, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = comb_v_egg_glm.p, plot = T)
 # Quite a bad model, all tests are significant 
 
 # easystats / performance checks 
 
 # Testing for overdispersion
-check_overdispersion(comb_v_egg_glm.p.2)
+check_overdispersion(comb_v_egg_glm.p)
 # Overdispersion detected
 
 # Testing for zeroinflation
-check_zeroinflation(comb_v_egg_glm.p.2)
+check_zeroinflation(comb_v_egg_glm.p)
 # There is an underfitting of zeros
 
 
 
 
 #### Poisson GLMM ####
-glm_mm_v_egg.2 <- glmmTMB(egg_numbers
+glm_mm_v_egg <- glmmTMB(egg_numbers
                           ~ ratio * condition * block 
                           + (1| block / plate) , family = poisson, data = combined_ovi_v_split)
 
 
 # DHARMa checks
-simulationOutput <- simulateResiduals(fittedModel = glm_mm_v_egg.2, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glm_mm_v_egg, plot = T)
 # A bit better, but still significant tests
 
 # easystats / performance checks 
 
 # Testing for overdispersion
-check_overdispersion(glm_mm_v_egg.2)
+check_overdispersion(glm_mm_v_egg)
 # Overdispersion detected
 
 # Testing for zeroinflation
-check_zeroinflation(glm_mm_v_egg.2)
+check_zeroinflation(glm_mm_v_egg)
 # There is an underfitting of zeros
 
 
@@ -248,31 +248,31 @@ check_zeroinflation(glm_mm_v_egg.2)
 
 
 #### Negative Binomial GLM ####
-glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers
+glm.nb_v_comb_egg <- glm.nb(egg_numbers
                               ~ ratio * condition * block, 
                               data =  combined_ovi_v_split)
 
 
 
 # DHARMa checks
-simulationOutput <- simulateResiduals(fittedModel = glm.nb_v_comb_egg.2, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glm.nb_v_comb_egg, plot = T)
 # A LOT better,  no significant tests
 
 # easystats / performance checks 
 
 # Testing for overdispersion
-check_overdispersion(glm.nb_v_comb_egg.2)
+check_overdispersion(glm.nb_v_comb_egg)
 # Overdispersion NOT detected
 
 # Testing for zeroinflation
-check_zeroinflation(glm.nb_v_comb_egg.2)
+check_zeroinflation(glm.nb_v_comb_egg)
 # There is an underfitting of zeros - still zeroinflation 
 
 
 #### Zero inflation tests! ####
 
 # Zero inflated poisson ####
-glm.zi.p.MFE.flies <- glmmTMB(
+glm.zi.p.v.egg <- glmmTMB(
   egg_numbers   ~ ratio * condition * block + (1| block / plate),  
   ziformula =  ~ ratio * condition * block,               
   family = poisson(),                          
@@ -283,17 +283,17 @@ glm.zi.p.MFE.flies <- glmmTMB(
 # Assumption checks 
 
 # DHARMa checks
-simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.MFE.flies, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.v.egg , plot = T)
 # Some significant tests
 
 # easystats / performance checks 
 
 # Testing for overdispersion
-check_overdispersion(glm.zi.p.MFE.flies)
+check_overdispersion(glm.zi.p.v.egg )
 # Overdispersion IS detected
 
 # Testing for zeroinflation
-check_zeroinflation(glm.zi.p.MFE.flies)
+check_zeroinflation(glm.zi.p.v.egg )
 # There is no longer zeroinflation 
 
 
@@ -302,7 +302,7 @@ check_zeroinflation(glm.zi.p.MFE.flies)
 
 
 #### Zero Inflated Negative Binomial ####
-glm.zi.nb.MFE.flies <- glmmTMB(
+glm.zi.nb.v.egg  <- glmmTMB(
   egg_numbers   ~ ratio * condition * block + (1| block / plate),  
   ziformula =  ~ ratio * condition * block,               
   family = nbinom2(),                          
@@ -312,60 +312,59 @@ glm.zi.nb.MFE.flies <- glmmTMB(
 # Assumption checks 
 
 # DHARMa checks
-simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.flies, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.v.egg, plot = T)
 # Model is looking pretty cracking 
 
 # easystats / performance checks 
 
 # Testing for overdispersion
-check_overdispersion(glm.zi.nb.MFE.flies)
+check_overdispersion(glm.zi.nb.v.egg)
 # Overdispersion IS NOT detected
 
 # Testing for zeroinflation
-check_zeroinflation(glm.zi.nb.MFE.flies)
+check_zeroinflation(glm.zi.nb.v.egg)
 # There is no longer zeroinflation 
 
 # This model ^^ seems best... 
 #### Comparing models just to check... 
 
-AIC(comb_v_egg_glm.p.2, glm_mm_v_egg.2, glm.nb_v_comb_egg.2, glm.zi.p.MFE.flies, glm.zi.nb.MFE.flies)
+AIC(comb_v_egg_glm.p, glm_mm_v_egg, glm.nb_v_comb_egg, glm.zi.p.v.egg, glm.zi.nb.v.egg)
  # NegBin without zeroinflation has better assumptions but there is zeroinflation so still choosing Zero-Inflated Negative Binomial 
 
 
-
+cf
 
 #### Chosen model: Zero-Inflated Negative Binomial... 
 
 # Testing for a 3-way interaction effect
  # Note: this model only seems to work with the random effect how it is and not with block
-glm.zi.nb.MFE.flies <- glmmTMB(
-  egg_numbers   ~ ratio * condition * block   + (1|  plate),  
+glm.zi.nb.v.egg  <- glmmTMB(
+  egg_numbers   ~ ratio * condition * block + (1| plate),  
   ziformula =  ~ ratio * condition * block,               
   family = nbinom2(),                          
   data = combined_ovi_v_split
 )
-
 # Testing for significance in the 3-way interaction effect
-drop1(glm.zi.nb.MFE.flies, test = "Chisq")
+drop1(glm.zi.nb.v.egg, test = "Chisq")
  # Significant 3-way interaction
 
 
 #### 2. Data analysis for write-up ####
 
 # Basic analysis 
-summary(glm.zi.nb.MFE.flies)
+summary(glm.zi.nb.v.egg)
 
 
 # Confidence intervals 
-exp(confint(glm.zi.nb.MFE.flies))
+exp(confint(glm.zi.nb.v.egg))
 
 
 # Real values for write-up
-emmeans::emmeans(glm.zi.nb.MFE.flies, specs = ~ ratio + condition + block, type = "response")
+emmeans::emmeans(glm.zi.nb.v.egg, specs = ~ ratio + condition + block, type = "response")
 
 
 ## Table of model for write-up
-tab_model(glm.zi.nb.MFE.flies, CSS = list(css.table = '+font-family: Arial;'))
+tab_model(glm.zi.nb.v.egg, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
@@ -400,16 +399,27 @@ combined_ovi_v_split <- combined_ovi_v %>%
 #### 1. Preliminary Data Analysis ####
 
 #### Poisson GLM ####
-comb_v_egg_glm.p.2 <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
+comb_ovi_egg_glm.p <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
 
-#### Negative Binomial GLM ####
-glm.nb_v_comb_egg.2 <- glm.nb(egg_numbers ~ ratio * condition * block, data =  combined_ovi_v_split)
+# DHARMa checks
+simulationOutput <- simulateResiduals(fittedModel = comb_ovi_egg_glm.p, plot = T)
+# Model is looking quite bad 
+
+# easystats / performance checks 
+
+# Testing for overdispersion
+check_overdispersion(comb_ovi_egg_glm.p)
+# Overdispersion IS detected
+
+# Testing for zeroinflation
+check_zeroinflation(comb_ovi_egg_glm.p)
+# There is zeroinflation 
+
+
+
 
 #### Poisson GLMM ####
-glm_mm_v_egg.2 <- glmmTMB(egg_numbers ~ ratio * condition * block + (1|factor(block)/plate) , family = poisson, data = combined_ovi_v_split)
-
-#### Zero-Inflated Poisson ####
-zif.p_v_egg.2 <- zeroinfl(egg_numbers ~ ratio * condition * block | ratio * condition * block, dist = "poisson", link = "logit", data = combined_ovi_v_split)
+glmm_ovi_egg <- glmmTMB(egg_numbers ~ ratio * condition * block + (1| block /plate) , family = poisson, data = combined_ovi_v_split)
 
 
 
