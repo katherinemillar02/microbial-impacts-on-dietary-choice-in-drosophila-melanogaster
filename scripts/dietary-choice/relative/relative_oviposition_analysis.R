@@ -53,16 +53,16 @@ comb_m_egg_glm.p <- glm(egg_numbers ~ ratio * condition * block, family = poisso
 
 # DHARMa checks
 simulationOutput <- simulateResiduals(fittedModel = comb_m_egg_glm.p, plot = T)
- # Quite a bad model, all tests are significant 
+# Quite a bad model, all tests are significant 
 
 # easystats / performance checks 
-  # Testing for overdispersion
+# Testing for overdispersion
 check_overdispersion(comb_m_egg_glm.p)
-   # Overdispersion detected
+# Overdispersion detected
 
-  # Testing for zeroinflation
+# Testing for zeroinflation
 check_zeroinflation(comb_m_egg_glm.p)
-   # There is probabale zeroinflation
+# There is probabale zeroinflation
 
 
 
@@ -110,12 +110,12 @@ check_zeroinflation(comb_m_egg_glmm.p)
 
 #### Comparing models 
 AIC(comb_m_egg_glm.p, comb_m_egg_glm.nb, comb_m_egg_glmm.p)
- # NegBin GLM has lowest AIC 
+# NegBin GLM has lowest AIC 
 
 
 
 # Using this model 
- # Testing for 3-way interaction 
+# Testing for 3-way interaction 
 comb_m_egg_glm.nb <- glm.nb(egg_numbers
                             ~ ratio * condition * block, 
                             data =  combined_ovi_m_split)
@@ -124,15 +124,15 @@ comb_m_egg_glm.nb <- glm.nb(egg_numbers
 
 # Using drop1 to test for the significance of the 3-way interaction 
 drop1(comb_m_egg_glm.nb, test = "Chisq")
- # No 3-way interaction 
+# No 3-way interaction 
 
 
- # Testing for 2-way interactions 
+# Testing for 2-way interactions 
 comb_m_egg_glm.nb.2 <- glm.nb(egg_numbers
-                            ~ ratio * condition + 
-                              ratio * block + 
-                              condition * block, 
-                            data =  combined_ovi_m_split)
+                              ~ ratio * condition + 
+                                ratio * block + 
+                                condition * block, 
+                              data =  combined_ovi_m_split)
 
 
 # Using drop1 to test for the significance of the 2-way interaction 
@@ -142,8 +142,8 @@ drop1(comb_m_egg_glm.nb.2, test = "Chisq")
 
 # Final model 
 comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers
-                            ~ ratio + condition + block, 
-                            data =  combined_ovi_m_split)
+                              ~ ratio + condition + block, 
+                              data =  combined_ovi_m_split)
 
 
 
@@ -225,8 +225,8 @@ check_zeroinflation(comb_v_egg_glm.p)
 
 #### Poisson GLMM ####
 glm_mm_v_egg <- glmmTMB(egg_numbers
-                          ~ ratio * condition * block 
-                          + (1| block / plate) , family = poisson, data = combined_ovi_v_split)
+                        ~ ratio * condition * block 
+                        + (1| block / plate) , family = poisson, data = combined_ovi_v_split)
 
 
 # DHARMa checks
@@ -249,8 +249,8 @@ check_zeroinflation(glm_mm_v_egg)
 
 #### Negative Binomial GLM ####
 glm.nb_v_comb_egg <- glm.nb(egg_numbers
-                              ~ ratio * condition * block, 
-                              data =  combined_ovi_v_split)
+                            ~ ratio * condition * block, 
+                            data =  combined_ovi_v_split)
 
 
 
@@ -329,15 +329,15 @@ check_zeroinflation(glm.zi.nb.v.egg)
 #### Comparing models just to check... 
 
 AIC(comb_v_egg_glm.p, glm_mm_v_egg, glm.nb_v_comb_egg, glm.zi.p.v.egg, glm.zi.nb.v.egg)
- # NegBin without zeroinflation has better assumptions but there is zeroinflation so still choosing Zero-Inflated Negative Binomial 
+# NegBin without zeroinflation has better assumptions but there is zeroinflation so still choosing Zero-Inflated Negative Binomial 
 
 
-cf
+
 
 #### Chosen model: Zero-Inflated Negative Binomial... 
 
 # Testing for a 3-way interaction effect
- # Note: this model only seems to work with the random effect how it is and not with block
+# Note: this model only seems to work with the random effect how it is and not with block
 glm.zi.nb.v.egg  <- glmmTMB(
   egg_numbers   ~ ratio * condition * block + (1| plate),  
   ziformula =  ~ ratio * condition * block,               
@@ -346,7 +346,7 @@ glm.zi.nb.v.egg  <- glmmTMB(
 )
 # Testing for significance in the 3-way interaction effect
 drop1(glm.zi.nb.v.egg, test = "Chisq")
- # Significant 3-way interaction
+# Significant 3-way interaction
 
 
 #### 2. Data analysis for write-up ####
@@ -391,7 +391,7 @@ combined_of_egg  <- combined_ovod1 %>%
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 # Splitting up diet variable 
-combined_ovi_v_split <- combined_ovi_v %>% 
+combined_of_egg_split <- combined_of_egg %>% 
   separate(diet, into = c("ratio", "condition"), sep = " ")
 
 
@@ -399,11 +399,12 @@ combined_ovi_v_split <- combined_ovi_v %>%
 #### 1. Preliminary Data Analysis ####
 
 #### Poisson GLM ####
-comb_ovi_egg_glm.p <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_ovi_v_split)
+comb_ovi_egg_glm.p <- glm(egg_numbers ~ ratio * condition * block, family = poisson,  combined_of_egg_split)
 
 # DHARMa checks
 simulationOutput <- simulateResiduals(fittedModel = comb_ovi_egg_glm.p, plot = T)
 # Model is looking quite bad 
+# As this isn't a mixed model, is it ok to do assumption checks like this? 
 
 # easystats / performance checks 
 
@@ -413,13 +414,124 @@ check_overdispersion(comb_ovi_egg_glm.p)
 
 # Testing for zeroinflation
 check_zeroinflation(comb_ovi_egg_glm.p)
-# There is zeroinflation 
+# There is NO zeroinflation 
+
+
+
 
 
 
 
 #### Poisson GLMM ####
-glmm_ovi_egg <- glmmTMB(egg_numbers ~ ratio * condition * block + (1| block /plate) , family = poisson, data = combined_ovi_v_split)
+glmm.p.ovo.egg <- glmmTMB(egg_numbers ~ ratio * condition * block 
+                          + (1| block /plate) , family = poisson, data = combined_of_egg_split)
 
 
+
+
+
+# DHARMa checks
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.ovo.egg, plot = T)
+# Model is looking quite bad 
+
+
+
+
+# easystats / performance checks 
+
+# Testing for overdispersion
+check_overdispersion(glmm.p.ovo.egg)
+# Overdispersion IS detected
+
+# Testing for zeroinflation
+check_zeroinflation(glmm.p.ovo.egg)
+# There is NO zeroinflation 
+
+
+# Because there is overdispersion, trying a NegBin GLM
+
+
+
+#### Negative Binomial Generalised Linear Model ####
+glm.nb_ovo_comb_egg <- glm.nb(egg_numbers
+                              ~ ratio * condition * block, 
+                              data =  combined_of_egg_split)
+
+
+
+# DHARMa checks
+simulationOutput <- simulateResiduals(fittedModel = glm.nb_ovo_comb_egg, plot = T)
+# Model is looking quite good, no significant tests
+
+
+
+
+# easystats / performance checks 
+
+# Testing for overdispersion
+check_overdispersion(glm.nb_ovo_comb_egg)
+# Overdispersion IS detected
+
+# Testing for zeroinflation
+check_zeroinflation(glmm.p.ovo.egg)
+# There is NO zeroinflation 
+
+
+
+# Comparing models 
+AIC(comb_ovi_egg_glm.p, glmm.p.ovo.egg, glm.nb_ovo_comb_egg)
+
+
+
+# Using this model 
+# Testing for a 3-way interaction: 
+glm.nb_ovo_comb_egg <- glm.nb(egg_numbers
+                              ~ ratio * condition * block, 
+                              data =  combined_of_egg_split)
+
+
+
+# Testing for  a significant  3-way interaction 
+drop1(glm.nb_ovo_comb_egg, test = "Chisq")
+# No 3-way interaction 
+
+
+## Now testing for two-way interactions
+glm.nb_ovo_comb_egg.2 <- glm.nb(egg_numbers
+                                ~ ratio * condition + 
+                                  condition * block + 
+                                  ratio * block, 
+                                data =  combined_of_egg_split)
+
+
+# Testing for  a significant  2-way interactions 
+drop1(glm.nb_ovo_comb_egg.2, test = "Chisq")
+# condition and block significant 
+# ratio and block significant 
+
+
+# Final model, with the 2-way interactions
+glm.nb_ovo_comb_egg.3 <- glm.nb(egg_numbers
+                                
+                                ~ condition * block + 
+                                  ratio * block, 
+                                
+                                data =  combined_of_egg_split)
+
+
+#### Data Analysis for write-up #### 
+
+# Basic analysis
+summary(glm.nb_ovo_comb_egg.3)
+
+# Confidence intervals 
+exp(confint(glm.nb_ovo_comb_egg.3))
+
+
+# Real values for write-up
+emmeans::emmeans(glm.nb_ovo_comb_egg.3, specs = ~ ratio + condition + block, type = "response")
+
+
+## Table of model for write-up
+tab_model(glm.nb_ovo_comb_egg.3, CSS = list(css.table = '+font-family: Arial;')) 
 
