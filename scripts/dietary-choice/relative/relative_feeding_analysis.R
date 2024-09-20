@@ -17,6 +17,11 @@
  ################## --
  
  
+                                                  
+                                                  
+                                                  
+                                                  
+                                                  
  #### Male ####
  
  #### Reading, binding and cleaning the data ####
@@ -411,6 +416,63 @@ check_zeroinflation(glm.nb.of.4choice)
 
 # Comparing models 
 AIC(glm.nb.of.4choice, glmm.of.4choice)
+ # Mixed model is better but has zeroinflation and overdispersion 
+
+
+
+
+
+
+
+#### Negative Binomial GLM #### 
+
+# 3-way interaction test 
+glm.nb.of.4choice <- glm.nb(fly_numbers ~ 
+                              ratio * condition * block,
+                            data = combined_of_split)
+
+
+drop1(glm.nb.of.4choice, test = "Chisq")
+
+
+
+glm.nb.of.4choice.2 <- glm.nb(fly_numbers ~ 
+                              ratio * condition +
+                              block * condition + 
+                              ratio * block,
+                            data = combined_of_split)
+
+
+drop1(glm.nb.of.4choice.2, test = "Chisq")
+
+
+glm.nb.of.4choice.3 <- glm.nb(fly_numbers ~  
+                                ratio * condition + block
+                                ,
+                              data = combined_of_split)
+
+
+
+
+#### Data Analysis for write-up #### 
+
+# Basic analysis 
+summary(glm.nb.of.4choice.3)
+
+# Confidence intervals 
+exp(confint(glm.nb.of.4choice.3))
+
+
+# Real values for write-up
+emmeans::emmeans(glm.nb.of.4choice.3, specs = ~ ratio + condition + block, type = "response")
+
+
+## Table of model for write-up
+tab_model(glm.nb.of.4choice.3, CSS = list(css.table = '+font-family: Arial;')) 
+
+
+
+
 
 
 
