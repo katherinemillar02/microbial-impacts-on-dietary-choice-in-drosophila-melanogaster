@@ -11,6 +11,20 @@ A GitHub Repository for my Masters of Science by Research project at the Univers
 
  #### 🗂 relative 
 
+  #### 🗂 official.relative.feeding.analysis.R 
+This script contains just the analysis for with the correct model chosen from the model assumptions (in preliminary.relative.feeding.analysis.R). This also contains code used for written analysis. 
+  
+  #### 🗂 official.relative.oviposition.analysis.R 
+This script contains just the analysis for with the correct model chosen from the model assumptions (in preliminary.relative.feeding.analysis.R). This also contains code used for written analysis.
+
+  #### 🗂 preliminary.relative.feeding.analysis.R 
+This script is a preliminary to official.relative.feeding.analysis.R, where I went through different models and tested assumptions for the best fit.
+  
+  #### 🗂 preliminary.relative.oviposition.analysis.R 
+This script is a preliminary to official.relative.oviposition.analysis.R, where I went through different models and tested assumptions for the best fit.
+
+
+
  #### 🗂 absolute 
 
  #### 🗂 data_visualisation 
