@@ -432,10 +432,13 @@ glm.nb.of.4choice <- glm.nb(fly_numbers ~
                             data = combined_of_split)
 
 
+# Testing for significance in a 3-way interaction
 drop1(glm.nb.of.4choice, test = "Chisq")
+ # No significant 3-way interaction found
 
 
 
+# 2-way interaction tests 
 glm.nb.of.4choice.2 <- glm.nb(fly_numbers ~ 
                               ratio * condition +
                               block * condition + 
@@ -443,9 +446,12 @@ glm.nb.of.4choice.2 <- glm.nb(fly_numbers ~
                             data = combined_of_split)
 
 
+# Testing for significance in 2-way interactions
 drop1(glm.nb.of.4choice.2, test = "Chisq")
+  # 2 way interaction between ratio and condition found 
 
 
+## Final chosen model 
 glm.nb.of.4choice.3 <- glm.nb(fly_numbers ~  
                                 ratio * condition + block
                                 ,
