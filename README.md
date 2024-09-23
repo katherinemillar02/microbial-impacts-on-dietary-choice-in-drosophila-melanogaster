@@ -11,28 +11,32 @@ A GitHub Repository for my Masters of Science by Research project at the Univers
 
  #### 🗂 relative 
 
-  #### 🗂 official.relative.feeding.analysis.R 
+    ##### official.relative.feeding.analysis.R 
 This script contains just the analysis for with the correct model chosen from the model assumptions (in preliminary.relative.feeding.analysis.R). This also contains code used for written analysis. 
   
-  #### 🗂 official.relative.oviposition.analysis.R 
+    ##### official.relative.oviposition.analysis.R 
 This script contains just the analysis for with the correct model chosen from the model assumptions (in preliminary.relative.feeding.analysis.R). This also contains code used for written analysis.
 
-  #### 🗂 preliminary.relative.feeding.analysis.R 
+    ##### preliminary.relative.feeding.analysis.R 
 This script is a preliminary to official.relative.feeding.analysis.R, where I went through different models and tested assumptions for the best fit.
   
-  #### 🗂 preliminary.relative.oviposition.analysis.R 
+    ##### preliminary.relative.oviposition.analysis.R 
 This script is a preliminary to official.relative.oviposition.analysis.R, where I went through different models and tested assumptions for the best fit.
 
 
 
  #### 🗂 absolute 
 
- #### 🗂 data_visualisation 
+NEED TO EDIT SCRIPTS¡¡
 
- #### data_visualisation_feeding.R    
+
+
+ #### 🗂 data_visualisation 
+  
+    ##### data_visualisation_feeding.R    
 This script includes visualisation for the preferred feeding diet for a mated female when allowed to choose across different diets that have been conditioned or unconditioned. There are boxplots which show experimental repeats which have been combined, and plots for separate blocks. 
 
- #### data_visualisation_oviposition.R 
+    ###### data_visualisation_oviposition.R 
 This script includes visualisation for the preferred oviposition diet for a mated female when allowed to choose across different diets that have been conditioned or unconditioned. There are boxplots which show experimental repeats which have been combined, and plots for separate blocks. 
 
    
@@ -43,12 +47,49 @@ This script includes visualisation for the preferred oviposition diet for a mate
 
 
   #### 🗂 overall_emergence 
+  
+      ##### UMFE_totalpupae.R
+This script contains the uncontrolled density analysis, testing different models and the final model for the overall emergence of flies. 
+
+    ##### UMFE_totalflies.R
+This script contains the uncontrolled density analysis, testing different models and the final model for the overall emergence of flies. 
 
   #### 🗂 development_time
+  
+        ##### UMFE_pupaedev_analysis.R
+This script contains the original (untidied data) uncontrolled density analysis, testing different models and the final model for development of pupae over time in conditioned and unconditioned treatments.
+        
+        ##### UMFE_pupaedev_analysis_2.R
+This script contains the used (tidied data) uncontrolled density analysis, testing different models and the final model for development of pupae over time in conditioned and unconditioned treatments.
+        
+        ##### UMFE_flydev_analysis.R
+This script contains the original (untidied data) uncontrolled density analysis, testing different models and the final model for development of flies over time in conditioned and unconditioned treatments.
+        
+        ##### UMFE_flydev_analysis_2.R
+This script contains the used (tidied data) uncontrolled density analysis, testing different models and the final model for development of flies over time in conditioned and unconditioned treatments.
 
   #### 🗂 data_visualisation
 
+        ##### UMFE_pupaedev_visualisation.R
+This script contains the data visualisation of pupae developing over time in conditioned and unconditioned treatments in an uncontrolled density.
+        
+        ##### UMFE_flydev_visualisation.R
+This script contains the data visualisation of flies developing over time in conditioned and unconditioned treatments in an uncontrolled density.
+        
+        ##### UMFE_totalpupae_visualisation.R
+This script contains the data visualisation of total pupae in conditioned and unconditioned treatments in an uncontrolled density.
+        
+        ##### UMFE_totalflies_visualisation.R
+This script contains the data visualisation of total flies in conditioned and unconditioned treatments in an uncontrolled density.
+
+        ##### UMFE_bodyweight_visualisation.R
+This script contains the data visualisation of the body weight of flies in conditioned and unconditioned treatments in an uncontrolled density.
+
+
   #### 🗂 body_weight 
+
+       ##### UMFE_bodyweight_analysis.R
+This script contains the data analysus of the body weight of flies in conditioned and unconditioned treatments in an uncontrolled density, testing assumptions of different models, as well as the final choice of model.
 
 
 
