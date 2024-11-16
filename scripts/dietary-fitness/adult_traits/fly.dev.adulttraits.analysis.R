@@ -152,6 +152,6 @@ tab_model(glm.nb.adulttraits.fly.2, CSS = list(css.table = '+font-family: Arial;
 
 ## 
 summary_data <- fly_fitness_adulttraits %>%
-  group_by(treatment, time_hours) %>%
+  group_by(treatment, time_hours, vial) %>%
   summarise(total_females = sum(females),
             total_males = sum(males))
