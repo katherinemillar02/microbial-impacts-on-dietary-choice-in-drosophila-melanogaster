@@ -26,7 +26,7 @@ reproductive_adultstraits$Sex <- ifelse(grepl("female", reproductive_adultstrait
 # Model 1 
 #### Poisson GLMM ###
 glmm.p.adulttraits.reproductive <- glmmTMB(offspring ~ Conditioning * Sex + (1|vial), family = poisson, data = reproductive_adultstraits)
- # some errors with the plot 
+ 
 
 
 ## DHARMa residuals check 
