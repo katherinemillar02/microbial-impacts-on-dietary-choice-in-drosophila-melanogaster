@@ -7,6 +7,10 @@ library(survminer)
 library(survival)
 
 
+## Reading the data in
+lifespan_adultstraits <- read_excel("data/fitness_development/adulttraits_lifespan.xlsx")
+lifespan_adultstraits <- as.data.frame(lifespan_adultstraits)
+
 
 
 ## Choosing colours from viridis to use: 
