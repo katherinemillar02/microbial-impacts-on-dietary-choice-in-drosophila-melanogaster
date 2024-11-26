@@ -25,8 +25,7 @@ lifespan_adultstraits$Sex <- ifelse(grepl("female", lifespan_adultstraits$treatm
 
 
 
-# Plot
-# Updated plot
+# Visualisation
 lifespan_adultstraits_plot <- ggplot(lifespan_adultstraits, 
                                             aes(x = days_alive, y = treatment, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
@@ -38,7 +37,10 @@ lifespan_adultstraits_plot <- ggplot(lifespan_adultstraits,
                                "Unconditioned female", "Unconditioned male")) +
   theme_classic() +
   theme(legend.position = "none") +
-  labs(x = "Conditioning", 
-       y = "deaths",
+  labs(x = "Days alive", 
+       y = "Conditioning Treatment",
        fill = "Treatment") 
+
+# run the plot
+lifespan_adultstraits_plot
 

@@ -43,13 +43,15 @@ check_overdispersion(glmm.p.adulttraits.lifespan)
 check_zeroinflation(glmm.p.adulttraits.lifespan) 
 # There is no zero-inflation 
 
-
+# Testing model with interaction effect
 glmm.p.adulttraits.lifespan <- glmmTMB(days_alive ~ Conditioning * Sex + (1|vial), family = poisson, data = lifespan_adultstraits)
 
+# testing significance of interaction effect
 drop1(glmm.p.adulttraits.lifespan, test  = "Chisq")
 
-
+# new model without interaction effect
 glmm.p.adulttraits.lifespan.2 <- glmmTMB(days_alive ~ Conditioning + Sex + (1|vial), family = poisson, data = lifespan_adultstraits)
 
+# data analysis
 summary(glmm.p.adulttraits.lifespan.2 )
  # no differences in days alive

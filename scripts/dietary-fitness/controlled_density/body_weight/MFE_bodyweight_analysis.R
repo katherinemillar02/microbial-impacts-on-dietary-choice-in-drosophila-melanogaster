@@ -32,7 +32,7 @@ bodyweight_MFE$weight_mg <- bodyweight_MFE$weight_mg * 1000
 glmm.p.MFE.weight <- glmmTMB(weight_mg ~ treatment * sex + (1|vial), family = poisson, data = bodyweight_MFE)
 
 ## DHARMa residuals check 
-simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.weight, plot = T)s
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.weight, plot = T)
  # The model is not great with either qq or homogeneity tests 
 
 

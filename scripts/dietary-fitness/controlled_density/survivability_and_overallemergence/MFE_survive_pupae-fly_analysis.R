@@ -176,12 +176,11 @@ AIC(glmm.p.bothsurvive.MFE, glm.nb.MFE.both, glm.zi.p.MFE.surviveboth, glm.zi.nb
 
 ## Final chosen model:  Poisson Negative Binomial
 glm.zi.nb.MFE.surviveboth <- glmmTMB(
-  survivability ~  treatment + (1 | vial) + ,
+  survivability ~  treatment + (1 | vial),
   ziformula =  ~ treatment,
   family = nbinom2(),
   data = survivability_between
 )
-
 
 #### Data Analysis ####
 

@@ -125,6 +125,8 @@ glmm.p.UMFE.fly <- glmmTMB( time_hours ~
 plot(simulateResiduals(glmm.p.UMFE.fly)) 
  ## Assumptions now look even worse 
 
+check_overdispersion(glmm.p.UMFE.fly)
+
 
 
 

@@ -13,6 +13,10 @@ library(DHARMa)
 library(glmmTMB)
 library(sjPlot)
 ##################
+
+
+
+#### FIRST REPRODUCTIVE COUNT ##### 22/10 -25/10
 ## Reading the data in
 reproductive_adultstraits <- read_excel("data/fitness_development/treatment_reproductive.xlsx")
 reproductive_adultstraits <- as.data.frame(reproductive_adultstraits)
@@ -90,7 +94,7 @@ summary(glm.zi.p.MFE.flies.2)
 
 
 
-#### SECOND 
+#### SECOND #### 29/10 - 01/11 
 ##################
 ## Reading the data in
 

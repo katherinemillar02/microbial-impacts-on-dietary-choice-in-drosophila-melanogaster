@@ -49,7 +49,7 @@ check_overdispersion(glmm.p.totalpupae.UMFE)
 # Overdispersion detected 
 
 check_zeroinflation(glmm.p.totalpupae.UMFE)
-## zero inflation 
+## NO zero inflation 
 
 
 # GLM NB 

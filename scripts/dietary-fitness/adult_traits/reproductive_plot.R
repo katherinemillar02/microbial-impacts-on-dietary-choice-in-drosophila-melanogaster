@@ -31,7 +31,7 @@ reproductive_boxplot_adultstraits <- ggplot(reproductive_adultstraits,
                     labels = c("Conditioned female", "Conditioned male", 
                                "Unconditioned female", "Unconditioned male")) +
   theme_classic() +
-  theme(legend.position = "top",
+  theme(legend.position = "none",
         legend.justification = "right",
         legend.direction = "vertical",
         strip.placement = "outside", 
@@ -39,7 +39,8 @@ reproductive_boxplot_adultstraits <- ggplot(reproductive_adultstraits,
         strip.text = element_text(face = "bold")) +
   labs(x = "Conditioning", 
        y = "Number of pupae emerged",
-       fill = "Treatment") +
+       fill = "Treatment",
+         title = "Eggs Laid 22/10 - 25/10") +
   facet_wrap(~Sex)
 
 
@@ -67,7 +68,7 @@ reproductive_boxplot_adultstraits.2 <- ggplot(reproductive_adultstraits.2,
                     labels = c("Conditioned female", "Conditioned male", 
                                "Unconditioned female", "Unconditioned male")) +
   theme_classic() +
-  theme(legend.position = "top",
+  theme(legend.position = "none",
         legend.justification = "right",
         legend.direction = "vertical",
         strip.placement = "outside", 
@@ -75,7 +76,8 @@ reproductive_boxplot_adultstraits.2 <- ggplot(reproductive_adultstraits.2,
         strip.text = element_text(face = "bold")) +
   labs(x = "Conditioning", 
        y = "Number of pupae emerged",
-       fill = "Treatment") +
+       fill = "Treatment",
+         title = "Eggs Laid 29/10 - 01/11") +
   facet_wrap(~Sex)
 
 
