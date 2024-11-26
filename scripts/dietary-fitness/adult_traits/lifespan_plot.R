@@ -24,23 +24,23 @@ lifespan_adultstraits$Sex <- ifelse(grepl("female", lifespan_adultstraits$treatm
 
 
 
+#### MESSING AROUND ####
+surv_obj <- Surv(time = lifespan_adultstraits$days_alive, event = lifespan_adultstraits$census)
+km_fit <- survfit(surv_obj ~ treatment, data = lifespan_adultstraits)
+km_fit <- survfit(surv_obj ~ 1)
 
-# Visualisation
-lifespan_adultstraits_plot <- ggplot(lifespan_adultstraits, 
-                                            aes(x = days_alive, y = treatment, fill = treatment)) +
-  geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
-  geom_point(aes(fill = treatment),
-             size = 1.5, shape = 21,
-             position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.9)) +
-  scale_fill_manual(values = viridis_colors[c(4, 4, 8, 8)], 
-                    labels = c("Conditioned female", "Conditioned male", 
-                               "Unconditioned female", "Unconditioned male")) +
-  theme_classic() +
-  theme(legend.position = "none") +
-  labs(x = "Days alive", 
-       y = "Conditioning Treatment",
-       fill = "Treatment") 
 
-# run the plot
-lifespan_adultstraits_plot
+ggsurvplot(
+  km_fit,
+  data = lifespan_adultstraits,
+  conf.int = TRUE,
+
+
+  legend.title = "Treatment",
+  xlab = "Days Alive",
+  ylab = "Survival Probability",
+  ggtheme = theme_minimal()
+)
+
+
 
