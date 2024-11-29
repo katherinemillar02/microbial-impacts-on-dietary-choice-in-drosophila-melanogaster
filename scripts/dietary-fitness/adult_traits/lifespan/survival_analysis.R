@@ -56,4 +56,4 @@ glmm.p.adulttraits.lifespan.2 <- glmmTMB(days_alive ~ Conditioning + Sex + (1|vi
 summary(glmm.p.adulttraits.lifespan.2 )
  # no differences in days alive between treatments
  # differences in sex 
- # but censor not c
+ # but censor not considered
