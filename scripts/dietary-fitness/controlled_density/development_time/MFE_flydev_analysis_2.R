@@ -29,7 +29,7 @@ fly_fitness_tidy_MFE <- tidyr::pivot_longer(data = fly_fitness_MFE ,
 
 
 # As DF
-fly_fitness_tidy_MFE <- as.data.frame(fly_fitness_tidy_MFE)
+#fly_fitness_tidy_MFE <- as.data.frame(fly_fitness_tidy_MFE)
 
 
 ## Cleaning the data into a tidier format, for correct data analysis

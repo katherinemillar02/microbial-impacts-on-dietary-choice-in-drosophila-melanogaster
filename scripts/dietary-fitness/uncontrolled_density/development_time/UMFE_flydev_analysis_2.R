@@ -26,12 +26,13 @@ fly_fitness_tidy <- tidyr::pivot_longer(data = fly_fitness ,
                                         names_to = "sex",
                                         values_to = "count") 
 # As df
-fly_fitness_tidy <- as.data.frame(fly_fitness_tidy)
+#fly_fitness_tidy <- as.data.frame(fly_fitness_tidy)
 
 
 ## This code will turn NA into 0 - so uncount can be used 
 fly_fitness_tidy  <- fly_fitness_tidy %>%
-  mutate(count = ifelse(is.na(count), 0, count))
+  #mutate(count = ifelse(is.na(count), 0, count))
+  drop_na(count)
 
 ## This code will uncount my data, to make it appropriate for the following models... 
 fly_fitness_tidy_2  <- uncount(fly_fitness_tidy, count)
@@ -129,9 +130,16 @@ check_overdispersion(glmm.p.UMFE.fly)
 
 
 
-
-
-
+# negbin glmm
+glmm.nb.UMFE.fly <- glmmTMB( time_hours ~ 
+                              
+                              treatment * sex 
+                            
+                            + (1|vial),
+                            
+                            family = nbinom1, data = fly_fitness_tidy_2)
+# DHARMa checks 
+plot(simulateResiduals(glmm.nb.UMFE.fly)) 
 
 
 
