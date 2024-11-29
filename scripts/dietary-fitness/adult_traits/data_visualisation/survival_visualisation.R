@@ -8,8 +8,8 @@ library(survival)
 
 
 ## Reading the data in
-lifespan_adultstraits <- read_excel("data/fitness_development/adulttraits_lifespan.xlsx")
-lifespan_adultstraits <- as.data.frame(lifespan_adultstraits)
+lifespan_adultstraits_f <- read_excel("data/fitness_development/adulttraits_lifespan.xlsx")
+
 
 
 
@@ -28,19 +28,5 @@ lifespan_adultstraits$Sex <- ifelse(grepl("female", lifespan_adultstraits$treatm
 surv_obj <- Surv(time = lifespan_adultstraits$days_alive, event = lifespan_adultstraits$census)
 km_fit <- survfit(surv_obj ~ treatment, data = lifespan_adultstraits)
 km_fit <- survfit(surv_obj ~ 1)
-
-
-ggsurvplot(
-  km_fit,
-  data = lifespan_adultstraits,
-  conf.int = TRUE,
-
-
-  legend.title = "Treatment",
-  xlab = "Days Alive",
-  ylab = "Survival Probability",
-  ggtheme = theme_minimal()
-)
-
 
 
