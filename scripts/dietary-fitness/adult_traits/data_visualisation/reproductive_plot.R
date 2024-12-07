@@ -1,9 +1,6 @@
 ## Packages
-library(tidyverse)
-library(ggplot2)
-library(readxl)
-library(viridisLite)
-library(patchwork)
+library(ggpubr)
+source("packages.R")
 
 
 ## Choosing colours from viridis to use: 
@@ -72,7 +69,7 @@ reproductive_boxplot_adultstraits_m <- ggplot(reproductive_adultstraits_m,
         strip.background = element_blank(),  
         strip.text = element_text(face = "bold")) +
   labs(x = "Day in experiment when eggs were laid", 
-       y = "Offspring",
+       y = "Offspring per day",
        fill = "Treatment",
        title = "Male focal") 
 
