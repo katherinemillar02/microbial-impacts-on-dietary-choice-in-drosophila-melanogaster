@@ -1,11 +1,6 @@
 ## Packages
-library(tidyverse)
-library(ggplot2)
-library(readxl)
-library(viridisLite)
-library(survminer)
-library(survival)
-library(ggsurvfit)
+source("packages.R")
+
 
 
 ## Reading the data in
