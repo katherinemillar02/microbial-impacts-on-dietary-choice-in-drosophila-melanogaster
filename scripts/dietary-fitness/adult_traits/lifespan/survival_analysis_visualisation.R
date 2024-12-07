@@ -1,4 +1,5 @@
 ## Packages
+library(ggpubr)
 source("packages.R")
 
 ## Reading the data in
