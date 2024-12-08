@@ -11,5 +11,7 @@ library(ggplot2)
 library(readxl)
 library(viridisLite)
 library(patchwork)
-
+library(DHARMa)
+library(performance)
+library(emmeans)
 
