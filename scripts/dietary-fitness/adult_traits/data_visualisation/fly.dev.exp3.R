@@ -3,7 +3,7 @@ library(ggpubr)
 source("packages.R")
 
 
-## Reading pupae data in
+## Reading the data in
 fly.dev.3 <- read_excel("data/fitness_development/adulttraits_flydev.xlsx")
 
 
@@ -93,7 +93,7 @@ ggsave(filename = "fly.dev.3.boxplot.png",
 fly.dev.3.tidy <- tidyr::pivot_longer(data = fly.dev.3 ,
                                       cols = c( females, males),
                                       names_to = "sex",
-                                      values_to = "count") 
+                                      values_to = "count")
 
 
 
@@ -107,35 +107,44 @@ fly.dev.3.tidy <- fly.dev.3.tidy %>%
 # Changing count to uncount, so the format is better 
 fly.dev.3.tidy <- uncount(fly.dev.3.tidy, count)
 
+# Understanding the data
+summary_data <- fly_fitness_adulttraits %>%
+  group_by(treatment, time_hours, vial) %>%
+  summarise(total_females = sum(females),
+            total_males = sum(males))
 
 
-                                 #### DATA ANALYSIS  #### 
+
+#### DATA ANALYSIS RESULTS #### 
 
 
 
-
-glmm.p.adulttraits.fly <- glmmTMB(time_hours ~ 
-                                    
-                                    treatment * sex
-                                  
-                                  + (1|sex/vial) ,
-                                  
-                                  family = poisson, data = fly_fitness_tidy_adulttraits_2)
+#### BEST MODEL, from models tried in fly.dev.exp3.scraps: 
+glmm.nb.flydev.3 <- glmmTMB(time_hours ~ 
+                              
+                              treatment * sex
+                            
+                            + (1|sex/vial) ,
+                            
+                            family = nbinom2(), data = fly.dev.3.tidy)
 
 
 
 
 # Using drop1 to look for significance in a 3-way interaction
-drop1(glmm.p.adulttraits.fly, test = "Chisq")
+drop1(glmm.p.flydev.3, test = "Chisq")
 # No 2-way interaction effect
 
 
 #### Chosen model: NegBin ####
-glm.nb.adulttraits.fly.2 <- glm.nb(time_hours ~
-                                     
-                                     treatment + sex ,
-                                   
-                                   data = fly_fitness_tidy_adulttraits_2)
+glmm.nb.flydev.3.2 <- glmmTMB(time_hours ~ 
+                              
+                              treatment + sex
+                            
+                            + (1|sex/vial) ,
+                            
+                            family = nbinom2(), data = fly.dev.3.tidy)
+
 
 
 
@@ -143,24 +152,17 @@ glm.nb.adulttraits.fly.2 <- glm.nb(time_hours ~
 #### Data Analysis for write-up #### 
 
 # Basic analysis 
-summary(glm.nb.adulttraits.fly.2)
+summary(glmm.nb.flydev.3.2)
 
 # Real values for write-up
-emmeans::emmeans(glm.nb.MFE.fly.2, specs = ~ sex + treatment, type = "response")
+emmeans::emmeans(glmm.nb.flydev.3.2, specs = ~ sex + treatment, type = "response")
 
 # Confidence intervals
-exp(confint(glm.nb.adulttraits.fly.2))
+exp(confint(glmm.nb.flydev.3.2))
 
 # Table for write-up 
-tab_model(glm.nb.adulttraits.fly.2, CSS = list(css.table = '+font-family: Arial;'))
+tab_model(glmm.nb.flydev.3.2, CSS = list(css.table = '+font-family: Arial;'))
 
 
-
-
-## 
-summary_data <- fly_fitness_adulttraits %>%
-  group_by(treatment, time_hours, vial) %>%
-  summarise(total_females = sum(females),
-            total_males = sum(males))
 
 

@@ -68,7 +68,7 @@ check_overdispersion(glmm.p.adulttraits.fly)
 AIC(glm.p.adulttraits.fly, glmm.p.adulttraits.fly)
 # poisson bad but what else>
 
-)
+
 
 
 ## Assumption checks 
@@ -104,7 +104,7 @@ glmm.p.adulttraits.fly <- glmmTMB(time_hours ~
                                   
                                   + (1|sex/vial) ,
                                   
-                                  family = poisson, data = fly_fitness_tidy_adulttraits_2)
+                                  family = poisson, data = fly.dev.3.tidy)
 
 
 
@@ -121,4 +121,22 @@ check_overdispersion(glmm.p.adulttraits.fly)
 # Comparing models
 AIC(glm.p.adulttraits.fly, glmm.p.adulttraits.fly)
 # poisson bad but what else>
+
+
+
+
+glmm.nb.flydev.3 <- glmmTMB(time_hours ~ 
+                                    
+                                    treatment * sex
+                                  
+                                  + (1|sex/vial) ,
+                                  
+                                  family = nbinom2(), data = fly.dev.3.tidy)
+
+
+
+plot(simulateResiduals(glmm.nb.flydev.3)) 
+ # beter assumptions 
+
+
 
