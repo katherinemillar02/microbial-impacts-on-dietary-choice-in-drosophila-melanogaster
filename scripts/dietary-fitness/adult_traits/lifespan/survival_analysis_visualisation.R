@@ -88,6 +88,7 @@ lifespan_female <- lifespan %>% filter(Sex == "Focal female")
 lifespan_male <- lifespan %>% filter(Sex == "Focal male")
 
 summary(coxph(Surv(days_alive, censor) ~ Conditioning, data = lifespan_female))
+
 summary(coxph(Surv(days_alive, censor) ~ Conditioning, data = lifespan_male))
 
 
