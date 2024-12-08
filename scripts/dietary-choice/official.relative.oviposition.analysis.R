@@ -1,19 +1,7 @@
 
-#### Chapter 2 ####
-
-# Just for analysis script
-
 #### Packages 📦📦📦📦 #### 
-library(tidyverse)
-library(lmerTest)
-library(readxl)
-library(DHARMa)
-library(glmmTMB)
-library(lme4)
-library(performance)
-library(pscl)
-library(MASS)
-library(sjPlot)
+library(ggpubr)
+source("scripts")
 #### 
 
 
@@ -24,7 +12,6 @@ library(sjPlot)
 
 
 #### Reading, binding, cleaning data 📖 ####
-
 # 4:1 + 1:4 
 fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx")
 fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_1-4_b2_oviposition.xlsx")
@@ -37,7 +24,6 @@ fourone_onefour_male_oviposition <- rbind(fourone_onefour_male_oviposition_b1, f
 ## Making the data different dataframes
 combined_ovi_m <- fourone_onefour_male_oviposition  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
-
 
 ## Splitting "diet" up
 combined_ovi_m_split <- combined_ovi_m %>% 
