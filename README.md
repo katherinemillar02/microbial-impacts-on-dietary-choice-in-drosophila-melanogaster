@@ -8,7 +8,7 @@ A GitHub Repository for a research project undertaken at the University of East 
 
 ## 🗂 Scripts 📜
 
-### 🗂️dietary-fitness
+### 🗂️fly-development
 
 ### 🗂️dietary-choice
 
