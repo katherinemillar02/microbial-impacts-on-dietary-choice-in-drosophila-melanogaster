@@ -1,9 +1,12 @@
 
-#### Packages 📦📦📦📦 #### 
+#### Packages and Data Read in 📦📦📦📦 #### 
 library(ggpubr)
 source("packages.R")
 source("scripts/dietary-choice/dietarychoice_dataread.R")
 #### 
+
+
+
 
 #### Male Conditioning ~ Data Analysis ####
 
@@ -79,7 +82,7 @@ drop1(glm.zi.nb.v.egg, test = "Chisq")
 # Significant 3-way interaction
 
 
-#### 2. Data analysis for write-up ####
+#### 2. Data analysis for write-up
 
 # Basic analysis 
 summary(glm.zi.nb.v.egg)
@@ -108,7 +111,7 @@ tab_model(glm.zi.nb.v.egg, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
-#### Data Analysis #### 
+#### OvoD1 ~ Data Analysis #### 
 
 
 # Using this model 
@@ -147,7 +150,7 @@ glm.nb_ovo_comb_egg.3 <- glm.nb(egg_numbers
                                 data =  combined_of_egg_split)
 
 
-#### Data Analysis for write-up #### 
+#### Data Analysis for write-up
 
 # Basic analysis
 summary(glm.nb_ovo_comb_egg.3)
