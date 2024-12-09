@@ -299,3 +299,9 @@ tab_model(glmm.bin.of, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
+
+
+
+
+
+
