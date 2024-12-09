@@ -5,26 +5,18 @@ source("packages.R")
 source("scripts/dietary-choice/dietarychoice_dataread.R")
 #### 
 
+#### Male Conditioning ~ Data Analysis ####
 
-
-
-
-
-
-
-#### Data Analysis ####
+## Finding the appropriate model: 
 
 # Testing for 3-way interaction 
 comb_m_egg_glm.nb <- glm.nb(egg_numbers
                             ~ ratio * condition * block, 
                             data =  combined_ovi_m_split)
 
-
-
 # Using drop1 to test for the significance of the 3-way interaction 
 drop1(comb_m_egg_glm.nb, test = "Chisq")
 # No 3-way interaction 
-
 
 # Testing for 2-way interactions 
 comb_m_egg_glm.nb.2 <- glm.nb(egg_numbers
@@ -33,11 +25,9 @@ comb_m_egg_glm.nb.2 <- glm.nb(egg_numbers
                                 condition * block, 
                               data =  combined_ovi_m_split)
 
-
 # Using drop1 to test for the significance of the 2-way interaction 
 drop1(comb_m_egg_glm.nb.2, test = "Chisq")
 # No 2-way interactions
-
 
 # Final model 
 comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers
@@ -46,19 +36,16 @@ comb_m_egg_glm.nb.3 <- glm.nb(egg_numbers
 
 
 
-#### Data analysis for write-up #### 
+#### Code for analysis with chosen model:  
 
 # Basic analysis 
 summary(comb_m_egg_glm.nb.3)
 
-
 # Confidence intervals 
 exp(confint(comb_m_egg_glm.nb.3))
 
-
 # Real values for write-up
 emmeans::emmeans(comb_m_egg_glm.nb.3, specs = ~ ratio + condition + block, type = "response")
-
 
 ## Table of model for write-up
 tab_model(comb_m_egg_glm.nb.3, CSS = list(css.table = '+font-family: Arial;'))
@@ -74,11 +61,7 @@ tab_model(comb_m_egg_glm.nb.3, CSS = list(css.table = '+font-family: Arial;'))
 
 
 
-
-
-
-
-#### Data Analysis #### 
+#### Virgin Female ~ Data Analysis #### 
 
 
 #### Chosen model: Zero-Inflated Negative Binomial... 
