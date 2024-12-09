@@ -10,6 +10,26 @@ A GitHub Repository for a research project undertaken at the University of East 
 
 ### 🗂️fly-development
 
+#### 🗂exp1.uncontrolled.density
+
+#### 🗂exp2.controlled.density
+
+#### 🗂exp2.adult.traits
+
+
 ### 🗂️dietary-choice
+
+##### dietarychoice.absolute.analysis.R
+
+##### dietarychoice.relative.analysis.R
+
+##### dietarychoice.visualisation.R
+
+##### dietarychoice.dataread.R
+
+
+
+
+
 
 ### 🗂️density-conditioning
