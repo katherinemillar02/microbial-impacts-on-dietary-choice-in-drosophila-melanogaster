@@ -158,10 +158,8 @@ summary(glm.nb_ovo_comb_egg.3)
 # Confidence intervals 
 exp(confint(glm.nb_ovo_comb_egg.3))
 
-
 # Real values for write-up
 emmeans::emmeans(glm.nb_ovo_comb_egg.3, specs = ~ ratio + condition + block, type = "response")
-
 
 ## Table of model for write-up
 tab_model(glm.nb_ovo_comb_egg.3, CSS = list(css.table = '+font-family: Arial;')) 
