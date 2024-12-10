@@ -5,7 +5,8 @@ reproductive_adultstraits_f$day <- as.character(reproductive_adultstraits_f$day)
 
 ## Reading pupae data in
 reproductive_adultstraits_m <- read_excel("data/fitness_development/treatment_reproductive.xlsx", sheet = "males")
-reproductive_adultstraits_m$day <- as.character(reproductive_adultstraits_m$day)
+reproductive_adultstraits_m$day <- factor(reproductive_adultstraits_m$day,
+                                             levels = c("5","12","22","25","29","32"))
 
 
 
