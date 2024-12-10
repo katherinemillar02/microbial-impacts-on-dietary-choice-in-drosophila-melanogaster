@@ -11,8 +11,8 @@ viridis_colors <- viridis(10)
 ## Reading pupae data in
 
 
-#### FEMALE FOCAL REPRODUCTIVE SUCCESS #### 
-reproductive_boxplot_adultstraits_f <- ggplot(reproductive_adultstraits_f, 
+#### FEMALE FOCAL REPRODUCTIVE SUCCESS BOXPLOT #### 
+rs.boxplot.f.exp3 <- ggplot(reproductive_adultstraits_f, 
                                               aes(x = day, y = os, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
   geom_point(aes(fill = treatment),
@@ -22,7 +22,7 @@ reproductive_boxplot_adultstraits_f <- ggplot(reproductive_adultstraits_f,
                     labels = c("Conditioned female", "Conditioned male", 
                                "Unconditioned female", "Unconditioned male")) +
   theme_classic() +
-  theme(legend.position = "none",
+  theme(legend.position = "top",
         legend.justification = "right",
         legend.direction = "vertical",
         strip.placement = "outside", 
@@ -34,22 +34,22 @@ reproductive_boxplot_adultstraits_f <- ggplot(reproductive_adultstraits_f,
        title = "Female focal") 
 
 ## Run plot:
-reproductive_boxplot_adultstraits_f
+rs.boxplot.f.exp3
 
 
 
 #### MALE FOCAL REPRODUCTIVE SUCCESS #### 
-reproductive_boxplot_adultstraits_m <- ggplot(reproductive_adultstraits_m, 
+rs.boxplot.m.exp3 <- ggplot(reproductive_adultstraits_m, 
                                               aes(x = day, y = os, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
   geom_point(aes(fill = treatment),
              size = 1.5, shape = 21,
              position = position_jitterdodge(jitter.width = 0.3, dodge.width = 0.9)) +
   scale_fill_manual(values = viridis_colors[c(4, 8)], 
-                    labels = c("Conditioned female", "Conditioned male", 
-                               "Unconditioned female", "Unconditioned male")) +
+                    labels = c("Conditioned male", "Unconditioned male"
+                               )) +
   theme_classic() +
-  theme(legend.position = "none",
+  theme(legend.position = "top",
         legend.justification = "right",
         legend.direction = "vertical",
         strip.placement = "outside", 
@@ -61,7 +61,7 @@ reproductive_boxplot_adultstraits_m <- ggplot(reproductive_adultstraits_m,
        title = "Male focal") 
 
 ## Run plot:
-reproductive_boxplot_adultstraits_m
+rs.boxplot.m.exp3
 
 
 
