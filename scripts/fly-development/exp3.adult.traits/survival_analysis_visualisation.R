@@ -1,15 +1,9 @@
-## Packages
+############################################# Packages #################################################### 
 library(ggpubr)
 source("packages.R")
+####################################################################################################################################### 
 
-## Reading the data in
-lifespan_adultstraits <- read_excel("data/fitness_development/adulttraits_lifespan.xlsx", range = cell_cols("A:E"))
-
-## Adding a sex section 
-lifespan_adultstraits$Conditioning <- ifelse(grepl("Conditioned", lifespan_adultstraits$treatment), "Conditioned", "Unconditioned")
-lifespan_adultstraits$Sex <- ifelse(grepl("female", lifespan_adultstraits$treatment), "Focal female", "Focal male")
-
-# Running Surv
+# Running Surv: 
 Surv(lifespan_adultstraits$days_alive, lifespan_adultstraits$censor)
  # Using Surv() to run time-to-event data, censor represents the days alive not being definitive.
  # days alive indicates how long each individual survived. 
