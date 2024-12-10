@@ -29,7 +29,6 @@ m.glmm.bin.feed.1 <- glmer(cbind(Conditioned, Unconditioned)
 drop1(m.glmm.bin.feed.1 , test = "Chisq")
  # No significant 2-way interaction 
 
-
 # New model with two-way interaction dropped:
 m.glmm.bin.feed.2 <- glmer(cbind(Conditioned, Unconditioned) 
                            ~ ratio + block +
@@ -77,9 +76,6 @@ vf.glmm.bin.feed.3  <- glmer(cbind(Conditioned, Unconditioned)
                         (1|block/observation),
                       family = binomial, 
                       data = df2_virgin)
-
-
-
 
 # Final model: 
 summary(vf.glmm.bin.feed.3)
