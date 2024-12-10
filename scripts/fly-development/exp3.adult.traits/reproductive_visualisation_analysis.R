@@ -1,23 +1,17 @@
-## Packages
-library(ggpubr)
-source("packages.R")
-source("scripts/dietary-fitness/adult_traits/data_visualisation/reproductive_plot.R")
 
+
+
+################################################ Packages ############################################
+source("packages.R")
+source("scripts/fly-development/exp3.adult.traits/fly.development.dataread.R")
+######################################################################################################
 
 ## Choosing colours from viridis to use: 
 viridis_colors <- viridis(10)
-
 ## Reading pupae data in
-reproductive_adultstraits_f <- read_excel("data/fitness_development/treatment_reproductive.xlsx", sheet = "females")
-reproductive_adultstraits_f$day <- as.character(reproductive_adultstraits_f$day)
 
 
-
-
-
-
-# Plot
-# Updated plot
+#### FEMALE FOCAL REPRODUCTIVE SUCCESS #### 
 reproductive_boxplot_adultstraits_f <- ggplot(reproductive_adultstraits_f, 
                                               aes(x = day, y = os, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
@@ -39,20 +33,12 @@ reproductive_boxplot_adultstraits_f <- ggplot(reproductive_adultstraits_f,
        fill = "Treatment",
        title = "Female focal") 
 
+## Run plot:
 reproductive_boxplot_adultstraits_f
 
 
-## male 
-## Reading pupae data in
-reproductive_adultstraits_m <- read_excel("data/fitness_development/treatment_reproductive.xlsx", sheet = "males")
 
-
-reproductive_adultstraits_m$day <- as.character(reproductive_adultstraits_m$day)
-
-
-
-# Plot
-# Updated plot
+#### MALE FOCAL REPRODUCTIVE SUCCESS #### 
 reproductive_boxplot_adultstraits_m <- ggplot(reproductive_adultstraits_m, 
                                               aes(x = day, y = os, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
@@ -74,18 +60,22 @@ reproductive_boxplot_adultstraits_m <- ggplot(reproductive_adultstraits_m,
        fill = "Treatment",
        title = "Male focal") 
 
+## Run plot:
 reproductive_boxplot_adultstraits_m
 
 
-#### DATA ANALYSIS 
+
+#################################### DATA ANALYSIS ####################################
 
 # Beginning a basic linear model 
 rs.lm.1 <- lm(os ~ treatment * day, data = reproductive_adultstraits_m)
 
-# performance checks 
+# Checks 
+# performance checks using easystats 
 performance::check_model(rs_lm_1)
 
-## Doing more complex models 
+
+## Doing more complex models - generalised linear mixed model 
 rs.glmm.p.1 <- glmmTMB(os ~ treatment * day
                             
                             
@@ -175,7 +165,6 @@ AIC(rs.lm.1, rs.glmm.p.1, rs.glmm.nb.1, rs.glmm.zi.p.1)
  # Poisson zero inflated is the best 
 
 
-#### Using this model 
-
+#### Using this model: 
 summary(rs.glmm.zi.p.1)
 
