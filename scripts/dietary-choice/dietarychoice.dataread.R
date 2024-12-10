@@ -362,6 +362,78 @@ df2_ovod1 <- df_ovod1 %>%
   pivot_wider(names_from = "condition", values_from = "count")
 
 
+#### Chapter 2 ####
+
+# Analyses for write up 
+
+#### Packages #### 📦📦📦📦
+library(tidyverse)
+library(lmerTest)
+library(readxl)
+library(DHARMa)
+library(glmmTMB)
+library(lme4)
+library(performance)
+library(pscl)
+library(MASS)
+############### 📦📦📦📦
+
+
+#### Male #### 
+
+## Creating a path to get to the data
+pathmaleoviposition <- "data/male_conditioning"
+
+
+################################################################################################################ --
+read_raw_male_oviposition <-function(path = pathmaleoviposition, pattern_to_exclude = "4-1_1-4"){
+  list_of_files <- list.files(path = pathmaleoviposition,
+                              pattern = "oviposition", full.names = T)
+  
+  list_of_files <- list_of_files[!grepl(pattern_to_exclude, list_of_files)]
+  
+
+list_of_files %>%
+  map_dfr(~read_excel(.x) %>% mutate(id = .x, .before = "plate")) %>% #.x is the vector you're inputting? so adding a section of id is the name of the data and the folder its in 
+  pivot_longer(cols = c(3:6), ## this will put all the data files into long data, easy to read
+               names_to = "diet",
+               values_to = "egg_numbers") %>%
+  drop_na(egg_numbers) ## because the data files are being combined, dropping na where certain data scripts should not be included
+}
+################################################################################################################--
+
+
+## read_raw is the function created, and path shows the path made, so the list of files
+read_raw_male_oviposition(read_raw_male_oviposition)
+
+
+
+## creating an actual data set that will read the paths
+# first data frame - purr package 
+df_male_oviposition <- pathmaleoviposition %>% 
+  map_df(~read_raw_male_oviposition(.x)) #.x is a string or NULL - only applies to dfr apparently
+
+
+
+## Mutating a variable for block 
+df_male_oviposition <- df_male_oviposition %>% 
+  mutate(block = case_when(
+    str_detect(id, "b1") ~ "one",
+    str_detect(id, "b2") ~ "two"
+  ))
+
+
+
+
+# uses what was generated with "df"
+df2_male_oviposition <- df_male_oviposition %>%
+  separate(diet, into = c("ratio", "condition"), sep = " ") %>%#separate will turn a single factor column into multiple columns
+  group_by(id, plate, ratio, condition, block) %>% ## group by what is split
+  summarise(count = sum(egg_numbers)) %>% 
+  pivot_wider(names_from = "condition", values_from = "count") 
+
+## new data 
+df2_male_oviposition # does it recognise condition from the long data? 
 
 
 
