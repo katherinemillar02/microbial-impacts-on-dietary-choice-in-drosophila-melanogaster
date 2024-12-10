@@ -1,15 +1,8 @@
 ## Uploading Packages using source
-library(ggpubr)
 source("packages.R")
+source()
 
-
-## Reading the data in
-fly.dev.3 <- read_excel("data/fitness_development/adulttraits_flydev.xlsx")
-
-
-
-
-                                  #### DATA VISUALISATION #### 
+                                 #### DATA VISUALISATION #### 
 
 ## Setting a colour palette from the "viridis" package
 viridis_colors <- viridis(10)

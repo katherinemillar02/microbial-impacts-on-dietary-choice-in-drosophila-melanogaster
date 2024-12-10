@@ -24,7 +24,6 @@ m.glmm.bin.feed.1 <- glmer(cbind(Conditioned, Unconditioned)
                     family = binomial, 
                     data = df2_male)
 
-
 # Testing for the significance of the two-way interaction 
 drop1(m.glmm.bin.feed.1 , test = "Chisq")
  # No significant 2-way interaction 
