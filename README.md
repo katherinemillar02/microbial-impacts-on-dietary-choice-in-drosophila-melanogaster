@@ -9,12 +9,13 @@ This project investigates the effects of a mated females feeding and oviposition
 ## 🗂 Scripts 📜
 
 ### 🗂️fly-development
+This experiment looks at how development could be effected by a D. melanogaster being reared on a conditioned or unconditioned diet.
 
 #### 🗂exp1.uncontrolled.density
 
 #### 🗂exp2.controlled.density
 
-#### 🗂exp2.adult.traits
+#### 🗂exp3.adult.traits
 
 ### 🗂️dietary-choice
 
