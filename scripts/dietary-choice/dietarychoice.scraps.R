@@ -98,8 +98,8 @@ simulationOutput <- simulateResiduals(fittedModel = glm.nb.m.4choice, plot = T)
 check_overdispersion(glm.nb.m.4choice)
 # NO overdispersion is detected
 
-check_zeroinflation(glmm.m.4choice)
-# Zeroinflation STILL detected 
+check_zeroinflation(glm.nb.m.4choice)
+# Zeroinflationnot detected 
 
 
 
@@ -253,7 +253,7 @@ glm.nb.m.4choice <- glm.nb(fly_numbers ~
 
 ## Assumption checks: 
 
-# DHARMa 
+# DHARMa
 simulationOutput <- simulateResiduals(fittedModel = glm.nb.m.4choice, plot = T)
 ## Assumptions of the model look pretty good 
 
