@@ -51,7 +51,7 @@ drop1(cox_model_1, test = "Chisq")
  # No significant interaction effect found
 
 # Doing the cox model without an interaction effect 
-cox_model_2 <- coxph(Surv(days_alive, censor) ~ Conditioning + Sex, data = lifespan)
+cox_model_2 <- coxph(Surv(days_alive, censor) ~ Conditioning + Sex, data = survival)
  # Final model? 
 
 
@@ -75,11 +75,11 @@ ggcoxzph(cox.assumptions)
 
 
 
-summary(coxph(Surv(days_alive, censor) ~ Conditioning + strata(Sex), data = lifespan))
+summary(coxph(Surv(days_alive, censor) ~ Conditioning + strata(Sex), data = survival))
 
-lifespan_female <- lifespan %>% filter(Sex == "Focal female")
+lifespan_female <- survival %>% filter(Sex == "Focal female")
 
-lifespan_male <- lifespan %>% filter(Sex == "Focal male")
+lifespan_male <- survival %>% filter(Sex == "Focal male")
 
 summary(coxph(Surv(days_alive, censor) ~ Conditioning, data = lifespan_female))
 

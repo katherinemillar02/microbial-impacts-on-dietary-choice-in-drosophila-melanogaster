@@ -13,7 +13,7 @@ viridis_colors <- viridis(10)
 
 #### FEMALE FOCAL REPRODUCTIVE SUCCESS BOXPLOT #### 
 rs.boxplot.f.exp3 <- ggplot(reproductive_adultstraits_f, 
-                                              aes(x = day, y = os, fill = treatment)) +
+                                              aes(x = ageofflyeggslaid, y = os, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
   geom_point(aes(fill = treatment),
              size = 1.5, shape = 21,
@@ -40,7 +40,7 @@ rs.boxplot.f.exp3
 
 #### MALE FOCAL REPRODUCTIVE SUCCESS #### 
 rs.boxplot.m.exp3 <- ggplot(reproductive_adultstraits_m, 
-                                              aes(x = day, y = os, fill = treatment)) +
+                                              aes(x = ageofflyeggslaid, y = os, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = .4, position = position_dodge(width = 0.9)) +
   geom_point(aes(fill = treatment),
              size = 1.5, shape = 21,
@@ -76,7 +76,7 @@ performance::check_model(rs_lm_1)
 
 
 ## Doing more complex models - generalised linear mixed model 
-rs.glmm.p.1 <- glmmTMB(os ~ treatment * day
+rs.glmm.p.1 <- glmmTMB(os ~ treatment * ageofflyeggslaid
                             
                             
                             + (1 | vial), 
@@ -104,7 +104,7 @@ simulationOutput <- simulateResiduals(fittedModel = rs.glmm.p.1, plot = T)
 
 
 #### Trying a negative binomial mixed model 
-rs.glmm.nb.1 <- glmmTMB(os ~ treatment * day
+rs.glmm.nb.1 <- glmmTMB(os ~ treatment * ageofflyeggslaid
                        
                        
                        + (1 | vial), 
@@ -133,7 +133,7 @@ simulationOutput <- simulateResiduals(fittedModel = rs.glmm.nb.1, plot = T)
 
 #### Trying a zeroinflation model
 
-rs.glmm.zi.p.1 <- glmmTMB(os ~ treatment * day
+rs.glmm.zi.p.1 <- glmmTMB(os ~ treatment * ageofflyeggslaid
                         
                         
                         + (1 | vial), 
