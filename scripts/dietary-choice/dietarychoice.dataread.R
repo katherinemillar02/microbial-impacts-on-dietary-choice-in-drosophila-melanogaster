@@ -462,6 +462,41 @@ df2_male
 
 
 
+#### MALE DATA READ FOR VISUALISATION ####
+
+# 1:4 
+onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_1-4_b1_oviposition.xlsx")
+onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_1-4_b2_oviposition.xlsx")
+
+# Mutating a block variable
+onefour_male_oviposition_b1 <- onefour_male_oviposition_b1 %>% mutate(block = "one")
+onefour_male_oviposition_b2 <- onefour_male_oviposition_b2 %>% mutate(block = "two")
+
+# Binding the data for 4:1/1:4 
+onefour_male_oviposition <- rbind(onefour_male_oviposition_b1, onefour_male_oviposition_b2)
+
+## Making the data different dataframes
+onefour_male_oviposition_long <- onefour_male_oviposition  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
+# 4:1 
+fourone_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_b1_oviposition.xlsx")
+fourone_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_b2_oviposition.xlsx")
+
+# Mutating a block variable
+fourone_male_oviposition_b1 <- fourone_male_oviposition_b1 %>% mutate(block = "one")
+fourone_male_oviposition_b2 <- fourone_male_oviposition_b2 %>% mutate(block = "two")
+
+# Binding the data for 4:1/1:4 
+fourone_male_oviposition <- rbind(fourone_male_oviposition_b1, fourone_male_oviposition_b2)
+
+## Making the data different dataframes
+fourone_male_oviposition_long <- fourone_male_oviposition  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
+
 
 
 
@@ -524,6 +559,40 @@ df2_virgin <- df_virgin %>%
 df2_virgin 
 
 
+#### VIRGIN FEMALE DATA READ FOR VISUALISATION ####
+
+# 1:4 
+onefour_virgin_oviposition_b1 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b1.xlsx")
+onefour_virgin_oviposition_b2 <- read_excel("data/female_conditioning/virgin/1-4_oviposition_virgin_b2.xlsx")
+
+# Mutating a block variable
+onefour_virgin_oviposition_b1 <- onefour_virgin_oviposition_b1 %>% mutate(block = "one")
+onefour_virgin_oviposition_b2 <- onefour_virgin_oviposition_b2 %>% mutate(block = "two")
+
+# Binding the data for 4:1/1:4 
+onefour_virgin_oviposition <- rbind(onefour_virgin_oviposition_b1, onefour_virgin_oviposition_b2)
+
+## Making the data different dataframes
+onefour_virgin_oviposition_long <- onefour_virgin_oviposition  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
+# 4:1 
+fourone_virgin_oviposition_b1 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b1.xlsx")
+fourone_virgin_oviposition_b2 <- read_excel("data/female_conditioning/virgin/4-1_oviposition_virgin_b2.xlsx")
+
+# Mutating a block variable
+fourone_virgin_oviposition_b1 <- fourone_virgin_oviposition_b1 %>% mutate(block = "one")
+fourone_virgin_oviposition_b2 <- fourone_virgin_oviposition_b2 %>% mutate(block = "two")
+
+# Binding the data for 4:1/1:4 
+fourone_virgin_oviposition <- rbind(fourone_virgin_oviposition_b1, fourone_virgin_oviposition_b2)
+
+## Making the data different dataframes
+fourone_virgin_oviposition_long <- fourone_virgin_oviposition  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
 
 
 
@@ -532,7 +601,7 @@ df2_virgin
 
 #### DIETS CONDITIONED BY OVOD1 FEMALES ####
 
-#### Reading data in ####
+#### Reading data in 
 
 pathovod1 <- "data/female_conditioning/ovod1"
 
@@ -573,4 +642,47 @@ df2_ovod1 <- df_ovod1 %>%
   group_by(id,observation, plate, ratio,condition, block) %>% ## group by what is split
   summarise(count = sum(fly_numbers)) %>% 
   pivot_wider(names_from = "condition", values_from = "count")
+
+
+
+
+
+
+
+
+
+
+#### OVOD1 FEMALE DATA READ FOR VISUALISATION ####
+
+# 1:4 
+onefour_ovod1_oviposition_b1 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b1.xlsx")
+onefour_ovod1_oviposition_b2 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b2.xlsx")
+
+# Mutating a block variable
+onefour_ovod1_oviposition_b1 <- onefour_ovod1_oviposition_b1 %>% mutate(block = "one")
+onefour_ovod1_oviposition_b2 <- onefour_ovod1_oviposition_b2 %>% mutate(block = "two")
+
+# Binding the data for 4:1/1:4 
+onefour_ovod1_oviposition <- rbind(onefour_ovod1_oviposition_b1, onefour_ovod1_oviposition_b1)
+
+## Making the data different dataframes
+onefour_ovod1_oviposition_long <- onefour_ovod1_oviposition  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+
+# 4:1 
+fourone_ovod1_oviposition_b1 <- read_excel("data/female_conditioning/ovod1/4-1_oviposition_ovod1_b1.xlsx")
+fourone_ovod1_oviposition_b2 <- read_excel("data/female_conditioning/ovod1/4-1_oviposition_ovod1_b2.xlsx")
+
+# Mutating a block variable
+fourone_ovod1_oviposition_b1 <- fourone_ovod1_oviposition_b1 %>% mutate(block = "one")
+fourone_ovod1_oviposition_b2 <- fourone_ovod1_oviposition_b2 %>% mutate(block = "two")
+
+# Binding the data for 4:1/1:4 
+fourone_ovod1_oviposition <- rbind(fourone_ovod1_oviposition_b1, fourone_ovod1_oviposition_b2)
+
+## Making the data different dataframes
+fourone_ovod1_oviposition_long <- fourone_ovod1_oviposition %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
 
