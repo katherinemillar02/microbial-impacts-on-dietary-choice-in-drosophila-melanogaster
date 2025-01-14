@@ -73,9 +73,26 @@ ovod1female_relative_feeding <- feeding_results(combined_of,  boxplot_fill_colou
 
 
 
+# Absolute Feeding #
 
-#### ABSOLUTE (TWO-CHOICE) ####
+## 1:4 
 
+#### MALE 
+male_1_4_feeding <- feeding_results(onefour_male_feeding_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+#### VIRGIN FEMALE 
+virginfemale_1_4_feeding <- oviposition_results(onefour_virgin_feeding_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+#### OVOD1 FEMALE 
+ovod1female_1_4_feeding <- oviposition_results(onefour_ovod1_feeding_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+
+
+## 4:1 
+
+#### MALE 
+male_4_1_feeding <- oviposition_results(fourone_male_feeding_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+#### VIRGIN FEMALE 
+virginfemale_4_1_feeding <- oviposition_results(fourone_virgin_feeding_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+#### OVOD1 FEMALE 
+ovod1female_4_1_feeding <- oviposition_results(fourone_ovod1_feeding_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
 
 
 
