@@ -313,7 +313,7 @@ summary(of.glm.nb.4choice.ovi.3)
 exp(confint(of.glm.nb.4choice.ovi.3))
 
 # Real values for write-up
-emmeans::emmeans(of.glm.nb.4choice.ovi.3, specs = ~ ratio + condition  , type = "response")
+emmeans::emmeans(of.glm.nb.4choice.ovi.3, specs = ~ ratio + condition, type = "response")
 
 ## Table of model for write-up
 tab_model(of.glm.nb.4choice.ovi.3, CSS = list(css.table = '+font-family: Arial;')) 
