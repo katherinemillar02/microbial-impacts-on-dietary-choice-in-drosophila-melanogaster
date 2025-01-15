@@ -2,6 +2,7 @@ source("packages.R")
 
 
 
+
 ############## The Effects of Diet Conditioning on Female  Dietary Choice ################### 
 ############################### Edited by: Katie Millar,
 ##################### This script is used as the FINAL PATCH, at which 
@@ -399,7 +400,12 @@ read_raw_ovod1_oviposition <-function(path = pathovod1oviposition, pattern_to_ex
 #### OVOD1 FEMALE DATA READ FOR VISUALISATION ####
 
 # 1:4 
+# Block 1 
 onefour_ovod1_oviposition_b1 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b1.xlsx")
+# Block 1 - Long 
+onefour_ovod1_oviposition_b1_long <- onefour_ovod1_oviposition_b1  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+# Block 2
 onefour_ovod1_oviposition_b2 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b2.xlsx")
 
 # Mutating a block variable
