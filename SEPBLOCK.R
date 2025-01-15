@@ -9,6 +9,7 @@ source("scripts/dietary-choice/dietarychoice.dataread.R")
 
   ## Visualising the individual blocks as data shows these to be significant ## 
 
+viridis_colours <- viridis(10)
 
 oviposition_results <- function(data, boxplot_fill_colour) {
   # Ensure the data has the necessary columns for faceting
@@ -47,31 +48,35 @@ oviposition_results <- function(data, boxplot_fill_colour) {
 
 
 ## Oviposition: 
+
 # 1:4 OvoD1
 
 # Block 1 
-ovod1_b1_onefour <- oviposition_results(onefour_ovod1_oviposition_b1_long, boxplot_fill_colour = viridis_colours[1:2])
+ovod1_b1_onefour <- oviposition_results(onefour_ovod1_oviposition_b1_long, boxplot_fill_colour = viridis_colours[c(9,9)])
 
 # Block 2
-ovod1_b2_onefour <- oviposition_results(onefour_ovod1_oviposition_b2_long, boxplot_fill_colour = viridis_colours[1:2])
+ovod1_b2_onefour <- oviposition_results(onefour_ovod1_oviposition_b2_long, boxplot_fill_colour = viridis_colours[c(9,9)])
 
 
-# For 4:1 OvoD1
+# 4:1 OvoD1
 
 # Block 1 
-ovod1_b1_fourone <- oviposition_results(four_one_b1_egg, boxplot_fill_colour = viridis_colours[3:4])
+ovod1_b1_fourone <- oviposition_results(fourone_ovod1_oviposition_b1_long, boxplot_fill_colour = viridis_colours[c(7,7)])
 
 # Block 2
-ovod1_b2_fourone <- oviposition_results(four_one_b2_egg, boxplot_fill_colour = viridis_colours[3:4])
+ovod1_b2_fourone <- oviposition_results(fourone_ovod1_oviposition_b1_long, boxplot_fill_colour = viridis_colours[c(7,7)])
+
+
 
 
 ## Combined 4:1 and 1:4 
 
 # Block 1
-ovod1_b1_combined <- oviposition_results(fourone_onefour_ovi_od1_b1 , boxplot_fill_colour = viridis_colours[c(1:4)])
+ovod1_b1_combined <- oviposition_results(fourone_onefour_oviposition_ovod1_b1_long , boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
 
 # Block 2 
-ovod1_b2_combined <- oviposition_results(fourone_onefour_ovi_od1_b2 ,  boxplot_fill_colour = viridis_colours[c(1:4)])
+ovod1_b2_combined <- oviposition_results(fourone_onefour_oviposition_ovod1_b2_long ,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
 
 
 
@@ -108,10 +113,10 @@ ovod1_female_oviposition <- grid.arrange(
 ## 4:1 Virgin 
 
 # Block 2 
-virgin_b2_fourone <- oviposition_results( fourone_ovi_vf_b2 , boxplot_fill_colour  = viridis_colours[3:4])
+virgin_b2_fourone <- oviposition_results( onefour_virgin_oviposition_b1_long , boxplot_fill_colour  = viridis_colours[3:4])
 
 # Block 3 
-virgin_b3_fourone <- oviposition_results( fourone_ovi_vf_b3, boxplot_fill_colour = viridis_colours[3:4])
+virgin_b3_fourone <- oviposition_results( onefour_virgin_oviposition_b1_long, boxplot_fill_colour = viridis_colours[3:4])
 
 # Block 4 
 virgin_b4_fourone <- oviposition_results( fourone_ovi_vf_b4, boxplot_fill_colour = viridis_colours[3:4])
