@@ -111,8 +111,8 @@ fourone_onefour_oviposition_ovod1_b2_long <- fourone_onefour_oviposition_ovod1_b
   pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 # Mutating a block variable 
-fourone_onefour_oviposition_ovod1_b1 <- combined_ovod1_b1  %>% mutate(block = "one")
-fourone_onefour_oviposition_ovod1_b2 <- combined_ovod1_b2  %>% mutate(block = "two")
+fourone_onefour_oviposition_ovod1_b1 <- fourone_onefour_oviposition_ovod1_b1  %>% mutate(block = "one")
+fourone_onefour_oviposition_ovod1_b2 <- fourone_onefour_oviposition_ovod1_b2  %>% mutate(block = "two")
 
 # Binding the data 
 fourone_onefour_oviposition_ovod1 <- rbind(fourone_onefour_oviposition_ovod1_b1, fourone_onefour_oviposition_ovod1_b2)
@@ -146,13 +146,13 @@ fourone_onefour_oviposition_ovod1_long_split <- fourone_onefour_oviposition_ovod
 fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx")
 # Block 1 - Long
 fourone_onefour_male_b1_long <- fourone_onefour_male_b1  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 # Block 2 
 fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx")
 # Block 2 - Long 
 fourone_onefour_male_b2_long <- fourone_onefour_male_b2  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 # Mutating an additional variable for "block" 
 fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
@@ -345,8 +345,6 @@ df2_male_oviposition # does it recognise condition from the long data?
 
 #### MALE DATA READ FOR VISUALISATION #### 
 
-
-#### OVOD1 FEMALE DATA READ FOR VISUALISATION ####
 
 # 1:4 
 # Block 1 
@@ -795,7 +793,7 @@ onefour_male_feeding_b1_long <- onefour_male_feeding_b1  %>%
 # Block 2
 onefour_male_feeding_b2 <- read_excel("data/male_conditioning/rawdata_m1-4_b2.xlsx")
 # Block 1 - Long
-onefour_male_feeding_b2 <- onefour_male_feeding_b2  %>% 
+onefour_male_feeding_b2_long <- onefour_male_feeding_b2  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
@@ -919,26 +917,26 @@ df2_virgin
 onefour_virgin_feeding_b1 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b1.xlsx")
 # Block 1 - Long
 onefour_virgin_feeding_b1_long <- onefour_virgin_feeding_b1  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 # Block 2 
 onefour_virgin_feeding_b2 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b2.xlsx")
 # Block 2 - Long 
 onefour_virgin_feeding_b2_long <- onefour_virgin_feeding_b2  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # Block 3
 onefour_virgin_feeding_b3 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b3.xlsx")
 # Block 1 - Long
 onefour_virgin_feeding_b3_long <- onefour_virgin_feeding_b3  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 # Block 2 
 onefour_virgin_feeding_b4 <- read_excel("data/female_conditioning/virgin/rawresults_1-4_virgin_b4.xlsx")
 # Block 2 - Long 
 onefour_virgin_feeding_b4_long <- onefour_virgin_feeding_b4  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 
@@ -956,7 +954,7 @@ onefour_virgin_feeding <- rbind(onefour_virgin_feeding_b1, onefour_virgin_feedin
 
 ## Making the data different dataframes
 onefour_virgin_feeding_long <- onefour_virgin_feeding  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 
@@ -1068,14 +1066,14 @@ df2_ovod1 <- df_ovod1 %>%
 onefour_ovod1_feeding_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b1.xlsx")
 # Block 1 - Long 
 onefour_ovod1_feeding_b1_long <- onefour_ovod1_feeding_b1  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # Block 2
 onefour_ovod1_feeding_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_1-4_ovod1_b2.xlsx")
 # Block 2 - Long 
 onefour_ovod1_feeding_b2_long <- onefour_ovod1_feeding_b2  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # Mutating a block variable
@@ -1087,7 +1085,7 @@ onefour_ovod1_feeding <- rbind(onefour_ovod1_feeding_b1, onefour_ovod1_feeding_b
 
 ## Making the data different dataframes
 onefour_ovod1_feeding_long <- onefour_ovod1_feeding  %>% 
-  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 
@@ -1098,13 +1096,13 @@ onefour_ovod1_feeding_long <- onefour_ovod1_feeding  %>%
 fourone_ovod1_feeding_b1 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx")
 # Block 1 - Long 
 fourone_ovod1_feeding_b1_long <- fourone_ovod1_feeding_b1  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 # Block 2 
 fourone_ovod1_feeding_b2 <- read_excel("data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx")
 # Block 2 - Long 
 fourone_ovod1_feeding_b2_long <- fourone_ovod1_feeding_b2  %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # Mutating a block variable
