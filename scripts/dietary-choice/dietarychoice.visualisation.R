@@ -18,6 +18,8 @@ source("scripts/dietary-choice/dietarychoice.dataread.R")
 
 ########################################################################################################################### --
 
+viridis_colours <- viridis(10)
+
 feeding_results <- function(data, boxplot_fill_colour) {
   # Ensure the data has the necessary columns for faceting
   data$nutrient_composition <- ifelse(grepl("4:1", data$diet), "4:1", "1:4")
@@ -60,39 +62,34 @@ feeding_results <- function(data, boxplot_fill_colour) {
 #### RELATIVE (FOUR-CHOICE) ####
 
 #### MALE 
-
-male_relative_feeding <- feeding_results(fourone_onefour_male_long,  boxplot_fill_colour = viridis_colors[c(7,7,9,9)])
-
+male_relative_feeding <- feeding_results(fourone_onefour_male_long,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
 #### VIRGIN FEMALE 
-virginfemale_relative_feeding <- feeding_results(combined_vf,  boxplot_fill_colour = viridis_colors[c(7,7,9,9)])
-
+virginfemale_relative_feeding <- feeding_results(combined_vf,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
 #### OVOD1 FEMAlE
-ovod1female_relative_feeding <- feeding_results(combined_of,  boxplot_fill_colour = viridis_colors[c(7,7,9,9)])
+ovod1female_relative_feeding <- feeding_results(combined_of,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
 
 
 
 
-
-# Absolute Feeding #
-
+#### RELATIVE (TWO-CHOICE) ####
 ## 1:4 
 
 #### MALE 
-male_1_4_feeding <- feeding_results(onefour_male_feeding_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+male_1_4_feeding <- feeding_results(onefour_male_feeding_long,  boxplot_fill_colour = viridis_colours[c(9,9)])
 #### VIRGIN FEMALE 
-virginfemale_1_4_feeding <- oviposition_results(onefour_virgin_feeding_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+virginfemale_1_4_feeding <- feeding_results(onefour_virgin_feeding_long,  boxplot_fill_colour = viridis_colours[c(9,9)])
 #### OVOD1 FEMALE 
-ovod1female_1_4_feeding <- oviposition_results(onefour_ovod1_feeding_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+ovod1female_1_4_feeding <- feeding_results(onefour_ovod1_feeding_long,  boxplot_fill_colour = viridis_colours[c(9,9)])
 
 
 ## 4:1 
 
 #### MALE 
-male_4_1_feeding <- oviposition_results(fourone_male_feeding_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+male_4_1_feeding <- feeding_results(fourone_male_feeding_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 #### VIRGIN FEMALE 
-virginfemale_4_1_feeding <- oviposition_results(fourone_virgin_feeding_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+virginfemale_4_1_feeding <- feeding_results(fourone_virgin_feeding_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 #### OVOD1 FEMALE 
-ovod1female_4_1_feeding <- oviposition_results(fourone_ovod1_feeding_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+ovod1female_4_1_feeding <- feeding_results(fourone_ovod1_feeding_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 
 
 
@@ -147,13 +144,11 @@ oviposition_results <- function(data, boxplot_fill_colour) {
 
 # Relative Oviposition 
 #### MALE 
-male_relative_oviposition <- oviposition_results(combined_ovi_m,  boxplot_fill_colour = viridis_colors[c(7,7,9,9)])
-
+male_relative_oviposition <- oviposition_results(combined_ovi_m,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
 #### VIRGIN FEMALE 
-virginfemale_relative_oviposition <- oviposition_results(combined_ovi_v,  boxplot_fill_colour = viridis_colors[c(7,7,9,9)])
-
+virginfemale_relative_oviposition <- oviposition_results(combined_ovi_v,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
 #### OVOD1 FEMAlE
-ovod1female_relative_oviposition <- oviposition_results(combined_of_egg,  boxplot_fill_colour = viridis_colors[c(7,7,9,9)])
+ovod1female_relative_oviposition <- oviposition_results(fourone_onefour_oviposition_ovod1_long,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
 
 
 # Absolute Oviposition #
@@ -161,18 +156,18 @@ ovod1female_relative_oviposition <- oviposition_results(combined_of_egg,  boxplo
 ## 1:4 
 
 #### MALE 
-male_1_4_oviposition <- oviposition_results(onefour_male_oviposition_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+male_1_4_oviposition <- oviposition_results(onefour_male_oviposition_long,  boxplot_fill_colour = viridis_colours[c(9,9)])
 #### VIRGIN FEMALE 
-virginfemale_1_4_oviposition <- oviposition_results(onefour_virgin_oviposition_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+virginfemale_1_4_oviposition <- oviposition_results(onefour_virgin_oviposition_long,  boxplot_fill_colour = viridis_colours[c(9,9)])
 #### OVOD1 FEMALE 
-ovod1female_1_4_oviposition <- oviposition_results(onefour_ovod1_oviposition_long,  boxplot_fill_colour = viridis_colors[c(9,9)])
+ovod1female_1_4_oviposition <- oviposition_results(onefour_ovod1_oviposition_long,  boxplot_fill_colour = viridis_colours[c(9,9)])
 
 
 ## 4:1 
 
 #### MALE 
-male_4_1_oviposition <- oviposition_results(fourone_male_oviposition_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+male_4_1_oviposition <- oviposition_results(fourone_male_oviposition_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 #### VIRGIN FEMALE 
-virginfemale_4_1_oviposition <- oviposition_results(fourone_virgin_oviposition_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+virginfemale_4_1_oviposition <- oviposition_results(fourone_virgin_oviposition_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 #### OVOD1 FEMALE 
-ovod1female_4_1_oviposition <- oviposition_results(fourone_ovod1_oviposition_long,  boxplot_fill_colour = viridis_colors[c(7,7)])
+ovod1female_4_1_oviposition <- oviposition_results(fourone_ovod1_oviposition_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
