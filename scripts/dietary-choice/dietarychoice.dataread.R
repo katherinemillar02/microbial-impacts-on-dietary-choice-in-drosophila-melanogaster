@@ -23,6 +23,8 @@ source("packages.R")
 ### DIETS CONDITIONED BY MALES #### 
 
 #### Reading, binding, cleaning data 📖
+
+# Block 1 
 fourone_onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx")
 fourone_onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_4-1_1-4_b2_oviposition.xlsx")
 
@@ -405,8 +407,14 @@ onefour_ovod1_oviposition_b1 <- read_excel("data/female_conditioning/ovod1/1-4_o
 # Block 1 - Long 
 onefour_ovod1_oviposition_b1_long <- onefour_ovod1_oviposition_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
 # Block 2
 onefour_ovod1_oviposition_b2 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b2.xlsx")
+# Block 2 - Long 
+onefour_ovod1_oviposition_b2_long <- onefour_ovod1_oviposition_b2  %>% 
+  pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+##### 
 
 # Mutating a block variable
 onefour_ovod1_oviposition_b1 <- onefour_ovod1_oviposition_b1 %>% mutate(block = "one")
@@ -421,8 +429,19 @@ onefour_ovod1_oviposition_long <- onefour_ovod1_oviposition  %>%
 
 
 # 4:1 
+
+# Block 1 
 fourone_ovod1_oviposition_b1 <- read_excel("data/female_conditioning/ovod1/4-1_oviposition_ovod1_b1.xlsx")
+# Block 1 - Long 
+fourone_ovod1_oviposition_b1_long <- fourone_ovod1_oviposition_b1  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
+# Block 2 
 fourone_ovod1_oviposition_b2 <- read_excel("data/female_conditioning/ovod1/4-1_oviposition_ovod1_b2.xlsx")
+# Block 2 - Long 
+fourone_ovod1_oviposition_b2_long <- fourone_ovod1_oviposition_b2  %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
+
 
 # Mutating a block variable
 fourone_ovod1_oviposition_b1 <- fourone_ovod1_oviposition_b1 %>% mutate(block = "one")
