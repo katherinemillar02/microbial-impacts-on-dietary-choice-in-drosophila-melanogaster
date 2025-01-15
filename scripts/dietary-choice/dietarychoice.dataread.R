@@ -9,7 +9,7 @@ source("packages.R")
 ############################   the data can be read from  
 
 
-#### RELATIVE (FOUR CHOICE) #### 
+#### RELATIVE (FOUR CHOICE) DATA #### 
 
 #### OVIPOSITION ####
 
@@ -236,7 +236,7 @@ combined_vf_split <- combined_vf %>%
 
 
 
-#### DIETS CONDITIONED BY OVOD1 ####
+#### DIETS CONDITIONED BY OVOD1 FEMALES ####
 
 #### Reading, binding and cleaning the data 
 
@@ -278,7 +278,13 @@ combined_of_split <- combined_of %>%
 
 
 
-#### ABSOLUTE (TWO CHOICE) ####
+####################################################################
+
+
+
+
+
+#### ABSOLUTE (TWO CHOICE) ASSAYS ####
 
 
 #### OVIPOSITION #### 
@@ -403,6 +409,7 @@ df2_virgin_oviposition <- df_virgin_oviposition %>%
 
 ## New data 
 df2_virgin_oviposition # does it recognise condition from the long data
+
 
 
 
