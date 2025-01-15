@@ -6,7 +6,7 @@ source("packages.R")
 ############## The Effects of Diet Conditioning on Female  Dietary Choice ################### 
 ############################### Edited by: Katie Millar,
 ##################### This script is used as the FINAL PATCH, at which 
-############################   the data can be read from  
+############################   the data can be read from ...  
 
 
 #### RELATIVE (FOUR CHOICE) DATA #### 
@@ -347,34 +347,34 @@ df2_male_oviposition # does it recognise condition from the long data?
 
 
 # 1:4 
+
 # Block 1 
-onefour_ovod1_oviposition_b1 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b1.xlsx")
+onefour_male_oviposition_b1 <- read_excel("data/male_conditioning/m_1-4_b1_oviposition.xlsx")
 # Block 1 - Long 
-onefour_ovod1_oviposition_b1_long <- onefour_ovod1_oviposition_b1  %>% 
+onefour_male_oviposition_b1_long <- onefour_male_oviposition_b1  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
-# Block 2
-onefour_ovod1_oviposition_b2 <- read_excel("data/female_conditioning/ovod1/1-4_oviposition_ovod1_b2.xlsx")
+# Block 2 
+onefour_male_oviposition_b2 <- read_excel("data/male_conditioning/m_1-4_b2_oviposition.xlsx")
 # Block 2 - Long 
-onefour_ovod1_oviposition_b2_long <- onefour_ovod1_oviposition_b2  %>% 
+onefour_male_oviposition_b2_long <- onefour_male_oviposition_b2  %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
-
 
 
 # Mutating a block variable
-onefour_ovod1_oviposition_b1 <- onefour_ovod1_oviposition_b1 %>% mutate(block = "one")
-onefour_ovod1_oviposition_b2 <- onefour_ovod1_oviposition_b2 %>% mutate(block = "two")
+onefour_male_oviposition_b1 <- onefour_male_oviposition_b1 %>% mutate(block = "one")
+onefour_male_oviposition_b2 <- onefour_male_oviposition_b2 %>% mutate(block = "two")
 
 # Binding the data for 4:1/1:4 
-onefour_ovod1_oviposition <- rbind(onefour_ovod1_oviposition_b1, onefour_ovod1_oviposition_b1)
+onefour_male_oviposition <- rbind(onefour_male_oviposition_b1, onefour_male_oviposition_b2)
 
 ## Making the data different dataframes
-onefour_ovod1_oviposition_long <- onefour_ovod1_oviposition  %>% 
+onefour_male_oviposition_long <- onefour_male_oviposition %>% 
   pivot_longer(cols = ("1:4 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "egg_numbers")
 
 
-# 4:1 
 
+# 4:1 
 # Block 1 
 fourone_male_oviposition_b1 <- read_excel("data/male_conditioning/m_4-1_b1_oviposition.xlsx")
 # Block 1 - Long 
@@ -964,28 +964,28 @@ onefour_virgin_feeding_long <- onefour_virgin_feeding  %>%
 # Block 1 
 fourone_virgin_feeding_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b1.xlsx")
 # Block 1 - Long 
-fourone_virgin_feeding_b1 <- fourone_virgin_feeding_b1  %>% 
+fourone_virgin_feeding_b1_long <- fourone_virgin_feeding_b1  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # Block 2 
 fourone_virgin_feeding_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx")
 # Block 2 - Long 
-fourone_virgin_feeding_b2 <- fourone_virgin_feeding_b2 %>% 
+fourone_virgin_feeding_b2_long <- fourone_virgin_feeding_b2 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # Block 3
 fourone_virgin_feeding_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b3.xlsx")
 # Block 1 - Long 
-fourone_virgin_feeding_b3 <- fourone_virgin_feeding_b3  %>% 
+fourone_virgin_feeding_b3_long <- fourone_virgin_feeding_b3  %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
 # Block 4 
 fourone_virgin_feeding_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_virgin_b4.xlsx")
 # Block 4 - Long 
-fourone_virgin_feeding_b4 <- fourone_virgin_feeding_b4 %>% 
+fourone_virgin_feeding_b4_long <- fourone_virgin_feeding_b4 %>% 
   pivot_longer(cols = ("4:1 Conditioned":"4:1 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
 
 
