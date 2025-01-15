@@ -11,13 +11,7 @@ source("packages.R")
 
 #### RELATIVE (FOUR CHOICE) #### 
 
-
-
 #### OVIPOSITION ####
-
-
-
-
 
 
 ### DIETS CONDITIONED BY MALES #### 
@@ -193,10 +187,31 @@ combined_m_split <- fourone_onefour_male_long %>%
 #### Reading, cleaning and binding the data 
 
 #### Reading in the data
+
+# Block 1 
 fourone_onefour_virgin_b1 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx")
+# Block 1 - Long
+fourone_onefour_virgin_b1_long <- fourone_onefour_virgin_b1 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+# Block 2 
 fourone_onefour_virgin_b2 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx")
+# Block 2 - Long 
+fourone_onefour_virgin_b2_long <- fourone_onefour_virgin_b2 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+# Block 3 
 fourone_onefour_virgin_b3 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx")
+# Block 3 - Long
+fourone_onefour_virgin_b3_long <- fourone_onefour_virgin_b3 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
+# Block 4 
 fourone_onefour_virgin_b4 <- read_excel("data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx")
+# Block 4 - Long 
+fourone_onefour_virgin_b4_long <- fourone_onefour_virgin_b4 %>% 
+  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers")
+
 
 ## Mutating a block variable 
 fourone_onefour_virgin_b1 <- fourone_onefour_virgin_b1  %>% mutate(block = "one")
