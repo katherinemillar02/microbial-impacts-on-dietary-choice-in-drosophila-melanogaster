@@ -50,10 +50,10 @@ oviposition_results <- function(data, boxplot_fill_colour) {
 # 1:4 OvoD1
 
 # Block 1 
-ovod1_b1_onefour <- oviposition_results(onefour_ovod1_oviposition_b1, boxplot_fill_colour = viridis_colours[1:2])
+ovod1_b1_onefour <- oviposition_results(onefour_ovod1_oviposition_b1_long, boxplot_fill_colour = viridis_colours[1:2])
 
 # Block 2
-ovod1_b2_onefour <- oviposition_results(onefour_ovod1_oviposition_b2, boxplot_fill_colour = viridis_colours[1:2])
+ovod1_b2_onefour <- oviposition_results(onefour_ovod1_oviposition_b2_long, boxplot_fill_colour = viridis_colours[1:2])
 
 
 # For 4:1 OvoD1
