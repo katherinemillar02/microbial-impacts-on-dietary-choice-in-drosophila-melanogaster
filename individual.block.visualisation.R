@@ -285,6 +285,154 @@ feeding_results <- function(data, boxplot_fill_colour) {
 
 
 
+#### MALE ####
+# 1:4 Male
+
+# Block 1 
+male_b1_onefour_feed <- feeding_results(onefour_male_feeding_b1_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 2
+male_b2_onefour_feed <- feeding_results(onefour_male_feeding_b2_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+
+# 4:1 OvoD1
+
+# Block 1 
+male_b1_fourone_feed <- feeding_results(fourone_male_feeding_b1_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 2
+male_b2_fourone_feed <- feeding_results(fourone_male_feeding_b2_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+
+
+
+## Combined 4:1 and 1:4 
+
+# Block 1
+male_b1_combined_feed <- feeding_results(fourone_onefour_male_oviposition_b1_long , boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
+# Block 2 
+male_b2_combined_feed <- feeding_results(fourone_onefour_male_oviposition_b2_long ,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
+
+
+
+## Adding titles to the plots 
+male_b1_onefour_feed <- male_b1_onefour_feed + ggtitle("Male Block 1")
+male_b1_fourone_feed <- male_b1_fourone_feed + ggtitle("Male Block 1")
+male_b1_combined_feed<- male_b1_combined_feed + ggtitle("Male Block 1")
+
+male_b2_onefour_feed <- male_b2_onefour_feed + ggtitle("Male Block 2")
+male_b2_fourone_feed <- male_b2_fourone_feed + ggtitle("Male Block 2")
+male_b2_combined_feed <- male_b2_combined_feed + ggtitle("Male Block 2")
+
+
+
+
+## OvoD1 Block plot 
+male_feed <- grid.arrange(
+  male_b1_onefour_feed, male_b1_fourone_feed, male_b1_combined_feed,
+  male_b2_onefour_feed, male_b2_fourone_feed, male_b2_combined_feed,
+  ncol = 3,
+  nrow = 2,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1)
+)
+
+
+
+
+
+
+#### VIRGIN ####
+# 1:4 Virgin
+
+# Block 1 
+virgin_b1_onefour_feed <- feeding_results(onefour_virgin_feeding_b1_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 2
+virgin_b2_onefour_feed <- feeding_results(onefour_virgin_feeding_b2_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 3
+virgin_b3_onefour_feed <- feeding_results(onefour_virgin_feeding_b3_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 4
+virgin_b4_onefour_feed <- feeding_results(onefour_virgin_feeding_b4_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# 4:1 OvoD1
+
+# Block 1 
+virgin_b1_fourone_feed <- feeding_results(fourone_virgin_feeding_b1_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 2
+virgin_b2_fourone_feed <- feeding_results(fourone_virgin_feeding_b2_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 3
+virgin_b3_fourone_feed <- feeding_results(fourone_virgin_feeding_b3_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+# Block 4
+virgin_b4_fourone_feed <- feeding_results(fourone_virgin_feeding_b4_long, boxplot_fill_colour = viridis_colours[c(9,9)])
+
+
+
+## Combined 4:1 and 1:4 
+
+# Block 1
+virgin_b1_combined_feed <- feeding_results(fourone_onefour_virgin_b1_long , boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
+# Block 2 
+virgin_b2_combined_feed <- feeding_results(fourone_onefour_virgin_b2_long ,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
+# Block 3
+virgin_b4_combined_feed <- feeding_results(fourone_onefour_virgin_b3_long , boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
+# Block 4
+virgin_b4_combined_feed <- feeding_results(fourone_onefour_virgin_b4_long ,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
+
+
+## Adding titles to the plots 
+virgin_b1_onefour_feed <- virgin_b1_onefour_feed + ggtitle("Virgin Block 1")
+virgin_b1_fourone_feed <- virgin_b1_fourone_feed + ggtitle("Virgin Block 1")
+virgin_b1_combined_feed <- virgin_b1_combined_feed + ggtitle("Virgin Block 1")
+
+virgin_b2_onefour_feed <- virgin_b2_onefour_feed + ggtitle("Virgin Block 2")
+virgin_b2_fourone_feed <- virgin_b2_fourone_feed + ggtitle("Virgin Block 2")
+virgin_b2_combined_feed <- virgin_b2_combined_feed + ggtitle("Virgin Block 2")
+
+virgin_b3_onefour_feed <- virgin_b1_onefour_feed + ggtitle("Virgin Block 3")
+virgin_b3_fourone_feed <- virgin_b1_fourone_feed + ggtitle("Virgin Block 3")
+virgin_b3_combined_feed <- virgin_b1_combined_feed + ggtitle("Virgin Block 3")
+
+virgin_b4_onefour_feed <- virgin_b2_onefour_feed + ggtitle("Virgin Block 4")
+virgin_b4_fourone_feed <- virgin_b2_fourone_feed + ggtitle("Virgin Block 4")
+virgin_b4_combined_feed <- virgin_b2_combined_feed + ggtitle("Virgin Block 4")
+
+
+
+## OvoD1 Block plot 
+virgin_female_feed <- grid.arrange(
+  virgin_b1_onefour_feed, virgin_b1_fourone_feed, virgin_b1_combined_feed,
+  virgin_b2_onefour_feed, virgin_b2_fourone_feed, virgin_b2_combined_feed,
+  virgin_b3_onefour_feed, virgin_b3_fourone_feed, virgin_b3_combined_feed,
+  virgin_b4_onefour_feed, virgin_b4_fourone_feed, virgin_b4_combined_feed,
+  ncol = 3,
+  nrow = 4,
+  widths = c(0.5, 0.5, 1),
+  heights = c(1, 1, 1, 1)
+)
+
+
+
+
+
+
+
+
+
+
+
+
 #### OVOD1 ####
 # 1:4 OvoD1
 
@@ -338,7 +486,6 @@ ovod1_female_feed <- grid.arrange(
   widths = c(0.5, 0.5, 1),
   heights = c(1, 1)
 )
-
 
 
 
