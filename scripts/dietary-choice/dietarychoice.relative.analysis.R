@@ -276,7 +276,7 @@ tab_model(vf.glm.z.nb.4choice.ovi.1, CSS = list(css.table = '+font-family: Arial
 # Testing for a 3-way interaction: 
 of.glm.nb.4choice.ovi.1 <- glm.nb(egg_numbers
                                   ~ ratio * condition * block, 
-                                  data =  combined_of_egg_split)
+                                  data =  fourone_onefour_oviposition_ovod1_long_split)
 
 
 # Testing for  a significant  3-way interaction 
@@ -288,7 +288,7 @@ of.glm.nb.4choice.ovi.2 <- glm.nb(egg_numbers
                                   ~ ratio * condition + 
                                   condition * block + 
                                   ratio * block, 
-                                  data =  combined_of_egg_split)
+                                  data =  fourone_onefour_oviposition_ovod1_long_split)
 
 
 # Testing for  a significant  2-way interactions 
@@ -301,7 +301,7 @@ drop1(of.glm.nb.4choice.ovi.2, test = "Chisq")
 of.glm.nb.4choice.ovi.3 <- glm.nb(egg_numbers
                                 ~ condition * block + 
                                   ratio * block, 
-                                  data =  combined_of_egg_split)
+                                  data =  fourone_onefour_oviposition_ovod1_long_split)
 
 
 #### Data Analysis for write-up
