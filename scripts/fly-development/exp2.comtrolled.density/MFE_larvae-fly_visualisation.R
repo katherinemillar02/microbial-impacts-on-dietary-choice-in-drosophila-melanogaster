@@ -9,7 +9,7 @@ library(DHARMa)
 library(glmmTMB)
 library(sjPlot)
 
-
+viridis_colors <- viridis(10)
 
 #### Reading data in: ####
 fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
