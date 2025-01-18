@@ -606,3 +606,113 @@ AIC(glmm.p.total.MFE, glm.zi.nb.MFE.flies, glm.zi.p.MFE.flies)
 
 
 
+
+#### Model testing ####
+
+# Model 1
+# Poisson GLMM #
+glmm.p.bothsurvive.MFE <- glmmTMB(survivability ~ 
+                                    
+                                    treatment +
+                                    
+                                    + (1|vial) + (1|id),
+                                  
+                                  family = poisson, data = survivability_between)
+
+
+## Assumption checking:
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.bothsurvive.MFE , plot = T)
+## Assumptions aren't great, new model maybe? ## red values
+
+# easystats
+check_overdispersion(glmm.p.bothsurvive.MFE)
+# Overdispersion detected 
+
+check_zeroinflation(glmm.p.bothsurvive.MFE)
+##  zero inflation 
+
+
+
+
+
+# Model 2 
+# Negative Binomial GLM #
+glm.nb.MFE.both <- glm.nb(survivability ~
+                            
+                            treatment,
+                          
+                          data = survivability_between)
+
+
+
+## Assumption checking:
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.both, plot = T)
+## Assumptions aren't  eeven worse 
+
+
+
+# easystats 
+check_overdispersion(glm.nb.MFE.both)
+# No overderdispersion detected 
+
+check_zeroinflation(glm.nb.MFE.both)
+## Zero inflation 
+
+
+
+## There no overdispersion but there is still zeroinflation, trying zeroinflated models 
+
+
+
+# Model 3
+# Poisson Zero Inflated #
+glm.zi.p.MFE.surviveboth <- glmmTMB(
+  survivability ~  treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ treatment,               
+  family = poisson(),                          
+  data = survivability_between
+)
+
+## Assumption checks 
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.MFE.surviveboth, plot = T)
+# Assumptions are a lot better
+# qq doesn't line up great, but the tests are okay - small sample size could be why the qq does not line up great
+
+
+# easystats
+check_overdispersion(glm.zi.p.MFE.surviveboth)
+# no overdispersion 
+
+
+
+
+
+# Model 4
+# Poisson Negative Binomial #
+glm.zi.nb.MFE.surviveboth <- glmmTMB(
+  survivability ~  treatment + (1 | vial),
+  ziformula =  ~ treatment,
+  family = nbinom2(),
+  data = survivability_between
+)
+
+## Assumption checks
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.surviveboth, plot = T)
+# This one looks a lot better
+
+
+
+# Comparing models: 
+AIC(glmm.p.bothsurvive.MFE, glm.nb.MFE.both, glm.zi.p.MFE.surviveboth, glm.zi.nb.MFE.surviveboth)
+## zeroinflation models are way better,  Poisson Negative Binomial is the best 
+
+
+
