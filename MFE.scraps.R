@@ -715,4 +715,79 @@ AIC(glmm.p.bothsurvive.MFE, glm.nb.MFE.both, glm.zi.p.MFE.surviveboth, glm.zi.nb
 ## zeroinflation models are way better,  Poisson Negative Binomial is the best 
 
 
+family = poisson, data = survivability_pupae)
+
+
+## Assumption checking:
+
+# DHARMa checks 
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.pupaesurvive.MFE , plot = T)
+## qq doesn't look too bad
+
+
+
+# easystats checks 
+check_overdispersion(glmm.p.pupaesurvive.MFE)
+# Overdispersion detected 
+
+check_zeroinflation(glmm.p.pupaesurvive.MFE)
+## NO zero inflation 
+
+
+
+
+
+
+# Model 2 
+#### Negative Binomial GLM ####
+glm.nb.MFE.pupae <- glm.nb(survivability ~
+                             
+                             treatment,
+                           
+                           data = survivability_pupae)
+
+
+
+## Assumption checking:
+
+# DHARMa: 
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.pupae, plot = T)
+## Assumptions aren't great, new model maybe? 
+
+
+
+# easystats
+check_overdispersion(glm.nb.MFE.pupae)
+# No Overderdispersion detected 
+
+check_zeroinflation(glm.nb.MFE.pupae)
+## Zero inflation 
+
+
+## There is still zeroinflation, so trying zero inflation models... 
+
+## Trying poisson zero inflated 
+# Model 3 
+glmm.zi.p.MFE.pupae <- glmmTMB(
+  survivability ~ treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ treatment,               
+  family = poisson(),                          
+  data = survivability_pupae)
+
+
+## Assumption checking:
+
+# DHARMa: 
+simulationOutput <- simulateResiduals(fittedModel = glmm.zi.p.MFE.pupae, plot = T)
+## Assumptions are looking sort of ok 
+
+
+# easystats:
+check_zeroinflation(glmm.zi.p.MFE.pupae)
+## Zero inflation 
+
+
+# Testing AIC 
+AIC(glmm.p.pupaesurvive.MFE, glm.nb.MFE.pupae, glmm.zi.p.MFE.pupae)
+# NegBin GLM the best? Go with this 
 
