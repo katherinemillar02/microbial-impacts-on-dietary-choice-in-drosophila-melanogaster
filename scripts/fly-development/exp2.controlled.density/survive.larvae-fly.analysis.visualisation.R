@@ -1,15 +1,7 @@
-#### Packages #### 
-library(tidyverse)
-library(lmerTest)
-library(readxl)
-library(MASS)
-library(performance)
-library(pscl)
-library(DHARMa)
-library(glmmTMB)
-library(sjPlot)
+source("packages.R")
 
-viridis_colors <- viridis(10)
+
+## Larve to Fly Survivability: 
 
 #### Reading data in: ####
 fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
@@ -39,8 +31,59 @@ overallflies_MFE <- as.data.frame(overallflies_MFE)
 
 ## making a surviability data frame 
 fly_survivability <- overallflies_MFE %>%
-  mutate(fixed_total = 63,  # Add a fixed total of 63
+  mutate(fixed_total = 63,  
          survivability = (total_count / fixed_total)*100 )
+
+
+
+
+
+
+
+# Model 4 
+glm.zi.p.flysurvive.MFE <- glmmTMB(
+  survivability ~ treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ treatment,               
+  family = poisson(),                          
+  data = fly_survivability
+)
+
+
+## Assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.flysurvive.MFE, plot = T)
+## Assumptions aren't great, new model maybe? 
+## qq still is not matching up great but looks ok
+
+
+
+check_overdispersion(glm.zi.p.flysurvive.MFE)
+# No overderdispersion detected 
+
+check_zeroinflation(glm.zi.p.flysurvive.MFE)
+## NO zero inflation 
+
+
+## Comparing models 
+AIC(glmm.p.flysurvive.MFE,glm.nb.flysurvive.MFE,glm.p.flysurvive.MFE,glm.zi.p.flysurvive.MFE)
+# Zero Inflated Poisson has the lowest AIC 
+
+
+
+## Using this model 
+
+# Basic analysis:
+summary(glm.zi.p.flysurvive.MFE)
+
+
+## Getting numbers for the write-up
+emmeans::emmeans(glm.zi.p.flysurvive.MFE, specs =  ~ treatment , type = "response")
+
+
+# Table for write-up
+tab_model(glm.zi.p.flysurvive.MFE, CSS = list(css.table = '+font-family: Arial;'))
+
+
+
 
 
 
@@ -70,6 +113,9 @@ ggsave(filename = "larvae_fly.png",
        width = 10, 
        height = 6, 
        dpi = 300)
+
+
+
 
 
 

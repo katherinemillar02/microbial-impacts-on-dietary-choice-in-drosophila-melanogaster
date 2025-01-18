@@ -408,3 +408,91 @@ drop1(glm.nb.MFE.fly, test = "Chisq")
 
 
 
+
+
+
+#### TESTING MODELS ####
+
+
+# Model 1
+#### Poisson GLMM ####
+glmm.p.flysurvive.MFE <- glmmTMB(survivability ~ 
+                                   
+                                   treatment +
+                                   
+                                   (1|id) + (1|vial) ,
+                                 
+                                 family = poisson, data = fly_survivability)
+
+
+## Assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.flysurvive.MFE , plot = T)
+## Assumptions aren't great, new model maybe?
+## qq doesn't really match at all... 
+
+
+
+check_overdispersion(glmm.p.flysurvive.MFE)
+# Overdispersion detected 
+
+check_zeroinflation(glmm.p.flysurvive.MFE)
+## zero inflation 
+
+
+
+
+
+
+# Model 2 
+# Negative Binomial GLM
+glm.nb.flysurvive.MFE <- glm.nb(survivability ~
+                                  
+                                  treatment,
+                                
+                                data = fly_survivability)
+
+
+
+
+## Assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.flysurvive.MFE, plot = T)
+## Assumptions aren't great, new model maybe? 
+## qq still is not matching up great 
+
+
+check_overdispersion(glm.nb.flysurvive.MFE)
+# overderdispersion detected 
+
+check_zeroinflation(glm.nb.flysurvive.MFE)
+## zero inflation 
+
+
+
+
+
+
+
+## Model 3 
+glm.p.flysurvive.MFE <- glm(survivability ~
+                              treatment, 
+                            family = poisson, data = fly_survivability)
+
+
+
+## Assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glm.p.flysurvive.MFE, plot = T)
+## Assumptions aren't great, new model maybe? 
+## qq still is not matching up great 
+
+
+check_overdispersion(glm.p.flysurvive.MFE)
+# Overderdispersion detected 
+
+check_zeroinflation(glm.p.flysurvive.MFE)
+## zero inflation 
+
+
+
+
+
+
