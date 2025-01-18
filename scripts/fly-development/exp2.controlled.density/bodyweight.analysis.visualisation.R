@@ -1,4 +1,5 @@
 source("packages.R")
+source("scripts/fly-development/exp2.controlled.density/c.density.dataread.R")
 
 ## Testing for a two-way interaction effect 
 glm.nb.MFE.weight <- glm.nb(weight_mg ~ treatment * sex  
