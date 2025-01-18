@@ -130,7 +130,7 @@ oviposition_results <- function(data, boxplot_fill_colour) {
     scale_fill_manual(values = boxplot_fill_colour) + 
     scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
     theme(legend.position = "none") +
-    ylim(-0.01, 150) +
+    ylim(-0.01, 270) +
     facet_wrap(~ nutrient_composition, scales = "free_x", nrow = 1, strip.position = "bottom") +
     theme(
       strip.placement = "outside",
@@ -171,3 +171,4 @@ male_4_1_oviposition <- oviposition_results(fourone_male_oviposition_long,  boxp
 virginfemale_4_1_oviposition <- oviposition_results(fourone_virgin_oviposition_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 #### OVOD1 FEMALE 
 ovod1female_4_1_oviposition <- oviposition_results(fourone_ovod1_oviposition_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
+
