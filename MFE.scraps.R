@@ -904,5 +904,52 @@ tab_model(glm.nb_pupae.2)
 
 
 
+#### Data Analysis ####
+
+
+# Model 1 - Poisson GLMM
+
+
+
+# Assumption checks 
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.totalpupae, plot = T)
+# Model looks sort of okay
+
+
+
+# easyststas checks
+check_overdispersion(glmm.p.MFE.totalpupae)
+# There is overdispersion 
+
+check_zeroinflation(glmm.p.MFE.totalpupae)
+# No zeroinflation 
+
+
+
+# Model 2 
+# Negative Binomial GLM #
+glm.nb.MFE.totalpupae <- glm.nb(total_pupae ~ 
+                                  
+                                  treatment,
+                                
+                                data = total_pupae)
+
+
+## Assumption checks 
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.totalpupae, plot = T)
+
+
+# easyststas checks
+check_overdispersion(glm.nb.MFE.totalpupae)
+# No overdispersion 
+
+
+# Comparing models 
+AIC(glmm.p.MFE.totalpupae, glm.nb.MFE.totalpupae)
+# Negative Binomial GLM
+
 
 
