@@ -1,70 +1,4 @@
-#### Packages ####
-library(tidyverse)
-library(ggplot2)
-library(readxl)
-library(viridisLite)
-library(tidyverse)
-library(lmerTest)
-library(readxl)
-library(MASS)
-library(performance)
-library(pscl)
-library(DHARMa)
-library(glmmTMB)
-library(sjPlot)
-##################
-
-#### Reading and cleaning data ####
-
-## Reading data in using read excel 
-bodyweight_MFE <- read_excel("data/fitness_development/weighing_body.xlsx")
-
-## Multiplying the values by 1000, for better analysis and to get the plots to work... for consistency too 
-bodyweight_MFE$weight_mg <- bodyweight_MFE$weight_mg * 1000
-
-
-
-#### 1. Preliminary Data Analysis #### 
-
-
-# Model 1 
-#### Poisson GLMM ###
-glmm.p.MFE.weight <- glmmTMB(weight_mg ~ treatment * sex + (1|vial), family = poisson, data = bodyweight_MFE)
-
-## DHARMa residuals check 
-simulationOutput <- simulateResiduals(fittedModel = glmm.p.MFE.weight, plot = T)
- # The model is not great with either qq or homogeneity tests 
-
-
-# performance checks - easystats 
-
-# Checking for overdispersion 
-check_overdispersion(glmm.p.MFE.weight)
-# There is overdispersion
-
-# Checking for zeroinflation
-check_zeroinflation(glmm.p.MFE.weight) 
-# There is no zero-inflation 
-
-
-
-## As there is overdispersion, trying a Negative Binomial GLM 
-
-# Model 2
-#### Negative Binomial GLM #### 
-glm.nb.MFE.weight <- glm.nb(weight_mg ~ treatment * sex  
-                               
-                               , data = bodyweight_MFE)
-
-
-## DHARMa checks 
-simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.weight, plot = T)
- # Model is better, but still get significant result for homogeneity
-
-
-## Using this model for now 
-
-#### 2. Data analysis with chosen model ####
+source("packages.R")
 
 ## Testing for a two-way interaction effect 
 glm.nb.MFE.weight <- glm.nb(weight_mg ~ treatment * sex  
@@ -96,6 +30,39 @@ emmeans::emmeans(glm.nb.MFE.weight.2, specs =  ~ treatment + sex , type = "respo
 
 ## Table of model for write-up
 tab_model(glm.nb.MFE.weight.2, CSS = list(css.table = '+font-family: Arial;'))
+
+
+
+## Visualising the data
+bodyweight_plot_MFE <- ggplot(bodyweight_MFE, aes(x = sex, y = weight_mg, fill = treatment)) +
+  geom_boxplot(outliers = FALSE, alpha = 0.4, position = position_dodge(width = 0.8)) +
+  geom_point(aes(fill = treatment),
+             size = 1.5, shape = 21,
+             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.8)) +
+  scale_y_continuous(breaks=seq(0,10,2)) +
+  scale_x_discrete(labels = c("Females", "Males")) + 
+  theme_classic() +
+  scale_fill_manual(values = viridis_colours[c(4,8)], labels =  c("Conditioned", "Unconditioned")) +
+  theme(legend.position = "top",
+        legend.justification = "right",
+        legend.direction = "vertical")+
+  labs(x = "Sex", 
+       y = "Body Weight (μg) of fly") +
+  labs(fill = "Treatment")+
+  ylim(0,700)
+
+## Displaying plot 
+bodyweight_plot_MFE 
+
+
+
+## Saving a plot
+ggsave(filename = "bodyweight_plot_MFE.png", 
+       plot = bodyweight_plot_MFE, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
 
 
 

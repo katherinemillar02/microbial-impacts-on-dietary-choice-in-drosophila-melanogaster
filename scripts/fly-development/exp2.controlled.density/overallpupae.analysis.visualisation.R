@@ -1,13 +1,6 @@
 source("packages.R")
 
-#### Reading data in ####
-pupae_fitness_MFE <- read_excel("data/fitness_development/MFE_pupae.xlsx")
-pupae_fitness_MFE <- as.data.frame(pupae_fitness_MFE)
 
-#### Making a dataframe of total pupae, not over time 
-total_pupae <- pupae_fitness_MFE %>% 
-  group_by(id, vial, treatment) %>% 
-  summarise(total_pupae = sum(pupae, na.rm = FALSE))
 
 
 
@@ -24,12 +17,6 @@ glmm.p.MFE.totalpupae <- glmmTMB(total_pupae ~
                                  + (1|vial) + (1|id),
                                  
                                  family = poisson, data = total_pupae)
-
-
-
-
-
-
 
 
 

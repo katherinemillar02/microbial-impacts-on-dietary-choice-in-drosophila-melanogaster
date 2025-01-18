@@ -3,30 +3,6 @@ source("packages.R")
 
 ## Larve to Fly Survivability: 
 
-#### Reading data in: ####
-fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
-
-
-## Making a tidy version of the data,
-#### Puts males and females together into a "sex" column.
-fly_fitness_tidy_MFE <- tidyr::pivot_longer(data = fly_fitness_MFE ,
-                                            cols = c( females, males),
-                                            names_to = "sex",
-                                            values_to = "count") 
-
-
-
-#### This code shows each vial, for each sex, and for each treatment
-### this shows a TOTAL count for each vial, males and females in each vial over all the counts
-### adds a column that looks at treatment and sex 
-### EMERGENCE BY SEX
-overallflies_MFE <- fly_fitness_tidy_MFE %>%
-  group_by(id, vial, treatment) %>%
-  summarise(total_count = sum(count, na.rm = TRUE)) 
-
-
-## making it a dataframe 
-overallflies_MFE <- as.data.frame(overallflies_MFE)
 
 
 ## making a surviability data frame 

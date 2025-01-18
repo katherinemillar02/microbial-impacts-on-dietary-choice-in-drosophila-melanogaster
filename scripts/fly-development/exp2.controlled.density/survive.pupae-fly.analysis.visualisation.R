@@ -2,55 +2,7 @@ source("packages.R")
 ########################
 
 
-#### Reading data in: ####
 
-## Fly data
-fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
-
-## Making a tidy version of the data,
-#### Puts males and females together into a "sex" column.
-fly_fitness_tidy_MFE <- tidyr::pivot_longer(data = fly_fitness_MFE ,
-                                            cols = c( females, males),
-                                            names_to = "sex",
-                                            values_to = "count") 
-## Summing up total flies
-overallflies_MFE <- fly_fitness_tidy_MFE %>%
-  group_by(id, vial, treatment) %>%
-  summarise(total_count = sum(count, na.rm = FALSE)) 
-
-## making it a dataframe 
-overallflies_MFE <- as.data.frame(overallflies_MFE)
-
-
-
-
-
-## Pupae data
-pupae_fitness_MFE <- read_excel("data/fitness_development/MFE_pupae.xlsx")
-pupae_fitness_MFE <- as.data.frame(pupae_fitness_MFE)
-
-#### Summing up total pupae
-total_pupae <- pupae_fitness_MFE %>% 
-  group_by(id, vial, treatment) %>% 
-  summarise(total_pupae = sum(pupae, na.rm = FALSE))
-
-## Changing it to a dataframe
-total_pupae <- as.data.frame(total_pupae)
-
-
-
-#### Combining data frames ####
-
-
-## Calculating the data frames together, making a variable on the left of total pupae
-flies_and_pupae <- overallflies_MFE %>%
-  left_join(total_pupae, by = c("id", "vial", "treatment"))
-
-
-
-## Calculating the survivability percentages of flies to pupae 
-survivability_between <- flies_and_pupae %>%
-  mutate(survivability = (total_count / total_pupae) * 100)
 
 
 

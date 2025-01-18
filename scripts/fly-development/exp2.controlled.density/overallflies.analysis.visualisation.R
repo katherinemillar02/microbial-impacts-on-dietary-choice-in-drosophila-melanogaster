@@ -2,33 +2,6 @@
 source("packages.R")
 ########################
 
-#### Reading data in: ####
-fly_fitness_MFE <- read_excel("data/fitness_development/MFE_flies.xlsx")
-
-
-## Making a tidy version of the data,
-#### Puts males and females together into a "sex" column.
-fly_fitness_tidy_MFE <- tidyr::pivot_longer(data = fly_fitness_MFE ,
-                                             cols = c( females, males),
-                                             names_to = "sex",
-                                             values_to = "count") 
-
-
-
-#### This code shows each vial, for each sex, and for each treatment
-### this shows a TOTAL count for each vial, males and females in each vial over all the counts
-### adds a column that looks at treatment and sex 
-### EMERGENCE BY SEX
-overallflies_MFE <- fly_fitness_tidy_MFE %>%
-  filter(sex %in% c("females", "males")) %>%
-  group_by(vial, sex, treatment, id) %>%
-  summarise(total_count = sum(count, na.rm = FALSE)) %>%
-  ungroup() %>%
-  mutate(sex_treatment = paste(treatment, sex, sep = " ")) %>%
-  mutate(sex_treatment = factor(sex_treatment,
-                                levels = c("conditioned females", "unconditioned females",
-                                           "conditioned males", "unconditioned males")))
-
 
 
 
