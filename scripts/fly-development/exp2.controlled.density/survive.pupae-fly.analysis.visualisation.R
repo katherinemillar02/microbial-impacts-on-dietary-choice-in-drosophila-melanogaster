@@ -3,18 +3,16 @@ source("scripts/fly-development/exp2.controlled.density/c.density.dataread.R")
 ########################
 
 
-
-
-
-
-
-## Final chosen model:  Poisson Negative Binomial
+## Poisson Negative Binomial ##
 glm.zi.nb.MFE.surviveboth <- glmmTMB(
   survivability ~  treatment + (1 | vial),
   ziformula =  ~ treatment,
   family = nbinom2(),
   data = survivability_between
 )
+
+
+
 
 #### Data Analysis ####
 
@@ -32,7 +30,15 @@ tab_model(glm.zi.nb.MFE.surviveboth, CSS = list(css.table = '+font-family: Arial
 
 
 
+##### Ideas for diff erent analysis: 
 
+
+
+
+
+
+
+############################## 
 
 
 
@@ -40,7 +46,7 @@ tab_model(glm.zi.nb.MFE.surviveboth, CSS = list(css.table = '+font-family: Arial
 viridis_colors <- viridis(10)
 
 
-## The plot code 
+## The plot code: 
 pupae_flies <- ggplot(survivability_between, aes(x = treatment, y = survivability, fill = treatment)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.4, position = position_dodge(width = 0.75)) + 
   geom_point(aes(fill = treatment), 
@@ -59,11 +65,11 @@ pupae_flies <- ggplot(survivability_between, aes(x = treatment, y = survivabilit
   ylim(0, 100)
 
 
-## Run plot
+## Run plot: 
 pupae_flies
 
 
-## Saving a plot
+## Saving a plot: 
 ggsave(filename = "pupae_flies .png", 
        plot = pupae_flies , 
        width = 10, 

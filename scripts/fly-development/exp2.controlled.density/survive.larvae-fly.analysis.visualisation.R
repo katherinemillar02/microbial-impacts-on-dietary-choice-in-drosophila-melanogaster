@@ -40,10 +40,6 @@ check_zeroinflation(glm.zi.p.flysurvive.MFE)
 ## NO zero inflation 
 
 
-## Comparing models 
-AIC(glmm.p.flysurvive.MFE,glm.nb.flysurvive.MFE,glm.p.flysurvive.MFE,glm.zi.p.flysurvive.MFE)
-# Zero Inflated Poisson has the lowest AIC 
-
 
 
 ## Using this model 
@@ -59,6 +55,10 @@ emmeans::emmeans(glm.zi.p.flysurvive.MFE, specs =  ~ treatment , type = "respons
 # Table for write-up
 tab_model(glm.zi.p.flysurvive.MFE, CSS = list(css.table = '+font-family: Arial;'))
 
+
+
+
+#############################################
 
 
 
