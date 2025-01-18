@@ -496,3 +496,113 @@ check_zeroinflation(glm.p.flysurvive.MFE)
 
 
 
+
+#### TESTING MODELS ####
+
+
+# Model 1
+#### Poisson GLMM ####
+glmm.p.total.MFE <- glmmTMB(total_count ~ 
+                              
+                              sex * treatment +
+                              
+                              (1|id) + (1|vial) ,
+                            
+                            family = poisson, data = overallflies_MFE)
+
+
+## Assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glmm.p.total.MFE , plot = T)
+## Assumptions aren't great, new model maybe? 
+
+
+
+check_overdispersion(glmm.p.total.MFE)
+# overdispersion detected 
+
+check_zeroinflation(glmm.p.total.MFE)
+## zero inflation 
+
+
+
+
+# Model 2 
+# Negative Binomial GLM
+glm.nb.MFE.flies <- glm.nb(total_count ~
+                             
+                             sex * treatment,
+                           
+                           data = overallflies_MFE)
+
+
+
+## Assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glm.nb.MFE.flies, plot = T)
+## Assumptions aren't great, new model maybe? 
+
+
+check_overdispersion(glm.nb.MFE.flies)
+# Overderdispersion detected 
+
+check_zeroinflation(glm.nb.MFE.flies)
+## zero inflation 
+
+
+
+## The issue seems to be zeroinflation 
+
+
+
+# Trying zeroinflation models 
+
+
+
+# Model 3
+# Negative Binomial GLM # 
+glm.zi.nb.MFE.flies <- glmmTMB(
+  total_count ~ sex * treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ sex * treatment,               
+  family = nbinom2(),                          
+  data = overallflies_MFE
+)
+
+
+## Assumption checking 
+# DHARMa 
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.flies, plot = T)
+# Model seems ok
+
+
+check_overdispersion(glm.zi.nb.MFE.flies)
+# No overdispersion 
+
+
+
+
+# Model 4 
+# Poisson Zero Inflated
+glm.zi.p.MFE.flies <- glmmTMB(
+  total_count ~ sex * treatment + (1 | vial) + (1 | id),  
+  ziformula = ~ sex * treatment,               
+  family = poisson(),                          
+  data = overallflies_MFE
+)
+
+
+## Assumption checks
+
+# DHARMa
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.MFE.flies, plot = T)
+
+# easystats 
+check_overdispersion(glm.zi.p.MFE.flies)
+# No overdispersion even with poisson models
+
+
+# Comparing models
+AIC(glmm.p.total.MFE, glm.zi.nb.MFE.flies, glm.zi.p.MFE.flies)
+# Poisson slightly better 
+
+
+
+
