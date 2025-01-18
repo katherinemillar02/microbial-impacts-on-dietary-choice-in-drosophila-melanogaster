@@ -31,7 +31,9 @@ glmm.p.pupaesurvive.MFE <- glmmTMB(survivability ~
                                      
                                      treatment +
                                      
-                                     + (1|vial) + (1|id),
+                                     + (1|vial) + (1|id), 
+                                   
+                                   data = survivability_pupae)
                                    
        
 
