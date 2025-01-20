@@ -62,7 +62,7 @@ tab_model(glm.zi.p.flysurvive.MFE, CSS = list(css.table = '+font-family: Arial;'
 
 
 
-
+viridis_colours <- viridis(10)
 
 
 ## Plot for larvae - fly 
@@ -74,7 +74,7 @@ larvae_fly <- ggplot(fly_survivability, aes(x = treatment, y = survivability, fi
   scale_y_continuous(breaks = seq(0, 80, 10)) +
   scale_x_discrete(labels = c("Conditioned", "Unconditioned")) + 
   theme_classic() +
-  scale_fill_manual(values = viridis_colors[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
+  scale_fill_manual(values = viridis_colours[c(4, 8)], labels = c("Conditioned", "Unconditioned")) +
   theme(legend.position = "top",
         legend.justification = "right",
         legend.direction = "vertical") +

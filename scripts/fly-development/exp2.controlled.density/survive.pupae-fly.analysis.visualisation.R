@@ -12,7 +12,8 @@ glm.zi.nb.MFE.surviveboth <- glmmTMB(
 )
 
 
-
+## Assumption checking:
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.nb.MFE.surviveboth, plot = T)
 
 #### Data Analysis ####
 
