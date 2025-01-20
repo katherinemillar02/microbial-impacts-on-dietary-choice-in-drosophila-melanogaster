@@ -705,5 +705,169 @@ AIC(glmm.p.pupae,glm.nb_pupae)
 
 
 
+######################## playing around with larvae - fly survivability data
+
+## means 
+conditioned_survivability <- fly_survivability %>%
+  filter(treatment == "conditioned") %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(conditioned_survivability$mean_survivability)
+ ## 19.6712
+
+
+unconditioned_survivability <- fly_survivability %>%
+  filter(treatment == "unconditioned") %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(unconditioned_survivability$mean_survivability)
+ ##  17.3545
+
+
+
+
+## medians
+conditioned_survivability <- fly_survivability %>%
+  filter(treatment == "conditioned") %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(conditioned_survivability$median_survivability)
+## 23.80952
+
+
+unconditioned_survivability <- fly_survivability %>%
+  filter(treatment == "unconditioned") %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(unconditioned_survivability$median_survivability)
+##  21.42857
+
+
+
+
+
+## zeros removed 
+
+## means 
+conditioned_survivability <- fly_survivability %>%
+  filter(treatment == "conditioned", , survivability != 0) %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(conditioned_survivability$mean_survivability)
+#  22.94974
+
+
+unconditioned_survivability <- fly_survivability %>%
+  filter(treatment == "unconditioned" , survivability != 0) %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(unconditioned_survivability$mean_survivability)
+##   22.6363
+
+
+
+
+
+## medians
+conditioned_survivability <- fly_survivability %>%
+  filter(treatment == "conditioned", survivability != 0) %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(conditioned_survivability$median_survivability)
+##  23.80952
+
+
+unconditioned_survivability <- fly_survivability %>%
+  filter(treatment == "unconditioned", survivability != 0) %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(unconditioned_survivability$median_survivability)
+##   25.39683
+
+
+
+
+
+######################## playing around with pupae - fly survivability data
+
+## means 
+conditioned_survivability <- survivability_between %>%
+  filter(treatment == "conditioned") %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(conditioned_survivability$mean_survivability)
+## 29.54995
+
+
+unconditioned_survivability <- survivability_between %>%
+  filter(treatment == "unconditioned") %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(unconditioned_survivability$mean_survivability)
+## 25.74572
+
+
+
+
+## medians
+conditioned_survivability <- survivability_between %>%
+  filter(treatment == "conditioned") %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(conditioned_survivability$median_survivability)
+## 34.16667
+
+
+unconditioned_survivability <- survivability_between %>%
+  filter(treatment == "unconditioned") %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(unconditioned_survivability$median_survivability)
+## 26.53061
+
+
+
+
+
+## zeros removed 
+
+## means 
+conditioned_survivability <- survivability_between %>%
+  filter(treatment == "conditioned", , survivability != 0) %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(conditioned_survivability$mean_survivability)
+# 34.47495
+
+
+unconditioned_survivability <- survivability_between %>%
+  filter(treatment == "unconditioned" , survivability != 0) %>%
+  summarise(mean_survivability = mean(survivability, na.rm = TRUE))
+
+mean(unconditioned_survivability$mean_survivability)
+##   33.58138
+
+
+
+
+
+## medians
+conditioned_survivability <- survivability_between %>%
+  filter(treatment == "conditioned", survivability != 0) %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(conditioned_survivability$median_survivability)
+##   36.14983
+
+
+unconditioned_survivability <- survivability_between %>%
+  filter(treatment == "unconditioned", survivability != 0) %>%
+  summarise(median_survivability = median(survivability, na.rm = TRUE))
+
+median(unconditioned_survivability$median_survivability)
+## 39.02439
+
+
+
 
 

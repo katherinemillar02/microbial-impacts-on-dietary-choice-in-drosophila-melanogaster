@@ -43,12 +43,12 @@ fly_fitness_tidy_MFE <- tidyr::pivot_longer(data = fly_fitness_MFE ,
        overallflies_MFE <- fly_fitness_tidy_MFE %>%
          filter(sex %in% c("females", "males")) %>%
          group_by(vial, sex, treatment, id) %>%
-         summarise(total_count = sum(count, na.rm = FALSE)) %>%
-         ungroup() %>%
-         mutate(sex_treatment = paste(treatment, sex, sep = " ")) %>%
-         mutate(sex_treatment = factor(sex_treatment,
-                                       levels = c("conditioned females", "unconditioned females",
-                                                  "conditioned males", "unconditioned males")))
+         summarise(total_count = sum(count, na.rm = TRUE))
+         # ungroup() %>%
+         # mutate(sex_treatment = paste(treatment, sex, sep = " ")) %>%
+         # mutate(sex_treatment = factor(sex_treatment,
+         #                               levels = c("conditioned females", "unconditioned females",
+         #                                          "conditioned males", "unconditioned males")))
        
        
 #### Overall Pupae Analysis #### 
