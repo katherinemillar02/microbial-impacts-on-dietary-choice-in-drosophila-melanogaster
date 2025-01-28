@@ -18,7 +18,7 @@ source("scripts/dietary-choice/dietarychoice.dataread.R")
 
 ########################################################################################################################### --
 
-viridis_colours <- viridis(10)
+viridis_colours <- inferno(10)
 
 feeding_results <- function(data, boxplot_fill_colour) {
   # Ensure the data has the necessary columns for faceting
@@ -46,7 +46,7 @@ feeding_results <- function(data, boxplot_fill_colour) {
     scale_fill_manual(values = boxplot_fill_colour) + 
     scale_pattern_manual(values = c("circle", "none", "circle", "none")) +
     theme(legend.position = "none") +
-    ylim(-0.01, 6) +
+    ylim(-0.01, 10) +
     facet_wrap(~ nutrient_composition, scales = "free_x", nrow = 1, strip.position = "bottom") +
     theme(
       strip.placement = "outside",
@@ -62,13 +62,31 @@ feeding_results <- function(data, boxplot_fill_colour) {
 #### RELATIVE (FOUR-CHOICE) ####
 
 #### MALE 
-male_relative_feeding <- feeding_results(fourone_onefour_male_long,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
+male_relative_feeding <- feeding_results(fourone_onefour_male_long,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
 #### VIRGIN FEMALE 
-virginfemale_relative_feeding <- feeding_results(combined_vf,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
+virginfemale_relative_feeding <- feeding_results(combined_vf,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
 #### OVOD1 FEMAlE
-ovod1female_relative_feeding <- feeding_results(combined_of,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
+ovod1female_relative_feeding <- feeding_results(combined_of,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
 
 
+##
+ggsave(filename = "male_relative_feeding.m.png", 
+       plot = male_relative_feeding, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
+ggsave(filename = "virgin_relative_feeding.m.png", 
+       plot = male_relative_feeding, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
+ggsave(filename = "ovod1female_relative_feeding.png", 
+       plot = ovod1female_relative_feeding, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
 
 
 #### RELATIVE (TWO-CHOICE) ####
@@ -91,6 +109,34 @@ virginfemale_4_1_feeding <- feeding_results(fourone_virgin_feeding_long,  boxplo
 #### OVOD1 FEMALE 
 ovod1female_4_1_feeding <- feeding_results(fourone_ovod1_feeding_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 
+### 
+# Saving images 
+twochoice.feeding.m <- male_1_4_feeding + male_4_1_feeding
+
+ggsave(filename = "twochoice.feeding.m.png", 
+       plot = twochoice.feeding.m, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
+
+twochoice.feeding.v <- virginfemale_1_4_feeding + virginfemale_4_1_feeding
+
+ggsave(filename = "twochoice.feeding.v.png", 
+       plot = twochoice.feeding.v, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
+
+
+
+twochoice.feeding.o <- ovod1female_1_4_feeding + ovod1female_4_1_feeding
+
+ggsave(filename = "twochoice.feeding.o.png", 
+       plot = twochoice.feeding.o, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
 
 
 
@@ -148,7 +194,14 @@ male_relative_oviposition <- oviposition_results(combined_ovi_m,  boxplot_fill_c
 #### VIRGIN FEMALE 
 virginfemale_relative_oviposition <- oviposition_results(combined_ovi_v,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
 #### OVOD1 FEMAlE
-ovod1female_relative_oviposition <- oviposition_results(fourone_onefour_oviposition_ovod1_long,  boxplot_fill_colour = viridis_colours[c(7,7,9,9)])
+ovod1female_relative_oviposition <- oviposition_results(fourone_onefour_oviposition_ovod1_long,  boxplot_fill_colour = viridis_colours[c(9,9,7,7)])
+
+## image save 
+ggsave(filename = "ovod1female_relative_oviposition.png", 
+       plot = ovod1female_relative_oviposition, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
 
 
 # Absolute Oviposition #
@@ -171,4 +224,15 @@ male_4_1_oviposition <- oviposition_results(fourone_male_oviposition_long,  boxp
 virginfemale_4_1_oviposition <- oviposition_results(fourone_virgin_oviposition_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
 #### OVOD1 FEMALE 
 ovod1female_4_1_oviposition <- oviposition_results(fourone_ovod1_oviposition_long,  boxplot_fill_colour = viridis_colours[c(7,7)])
+
+
+## 
+oviposition_ovod1 <- ovod1female_1_4_oviposition + ovod1female_4_1_oviposition
+
+## image save 
+ggsave(filename = "oviposition_ovod1.png", 
+       plot = oviposition_ovod1, 
+       width = 10, 
+       height = 6, 
+       dpi = 300)
 
