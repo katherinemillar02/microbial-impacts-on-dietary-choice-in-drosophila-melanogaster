@@ -63,14 +63,22 @@ ggcoxzph(fit)
 
 
 summary(coxph(Surv(days_alive, censor) ~ Conditioning + strata(Sex), data = lifespan))
+ # a proportional hazards model, with Surv including says alive and censor with the predictor variable being conditioning and sex
+ # strata(Sex) means stratify by sex, so it has particular hazards for males and females 
+ # but conditioning is assumed to be the same across sexes, maybe because there was no interaction effect... 
+ # Need to look into what stratifying by sex actually does... 
 
-lifespan_female<- lifespan %>% filter(Sex == "Focal female")
 
-lifespan_male<- lifespan %>% filter(Sex == "Focal male")
+# Creating separate sex datasets 
+lifespan_female <- lifespan %>% filter(Sex == "Focal female")
+lifespan_male <- lifespan %>% filter(Sex == "Focal male")
 
+# Separate sex cox survival models
 summary(coxph(Surv(days_alive, censor) ~ Conditioning, data = lifespan_female))
 summary(coxph(Surv(days_alive, censor) ~ Conditioning, data = lifespan_male))
 
+# In females, there is a significant effect of conditioning - they survive longer on conditioned diets 
+# Males no sig effect - but the opposite result?? 
 
 
 
