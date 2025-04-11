@@ -29,7 +29,10 @@ lifespan <- lifespan_adultstraits %>%
 # Using survfit2
 survival_curve <- survfit2(Surv(days_alive, censor) ~ treatment, data = lifespan) %>% 
   ggsurvfit() +
-  add_confidence_interval() 
+  add_confidence_interval()+ 
+  labs(x = "Time (Days)", y = "Survival Probability")+ 
+  scale_colour_viridis_d(option = "D")
+
   # This specifically uses the Surv object
   # Within survfit2, use time to event (which is death) - with censoring information
   # after the ~ is treatment, because this is the predictor
