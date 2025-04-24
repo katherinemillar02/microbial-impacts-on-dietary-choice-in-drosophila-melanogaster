@@ -19,6 +19,38 @@ glmm.m.4choice <- glmmTMB(fly_numbers
                           family = poisson, data = combined_m_split)
 
 
+
+
+
+glmm.m.4choice <- glmmTMB(fly_numbers 
+                          
+                          ~ ratio * condition * block, 
+                          
+    
+                          
+                          family = poisson, data = all)
+
+
+
+simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice, plot = T)
+
+## this works - with the random effects removed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 combined_m_split <- combined_m_split %>% 
   mutate(data = "male")
 
@@ -42,6 +74,11 @@ glmm.m.4choice <- glmmTMB(fly_numbers
                           
                           family = poisson, data = all)
 
+simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice, plot = T)
+
+
+view(all)
+
 summary(glmm.m.4choice)
 drop1(glmm.m.4choice, test = "Chisq")
 
@@ -59,29 +96,25 @@ glmm.m.4choice <- glmmTMB(fly_numbers
 
 drop1(glmm.m.4choice, test = "Chisq")
 
-glmm.m.4choice <- glmmTMB(fly_numbers 
-                          
-                          ~ data * ratio * condition + 
-                            block * data * ratio +
-                            ratio * data * block +
-                            
-                            data * ratio + 
-                            ratio * condition + 
-                            ratio * block +
-                            
-                            condition * block + 
-                            data * condition +
-                            
-                            
-                            data * block 
-                            
-                            
-                          + (1 | block / plate) + (1 | observation), 
-                          
-                          family = poisson, data = all)
+glmm.m.4choice <- glmmTMB(
+  fly_numbers ~ data:ratio:condition +
+    block:data:ratio +
+    data:ratio +
+    ratio:condition +
+    ratio:block +
+    condition:block +
+    data:condition +
+    data:block,
+
+  family = poisson,
+  data = all)
+
 
  ## only shows 3? 
 summary(glmm.m.4choice)
 
 simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice, plot = T)
+
+
+
 
