@@ -2,6 +2,8 @@
 
 #### Chapter 2  #### 
 
+# This script includes all the analysis I did to get to the final model. To see the scripts containing the chosen models for the write-up, please see: . 
+
 
 ##### Packages 📦📦📦📦 ####
 library(tidyverse)
@@ -63,6 +65,18 @@ glmm.m.4choice <- glmmTMB(fly_numbers
                           
                           family = poisson, data = combined_m_split)
 
+# without random effects
+
+
+glmm.m.4choice.noRE <- glmmTMB(fly_numbers 
+                          
+                          ~ ratio * condition * block, 
+                          
+                          family = poisson, data = combined_m_split)
+
+# LRT test 
+anova(glmm.m.4choice, glmm.m.4choice.noRE)
+
 
 
 ## Assumption checks: 
@@ -76,16 +90,22 @@ simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice, plot = T)
 check_overdispersion(glmm.m.4choice)
 # Overdispersion is detected
 
-check_zeroinflation(glmm.m.4choice)
+check_zeroinflation(glmm.m.4choice) 
+
 # Zeroinflation detected 
 
 
 
 #### Model 2
 #### Negative Binomial GLM ####
-glm.nb.m.4choice <- glm.nb(fly_numbers ~ 
-                             ratio * condition * block,
-                           data = combined_m_split)
+glm.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+                              
+                              (1 | block / plate) + (1 | observation),
+                            
+                            family = nbinom2, data = combined_m_split)
+
+check_overdispersion(glm.nb.m.4choice)
+check_zeroinflation(glm.nb.m.4choice)
 
 ## Assumption checks: 
 
@@ -103,52 +123,83 @@ check_zeroinflation(glm.nb.m.4choice)
 
 
 
+glm.zi.p.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+                                      (1 | block / plate) + (1 | observation),
+                                    ziformula = ~ 1, 
+                                    family = poisson, data = combined_m_split)
+
+
+check_overdispersion(glm.zi.p.m.4choice)
+check_zeroinflation(glm.zi.p.m.4choice)
+
+
+glm.zi.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+                                 (1 | block / plate) + (1 | observation),
+                               ziformula = ~ 1,  # Simplest case: constant probability of extra zero
+                               family = nbinom2,
+                               data = combined_m_split)
+
+
+check_overdispersion(glm.zi.nb.m.4choice)
+check_zeroinflation(glm.zi.nb.m.4choice)
+
+###### Testing Models ###### 
+
+
+
+
+
+
+
 # Comparing models... 
-AIC(glm.nb.m.4choice, glmm.m.4choice)
+AIC(glm.nb.m.4choice, glmm.m.4choice, glm.zi.p.m.4choice, glm.zi.nb.m.4choice)
 # The mixed model is better, despite there being overdispersion 
+# lowest is zeroinfl 
+simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.m.4choice, plot = T)
+
+
 
 
 ## Using this
 # Testing for a 3-way interaction
-glmm.m.4choice <- glmmTMB(fly_numbers 
-                          
-                          ~ ratio * condition * block 
-                          
-                          + (1 | block / plate) + (1 | observation), 
-                          
-                          family = poisson, data = combined_m_split)
+glm.zi.p.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+                                (1 | block / plate) + (1 | observation),
+                              ziformula = ~ 1, 
+                              family = poisson, data = combined_m_split)
 
 
 # Significance of 3-way interaction
-drop1(glmm.m.4choice, test = "Chisq")
+drop1(glm.zi.p.m.4choice, test = "Chisq")
 # No 3-way interaction 
 
 
 # Testing for a 2-way interaction
-glmm.m.4choice.2 <- glmmTMB(fly_numbers 
+glm.zi.p.m.4choice.2 <- glmmTMB(fly_numbers 
                             
                             ~ ratio * condition +
                               condition * block +
                               ratio * block
                             
                             + (1 | block / plate) + (1 | observation), 
+                            ziformula = ~ 1,
                             
                             family = poisson, data = combined_m_split)
 
 # Significance of 2-way interaction
-drop1(glmm.m.4choice.2, test = "Chisq")
+drop1(glm.zi.p.m.4choice.2, test = "Chisq")
 # Significant interaction between condition and block
 
 
 
 #### Final model 
-glmm.m.4choice.3 <- glmmTMB(fly_numbers 
+glm.zi.p.m.4choice.3 <- glmmTMB(fly_numbers 
                             
                             ~ 
                               condition * block + ratio
                             
                             
                             + (1 | block / plate) + (1 | observation), 
+                            ziformula = ~ 1,
                             
                             family = poisson, data = combined_m_split)
 
@@ -156,18 +207,18 @@ glmm.m.4choice.3 <- glmmTMB(fly_numbers
 #### Data Analysis for write-up ####
 
 # Basic analysis 
-summary(glmm.m.4choice.3)
+summary(glm.zi.p.m.4choice.3)
 
 # Confidence intervals 
 exp(confint(glmm.m.4choice.3))
 
 
 # Real values for write-up
-emmeans::emmeans(glmm.m.4choice.3, specs = ~ ratio + condition + block, type = "response")
+emmeans::emmeans(glm.zi.p.m.4choice.3, specs = ~ ratio + condition + block, type = "response")
 
 
 ## Table of model for write-up
-tab_model(glmm.m.4choice.3, CSS = list(css.table = '+font-family: Arial;')) 
+tab_model(glm.zi.p.m.4choice.3, CSS = list(css.table = '+font-family: Arial;')) 
 
 
 
