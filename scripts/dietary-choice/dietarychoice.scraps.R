@@ -2,7 +2,7 @@
 
 #### Chapter 2  #### 
 
-# This script includes all the analysis I did to get to the final model. To see the scripts containing the chosen models for the write-up, please see: . 
+# This script includes all the analysis I did to get to the final model. To see the scripts containing the chosen models for the write-up, please see:
 
 
 
@@ -285,7 +285,7 @@ glmm.nb.vf.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
                              
                              family = nbinom2, data = combined_vf_split)
 
-
+## no RE 
 glmm.nb.vf.4choice.noRE <- glmmTMB(fly_numbers ~ ratio * condition * block, 
                               
                               family = nbinom2, data = combined_vf_split)
@@ -293,20 +293,24 @@ glmm.nb.vf.4choice.noRE <- glmmTMB(fly_numbers ~ ratio * condition * block,
 
 
 anova(glmm.nb.vf.4choice, glmm.nb.vf.4choice.noRE)
+ # Not significant, not worth included 
 AIC(glmm.nb.vf.4choice, glmm.nb.vf.4choice.noRE)
  # Not much difference in AIC
 
 
 simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice, plot = T)
+ # good 
 
 simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice.noRE, plot = T)
+ # maybe slightly better 
 
-## Assumption checks: 
 
-# DHARMa
-simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice, plot = T)
-## Assumptions of the model look pretty good 
 
+
+
+
+
+# For now, including random effects as I don't understand the implications of not including them. 
 
 # easystats checks 
 check_overdispersion(glm.nb.m.4choice)
