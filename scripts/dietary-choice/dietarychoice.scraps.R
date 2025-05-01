@@ -5,18 +5,13 @@
 # This script includes all the analysis I did to get to the final model. To see the scripts containing the chosen models for the write-up, please see: . 
 
 
-##### Packages 📦📦📦📦 ####
-library(tidyverse)
-library(lmerTest)
-library(readxl)
-library(MASS)
-library(performance)
-library(pscl)
-library(DHARMa)
-library(glmmTMB)
-library(emmeans)
-library(sjPlot)
-################## --
+
+#### Packages and Data Read in 📦📦📦📦 #### 
+library(ggpubr)
+source("packages.R")
+source("scripts/dietary-choice/dietarychoice.dataread.R")
+#### 
+-
 
 
 
@@ -25,32 +20,6 @@ library(sjPlot)
 
 
 #### Male ####
-
-#### Reading, binding and cleaning the data ####
-
-## Using read excel to upload the data (block one and block two)
-fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx")
-fourone_onefour_male_b2 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx")
-
-# Mutating an additional variable for "block" 
-fourone_onefour_male_b1 <- fourone_onefour_male_b1  %>% mutate(block = "one")
-fourone_onefour_male_b2 <- fourone_onefour_male_b2  %>% mutate(block = "two")
-
-# Using rbind() to bind the block 1 and block 2 data frames into one data frame.
-fourone_onefour_male <- rbind(fourone_onefour_male_b1, fourone_onefour_male_b2)
-
-## Using pivot longer to add additional variables to the dataframe, and change variable names 
-fourone_onefour_male_long <- fourone_onefour_male %>% 
-  pivot_longer(cols = ("4:1 Conditioned":"1:4 Unconditioned"), names_to = "diet", values_to = "fly_numbers") %>% 
-  mutate(fly_numbers = as.integer(fly_numbers))  
-
-
-## Splitting up diet within the actual data frame
-combined_m_split <- fourone_onefour_male_long %>%
-  separate(diet, into = c("ratio", "condition"), sep = " ")
-
-
-
 
 
 #### 1. Preliminary Data Analysis ####
@@ -65,9 +34,7 @@ glmm.m.4choice <- glmmTMB(fly_numbers
                           
                           family = poisson, data = combined_m_split)
 
-# without random effects
-
-
+# Testing without random effects
 glmm.m.4choice.noRE <- glmmTMB(fly_numbers 
                           
                           ~ ratio * condition * block, 
@@ -76,7 +43,7 @@ glmm.m.4choice.noRE <- glmmTMB(fly_numbers
 
 # LRT test 
 anova(glmm.m.4choice, glmm.m.4choice.noRE)
-
+ # random effects are significant - probably needed 
 
 
 ## Assumption checks: 
@@ -91,71 +58,71 @@ check_overdispersion(glmm.m.4choice)
 # Overdispersion is detected
 
 check_zeroinflation(glmm.m.4choice) 
-
 # Zeroinflation detected 
 
 
 
 #### Model 2
-#### Negative Binomial GLM ####
-glm.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+#### Negative Binomial GLMM ####
+glmm.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
                               
                               (1 | block / plate) + (1 | observation),
                             
                             family = nbinom2, data = combined_m_split)
 
-check_overdispersion(glm.nb.m.4choice)
-check_zeroinflation(glm.nb.m.4choice)
 
-## Assumption checks: 
+check_overdispersion(glmm.nb.m.4choice)
+# Overdispersion no longer detected 
+
+check_zeroinflation(glmm.nb.m.4choice)
+# Zeroinflation no longer detected  
+
+
+
 
 # DHARMa 
-simulationOutput <- simulateResiduals(fittedModel = glm.nb.m.4choice, plot = T)
-## Assumptions of the model look pretty good but there is a significant test with homogeneity
-
-
-# easystats checks 
-check_overdispersion(glm.nb.m.4choice)
-# NO overdispersion is detected
-
-check_zeroinflation(glm.nb.m.4choice)
-# Zeroinflationnot detected 
+simulationOutput <- simulateResiduals(fittedModel = glmm.nb.m.4choice, plot = T)
+## Assumptions of the model look pretty good 
 
 
 
-glm.zi.p.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+
+
+## Trying zeroinflation model as there was zeroinflation previously 
+glmm.zi.p.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
                                       (1 | block / plate) + (1 | observation),
                                     ziformula = ~ 1, 
                                     family = poisson, data = combined_m_split)
 
 
-check_overdispersion(glm.zi.p.m.4choice)
-check_zeroinflation(glm.zi.p.m.4choice)
+check_overdispersion(glmm.zi.p.m.4choice)
+ # No overdispersion detected 
+
+check_zeroinflation(glmm.zi.p.m.4choice)
+# No zeroinflation detected 
+
+# DHARMa 
+simulationOutput <- simulateResiduals(fittedModel = glmm.zi.p.m.4choice, plot = T)
+# looks pretty good 
 
 
-glm.zi.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+
+# Final model choice - combo of negBin and zero inflation
+glmm.zi.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
                                  (1 | block / plate) + (1 | observation),
-                               ziformula = ~ 1,  # Simplest case: constant probability of extra zero
+                               ziformula = ~ 1,  
                                family = nbinom2,
                                data = combined_m_split)
 
-
-check_overdispersion(glm.zi.nb.m.4choice)
-check_zeroinflation(glm.zi.nb.m.4choice)
-
-###### Testing Models ###### 
-
-
-
-
+      ## cannot actually test as there is a convergence problem 
 
 
 
 # Comparing models... 
-AIC(glm.nb.m.4choice, glmm.m.4choice, glm.zi.p.m.4choice, glm.zi.nb.m.4choice)
+AIC(glmm.nb.m.4choice, glmm.m.4choice, glmm.zi.p.m.4choice, glmm.zi.nb.m.4choice)
 # The mixed model is better, despite there being overdispersion 
 # lowest is zeroinfl 
-simulationOutput <- simulateResiduals(fittedModel = glm.zi.p.m.4choice, plot = T)
+
 
 
 
@@ -204,21 +171,37 @@ glm.zi.p.m.4choice.3 <- glmmTMB(fly_numbers
                             family = poisson, data = combined_m_split)
 
 
+## testing if random effects still make a difference 
+glm.zi.p.m.4choice.3.noRE <- glmmTMB(fly_numbers 
+                                
+                                ~ 
+                                  condition * block + ratio,
+                                
+                                
+                                
+                                ziformula = ~ 1,
+                                
+                                family = poisson, data = combined_m_split)
+
+# Random Effect Test
+anova(glm.zi.p.m.4choice.3, glm.zi.p.m.4choice.3.noRE)
+ ## they do 
+
 #### Data Analysis for write-up ####
 
 # Basic analysis 
-summary(glm.zi.p.m.4choice.3)
+summary(glm.zi.p.m.4choice.3.noRE)
 
 # Confidence intervals 
-exp(confint(glmm.m.4choice.3))
+exp(confint(glm.zi.p.m.4choice.3.noRE))
 
 
 # Real values for write-up
-emmeans::emmeans(glm.zi.p.m.4choice.3, specs = ~ ratio + condition + block, type = "response")
+emmeans::emmeans(glm.zi.p.m.4choice.3.noRE, specs = ~ ratio + condition + block, type = "response")
 
 
 ## Table of model for write-up
-tab_model(glm.zi.p.m.4choice.3, CSS = list(css.table = '+font-family: Arial;')) 
+tab_model(glm.zi.p.m.4choice.3.noRE, CSS = list(css.table = '+font-family: Arial;')) 
 
 
 
@@ -296,16 +279,32 @@ check_zeroinflation(glmm.vf.4choice)
 
 # Model 2
 #### Negative Binomial GLM ####
-glm.nb.m.4choice <- glm.nb(fly_numbers ~ 
-                             ratio * condition * block,
-                           data = combined_vf_split)
+glmm.nb.vf.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+                               
+                               (1 | block / plate) + (1 | observation),
+                             
+                             family = nbinom2, data = combined_vf_split)
 
 
+glmm.nb.vf.4choice.noRE <- glmmTMB(fly_numbers ~ ratio * condition * block, 
+                              
+                              family = nbinom2, data = combined_vf_split)
+
+
+
+anova(glmm.nb.vf.4choice, glmm.nb.vf.4choice.noRE)
+AIC(glmm.nb.vf.4choice, glmm.nb.vf.4choice.noRE)
+ # Not much difference in AIC
+
+
+simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice, plot = T)
+
+simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice.noRE, plot = T)
 
 ## Assumption checks: 
 
 # DHARMa
-simulationOutput <- simulateResiduals(fittedModel = glm.nb.m.4choice, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice, plot = T)
 ## Assumptions of the model look pretty good 
 
 
@@ -318,8 +317,10 @@ check_zeroinflation(glm.nb.m.4choice)
 
 
 
+
+
 # Going to chooose NegBin but doing AIC just in case 
-AIC(glmm.vf.4choice, glm.nb.m.4choice)
+AIC(glmm.vf.4choice, glmm.nb.vf.4choice)
 # NegBin AIC only slightly lower 
 
 
@@ -329,9 +330,12 @@ AIC(glmm.vf.4choice, glm.nb.m.4choice)
 
 ## Choosing this model: 
 # Testing for a 3-way significant effect 
-glm.nb.m.4choice <- glm.nb(fly_numbers ~ 
-                             ratio * condition * block,
-                           data = combined_vf_split)
+glmm.nb.vf.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+                                
+                                (1 | block / plate) + (1 | observation),
+                              
+                              family = nbinom2, data = combined_vf_split)
+
 
 
 # Significance of 3-way interaction
@@ -340,24 +344,39 @@ drop1(glm.nb.m.4choice, test = "Chisq")
 
 
 ## Testing for 2-way interaction effects
-glm.nb.m.4choice.2 <- glm.nb(fly_numbers ~ 
-                               ratio * condition +
-                               condition * block +
-                               ratio * block,
-                             data = combined_vf_split)
+
+glmm.nb.vf.4choice.2 <- glmmTMB(
+  fly_numbers ~ ratio * condition + condition * block + ratio * block + 
+    (1 | block / plate) + (1 | observation),
+  family = nbinom2,
+  data = combined_vf_split
+)
+
+
+
 
 
 # Looking for significance in the 2-way interaction effecrs
-drop1(glm.nb.m.4choice.2, test = "Chisq")
+drop1(glmm.nb.vf.4choice.2, test = "Chisq")
 # Only a significant interaction between condition and block 
 
 
 # Final model 
-glm.nb.m.4choice.3 <- glm.nb(fly_numbers ~ 
-                               
-                               condition * block + ratio,
-                             
-                             data = combined_vf_split)
+
+glmm.nb.vf.4choice.3 <- glmmTMB(  fly_numbers ~ 
+  condition * block + ratio  + 
+    (1 | block / plate) + (1 | observation),
+  family = nbinom2,
+  data = combined_vf_split
+)
+
+
+glmm.nb.vf.4choice.3.noRE <- glmmTMB(  fly_numbers ~ 
+                                    condition * block + ratio, 
+                                   
+                                  family = nbinom2,
+                                  data = combined_vf_split
+)
 
 
 
@@ -365,23 +384,27 @@ glm.nb.m.4choice.3 <- glm.nb(fly_numbers ~
 #### Data Analysis for write-up #### 
 
 # Basic analysis 
-summary(glm.nb.m.4choice.3)
+summary(glmm.nb.vf.4choice.3)
 
 # Confidence intervals 
-exp(confint(glm.nb.m.4choice.3))
+exp(confint(glmm.nb.vf.4choice.3))
 
 
 # Real values for write-up
-emmeans::emmeans(glm.nb.m.4choice.3, specs = ~ ratio + condition + block, type = "response")
+emmeans::emmeans(glmm.nb.vf.4choice.3, specs = ~ ratio + condition + block, type = "response")
 
 
 ## Table of model for write-up
-tab_model(glm.nb.m.4choice.3, CSS = list(css.table = '+font-family: Arial;')) 
+tab_model(glmm.nb.vf.4choice.3, CSS = list(css.table = '+font-family: Arial;')) 
+
+
+# checking random effects again 
+anova(glmm.nb.vf.4choice.3, glmm.nb.vf.4choice.3.noRE)
 
 
 
-
-
+simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice.3, plot = T)
+simulationOutput <- simulateResiduals(fittedModel = glmm.nb.vf.4choice.3.noRE, plot = T)
 
 
 
