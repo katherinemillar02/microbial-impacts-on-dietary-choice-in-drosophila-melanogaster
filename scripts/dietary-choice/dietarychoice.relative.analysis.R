@@ -21,51 +21,65 @@ source("scripts/dietary-choice/dietarychoice.dataread.R")
                                   #### Diets Conditioned by Males ####
 
 # Testing for a 3-way interaction
-m.glmm.p.4choice.feed.1 <- glmmTMB(fly_numbers 
-                                   ~ ratio * condition * block 
-                                   + (1 | block / plate) + (1 | observation), 
-                                   family = poisson, 
-                                   data = combined_m_split)
+glm.zi.p.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
+                                (1 | block / plate) + (1 | observation),
+                              ziformula = ~ 1, 
+                              family = poisson, data = combined_m_split)
+
 
 # Significance of 3-way interaction
-drop1(m.glmm.p.4choice.feed.1, test = "Chisq")
+drop1(glm.zi.p.m.4choice, test = "Chisq")
 # No 3-way interaction 
 
-# Dropping the three way interaction and testing for 2-way interactions
-m.glmm.p.4choice.feed.2 <- glmmTMB(fly_numbers 
-                            ~ ratio * condition +
-                            condition * block +
-                            ratio * block
-                            + (1 | block / plate) + (1 | observation), 
-                            family = poisson, 
-                            data = combined_m_split)
+
+# Testing for a 2-way interaction
+glm.zi.p.m.4choice.2 <- glmmTMB(fly_numbers 
+                                
+                                ~ ratio * condition +
+                                  condition * block +
+                                  ratio * block
+                                
+                                + (1 | block / plate) + (1 | observation), 
+                                ziformula = ~ 1,
+                                
+                                family = poisson, data = combined_m_split)
 
 # Significance of 2-way interaction
-drop1(m.glmm.p.4choice.feed.2, test = "Chisq")
-# Significant interaction between "condition" and "block"
-
-# Final model! 
-m.glmm.p.4choice.feed.3 <- glmmTMB(fly_numbers 
-                            ~ condition * block + ratio
-                            + (1 | block / plate) + (1 | observation), 
-                            family = poisson, 
-                            data = combined_m_split)
+drop1(glm.zi.p.m.4choice.2, test = "Chisq")
+# Significant interaction between condition and block
 
 
 
-#### Analysis with final chosen model: 
+#### Final model 
+glm.zi.p.m.4choice.3 <- glmmTMB(fly_numbers 
+                                
+                                ~ 
+                                  condition * block + ratio
+                                
+                                
+                                + (1 | block / plate) + (1 | observation), 
+                                ziformula = ~ 1,
+                                
+                                family = poisson, data = combined_m_split)
+
+
+#### Data Analysis for write-up ####
 
 # Basic analysis 
-summary(m.glmm.p.4choice.feed.3)
+summary(glm.zi.p.m.4choice.3)
 
 # Confidence intervals 
-exp(confint(m.glmm.p.4choice.feed.3))
+exp(confint(glmm.m.4choice.3))
+
 
 # Real values for write-up
-emmeans::emmeans(m.glmm.p.4choice.feed.3, specs = ~ ratio + condition + block, type = "response")
+emmeans::emmeans(glm.zi.p.m.4choice.3, specs = ~ ratio + condition + block, type = "response")
+
 
 ## Table of model for write-up
-tab_model(m.glmm.p.4choice.feed.3, CSS = list(css.table = '+font-family: Arial;')) 
+tab_model(glm.zi.p.m.4choice.3, CSS = list(css.table = '+font-family: Arial;')) 
+
+
 
 
 
