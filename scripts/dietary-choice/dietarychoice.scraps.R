@@ -249,7 +249,7 @@ tab_model(glm.zi.p.m.4choice.3.noRE, CSS = list(css.table = '+font-family: Arial
 
 
 
-#### Virgin Female #### 
+#### Virgin Female - 4 choice feeding #### 
 
 #### Reading, cleaning and binding the data ####
 
