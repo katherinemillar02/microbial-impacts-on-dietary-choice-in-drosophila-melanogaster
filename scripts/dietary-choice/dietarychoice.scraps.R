@@ -12,6 +12,18 @@ source("packages.R")
 source("scripts/dietary-choice/dietarychoice.dataread.R")
 #### 
 -
+#Basic model outline: 
+ # (fly_numbers 
+ # ~ ratio * condition * block 
+ #   + (1 | block / plate) + (1 | observation), 
+ # data = data)
+
+#Read me: 
+#fly_numbers: the number of flies present on a singular diet patch in a dish per observation
+#ratio: the protein: carbohydrate ratio of the diet (4:1 or 1:4). 
+#condition: whether the fly has previously been conditioned or not by another fly (conditioned or unconditioned).
+#observation: one half an hour time point, across the span of about 6 hours (1-11)
+#block: a repeat of the experiment (1-4)
 
 
 
@@ -42,7 +54,7 @@ glmm.m.4choice.noRE <- glmmTMB(fly_numbers
                           
                           family = poisson, data = combined_m_split)
 
-# LRT  
+# LRT  to check relevance of random effects
 anova(glmm.m.4choice, glmm.m.4choice.noRE)
  # random effects are significant - probably needed 
 
@@ -61,6 +73,11 @@ glmm.m.4choice <- glmmTMB(fly_numbers
 # DHARMa 
 simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice, plot = T)
 ## Assumptions of the model look pretty good
+#Uniformity good 
+#Dispersion good 
+#Outlier good  
+#Homogeneity of variance good 
+
 
 
 # easystats checks 
@@ -73,7 +90,7 @@ check_zeroinflation(glmm.m.4choice)
 
 
 #### Model 2
-#### Negative Binomial GLMM ####
+#### Negative Binomial GLMM #### incase overdispersion is a problem 
 glmm.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
                               
                               (1 | block / plate) + (1 | observation),
@@ -93,12 +110,16 @@ check_zeroinflation(glmm.nb.m.4choice)
 # DHARMa 
 simulationOutput <- simulateResiduals(fittedModel = glmm.nb.m.4choice, plot = T)
 ## Assumptions of the model look pretty good 
+#Uniformity good 
+#Dispersion good 
+#Outlier good  
+#Homogeneity of variance good 
 
 
 
 
-
-## Trying zeroinflation model as there was zeroinflation previously 
+# Zeroinflation Poisson 
+## Trying zeroinflation model as there was zeroinflation previously, and overdispersion might not be an issue
 glmm.zi.p.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
                                       (1 | block / plate) + (1 | observation),
                                     ziformula = ~ 1, 
@@ -114,6 +135,11 @@ check_zeroinflation(glmm.zi.p.m.4choice)
 # DHARMa 
 simulationOutput <- simulateResiduals(fittedModel = glmm.zi.p.m.4choice, plot = T)
 # looks pretty good 
+#Uniformity good 
+#Dispersion good 
+#Outlier good  
+#Homogeneity of variance good 
+
 
 
 
@@ -124,7 +150,7 @@ glmm.zi.nb.m.4choice <- glmmTMB(fly_numbers ~ ratio * condition * block +
                                family = nbinom2,
                                data = combined_m_split)
 
-      ## cannot actually test as there is a convergence problem 
+      ## cannot actually test as there is a convergence problem ???? 
 
 
 
