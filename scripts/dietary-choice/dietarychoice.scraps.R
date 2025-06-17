@@ -21,6 +21,7 @@ source("scripts/dietary-choice/dietarychoice.dataread.R")
 
 #### Male ####
 
+#### Male 4 choice feeding 
 
 #### 1. Preliminary Data Analysis ####
 
@@ -41,12 +42,21 @@ glmm.m.4choice.noRE <- glmmTMB(fly_numbers
                           
                           family = poisson, data = combined_m_split)
 
-# LRT test 
+# LRT  
 anova(glmm.m.4choice, glmm.m.4choice.noRE)
  # random effects are significant - probably needed 
 
 
-## Assumption checks: 
+# Model to go with 
+glmm.m.4choice <- glmmTMB(fly_numbers 
+                          
+                          ~ ratio * condition * block 
+                          
+                          + (1 | block / plate) + (1 | observation), 
+                          
+                          family = poisson, data = combined_m_split)
+
+## Assumption checks:
 
 # DHARMa 
 simulationOutput <- simulateResiduals(fittedModel = glmm.m.4choice, plot = T)
