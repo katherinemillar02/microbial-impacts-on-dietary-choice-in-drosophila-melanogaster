@@ -7,6 +7,7 @@ source("packages.R")
 ############################### Edited by: Katie Millar,
 ##################### This script is used as the FINAL PATCH, at which 
 ############################   the data can be read from ...  
+##### this is confusing as has some visualisation then there is a separate script for visualisation
 
 
 #### RELATIVE (FOUR CHOICE) DATA #### 
@@ -713,7 +714,7 @@ fourone_ovod1_oviposition_long <- fourone_ovod1_oviposition %>%
 
 
 
-######################################## FEEDING ################################################################
+######################################## FEEDING ////// ################################################################
 
 
 
