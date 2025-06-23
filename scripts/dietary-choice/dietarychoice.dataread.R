@@ -12,11 +12,9 @@ source("packages.R")
 
 #### RELATIVE (FOUR CHOICE) DATA #### 
 
-#### #### #### #### #### #### #### #### #### #### #### OVIPOSITION #### #### #### #### #### #### #### #### #### 
+#### #### #### #### #### #### #### #### #### #### #### OVIPOSITION #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 
 
-
-### DIETS CONDITIONED BY MALES #### 
-
+# This code will run a dataset for all three different experiments, containing all blocks of each one - for the oviposition experiments. 
 
 
 read_diet_data <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
@@ -50,8 +48,72 @@ four_choice_oviposition <- list_rbind(pmap(list(paths,blocks,condition_type),
 
 
 
-#### #### #### #### #### #### #### #### #### #### #### FEEDING #### #### #### #### #### #### #### #### #### 
+#### #### #### #### #### #### #### #### #### #### #### FEEDING #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 
 
+# This code will run a dataset for all three different experiments, containing all blocks of each one - for the feeding experiments. 
+
+
+read_diet_data_feeding <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
+  read_excel(path)  %>% 
+    pivot_longer(cols = -all_of(cols), 
+                 names_to = "diet", values_to = value) %>% 
+    mutate(block = blocks) %>% 
+    mutate(treatment = condition_type) %>%
+    separate(diet, into = c("ratio", "condition"), sep = " ") %>% 
+    separate(treatment, into = c("sex", "treatment"))
+}
+
+# make into a iteration
+paths <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
+           "data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx",
+           "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx",
+           "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx"
+)
+
+blocks <- c("one", "two", "one", "two", "three", "four", "one", "two")
+condition_type <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2))
+
+
+
+four_choice_feeding <- list_rbind(pmap(list(paths,blocks,condition_type), 
+                                       read_diet_data_feeding))
+
+
+########## ALTERNATE CODE BY PHIL ########## ########## ########## ########## ########## ########## ########## ########## ########## 
+
+
+feeding <- read_diet_data("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx", "one", "male virgin", 
+               cols = c("plate", "observation"), value = "fly_numbers")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# The rest of the four-choice code is now okay to delete?
+
+########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## 
 
 
 #### DIETS CONDITIONED BY MALES ####
@@ -59,11 +121,6 @@ four_choice_oviposition <- list_rbind(pmap(list(paths,blocks,condition_type),
 #### Reading, binding and cleaning the data 
 
 ## Using read excel to upload the data (block one and block two)
-
-
-read_diet_data("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx", "one", "male virgin", 
-               cols = c("plate", "observation"), value = "fly_numbers")
-
 
 # Block 1 
 fourone_onefour_male_b1 <- read_excel("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx")
