@@ -18,7 +18,7 @@ source("packages.R")
 # It includes data from all experimental blocks and is used to analyse relative
 # oviposition preferences in the four-choice setup.
  
-read_diet_data <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
+read_diet_data_oviposition_4 <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
   read_excel(path)  %>% 
   pivot_longer(cols = -all_of(cols), 
                names_to = "diet", values_to = value) %>% 
@@ -57,7 +57,7 @@ four_choice_oviposition <- list_rbind(pmap(list(paths,blocks,condition_type),
 # including all experimental blocks. It is used to analyse dietary choices 
 # in the four-choice feeding setup.
 
-read_diet_data_feeding <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
+read_diet_data_feeding_4 <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
   read_excel(path)  %>% 
     pivot_longer(cols = -all_of(cols), 
                  names_to = "diet", values_to = value) %>% 
@@ -95,7 +95,7 @@ four_choice_feeding <- list_rbind(pmap(list(paths,blocks,condition_type),
 # This section handles data from oviposition experiments using two-choice assays,
 # analysing absolute female egg-laying preference between paired diet conditions.
 
-read_diet_data_oviposition_two <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
+read_diet_data_oviposition_2 <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
   read_excel(path)  %>% 
     pivot_longer(cols = -all_of(cols), 
                  names_to = "diet", values_to = value) %>% 
@@ -137,7 +137,7 @@ two_choice_oviposition <- list_rbind(pmap(list(paths,blocks,condition_type),
 # This section processes data from feeding experiments using two-choice assays,
 # assessing absolute dietary preferences based on paired diet presentations.
 
-read_diet_data_feeding_four <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
+read_diet_data_feeding_2 <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
   read_excel(path)  %>% 
     pivot_longer(cols = -all_of(cols), 
                  names_to = "diet", values_to = value) %>% 
