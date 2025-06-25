@@ -18,7 +18,7 @@ source("packages.R")
 # It includes data from all experimental blocks and is used to analyse relative
 # oviposition preferences in the four-choice setup.
  
-read_diet_data_oviposition_4 <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
+read_diet_data <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
   read_excel(path)  %>% 
   pivot_longer(cols = -all_of(cols), 
                names_to = "diet", values_to = value) %>% 
@@ -28,8 +28,9 @@ read_diet_data_oviposition_4 <- function(path, blocks, condition_type, cols = "p
     separate(treatment, into = c("sex", "treatment"))
 }
 
-# make into a iteration
-paths <- c("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx",
+
+## FOUR CHOICE
+paths_ovi_4 <- c("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx",
            "data/male_conditioning/m_4-1_1-4_b2_oviposition.xlsx",
            "data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx",
            "data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b3.xlsx",
@@ -37,76 +38,12 @@ paths <- c("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx",
            "data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx",
            "data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx"
            )
-
-blocks <- c("one", "two", "two", "three", "four", "one", "two")
-condition_type <- c(rep("male_mated", 2), rep("female_virgin", 3), rep("female_ovod1", 2))
-
-
-four_choice_oviposition <- list_rbind(pmap(list(paths,blocks,condition_type), 
-                                           read_diet_data))
+blocks_ovi_4 <- c("one", "two", "two", "three", "four", "one", "two")
+condition_type_ovi_4 <- c(rep("male_mated", 2), rep("female_virgin", 3), rep("female_ovod1", 2))
 
 
-
-
-
-
-
-#### FEEDING EXPERIMENTS — RELATIVE (FOUR CHOICE) DATA ####
-
-# This section processes the dataset for all three feeding experiments,
-# including all experimental blocks. It is used to analyse dietary choices 
-# in the four-choice feeding setup.
-
-read_diet_data_feeding_4 <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
-  read_excel(path)  %>% 
-    pivot_longer(cols = -all_of(cols), 
-                 names_to = "diet", values_to = value) %>% 
-    mutate(block = blocks) %>% 
-    mutate(treatment = condition_type) %>%
-    separate(diet, into = c("ratio", "condition"), sep = " ") %>% 
-    separate(treatment, into = c("sex", "treatment"))
-}
-
-# make into a iteration
-paths <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
-           "data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx",
-           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx",
-           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx",
-           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx",
-           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx",
-           "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx",
-           "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx"
-)
-
-blocks <- c("one", "two", "one", "two", "three", "four", "one", "two")
-condition_type <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2))
-
-
-
-four_choice_feeding <- list_rbind(pmap(list(paths,blocks,condition_type), 
-                                       read_diet_data_feeding))
-
-
-
-
-
-#### OVIPOSITION EXPERIMENTS — TWO CHOICE ASSAYS ####
-
-# This section handles data from oviposition experiments using two-choice assays,
-# analysing absolute female egg-laying preference between paired diet conditions.
-
-read_diet_data_oviposition_2 <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
-  read_excel(path)  %>% 
-    pivot_longer(cols = -all_of(cols), 
-                 names_to = "diet", values_to = value) %>% 
-    mutate(block = blocks) %>% 
-    mutate(treatment = condition_type) %>% 
-    separate(diet, into = c("ratio", "condition"), sep = " ") %>% 
-    separate(treatment, into = c("sex", "treatment"))
-}
-
-# make into a iteration
-paths <- c("data/male_conditioning/m_4-1_b1_oviposition.xlsx",
+## TWO CHOICE 
+paths_ovi_2 <- c("data/male_conditioning/m_4-1_b1_oviposition.xlsx",
            "data/male_conditioning/m_4-1_b2_oviposition.xlsx",
            "data/male_conditioning/m_1-4_b1_oviposition.xlsx",
            "data/male_conditioning/m_1-4_b2_oviposition.xlsx",
@@ -121,18 +58,80 @@ paths <- c("data/male_conditioning/m_4-1_b1_oviposition.xlsx",
            "data/female_conditioning/ovod1/4-1_oviposition_ovod1_b1.xlsx",
            "data/female_conditioning/ovod1/4-1_oviposition_ovod1_b2.xlsx"
 )
+blocks_ovi_2 <- c("one", "two","one", "two", "two", "three", "four","two", "three", "four", "one", "two", "one", "two")
+condition_type_ovi_2 <- c(rep("male_mated", 4), rep("female_virgin", 6), rep("female_ovod1", 4))
 
 
-blocks <- c("one", "two","one", "two", "two", "three", "four","two", "three", "four", "one", "two", "one", "two")
-condition_type <- c(rep("male_mated", 4), rep("female_virgin", 6), rep("female_ovod1", 4))
 
+## DATA FRAMES - OVIPOSITION
+four_choice_oviposition <- list_rbind(pmap(list(paths_ovi_4,blocks_ovi_4,condition_type_ovi_4), 
+                                           read_diet_data))
 
-two_choice_oviposition <- list_rbind(pmap(list(paths,blocks,condition_type), 
+two_choice_oviposition <- list_rbind(pmap(list(paths_ovi_2,blocks_ovi_2,condition_type_ovi_2), 
                                            read_diet_data))
 
 
+####################################################################################################################################
 
-#### FEEDING EXPERIMENTS — TWO CHOICE ASSAYS ####
+
+
+
+
+
+
+
+
+
+
+
+
+
+### NEED TO WORK ON HOW I CAN COMBINE FEEDING  
+
+
+#### FEEDING EXPERIMENTS 
+
+# This section processes the dataset for all three feeding experiments,
+# including all experimental blocks. 
+
+
+read_diet_data <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
+  read_excel(path)  %>% 
+    pivot_longer(cols = -all_of(cols), 
+                 names_to = "diet", values_to = value) %>% 
+    mutate(block = blocks) %>% 
+    mutate(treatment = condition_type) %>%
+    separate(diet, into = c("ratio", "condition"), sep = " ") %>% 
+    separate(treatment, into = c("sex", "treatment"))
+}
+
+# make into a iteration
+paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
+           "data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx",
+           "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx",
+           "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx",
+           "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx"
+)
+
+blocks <- c("one", "two", "one", "two", "three", "four", "one", "two")
+condition_type <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2))
+
+four_choice_feeding <- list_rbind(pmap(list(paths_feed4,blocks,condition_type), 
+                                       read_diet_data_feeding))
+
+
+
+
+
+
+
+
+
+
+#### FEEDING EXPERIMENTS — TWO CHOICE ASSAYS #### - still need to work on combining feeding and oviposition. 
 
 # This section processes data from feeding experiments using two-choice assays,
 # assessing absolute dietary preferences based on paired diet presentations.
@@ -175,13 +174,6 @@ two_choice_feeding <- list_rbind(pmap(list(paths,blocks,condition_type),
                                        read_diet_data_feeding))
 
 
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### 
-
-## Final dataframes: 
-four_choice_feeding
-four_choice_oviposition
-two_choice_feeding
-two_choice_oviposition
 
 
 
