@@ -87,15 +87,6 @@ four_choice_feeding <- list_rbind(pmap(list(paths,blocks,condition_type),
                                        read_diet_data_feeding))
 
 
-########## ALTERNATE CODE BY PHIL, to use? ########## ########## ########## ########## ########## ########## ########## ########## ########## 
-
-
-feeding <- read_diet_data("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx", "one", "male virgin", 
-               cols = c("plate", "observation"), value = "fly_numbers")
-
-
-########## ########## ########## ########## ########## ########## ########## ########## ##########  ########## ########## ########## 
-
 
 
 
@@ -191,3 +182,15 @@ four_choice_feeding
 four_choice_oviposition
 two_choice_feeding
 two_choice_oviposition
+
+
+
+
+########## ALTERNATE CODE BY PHIL, to use? ########## ########## ########## ########## ########## ########## ########## ########## ########## 
+
+
+feeding <- read_diet_data("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx", "one", "male virgin", 
+                          cols = c("plate", "observation"), value = "fly_numbers")
+
+
+########## ########## ########## ########## ########## ########## ########## ########## ##########  ########## ########## ########## 
