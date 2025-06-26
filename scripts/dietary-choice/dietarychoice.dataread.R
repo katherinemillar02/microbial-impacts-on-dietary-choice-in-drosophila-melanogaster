@@ -83,13 +83,12 @@ paths_ovi_2 <- c("data/male_conditioning/m_4-1_b1_oviposition.xlsx",
            "data/female_conditioning/ovod1/4-1_oviposition_ovod1_b2.xlsx"
 )
 blocks_ovi_2 <- c("one", "two","one", "two", "two", "three", "four","two", "three", "four", "one", "two", "one", "two")
-
 condition_type_ovi_2 <- c(rep("male_mated", 4), rep("female_virgin", 6), rep("female_ovod1", 4))
 
 
 ## FEEDING EXPERIMENTS==== 
 
-
+## FOUR CHOICE====
 paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
            "data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx",
            "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx",
@@ -99,14 +98,13 @@ paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
            "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx",
            "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx"
 )
-
 blocks4 <- c("one", "two", "one", "two", "three", "four", "one", "two")
 condition_type4 <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2))
 
 
 
 
-# make into a iteration
+### TWO CHOICE====
 paths_feed2 <- c("data/male_conditioning/rawdata_m4-1_b1.xlsx",
            "data/male_conditioning/rawdata_m4-1_b2.xlsx",
            "data/male_conditioning/rawdata_m1-4_b1.xlsx",
@@ -124,11 +122,13 @@ paths_feed2 <- c("data/male_conditioning/rawdata_m4-1_b1.xlsx",
            "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx",
            "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx"
 )
-
 blocks2 <- c("one", "two","one", "two", "one", "two", "three", "four","one", "two", "three", "four","one", "two","one", "two")
 condition_type2 <- c(rep("male_mated", 4), rep("female_virgin", 8), rep("female_ovod1", 4))
 
 
+
+
+###
 data_configs <- list(
   four_choice_oviposition = list(paths = paths_ovi_4,
        blocks = blocks_ovi_4,
