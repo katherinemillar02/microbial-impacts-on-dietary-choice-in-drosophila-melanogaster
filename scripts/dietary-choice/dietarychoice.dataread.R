@@ -15,9 +15,6 @@ source("packages.R")
 #### #### #### #### #### #### #### #### #### #### #### OVIPOSITION #### #### #### #### #### #### #### #### #### 
 
 
-### DIETS CONDITIONED BY MALES #### 
-
-
 
 read_diet_data <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
   read_excel(path)  %>% 
