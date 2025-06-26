@@ -1,26 +1,23 @@
+
 ## Reading in the packages from the packages script.
 source("packages.R")
 
+# Function: read diet data====
+# Description: Reads the dietary-choice feeding data into the R environment
+#
+# Input:
+#   paths - file paths of csv formatted data
+#   blocks - metadata on replication
+#   condition_type - metadata on sex and genotype
+#   cols: columns to be left out of pivot tables
+#   value: response variable - egg numbers or fly counts
+# Output:
+#   R tibble
+#
 
-############################# FINAL DATA PREPARATION SCRIPT #############################
-# Title: The Effects of Diet Conditioning on Female Dietary Choice
-# Authors: Philip Leftwich, Katie Millar
-# Purpose: This script is the final version used for data loading, cleaning, and preparation.
-# Note: This script includes essential visualisation checks for data integrity, 
-#       but full analysis and figures are handled in a separate visualisation script.
-##########################################################################################
-
-
-
-#### RELATIVE (FOUR CHOICE) DATA — OVIPOSITION EXPERIMENTS ####
-
-# This section processes the full dataset for all three two-choice oviposition data treatments (Male, Virgin female and OvoD1 female)
-# It includes data from all experimental blocks and is used to analyse relative
-# oviposition preferences in the four-choice setup.
- 
-read_diet_data <- function(path, blocks, condition_type, cols = "plate", value = "egg_numbers"){
+read_diet_data <- function(path, blocks, condition_type, value, cols = c("plate", "observation")){
   read_excel(path)  %>% 
-  pivot_longer(cols = -all_of(cols), 
+  pivot_longer(cols = -tidyselect::all_of(cols), 
                names_to = "diet", values_to = value) %>% 
     mutate(block = blocks) %>% 
     mutate(treatment = condition_type) %>% 
@@ -29,7 +26,33 @@ read_diet_data <- function(path, blocks, condition_type, cols = "plate", value =
 }
 
 
-## FOUR CHOICE
+#### Improve code further 
+
+# Function: read many data files ====
+# Description: Generates an iterative use of the read data files function
+#
+# Input:
+#   paths - file paths of csv formatted data
+#   blocks - metadata on replication
+#   condition_type - metadata on sex and genotype
+#   value: response variable - egg numbers or fly counts
+#   cols: columns to be left out of pivot tables
+# Output:
+#   Combined csv files into one tibble
+#
+
+read_many_diet_files <- function(paths, blocks, conditions, 
+                                 value, cols) {
+  list_rbind(
+    pmap(list(paths, blocks, conditions), 
+         function(path, block, condition) {
+           read_diet_data(path, block, condition, value, cols)
+         })
+  )
+}
+
+
+## FOUR CHOICE====
 paths_ovi_4 <- c("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx",
            "data/male_conditioning/m_4-1_1-4_b2_oviposition.xlsx",
            "data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b2.xlsx",
@@ -42,7 +65,8 @@ blocks_ovi_4 <- c("one", "two", "two", "three", "four", "one", "two")
 condition_type_ovi_4 <- c(rep("male_mated", 2), rep("female_virgin", 3), rep("female_ovod1", 2))
 
 
-## TWO CHOICE 
+
+## TWO CHOICE====
 paths_ovi_2 <- c("data/male_conditioning/m_4-1_b1_oviposition.xlsx",
            "data/male_conditioning/m_4-1_b2_oviposition.xlsx",
            "data/male_conditioning/m_1-4_b1_oviposition.xlsx",
@@ -59,53 +83,13 @@ paths_ovi_2 <- c("data/male_conditioning/m_4-1_b1_oviposition.xlsx",
            "data/female_conditioning/ovod1/4-1_oviposition_ovod1_b2.xlsx"
 )
 blocks_ovi_2 <- c("one", "two","one", "two", "two", "three", "four","two", "three", "four", "one", "two", "one", "two")
+
 condition_type_ovi_2 <- c(rep("male_mated", 4), rep("female_virgin", 6), rep("female_ovod1", 4))
 
 
-
-## DATA FRAMES - OVIPOSITION
-four_choice_oviposition <- list_rbind(pmap(list(paths_ovi_4,blocks_ovi_4,condition_type_ovi_4), 
-                                           read_diet_data))
-
-two_choice_oviposition <- list_rbind(pmap(list(paths_ovi_2,blocks_ovi_2,condition_type_ovi_2), 
-                                           read_diet_data))
+## FEEDING EXPERIMENTS==== 
 
 
-####################################################################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### NEED TO WORK ON HOW I CAN COMBINE FEEDING  
-
-
-#### FEEDING EXPERIMENTS 
-
-# This section processes the dataset for all three feeding experiments,
-# including all experimental blocks. 
-
-
-read_diet_data <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
-  read_excel(path)  %>% 
-    pivot_longer(cols = -all_of(cols), 
-                 names_to = "diet", values_to = value) %>% 
-    mutate(block = blocks) %>% 
-    mutate(treatment = condition_type) %>%
-    separate(diet, into = c("ratio", "condition"), sep = " ") %>% 
-    separate(treatment, into = c("sex", "treatment"))
-}
-
-# make into a iteration
 paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
            "data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx",
            "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx",
@@ -116,38 +100,14 @@ paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
            "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx"
 )
 
-blocks <- c("one", "two", "one", "two", "three", "four", "one", "two")
-condition_type <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2))
-
-four_choice_feeding <- list_rbind(pmap(list(paths_feed4,blocks,condition_type), 
-                                       read_diet_data_feeding))
+blocks4 <- c("one", "two", "one", "two", "three", "four", "one", "two")
+condition_type4 <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2))
 
 
 
-
-
-
-
-
-
-
-#### FEEDING EXPERIMENTS — TWO CHOICE ASSAYS #### - still need to work on combining feeding and oviposition. 
-
-# This section processes data from feeding experiments using two-choice assays,
-# assessing absolute dietary preferences based on paired diet presentations.
-
-read_diet_data_feeding_2 <- function(path, blocks, condition_type, cols = c("plate", "observation"), value = "fly_numbers"){
-  read_excel(path)  %>% 
-    pivot_longer(cols = -all_of(cols), 
-                 names_to = "diet", values_to = value) %>% 
-    mutate(block = blocks) %>% 
-    mutate(treatment = condition_type) %>%
-    separate(diet, into = c("ratio", "condition"), sep = " ") %>% 
-    separate(treatment, into = c("sex", "treatment"))
-}
 
 # make into a iteration
-paths <- c("data/male_conditioning/rawdata_m4-1_b1.xlsx",
+paths_feed2 <- c("data/male_conditioning/rawdata_m4-1_b1.xlsx",
            "data/male_conditioning/rawdata_m4-1_b2.xlsx",
            "data/male_conditioning/rawdata_m1-4_b1.xlsx",
            "data/male_conditioning/rawdata_m1-4_b2.xlsx",
@@ -165,24 +125,46 @@ paths <- c("data/male_conditioning/rawdata_m4-1_b1.xlsx",
            "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx"
 )
 
-blocks <- c("one", "two","one", "two", "one", "two", "three", "four","one", "two", "three", "four","one", "two","one", "two")
-condition_type <- c(rep("male_mated", 4), rep("female_virgin", 8), rep("female_ovod1", 4))
+blocks2 <- c("one", "two","one", "two", "one", "two", "three", "four","one", "two", "three", "four","one", "two","one", "two")
+condition_type2 <- c(rep("male_mated", 4), rep("female_virgin", 8), rep("female_ovod1", 4))
 
 
+data_configs <- list(
+  four_choice_oviposition = list(paths = paths_ovi_4,
+       blocks = blocks_ovi_4,
+       conditions = condition_type_ovi_4,
+       value = "egg_numbers",
+       cols = "plate"
+       ),
+  
+  two_choice_oviposition = list(paths = paths_ovi_2,
+       blocks = blocks_ovi_2,
+       conditions = condition_type_ovi_2,
+       value = "egg_numbers",
+       cols = "plate"
+       ),
+  
+  four_choice_feeding = list(paths = paths_feed4,
+       blocks = blocks4,
+       conditions = condition_type4,
+       value = "fly_numbers",
+       cols = c("plate", "observation")),
+  
+  two_choice_feeding = list(paths = paths_feed2,
+       blocks = blocks2,
+       conditions = condition_type2,
+       value = "fly_numbers",
+       cols = c("plate", "observation"))
+)
 
-two_choice_feeding <- list_rbind(pmap(list(paths,blocks,condition_type), 
-                                       read_diet_data_feeding))
+results <- map(data_configs, function(cfg) {
+  read_many_diet_files(
+    paths = cfg$paths,
+    blocks = cfg$blocks,
+    conditions = cfg$conditions,
+    value = cfg$value,
+    cols = cfg$cols
+  )
+})
 
-
-
-
-
-
-########## ALTERNATE CODE BY PHIL, to use? ########## ########## ########## ########## ########## ########## ########## ########## ########## 
-
-
-feeding <- read_diet_data("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx", "one", "male virgin", 
-                          cols = c("plate", "observation"), value = "fly_numbers")
-
-
-########## ########## ########## ########## ########## ########## ########## ########## ##########  ########## ########## ########## 
+names(results) <- names(data_configs)
