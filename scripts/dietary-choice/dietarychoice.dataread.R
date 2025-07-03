@@ -59,10 +59,13 @@ paths_ovi_4 <- c("data/male_conditioning/m_4-1_1-4_b1_oviposition.xlsx",
                  "data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b3.xlsx",
                  "data/female_conditioning/virgin/4-1_1-4_oviposition_virgin_b4.xlsx",
                  "data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b1.xlsx",
-                 "data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx"
-)
-blocks_ovi_4 <- c("one", "two", "two", "three", "four", "one", "two")
-condition_type_ovi_4 <- c(rep("male_mated", 2), rep("female_virgin", 3), rep("female_ovod1", 2))
+                 "data/female_conditioning/ovod1/4-1_1-4_oviposition_ovod1_b2.xlsx",
+                 "data/density_experiment/50mm_combined_oviposition_2.xlsx",
+                 "data/density_experiment/90mm_combined_oviposition_2.xlsx")
+
+blocks_ovi_4 <- c("one", "two", "two", "three", "four", "one", "two", "one", "one")
+condition_type_ovi_4 <- c(rep("male_mated", 2), rep("female_virgin", 3), 
+                          rep("female_ovod1", 2), rep("male_50mm", 1), rep("male_90mm", 1))
 
 
 
@@ -80,14 +83,24 @@ paths_ovi_2 <- c("data/male_conditioning/m_4-1_b1_oviposition.xlsx",
                  "data/female_conditioning/ovod1/1-4_oviposition_ovod1_b1.xlsx",
                  "data/female_conditioning/ovod1/1-4_oviposition_ovod1_b2.xlsx",
                  "data/female_conditioning/ovod1/4-1_oviposition_ovod1_b1.xlsx",
-                 "data/female_conditioning/ovod1/4-1_oviposition_ovod1_b2.xlsx"
-)
-blocks_ovi_2 <- c("one", "two","one", "two", "two", "three", "four","two", "three", "four", "one", "two", "one", "two")
+                 "data/female_conditioning/ovod1/4-1_oviposition_ovod1_b2.xlsx", 
+                 "data/density_experiment/50mm_4-1_oviposition_2.xlsx",
+                 "data/density_experiment/50mm_1-4_oviposition_2.xlsx",
+                 "data/density_experiment/90mm_4-1_oviposition_2.xlsx",
+                 "data/density_experiment/90mm_1-4_oviposition_2.xlsx")
 
-condition_type_ovi_2 <- c(rep("male_mated", 4), rep("female_virgin", 6), rep("female_ovod1", 4))
+
+
+blocks_ovi_2 <- c("one", "two","one", "two", "two", "three", 
+                  "four","two", "three", "four", "one", "two",
+                  "one", "two", "one", "one","one","one")
+
+condition_type_ovi_2 <- c(rep("male_mated", 4), rep("female_virgin", 6), 
+                          rep("female_ovod1", 4), rep("male_density_50mm", 2), rep("male_density_90mm", 2))
 
 
 ## FEEDING EXPERIMENTS==== 
+
 
 
 paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
@@ -97,11 +110,15 @@ paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
                  "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx",
                  "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx",
                  "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx",
-                 "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx"
+                 "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx", 
+                 "data/density_experiment/densityexperiment_50mm_4-1_1-4.xlsx",
+                 "data/density_experiment/densityexperiment_90mm_4-1_1-4.xlsx"
+                 
 )
 
-blocks4 <- c("one", "two", "one", "two", "three", "four", "one", "two")
-condition_type4 <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2))
+blocks4 <- c("one", "two", "one", "two", "three", "four", "one", "two", "one", "one")
+condition_type4 <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2), rep("male_50mm", 1), 
+                     rep("male_90mm", 1))
 
 
 
@@ -122,11 +139,19 @@ paths_feed2 <- c("data/male_conditioning/rawdata_m4-1_b1.xlsx",
                  "data/female_conditioning/ovod1/rawresults_1-4_ovod1_b1.xlsx",
                  "data/female_conditioning/ovod1/rawresults_1-4_ovod1_b2.xlsx",
                  "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx",
-                 "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx"
-)
+                 "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx", 
+                 "data/density_experiment/densityexperiment_50mm_4-1.xlsx",
+                 "data/density_experiment/densityexperiment_50mm_1-4.xlsx",
+                 "data/density_experiment/densityexperiment_90mm_4-1.xlsx",
+                 "data/density_experiment/densityexperiment_90mm_1-4.xlsx")
 
-blocks2 <- c("one", "two","one", "two", "one", "two", "three", "four","one", "two", "three", "four","one", "two","one", "two")
-condition_type2 <- c(rep("male_mated", 4), rep("female_virgin", 8), rep("female_ovod1", 4))
+
+blocks2 <- c("one", "two","one", "two", "one", "two", "three", "four",
+             "one", "two", "three", "four","one", "two","one", "two", 
+             "one", "one","one","one" )
+
+condition_type2 <- c(rep("male_mated", 4), rep("female_virgin", 8), rep("female_ovod1", 4), rep("male_50mm", 2),
+                     rep("male_90mm", 2))
 
 
 data_configs <- list(
