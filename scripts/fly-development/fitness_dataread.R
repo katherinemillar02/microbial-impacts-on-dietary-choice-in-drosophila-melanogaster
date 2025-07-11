@@ -4,7 +4,7 @@ source("scripts/packages.R")
 
 
  # FUNCTIONS ====
-#### Total counts adult =================================
+#### Development adult =================================
 
 paths_adult <- c(uncontrolled = "data/fitness_development/fly_data.xlsx", 
                  controlled = "data/fitness_development/MFE_flies.xlsx")
@@ -19,36 +19,35 @@ timecourse_data <- function(path, sex_cols = c("females", "males"), cols = "vial
 }
 
 
-all_timecourse_data <- lapply(paths_adult, timecourse_data)
 
 all_timecourse_data <- purrr::imap_dfr(paths_adult, ~ 
                                    timecourse_data(.x) %>% 
                                    mutate(density_condition = .y))
 
 
-#### Total counts pupa =================================
+#### Development pupa =================================
 
 
-paths_pupa <- c(uncontrolled = "data/fitness_development/pupae_data.xlsx", 
+paths_pupa <- c(uncontrolled = "data/fitness_development/pupae_data.xlsx", ## There are two pupa data files, (2) is for visualisation purposes.
                  controlled = "data/fitness_development/MFE_pupae.xlsx")
 
+
+
 timecourse_data_p <- function(path) {
-  read_excel(path) %>% 
-    pivot_longer(values_to = "count") %>% 
-    drop_na(count) %>% 
-    uncount(count)
+  read_excel(path) %>%
+    drop_na(pupae) %>%
+    uncount(pupae)
 }
 
 
-
-all_timecourse_data <- purrr::imap_dfr(paths_pupa,  ~ 
+all_timecourse_data_p <- purrr::imap_dfr(paths_pupa,  ~ 
                                          timecourse_data_p(.x) %>% 
                                          mutate(density_condition = .y))
 
 
 
 
-  
+
 ##### UNCONTROLLED DATA ============================================
 
 ## Load data 
