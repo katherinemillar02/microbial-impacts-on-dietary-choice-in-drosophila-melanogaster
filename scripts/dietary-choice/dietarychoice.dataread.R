@@ -2,6 +2,8 @@
 ## Reading in the packages from the packages script.
 source("packages.R")
 
+source("scripts/functions.R")
+
 # Function: read diet data====
 # Description: Reads the dietary-choice feeding data into the R environment
 #
@@ -154,7 +156,96 @@ data_configs <- list(
        blocks = blocks2,
        conditions = condition_type2,
        value = "fly_numbers",
-       cols = c("plate", "observation"))
+       cols = c("plate", "observation")))
+
+## FOUR CHOICE====
+four_choice_oviposition_metadata <- read_csv("data/four_choice_oviposition_metadata.csv")
+
+## TWO CHOICE====
+two_choice_oviposition_metadata <- read_csv("data/two_choice_oviposition_metadata.csv")
+
+
+## FEEDING EXPERIMENTS==== 
+
+
+
+paths_feed4 <- c("data/male_conditioning/rawdata_m4-1_1-4_b1.xlsx",
+                 "data/male_conditioning/rawdata_m4-1_1-4_b2.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b1.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b2.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b3.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_1-4_virgin_b4.xlsx",
+                 "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b1.xlsx",
+                 "data/female_conditioning/ovod1/rawresults_4-1_1-4_ovod1_b2.xlsx", 
+                 "data/density_experiment/densityexperiment_50mm_4-1_1-4.xlsx",
+                 "data/density_experiment/densityexperiment_90mm_4-1_1-4.xlsx"
+                 
+)
+
+blocks4 <- c("one", "two", "one", "two", "three", "four", "one", "two", "one", "one")
+condition_type4 <- c(rep("male_mated", 2), rep("female_virgin", 4), rep("female_ovod1", 2), rep("male_50mm", 1), 
+                     rep("male_90mm", 1))
+
+
+
+
+# make into a iteration
+paths_feed2 <- c("data/male_conditioning/rawdata_m4-1_b1.xlsx",
+                 "data/male_conditioning/rawdata_m4-1_b2.xlsx",
+                 "data/male_conditioning/rawdata_m1-4_b1.xlsx",
+                 "data/male_conditioning/rawdata_m1-4_b2.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_virgin_b1.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_virgin_b2.xlsx",
+                 "data/female_conditioning/virgin/rawresults_1-4_virgin_b1.xlsx",
+                 "data/female_conditioning/virgin/rawresults_1-4_virgin_b2.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_virgin_b3.xlsx",
+                 "data/female_conditioning/virgin/rawresults_4-1_virgin_b4.xlsx",
+                 "data/female_conditioning/virgin/rawresults_1-4_virgin_b3.xlsx",
+                 "data/female_conditioning/virgin/rawresults_1-4_virgin_b4.xlsx",
+                 "data/female_conditioning/ovod1/rawresults_1-4_ovod1_b1.xlsx",
+                 "data/female_conditioning/ovod1/rawresults_1-4_ovod1_b2.xlsx",
+                 "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b1.xlsx",
+                 "data/female_conditioning/ovod1/rawresults_4-1_ovod1_b2.xlsx", 
+                 "data/density_experiment/densityexperiment_50mm_4-1.xlsx",
+                 "data/density_experiment/densityexperiment_50mm_1-4.xlsx",
+                 "data/density_experiment/densityexperiment_90mm_4-1.xlsx",
+                 "data/density_experiment/densityexperiment_90mm_1-4.xlsx")
+
+
+blocks2 <- c("one", "two","one", "two", "one", "two", "three", "four",
+             "one", "two", "three", "four","one", "two","one", "two", 
+             "one", "one","one","one" )
+
+condition_type2 <- c(rep("male_mated", 4), rep("female_virgin", 8), rep("female_ovod1", 4), rep("male_50mm", 2),
+                     rep("male_90mm", 2))
+
+
+data_configs <- list(
+  four_choice_oviposition = list(paths = four_choice_oviposition_metadata$paths_ovi_4,
+                                 blocks = four_choice_oviposition_metadata$blocks_ovi_4,
+                                 conditions = four_choice_oviposition_metadata$condition_type_ovi_4,
+                                 value = "egg_numbers",
+                                 cols = "plate"
+  ),
+  
+  two_choice_oviposition = list(paths = two_choice_oviposition_metadata$paths_ovi_2,
+                                blocks = two_choice_oviposition_metadata$blocks_ovi_2,
+                                conditions = two_choice_oviposition_metadata$condition_type_ovi_2,
+                                value = "egg_numbers",
+                                cols = "plate"
+  ),
+  
+  four_choice_feeding = list(paths = paths_feed4,
+                             blocks = blocks4,
+                             conditions = condition_type4,
+                             value = "fly_numbers",
+                             cols = c("plate", "observation")),
+  
+  two_choice_feeding = list(paths = paths_feed2,
+                            blocks = blocks2,
+                            conditions = condition_type2,
+                            value = "fly_numbers",
+                            cols = c("plate", "observation"))
 )
 
 results <- map(data_configs, function(cfg) {
