@@ -16,7 +16,7 @@ source("scripts/packages.R")
 # purrr::imap_dfr - 
    # purr - a package that provides tools for working with functions and vectors. 
    # imap_dfr - imap will give both the values and names, looped together and dfr will combine everything into a single data frame 
-# all_of 
+# all_of - will make sex into one column? 
 
 
 
