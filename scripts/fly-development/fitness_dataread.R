@@ -3,8 +3,12 @@ source("scripts/packages.R")
 
 
 
+
+
+
  # FUNCTIONS ====
-#### Development adult =================================
+
+# Adult Development for both controlled and uncontrolled densities
 
 paths_adult <- c(uncontrolled = "data/fitness_development/fly_data.xlsx", 
                  controlled = "data/fitness_development/MFE_flies.xlsx")
@@ -19,14 +23,16 @@ timecourse_data <- function(path, sex_cols = c("females", "males"), cols = "vial
 }
 
 
-
 all_timecourse_data <- purrr::imap_dfr(paths_adult, ~ 
                                    timecourse_data(.x) %>% 
                                    mutate(density_condition = .y))
 
 
-#### Development pupa =================================
 
+
+
+
+# Pupa Development for both controlled and uncontrolled densities
 
 paths_pupa <- c(uncontrolled = "data/fitness_development/pupae_data.xlsx", ## There are two pupa data files, (2) is for visualisation purposes.
                  controlled = "data/fitness_development/MFE_pupae.xlsx")
@@ -43,6 +49,14 @@ timecourse_data_p <- function(path) {
 all_timecourse_data_p <- purrr::imap_dfr(paths_pupa,  ~ 
                                          timecourse_data_p(.x) %>% 
                                          mutate(density_condition = .y))
+
+
+# END OF FUNCTIONS === ==== ==== ==== =====
+
+
+
+
+
 
 
 
@@ -86,7 +100,7 @@ adult_timecourse_uc <- adult_uc %>%
   drop_na(count)
 
 # Development with uncount
-pupa_timecourse_uc_uncount  <- uncount(adult_timecourse_uc, count)
+adult_timecourse_uc_uncount  <- uncount(adult_timecourse_uc, count)
 
 # Total count 
 adult_total_uc <- adult_timecourse_uc %>% 
