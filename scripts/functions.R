@@ -2,6 +2,9 @@
 ## Reading in the packages from the packages script.
 source("scripts/packages.R")
 
+
+## DIETARY CHOICE EXPERIMENTS 
+
 # Function: read diet data====
 # Description: Reads the dietary-choice feeding data into the R environment
 #
@@ -55,6 +58,25 @@ read_many_diet_files <- function(paths, blocks, conditions,
 
 
 
+## FITNESS EXPERIMENTS
+
+
+# === FUNCTIONAL GLOSSARY ===
+# purrr::imap_dfr:
+#   - From the 'purrr' package (used for functional programming in R)
+#   - `imap_dfr()` iterates over both the names and values of a list and combines results into one data frame (row-wise)
+#
+# all_of:
+#   - Used with tidyselect to safely refer to column names passed as character vectors
+#
+# timecourse_data():
+#   - Custom function (defined in functions.R) to read and process time-course data
+#
+# totalcount_data():
+#   - Custom function to compute total counts from specified columns
+#
+# .x = the file path; .y = the name ("controlled"/"uncontrolled")
+
 
  ## Development 
 timecourse_data <- function(path, count_cols, group_col = "category", cols = "vial") {
@@ -71,8 +93,7 @@ timecourse_data <- function(path, count_cols, group_col = "category", cols = "vi
 ## Total count 
 
 totalcount_data <- function(path, count_cols, group_col = "category", cols = "vial") {
-  group_vars <- c(group_col, cols)  # define what to group by
-  
+  group_vars <- c(group_col, "treatment", cols)
   read_excel(path) %>%
     pivot_longer(cols = all_of(count_cols),
                  names_to = group_col,
