@@ -50,3 +50,34 @@ read_many_diet_files <- function(paths, blocks, conditions,
          })
   )
 }
+
+
+
+
+
+
+ ## Development 
+timecourse_data <- function(path, count_cols, group_col = "category", cols = "vial") {
+  read_excel(path) %>%
+    pivot_longer(cols = all_of(count_cols),
+                 names_to = group_col,
+                 values_to = "count") %>%
+    drop_na(count) %>%
+    uncount(count)
+}
+
+
+
+## Total count 
+
+totalcount_data <- function(path, count_cols, group_col = "category", cols = "vial") {
+  group_vars <- c(group_col, cols)  # define what to group by
+  
+  read_excel(path) %>%
+    pivot_longer(cols = all_of(count_cols),
+                 names_to = group_col,
+                 values_to = "count") %>%
+    drop_na(count) %>%
+    group_by(across(all_of(group_vars))) %>%
+    summarise(total_count = sum(count, na.rm = TRUE), .groups = "drop")
+}
