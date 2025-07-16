@@ -1,55 +1,54 @@
-# Load the packages script. 
-source("scripts/packages.R")
+## FLY FITNESS EXPERIMENTS ==== 
 
-##### DATA READ - FOR FLY FITNESS 
-## Controlled and Uncontrolled density experiments. 
-
-            # FUNCTIONS ====
-
-## GLOSSARY: 
-
-# R functions used 
-# purrr::imap_dfr - 
-   # purr - a package that provides tools for working with functions and vectors. 
-   # imap_dfr - imap will give both the values and names, looped together and dfr will combine everything into a single data frame 
-# all_of - will make sex into one column? 
-# path
-# timecourse_data()
-# al_timecourse_data()
+# Load functions (also loads required packages) 
+source("scripts/functions.R")
 
 
-## Setting file paths of adult data 
+
+# === FILE PATH SETUP ===
+
+# File paths for adult data 
 paths_adult <- c(uncontrolled = "data/fitness_development/fly_data.xlsx", 
                  controlled = "data/fitness_development/MFE_flies.xlsx")
 
-## Setting file paths of pupa data
+# File paths for pupa data
 paths_pupa <- c(uncontrolled = "data/fitness_development/pupae_data.xlsx", ## There are two pupa data files, (2) is for visualisation purposes.
                 controlled = "data/fitness_development/MFE_pupae.xlsx")
 
 
 
-# adults
+
+
+# === READ TIMECOURSE DATA ===
+
+# Read adult timecourse data, tagging each row with its condition ("controlled"/"uncontrolled")
 timecourse_adult <- imap_dfr(paths_adult, ~ timecourse_data(.x, count_cols = c("females", "males")) %>%
                                mutate(condition = .y))
 
-#  pupa
+# Read pupa timecourse data
 timecourse_pupae <- imap_dfr(paths_pupa, ~ timecourse_data(.x, count_cols = c("pupae")) %>% 
                                mutate(condition = .y))
 
 
-# adult
+# === READ TOTAL COUNTS ===
+
+# Total count of adults per vial/treatment/etc.
 totalcount_adult <- imap_dfr(paths_adult, ~ totalcount_data(.x, count_cols = c("females", "males")) %>%
                                mutate(condition = .y))
 
-# pupa
-totalcount_pupa <- imap_dfr(paths_adult, ~ totalcount_data(.x, count_cols = c("females", "males")) %>%
+# Total count of pupae per vial/treatment/etc.
+totalcount_pupa <- imap_dfr(paths_pupa, ~ totalcount_data(.x, count_cols = c("females", "males")) %>%
                                mutate(condition = .y))
 
 
 
 
 
-## Body Weight of Adults ==  
+
+
+
+#### ===== Left to fix 
+## Body Weight of Adults ==  No point turning this into a function? Code would become longer?
 # Uncontrolled
 adult_bodyweight_uc <- read_excel("data/fitness_development/bodyweight_flies2.xlsx")
 adult_bodyweight_uc$weight_mg <- adult_bodyweight_uc$weight_mg * 1000
@@ -58,22 +57,28 @@ bodyweight_MFE <- read_excel("data/fitness_development/weighing_body.xlsx")
 bodyweight_MFE$weight_mg <- bodyweight_MFE$weight_mg * 1000
 
 
-## Survivabiliy ====
+
+
+
+#### ===== Left to fix ---------
+## Survivabiliy-----Currently does not work because of files / function.
+
 # Larvae - Pupae 
 lv_pup_c <- pupa_total_c %>%
   mutate(fixed_total = 63,
-    survivability = (total_pupa / fixed_total) * 100)
+         survivability = (total_pupa / fixed_total) * 100)
+
 # Pupae - Adult 
 pup_adult <- pupa_total_c %>%
   left_join(adult_total_c, by = c("vial", "treatment"))
 pup_adult_c <- pup_adult %>%
   mutate(survivability = (total_adult / total_pupa) * 100)
+
 # Larvae to Fly 
 fly_survivability <- adult_total_c %>%
   mutate(
     fixed_total = 63,
     survivability = (total_count / fixed_total) * 100)
-
 
 
 
