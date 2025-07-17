@@ -22,22 +22,22 @@ paths_pupa <- c(uncontrolled = "data/fitness_development/pupae_data.xlsx", ## Th
 # === READ TIMECOURSE DATA ===
 
 # Read adult timecourse data, tagging each row with its condition ("controlled"/"uncontrolled")
-timecourse_adult <- imap_dfr(paths_adult, ~ timecourse_data(.x, count_cols = c("females", "males")) %>%
+timecourse_adult <- imap_dfr(paths_adult, ~ read_fitness_data(.x, count_cols = c("females", "males"), summarise_total = FALSE) %>%
                                mutate(condition = .y))
 
 # Read pupa timecourse data
-timecourse_pupae <- imap_dfr(paths_pupa, ~ timecourse_data(.x, count_cols = c("pupae")) %>% 
+timecourse_pupae <- imap_dfr(paths_pupa, ~ read_fitness_data(.x, count_cols = c("pupae"), summarise_total = FALSE) %>%
                                mutate(condition = .y))
 
 
 # === READ TOTAL COUNTS ===
 
 # Total count of adults per vial/treatment/etc.
-totalcount_adult <- imap_dfr(paths_adult, ~ totalcount_data(.x, count_cols = c("females", "males")) %>%
+timecourse_adult <- imap_dfr(paths_adult, ~ read_fitness_data(.x, count_cols = c("females", "males"), summarise_total = TRUE) %>%
                                mutate(condition = .y))
 
 # Total count of pupae per vial/treatment/etc.
-totalcount_pupa <- imap_dfr(paths_pupa, ~ totalcount_data(.x, count_cols = c("females", "males")) %>%
+timecourse_pupae <- imap_dfr(paths_pupa, ~ read_fitness_data(.x, count_cols = c("pupae"), summarise_total = TRUE) %>%
                                mutate(condition = .y))
 
 
