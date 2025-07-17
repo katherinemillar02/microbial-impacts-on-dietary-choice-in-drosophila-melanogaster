@@ -58,47 +58,40 @@ read_many_diet_files <- function(paths, blocks, conditions,
 
 
 
-## FITNESS EXPERIMENTS
+## FITNESS EXPERIMENTS ====================================
 
 
 # === FUNCTIONAL GLOSSARY ===
-# purrr::imap_dfr:
-#   - From the 'purrr' package (used for functional programming in R)
-#   - `imap_dfr()` iterates over both the names and values of a list and combines results into one data frame (row-wise)
+
 #
 # all_of:
 #   - Used with tidyselect to safely refer to column names passed as character vectors
 #
-# timecourse_data():
-#   - Custom function (defined in functions.R) to read and process time-course data
-#
-# totalcount_data():
+
+
+#read_fitness_data():
 #   - Custom function to compute total counts from specified columns
 #
-# .x = the file path; .y = the name ("controlled"/"uncontrolled")
 
 
- ## Development 
-timecourse_data <- function(path, count_cols, group_col = "category", cols = "vial") {
-  read_excel(path) %>%
-    pivot_longer(cols = all_of(count_cols),
-                 names_to = group_col,
-                 values_to = "count") %>%
-    drop_na(count) %>%
-    uncount(count)
+
+read_fitness_data <- function(path, count_cols, group_col = "category", cols = "vial", summarise_total = FALSE) { # summarise added 
+  fitness_data <- read_excel(path) %>% # read the excel file from paths which have already been established. 
+    pivot_longer(cols = all_of(count_cols), # Putting the columns in a long format. 
+                 names_to = group_col,# Naming the column of the names data
+                 values_to = "count") %>% # Naming the column of the values data 
+    drop_na(count) # Dropping all NAs so functions work, there is some missing data 
+  
+  if (summarise_total) { # this means that if summarise_total is used, 
+    group_vars <- c(group_col, "treatment", cols) #  the variables will be the group and treatment
+    fitness_data %>% # using the established fitness data 
+      group_by(across(all_of(group_vars))) %>%
+      summarise(total_count = sum(count, na.rm = TRUE), .groups = "drop") # and summarised? 
+  } else { # otherwise 
+    fitness_data %>% uncount(count) # the fitness data will not be summarised, and uncount will be used - for development
+  }
 }
 
 
 
-## Total count 
 
-totalcount_data <- function(path, count_cols, group_col = "category", cols = "vial") {
-  group_vars <- c(group_col, "treatment", cols)
-  read_excel(path) %>%
-    pivot_longer(cols = all_of(count_cols),
-                 names_to = group_col,
-                 values_to = "count") %>%
-    drop_na(count) %>%
-    group_by(across(all_of(group_vars))) %>%
-    summarise(total_count = sum(count, na.rm = TRUE), .groups = "drop")
-}
